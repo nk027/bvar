@@ -42,5 +42,58 @@ bvar <- function(data, lags,
   N <- nrow(Y)
 
 
+  # Priors ------------------------------------------------------------------
 
+  # Minnesota Prior
+  # set b
+  # set psi (unless provided)
+
+
+  # Optimise ----------------------------------------------------------------
+
+  opt <- optim(par = par_init, m_like, ...)
+
+
+  # Hessian -----------------------------------------------------------------
+
+
+  # Initial draw ------------------------------------------------------------
+
+  # m_like
+  # sv
+
+
+  # Loop --------------------------------------------------------------------
+
+  # Storage
+
+  # start loop
+  for(i in (1 - burns):(draws - burns)) {
+
+    # Metropolis-Hastings
+
+    if(runif(1) < 0.5) {
+      # accept
+    } else {
+      # reject
+    }
+
+    # tune acceptance
+
+    # saved draws
+    if(i > 0) {
+      # store
+
+      # Companion matrix
+      # fcast
+      # irf
+    }
+  }
+  # end loop
+
+
+  # Outputs -----------------------------------------------------------------
+
+  class(out) <- "bvar"
+  return(out)
 }
