@@ -68,6 +68,7 @@ bvar <- function(data, lags,
   # Storage
 
   # start loop
+  if(verbose) pb <- txtProgressBar(min = 0, max = (nburn + nsave), style = 3)
   for(i in (1 - burns):(draws - burns)) {
 
     # Metropolis-Hastings
@@ -81,13 +82,14 @@ bvar <- function(data, lags,
     # tune acceptance
 
     # saved draws
-    if(i > 0) {
+    if(i > 0 && i %% thin == 0) {
       # store
 
       # Companion matrix
       # fcast
       # irf
     }
+    if(verbose) setTxtProgressBar(pb, (i + nburn))
   }
   # end loop
 
