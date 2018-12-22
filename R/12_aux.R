@@ -11,3 +11,13 @@ var_lag <- function(x, p) {
 
   return(x_lagged)
 }
+
+gamma_coef <- function(mode, sd) {
+
+  mode_sq <- mode ^ 2
+  sd_sq <- sd ^ 2
+  k <- (2 + mode_sq / sd_sq + sqrt((4 + mode_sq / sd_sq) * mode_sq / sd_sq)) / 2
+  theta <- sqrt(sd_sq / k)
+
+  return(list("k" = k, "theta" = theta))
+}
