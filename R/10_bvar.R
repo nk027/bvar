@@ -1,4 +1,5 @@
-bvar <- function(data, lags,
+bvar <- function(
+  data, lags,
   draws = 10000, burns = 10000, thin = 1,
   mh,
   priors,
@@ -44,6 +45,10 @@ bvar <- function(data, lags,
 
   # Priors ------------------------------------------------------------------
 
+  priors$b <- matrix(0, nrow = K, ncol = M)
+  priors$b[2:(M + 1), ] <- diag(M)
+
+  if(priors$psi == "auto") priors$psi <- .auto_psi(Y, lags)
   # Minnesota Prior
   # set b
   # set psi (unless provided)
