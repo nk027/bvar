@@ -45,18 +45,27 @@ bvar <- function(
 
   # Priors ------------------------------------------------------------------
 
+  # Minnesota Prior
   priors$b <- matrix(0, nrow = K, ncol = M)
   priors$b[2:(M + 1), ] <- diag(M)
 
   if(priors$psi == "auto") priors$psi <- .auto_psi(Y, lags)
-  # Minnesota Prior
-  # set b
-  # set psi (unless provided)
+
+  # Check for non-hierarchical estimation
+  n_hpriors <- length(priors$hyper)
+  if(n_hpriors == 0) .bv_non_hierarchical(...)
 
 
   # Optimise ----------------------------------------------------------------
 
-  opt <- optim(par = par_init, m_like, ...)
+  # Rows: mode, min, max; Cols: hyperparameters
+  par_init <- sapply(priors$hyper, function(x) {
+    c(priors[[x]]$mode, priors[[x]]$min, priors[[x]]$max)
+    })
+
+  opt <- optim(par = par_init[1, ], m_like,
+               method = if(n_hpriors == 1) {"Brent"} else {"L-BFGS-B"},
+               control = list("fnscale" = -1))
 
 
   # Hessian -----------------------------------------------------------------

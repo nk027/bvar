@@ -12,7 +12,7 @@
   x$mode <- tryCatch(apply(Y, 2, function(x) {
     sqrt(arima(x, order = c(lags, 0, 0))$sigma2)
   }), error = function(x) {
-    stop("Data appears to be integrated; setting psi automatically via 'arima' failed.")
+    stop("Data appears to be integrated; setting psi automatically via 'arima()' failed.")
   })
   # # Alternative via try(), which is allegedly less efficient. Upping the
   # # order of integration is done away with for transparency (for now).
