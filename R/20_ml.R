@@ -1,11 +1,16 @@
 bv_ml <- function(
+  hyper,
   pars,
   priors) {
 
-  # outside bounds?
+  # Outside bounds?
 
 
   # Priors ------------------------------------------------------------------
+
+  for(name in unique(names(hyper))) {
+    pars[names(pars) == name] <- hyper[names(hyper) == name]
+  }
 
   omega <- vector("numeric", 1 + M * lags)
   omega[1] <- priors$var
@@ -15,6 +20,12 @@ bv_ml <- function(
   }
 
   # Dummy priors
+  dmy <- lapply(priors$dummy, function(x) {
+    priors[[x]]$fnc(Y = Y, lags = lags, pars = pars[[x]])
+  })
+  Y <- rbind(do.call(rbind, lapply(dmy, function(x) matrix(x$Y, ncol = M))), Y)
+  X <- rbind(do.call(rbind, lapply(dmy, function(x) matrix(x$X, ncol = K))), X)
+  N <- nrow(Y)
 
 
   # Calc --------------------------------------------------------------------

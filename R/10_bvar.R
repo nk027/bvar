@@ -52,10 +52,13 @@ bvar <- function(
   if(priors$psi == "auto") priors$psi <- .auto_psi(Y, lags)
 
   # Parameters
-  par_names <- names(priors)[!names(priors) %in% c("hyper", "var", "b")]
-  par_full <- do.call(c, lapply(par_names, function(x) priors[[x]]$mode))
-  names(par_full) <-
-    Reduce(c, sapply(par_names, function(x) if(x == "psi") rep(x, M) else x))
+  pars_names <- names(priors)[!names(priors) %in% c("hyper", "var", "b")]
+  pars_full <- do.call(c, lapply(pars_names, function(x) priors[[x]]$mode))
+  names(pars_full) <-
+    Reduce(c, sapply(pars_names, function(x) if(x == "psi") rep(x, M) else x))
+
+  # Dummy priors
+  priors$dummy <- pars_names[!pars_names %in% c("lambda", "alpha", "psi")]
 
   # Hierarchical priors
   hyper_n <- length(priors$hyper) + sum(priors$hyper == "psi") * (M - 1)
@@ -70,7 +73,7 @@ bvar <- function(
 
   # Optimise ----------------------------------------------------------------
 
-  opt <- optim(par = hyper_init, bv_ml,
+  opt <- optim(par = hyper_init, bv_ml, pars_full, priors,
                method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
                control = list("fnscale" = -1))
 
