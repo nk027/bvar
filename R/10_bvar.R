@@ -24,10 +24,10 @@ bvar <- function(
   thin <- .int_check(thin, min = 1, max = draws / 10)
 
   # Constructors
-  if(!"bvar_prior" %in% class(priors)) stop()
-  if(!"bvar_fcast" %in% class(fcast)) stop()
-  if(!"bvar_irf" %in% class(irf)) stop()
-  if(!"bvar_sv" %in% class(sv)) stop()
+  if(!"bv_priors" %in% class(priors)) stop()
+  if(!"bv_fcast" %in% class(fcast)) stop()
+  if(!"bv_irf" %in% class(irf)) stop()
+  if(!"bv_sv" %in% class(sv)) stop()
 
 
   # Preparation -------------------------------------------------------------
@@ -45,26 +45,33 @@ bvar <- function(
 
   # Priors ------------------------------------------------------------------
 
-  # Minnesota Prior
+  # Minnesota prior
   priors$b <- matrix(0, nrow = K, ncol = M)
   priors$b[2:(M + 1), ] <- diag(M)
 
   if(priors$psi == "auto") priors$psi <- .auto_psi(Y, lags)
 
-  # Check for non-hierarchical estimation
-  n_hpriors <- length(priors$hyper)
-  if(n_hpriors == 0) .bv_non_hierarchical(...)
+  # Parameters
+  par_names <- names(priors)[!names(priors) %in% c("hyper", "var", "b")]
+  par_full <- do.call(c, lapply(par_names, function(x) priors[[x]]$mode))
+  names(par_full) <-
+    Reduce(c, sapply(par_names, function(x) if(x == "psi") rep(x, M) else x))
+
+  # Hierarchical priors
+  hyper_n <- length(priors$hyper) + sum(priors$hyper == "psi") * (M - 1)
+  if(hyper_n == 0) bv_non_hierarchical(...)
+
+  hyper_init <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$mode))
+  hyper_min <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$min))
+  hyper_max <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$max))
+  names(hyper_init) <- names(hyper_min) <- names(hyper_max) <-
+    Reduce(c, sapply(priors$hyper, function(x) if(x == "psi") rep(x, M) else x))
 
 
   # Optimise ----------------------------------------------------------------
 
-  # Rows: mode, min, max; Cols: hyperparameters
-  par_init <- sapply(priors$hyper, function(x) {
-    c(priors[[x]]$mode, priors[[x]]$min, priors[[x]]$max)
-    })
-
-  opt <- optim(par = par_init[1, ], m_like,
-               method = if(n_hpriors == 1) {"Brent"} else {"L-BFGS-B"},
+  opt <- optim(par = hyper_init, bv_ml,
+               method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
                control = list("fnscale" = -1))
 
 
@@ -99,7 +106,7 @@ bvar <- function(
     if(i > 0 && i %% thin == 0) {
       # store
 
-      # Companion matrix
+      # companion matrix
       # fcast
       # irf
     }

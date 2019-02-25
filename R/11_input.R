@@ -1,5 +1,6 @@
 .int_check <- function(x, min = 0, max = Inf,
                        msg = "Please check the integer parameters.") {
+
   if(!is.numeric(x) || length(x) != 1 || x < min || x > max) {
     stop(msg)
   } else {
@@ -8,6 +9,7 @@
 }
 
 .auto_psi <- function(Y, lags) {
+
   x <- list()
   x$mode <- tryCatch(apply(Y, 2, function(x) {
     sqrt(arima(x, order = c(lags, 0, 0))$sigma2)
