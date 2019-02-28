@@ -98,9 +98,10 @@ bvar <- function(
     # Metropolis-Hastings
 
     if(runif(1) < 0.5) {
-      # accept
+      # accept, new draw of estimates with new parameters
+      bv_draw(...)
     } else {
-      # reject
+      # reject, draw new estimates with old parameters
     }
 
     # tune acceptance
