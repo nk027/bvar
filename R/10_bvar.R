@@ -5,7 +5,6 @@ bvar <- function(
   priors,
   fcast,
   irf,
-  sv,
   verbose = FALSE, ...) {
 
   # Input Checking ----------------------------------------------------------
@@ -24,10 +23,9 @@ bvar <- function(
   thin <- .int_check(thin, min = 1, max = draws / 10)
 
   # Constructors
-  if(!"bv_priors" %in% class(priors)) stop()
-  if(!"bv_fcast" %in% class(fcast)) stop()
-  if(!"bv_irf" %in% class(irf)) stop()
-  if(!"bv_sv" %in% class(sv)) stop()
+  if(inherits(priors, "bv_priors")) stop()
+  if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) stop()
+  if(!is.null(irf) && !inherits(irf, "bv_irf")) stop()
 
 
   # Preparation -------------------------------------------------------------
@@ -80,11 +78,25 @@ bvar <- function(
 
   # Hessian -----------------------------------------------------------------
 
+  H <- diag(length(opt$par)) * scale_hess
+  J <- sapply(priors$hyperpars, function(name) {
+    exp(opt$par[name]) / (1 + exp(opt$par[name])) ^ 2 *
+      (priors[[name]]$max - priors[[name]]$min)
+  })
+
+  if(n_hpriors != 1) {J <- diag(J)}
+  HH <- J %*% H %*% t(J)
+
+  # Make sure HH is positive definite
+  if(n_hpriors != 1) {
+    HH_eig <- eigen(HH)
+    HH <- HH_eig$vectors %*% diag(abs(HH_eig$values)) %*% t(HH_eig$vectors)
+  } else {HH <- abs(HH)}
+
 
   # Initial draw ------------------------------------------------------------
 
   # m_like
-  # sv
 
 
   # Loop --------------------------------------------------------------------
