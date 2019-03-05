@@ -66,13 +66,13 @@ bv_minnesota <- function(
 bv_dummy <- function(
   mode = 1, sd = 1,
   min = 0.0001, max = 5,
-  fnc) {
+  fun) {
 
   if(sd <= 0) stop("Parameter misspecified.")
-  fnc <- match.fun(fnc)
+  fun <- match.fun(fun)
 
   out <- .bv_dummy(mode, min, max,
-                   sd = sd, fnc = fnc,
+                   sd = sd, fun = fun,
                    coef = gamma_coef(mode, sd))
   return(out)
 }

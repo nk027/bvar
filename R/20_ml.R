@@ -1,53 +1,49 @@
-bv_ml <- function(Y, X,
-  hyper,
+bv_ml <- function(
   pars,
+  hyper = NULL,
   priors,
-  draw) {
-
-
-  K <- ncol(X)
-  M <- ncol(Y)
-  lags <- (K - 1) / M
+  Y, X, K, M, N, lags) {
 
   # Outside bounds?
 
 
   # Priors ------------------------------------------------------------------
 
-  for(name in unique(names(hyper))) {
-    pars[names(pars) == name] <- hyper[names(hyper) == name]
-  }
+  # Overwrite passed parameters with hyperparameters
+  if(!is.null(hyper))
+    for(name in unique(names(hyper)))
+      pars[names(pars) == name] <- hyper[names(hyper) == name]
 
+  psi <- diag(pars[names(pars) == "psi"])
   omega <- vector("numeric", 1 + M * lags)
   omega[1] <- priors$var
-  for(i in 1:lags) {
+  for(i in 1:lags)
     omega[seq(2 + M * (i - 1), 1 + i * M)] <-
-      pars["lambda"] ^ 2 / i ^ pars["alpha"] / pars[names(pars) == "psi"]
-  }
+      pars[["lambda"]] ^ 2 / i ^ pars[["alpha"]] / pars[names(pars) == "psi"]
 
   # Dummy priors
-  dmy <- lapply(priors$dummy, function(x) {
-    priors[[x]]$fnc(Y = Y, lags = lags, pars = pars[[x]])
-  })
-  Y <- rbind(do.call(rbind, lapply(dmy, function(x) matrix(x$Y, ncol = M))), Y)
-  X <- rbind(do.call(rbind, lapply(dmy, function(x) matrix(x$X, ncol = K))), X)
-  N <- nrow(Y)
+  if(length(priors$dummy) > 0) {
+    dmy <- lapply(priors$dummy, function(x) {
+      priors[[x]]$fun(Y = Y, lags = lags, pars = pars[[x]])
+    })
+    Y <- rbind(do.call(rbind, lapply(dmy, function(x) matrix(x$Y, ncol = M))), Y)
+    X <- rbind(do.call(rbind, lapply(dmy, function(x) matrix(x$X, ncol = K))), X)
+    N <- nrow(Y)
+  }
 
 
   # Calc --------------------------------------------------------------------
-  # OLS stuff
   omega_inv <- diag(1 / omega)
-  beta_hat <- solve(crossprod(X) + omega_inv) %*%
-    (crossprod(X, Y) + omega_inv %*% priors$b)
+  XX <- crossprod(X)
+  beta_hat <- solve(XX + omega_inv) %*% (crossprod(X, Y) + omega_inv %*% priors$b)
   sse <- crossprod(Y - X %*% beta_hat)
-
   psi_inv <- solve(sqrt(psi))
-  omega_ml <- diag(sqrt(omega)) %*% crossprod(X) %*% diag(sqrt(omega))
+  omega_ml <- diag(sqrt(omega)) %*% XX %*% diag(sqrt(omega))
   psi_ml <- psi_inv %*%
     (sse + t(beta_hat - priors$b) %*% omega_inv %*% (beta_hat - priors$b)) %*%
     psi_inv
 
-  # Eigenvalues + 1 as another way of computing the determinants in A.14
+  # Eigenvalues + 1 as another way of computing the determinants
   omega_ml_ev <- Re(eigen(omega_ml, only.values = TRUE)$values)
   omega_ml_ev[omega_ml_ev < 1e-12] <- 0
   omega_ml_ev <- omega_ml_ev + 1
@@ -56,12 +52,12 @@ bv_ml <- function(Y, X,
   psi_ml_ev <- psi_ml_ev + 1
 
   # Likelihood
-  log_mlike <- (-M * N * log(pi) / 2) +
-    sum(lgamma(((N + M + 2) - 0:(M - 1)) / 2) -
-          lgamma(((M + 2) - 0:(M -1)) / 2)) -
-    (N * sum(log(diag(psi))) / 2) -
-    (M * sum(log(omega_ml_ev)) / 2) -
+  log_ml <- (-M * N * log(pi) / 2) +
+    sum(lgamma(((N + M + 2) - 0:(M - 1)) / 2) - lgamma(((M + 2) - 0:(M -1)) / 2)) -
+    (N * sum(log(diag(psi))) / 2) - (M * sum(log(omega_ml_ev)) / 2) -
     ((N + M + 2) * sum(log(psi_ml_ev)) / 2)
+
+  ### To-do
 
   # Add prior-pdfs
   if(length(priors$hyperpars)!=0){
@@ -80,6 +76,9 @@ bv_ml <- function(Y, X,
     return(out_ml)
 }
 
+
+
+# Legacy ------------------------------------------------------------------
 
 log_mlike <- function(pars = NULL,
                       priors,

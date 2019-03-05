@@ -23,7 +23,7 @@ bvar <- function(
   thin <- .int_check(thin, min = 1, max = draws / 10)
 
   # Constructors
-  if(inherits(priors, "bv_priors")) stop()
+  if(!inherits(priors, "bv_priors")) stop()
   if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) stop()
   if(!is.null(irf) && !inherits(irf, "bv_irf")) stop()
 
@@ -74,13 +74,14 @@ bvar <- function(
   opt <- optim(par = hyper_init, bv_ml, pars_full, priors,
                method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
                control = list("fnscale" = -1))
+  names(opt$par) <- names(hyper_init)
 
 
   # Hessian -----------------------------------------------------------------
 
-  H <- diag(length(opt$par)) * scale_hess
+  H <- diag(length(opt$par)) * mh$scale_hess
   J <- sapply(priors$hyperpars, function(name) {
-    exp(opt$par[name]) / (1 + exp(opt$par[name])) ^ 2 *
+    exp(opt$par[[name]]) / (1 + exp(opt$par[[name]])) ^ 2 *
       (priors[[name]]$max - priors[[name]]$min)
   })
 
