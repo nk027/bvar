@@ -1,7 +1,13 @@
-bv_ml <- function(
+bv_ml <- function(Y, X,
   hyper,
   pars,
-  priors) {
+  priors,
+  draw) {
+
+
+  K <- ncol(X)
+  M <- ncol(Y)
+  lags <- (K - 1) / M
 
   # Outside bounds?
 
@@ -29,15 +35,49 @@ bv_ml <- function(
 
 
   # Calc --------------------------------------------------------------------
+  # OLS stuff
+  omega_inv <- diag(1 / omega)
+  beta_hat <- solve(crossprod(X) + omega_inv) %*%
+    (crossprod(X, Y) + omega_inv %*% priors$b)
+  sse <- crossprod(Y - X %*% beta_hat)
+
+  psi_inv <- solve(sqrt(psi))
+  omega_ml <- diag(sqrt(omega)) %*% crossprod(X) %*% diag(sqrt(omega))
+  psi_ml <- psi_inv %*%
+    (sse + t(beta_hat - priors$b) %*% omega_inv %*% (beta_hat - priors$b)) %*%
+    psi_inv
+
+  # Eigenvalues + 1 as another way of computing the determinants in A.14
+  omega_ml_ev <- Re(eigen(omega_ml, only.values = TRUE)$values)
+  omega_ml_ev[omega_ml_ev < 1e-12] <- 0
+  omega_ml_ev <- omega_ml_ev + 1
+  psi_ml_ev <- Re(eigen(psi_ml, only.values = TRUE)$values)
+  psi_ml_ev[psi_ml_ev < 1e-12] <- 0
+  psi_ml_ev <- psi_ml_ev + 1
 
   # Likelihood
+  log_mlike <- (-M * N * log(pi) / 2) +
+    sum(lgamma(((N + M + 2) - 0:(M - 1)) / 2) -
+          lgamma(((M + 2) - 0:(M -1)) / 2)) -
+    (N * sum(log(diag(psi))) / 2) -
+    (M * sum(log(omega_ml_ev)) / 2) -
+    ((N + M + 2) * sum(log(psi_ml_ev)) / 2)
 
+  # Add prior-pdfs
+  if(length(priors$hyperpars)!=0){
+    log_mlike <- log_mlike +
+      sum(sapply(names(prior_coef), function(x) {
+        log(dgamma(pars[x],
+                   shape = prior_coef[[x]]$k, scale = prior_coef[[x]]$theta))
+      }))
+  }
 
-  # Posteriors --------------------------------------------------------------
-
-
-
-
+    draw_list <- list("psi" = psi,
+                      "sse" = sse,
+                      "beta_hat" = beta_hat,
+                      "omega_inv" = omega_inv)
+    out_ml <- list("log_mlike" = log_mlike, "draw_list" = draw_list)
+    return(out_ml)
 }
 
 
