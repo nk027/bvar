@@ -1,8 +1,8 @@
 bvar <- function(
   data, lags,
   draws = 10000, burns = 10000, thin = 1,
-  mh,
   priors,
+  mh,
   fcast,
   irf,
   verbose = FALSE, ...) {
@@ -51,9 +51,8 @@ bvar <- function(
 
   # Parameters
   pars_names <- names(priors)[!names(priors) %in% c("hyper", "var", "b")]
-  pars_full <- do.call(c, lapply(pars_names, function(x) priors[[x]]$mode))
-  names(pars_full) <-
-    Reduce(c, sapply(pars_names, function(x) if(x == "psi") rep(x, M) else x))
+  pars <- do.call(c, lapply(pars_names, function(x) priors[[x]]$mode))
+  names(pars) <- .name_pars(pars_names)
 
   # Dummy priors
   priors$dummy <- pars_names[!pars_names %in% c("lambda", "alpha", "psi")]
@@ -62,16 +61,15 @@ bvar <- function(
   hyper_n <- length(priors$hyper) + sum(priors$hyper == "psi") * (M - 1)
   if(hyper_n == 0) bv_non_hierarchical(...)
 
-  hyper_init <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$mode))
+  hyper <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$mode))
   hyper_min <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$min))
   hyper_max <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$max))
-  names(hyper_init) <- names(hyper_min) <- names(hyper_max) <-
-    Reduce(c, sapply(priors$hyper, function(x) if(x == "psi") rep(x, M) else x))
+  names(hyper) <- .name_pars(priors$hyper)
 
 
   # Optimise ----------------------------------------------------------------
 
-  opt <- optim(par = hyper_init, bv_ml, pars_full, priors,
+  opt <- optim(par = hyper, bv_ml, pars, priors,
                method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
                control = list("fnscale" = -1))
   names(opt$par) <- names(hyper_init)

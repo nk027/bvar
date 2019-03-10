@@ -1,6 +1,6 @@
 bv_ml <- function(
-  pars,
   hyper = NULL,
+  pars,
   priors,
   Y, X, K, M, N, lags) {
 
