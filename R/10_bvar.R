@@ -98,8 +98,8 @@ bvar <- function(
   draw_necessary <- TRUE
   while(draw_necessary) {
     par_draw <- MASS::mvrnorm(mu = opt$par, Sigma = HH)
-    log_mlike_draw <- bv_ml(par_draw,
-                            hyper = priors$hyper, # check here?
+    log_mlike_draw <- bv_ml(hyper = NULL,
+                            par_draw,
                             priors,
                             Y, X, K, M, N, lags)
     if(log_mlike_draw$log_mlike > -1e16) {draw_necessary <- FALSE}
@@ -118,12 +118,12 @@ bvar <- function(
 
     # temporary draw
     par_temp <- MASS::mvrnorm(mu = par_draw, Sigma = HH)
-    log_mlike_temp <- bv_ml(par_temp,
-                            hyper = priors$hyper, # check here?
+    log_mlike_temp <- bv_ml(hyper = NULL,
+                            par_temp,
                             priors,
                             Y, X, K, M, N, lags)
 
-    if(runif(1) < exp(log_mlike_temp$log_mlike - log_mlike_draw$log_mlike)) {
+    if(runif(1) < exp(log_mlike_temp$log_ml - log_mlike_draw$log_ml)) {
       log_mlike_draw <- log_mlike_temp
       par_draw <- par_temp
       accepted <- accepted + 1

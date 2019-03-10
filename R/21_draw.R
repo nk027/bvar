@@ -1,5 +1,14 @@
 bv_draw <- function(draw_list) {
 
+  # maybe unpack list in order to save time?
+  # unp_names <- names(draw_list)
+  #
+  # for(i in unp_names){
+  #
+  #   assign(i, draw_list[[i]])
+  #
+  # }
+
   S_post <- draw_list$psi + draw_list$sse +
     t(draw_list$beta_hat - draw_list$b) %*%
     draw_list$omega_inv %*%
