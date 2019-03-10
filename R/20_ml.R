@@ -67,10 +67,17 @@ bv_ml <- function(
   }
 
   # Prep for draw and return
-  draw <- list("psi" = psi, "sse" = sse,
-               "beta_hat" = beta_hat, "omega_inv" = omega_inv)
-
-  out_ml <- list("log_ml" = log_ml, "draw" = draw_list)
+  draw_list <- list("Y_ml" = Y,
+                    "X_ml" = X,
+                    "M_ml" = M,
+                    "N_ml" = N,
+                    "lags_ml" = lags,
+                    "b" = priors$b,
+                    "psi" = psi,
+                    "sse" = sse,
+                    "beta_hat" = beta_hat,
+                    "omega_inv" = omega_inv)
+  out_ml <- list("log_ml" = log_ml, "draw_list" = draw_list)
 
   return(out_ml)
 }

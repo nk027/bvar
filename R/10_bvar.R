@@ -95,7 +95,15 @@ bvar <- function(
 
   # Initial draw ------------------------------------------------------------
 
-  # m_like
+  draw_necessary <- TRUE
+  while(draw_necessary) {
+    par_draw <- MASS::mvrnorm(mu = opt$par, Sigma = HH)
+    log_mlike_draw <- bv_ml(par_draw,
+                            hyper = priors$hyper, # check here?
+                            priors,
+                            Y, X, K, M, N, lags)
+    if(log_mlike_draw$log_mlike > -1e16) {draw_necessary <- FALSE}
+  }
 
 
   # Loop --------------------------------------------------------------------
@@ -108,19 +116,35 @@ bvar <- function(
 
     # Metropolis-Hastings
 
-    if(runif(1) < 0.5) {
-      # accept, new draw of estimates with new parameters
-      bv_draw(...)
+    # temporary draw
+    par_temp <- MASS::mvrnorm(mu = par_draw, Sigma = HH)
+    log_mlike_temp <- bv_ml(par_temp,
+                            hyper = priors$hyper, # check here?
+                            priors,
+                            Y, X, K, M, N, lags)
+
+    if(runif(1) < exp(log_mlike_temp$log_mlike - log_mlike_draw$log_mlike)) {
+      log_mlike_draw <- log_mlike_temp
+      par_draw <- par_temp
+      accepted <- accepted + 1
+      accepted_adj <- accepted_adj + 1
     } else {
-      # reject, draw new estimates with old parameters
+      # reject, not necessary any more? draw parameters out of MH-step
     }
 
     # tune acceptance
+    if(scale_adj && i < 0 && (i + nburn) %% 100 == 0) {
+      acc_rate <- accepted_adj / 100
+      if(acc_rate < 0.25) {
+        HH <- HH * 0.99
+      } else if(acc_rate > 0.35) {HH <- HH * 1.01}
+      accepted_adj <- 0
+    }
 
     # saved draws
     if(i > 0 && i %% thin == 0) {
-      # store
-
+      # draw parameters
+      para_draw <- bv_draw(log_mlike_draw$draw_list)
       # companion matrix
       # fcast
       # irf
