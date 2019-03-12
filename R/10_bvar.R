@@ -51,8 +51,8 @@ bvar <- function(
 
   # Parameters
   pars_names <- names(priors)[!names(priors) %in% c("hyper", "var", "b")]
-  pars <- do.call(c, lapply(pars_names, function(x) priors[[x]]$mode))
-  names(pars) <- .name_pars(pars_names)
+  pars_full <- do.call(c, lapply(pars_names, function(x) priors[[x]]$mode))
+  names(pars_full) <- .name_pars(pars_names)
 
   # Dummy priors
   priors$dummy <- pars_names[!pars_names %in% c("lambda", "alpha", "psi")]
@@ -69,7 +69,7 @@ bvar <- function(
 
   # Optimise ----------------------------------------------------------------
 
-  opt <- optim(par = hyper, bv_ml, pars, priors,
+  opt <- optim(par = hyper, bv_ml, pars_full, priors,
                method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
                control = list("fnscale" = -1))
   names(opt$par) <- names(hyper_init)
@@ -98,11 +98,9 @@ bvar <- function(
   draw_necessary <- TRUE
   while(draw_necessary) {
     par_draw <- MASS::mvrnorm(mu = opt$par, Sigma = HH)
-    log_mlike_draw <- bv_ml(hyper = NULL,
-                            par_draw,
-                            priors,
-                            Y, X, K, M, N, lags)
-    if(log_mlike_draw$log_mlike > -1e16) {draw_necessary <- FALSE}
+    ml_draw <- bv_ml(hyper = par_draw, pars = pars_full,
+                     priors, Y, X, K, M, N, lags)
+    if(ml_draw$log_ml > -1e16) {draw_necessary <- FALSE}
   }
 
 
@@ -110,29 +108,28 @@ bvar <- function(
 
   # Storage
 
-  # start loop
   if(verbose) pb <- txtProgressBar(min = 0, max = (nburn + nsave), style = 3)
-  for(i in (1 - burns):(draws - burns)) {
+  for(i in (1 - burns):(draws - burns)) { # Start loop
 
     # Metropolis-Hastings
-
-    # temporary draw
     par_temp <- MASS::mvrnorm(mu = par_draw, Sigma = HH)
-    log_mlike_temp <- bv_ml(hyper = NULL,
-                            par_temp,
-                            priors,
-                            Y, X, K, M, N, lags)
+    ml_temp <- bv_ml(hyper = par_temp, pars = par_full,
+                     priors, Y, X, K, M, N, lags)
 
-    if(runif(1) < exp(log_mlike_temp$log_ml - log_mlike_draw$log_ml)) {
-      log_mlike_draw <- log_mlike_temp
+    if(runif(1) < exp(ml_temp$log_ml - ml_temp$log_ml)) {
+      # Accept draw
+      ml_draw <- ml_temp
       par_draw <- par_temp
       accepted <- accepted + 1
       accepted_adj <- accepted_adj + 1
     } else {
-      # reject, not necessary any more? draw parameters out of MH-step
+      # Reject draw
+      # not necessary any more?
+      # parameters drawn out of MH-step
     }
 
-    # tune acceptance
+    # Tune acceptance
+    # These variables will be moved into the mh object and set via a constructor
     if(scale_adj && i < 0 && (i + nburn) %% 100 == 0) {
       acc_rate <- accepted_adj / 100
       if(acc_rate < 0.25) {
@@ -141,17 +138,22 @@ bvar <- function(
       accepted_adj <- 0
     }
 
-    # saved draws
     if(i > 0 && i %% thin == 0) {
-      # draw parameters
-      para_draw <- bv_draw(log_mlike_draw$draw_list)
+      # Stored iterations
+
+      # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
+      draws <- bv_draw(Y = ml_draw[["Y"]], X = ml_draw[["X"]],
+                       N = ml_draw[["N"]], lags = lags, M = M, priors[["b"]],
+                       psi = ml_draw[["psi"]], sse = ml_draw[["sse"]],
+                       beta_hat = ml_draw[["beta_hat"]],
+                       omega_inv = ml_draw[["omega_inv"]])
+
       # companion matrix
       # fcast
       # irf
     }
     if(verbose) setTxtProgressBar(pb, (i + nburn))
-  }
-  # end loop
+  } # End loop
 
 
   # Outputs -----------------------------------------------------------------
