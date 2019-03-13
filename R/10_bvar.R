@@ -107,6 +107,9 @@ bvar <- function(
   # Loop --------------------------------------------------------------------
 
   # Storage
+  ml_store <- vector("numeric", (draws / thin))
+  para_store <- matrix(NA, (draws / thin), length(pars_draw))
+
 
   if(verbose) pb <- txtProgressBar(min = 0, max = (nburn + nsave), style = 3)
   for(i in (1 - burns):(draws - burns)) { # Start loop
@@ -140,7 +143,8 @@ bvar <- function(
 
     if(i > 0 && i %% thin == 0) {
       # Stored iterations
-
+      ml_store[(i / thin)] <- ml_draw[["log_ml"]]
+      para_store[(i / thin), ] <- par_draw
       # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
       draws <- bv_draw(Y = ml_draw[["Y"]], X = ml_draw[["X"]],
                        N = ml_draw[["N"]], lags = lags, M = M, priors[["b"]],
