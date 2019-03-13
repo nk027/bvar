@@ -1,10 +1,13 @@
 bv_ml <- function(
-  hyper = NULL,
+  hyper = NULL, hyper_min = NULL, hyper_max = NULL,
   pars,
   priors,
   Y, X, K, M, N, lags) {
 
-  # Outside bounds?
+
+  # Bounds ------------------------------------------------------------------
+
+  if(any(hyper_min > hyper | hyper > hyper_max)) return(list("log_ml" = -1e18))
 
 
   # Priors ------------------------------------------------------------------
@@ -71,6 +74,9 @@ bv_ml <- function(
                  scale = priors[[x]][["coef"]][["theta"]]))
       }))
   }
+
+
+  # Output ------------------------------------------------------------------
 
   # Return log_ml and objects necessary for drawing
   out <- list("log_ml" = log_ml, "Y" = Y, "X" = X, "N" = N, "psi" = psi,

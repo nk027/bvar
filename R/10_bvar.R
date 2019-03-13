@@ -69,10 +69,12 @@ bvar <- function(
 
   # Optimise ----------------------------------------------------------------
 
-  opt <- optim(par = hyper, bv_ml, pars_full, priors,
+  opt <- optim(par = hyper, bv_ml,
+               hyper_min, hyper_max, pars_full, priors, Y, X, K, M, N, lags,
                method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
+               lower = hyper_min, upper = hyper_max,
                control = list("fnscale" = -1))
-  names(opt$par) <- names(hyper_init)
+  names(opt$par) <- names(hyper)
 
 
   # Hessian -----------------------------------------------------------------
