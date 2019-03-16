@@ -15,5 +15,6 @@ bv_draw <- function(Y, X, N, lags, M, b, psi, sse, beta_hat, omega_inv) {
   out <- list("beta_draw" = beta_draw,
               "sigma_draw" = sigma_draw,
               "sigma_chol" = sigma_chol)
+
   return(out)
 }
