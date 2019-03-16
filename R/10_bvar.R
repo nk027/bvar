@@ -69,8 +69,8 @@ bvar <- function(
 
   # Optimise ----------------------------------------------------------------
 
-  opt <- optim(par = hyper, bv_ml,
-               hyper_min, hyper_max, pars_full, priors, Y, X, K, M, N, lags,
+  opt <- optim(par = hyper, bv_ml, gr = NULL, hyper_min, hyper_max,
+               pars_full, priors, Y, X, K, M, N, lags, opt = TRUE,
                method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
                lower = hyper_min, upper = hyper_max,
                control = list("fnscale" = -1))
@@ -80,16 +80,16 @@ bvar <- function(
   # Hessian -----------------------------------------------------------------
 
   H <- diag(length(opt$par)) * metropolis$scale_hess
-  J <- sapply(priors$hyperpars, function(name) {
+  J <- sapply(priors$hyper, function(name) {
     exp(opt$par[[name]]) / (1 + exp(opt$par[[name]])) ^ 2 *
       (priors[[name]]$max - priors[[name]]$min)
   })
 
-  if(n_hpriors != 1) {J <- diag(J)}
+  if(hyper_n != 1) J <- diag(J)
   HH <- J %*% H %*% t(J)
 
   # Make sure HH is positive definite
-  if(n_hpriors != 1) {
+  if(hyper_n != 1) {
     HH_eig <- eigen(HH)
     HH <- HH_eig$vectors %*% diag(abs(HH_eig$values)) %*% t(HH_eig$vectors)
   } else {HH <- abs(HH)}
@@ -99,10 +99,10 @@ bvar <- function(
 
   draw_necessary <- TRUE
   while(draw_necessary) {
-    par_draw <- MASS::mvrnorm(mu = opt$par, Sigma = HH)
-    ml_draw <- bv_ml(hyper = par_draw, pars = pars_full,
+    hyper_draw <- MASS::mvrnorm(mu = opt$par, Sigma = HH)
+    ml_draw <- bv_ml(hyper = hyper_draw, hyper_min, hyper_max, pars = pars_full,
                      priors, Y, X, K, M, N, lags)
-    if(ml_draw$log_ml > -1e16) {draw_necessary <- FALSE}
+    if(ml_draw$log_ml > -1e16) draw_necessary <- FALSE
   }
 
 
@@ -110,30 +110,32 @@ bvar <- function(
 
   # Storage
   ml_store <- vector("numeric", (draws / thin))
-  para_store <- matrix(NA, (draws / thin), length(pars_draw))
+  hyper_store <- matrix(NA, nrow = (draws / thin), ncol = length(hyper_draw),
+                        dimnames = list(NULL, names(hyper)))
+  beta_store <- vector("list", (draws / thin))
+  sigma_store <- vector("list", (draws / thin))
 
 
   if(verbose) pb <- txtProgressBar(min = 0, max = (nburn + nsave), style = 3)
+
   for(i in (1 - burns):(draws - burns)) { # Start loop
 
     # Metropolis-Hastings
-    par_temp <- MASS::mvrnorm(mu = par_draw, Sigma = HH)
-    ml_temp <- bv_ml(hyper = par_temp, pars = par_full,
+    hyper_temp <- MASS::mvrnorm(mu = hyper_draw, Sigma = HH)
+    ml_temp <- bv_ml(hyper = hyper_temp, hyper_min, hyper_max, pars = par_full,
                      priors, Y, X, K, M, N, lags)
 
     if(runif(1) < exp(ml_temp$log_ml - ml_temp$log_ml)) {
       # Accept draw
       ml_draw <- ml_temp
-      par_draw <- par_temp
+      hyper_draw <- hyper_temp
       accepted <- accepted + 1
       accepted_adj <- accepted_adj + 1
     } else {
       # Reject draw
-      # not necessary any more?
-      # parameters drawn out of MH-step
     }
 
-    # Tune acceptance
+    # Tune acceptance during burn-in phase
     if(metropolis[["adjust_acc"]] && i < 0 && (i + nburn) %% 100 == 0) {
       acc_rate <- accepted_adj / 100
       if(acc_rate < metropolis[["lower"]]) {
@@ -148,7 +150,7 @@ bvar <- function(
       # Stored iterations
 
       ml_store[(i / thin)] <- ml_draw[["log_ml"]]
-      par_store[(i / thin), ] <- par_draw
+      hyper_store[(i / thin), ] <- hyper_draw
       # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
       draws <- bv_draw(Y = ml_draw[["Y"]], X = ml_draw[["X"]],
                        N = ml_draw[["N"]], lags = lags, M = M, priors[["b"]],
@@ -174,6 +176,7 @@ bvar <- function(
 
   } # End loop
 
+  close(pb)
 
   # Outputs -----------------------------------------------------------------
 

@@ -2,7 +2,8 @@ bv_ml <- function(
   hyper = NULL, hyper_min = NULL, hyper_max = NULL,
   pars,
   priors,
-  Y, X, K, M, N, lags) {
+  Y, X, K, M, N, lags,
+  opt = FALSE) {
 
 
   # Bounds ------------------------------------------------------------------
@@ -13,16 +14,18 @@ bv_ml <- function(
   # Priors ------------------------------------------------------------------
 
   # Overwrite passed parameters with hyperparameters
-  if(!is.null(hyper))
+  if(!is.null(hyper)) {
     for(name in unique(names(hyper)))
       pars[names(pars) == name] <- hyper[names(hyper) == name]
+  }
 
   psi <- diag(pars[names(pars) == "psi"])
   omega <- vector("numeric", 1 + M * lags)
   omega[1] <- priors[["var"]]
-  for(i in 1:lags)
+  for(i in 1:lags) {
     omega[seq(2 + M * (i - 1), 1 + i * M)] <-
       pars[["lambda"]] ^ 2 / i ^ pars[["alpha"]] / pars[names(pars) == "psi"]
+  }
 
   # Dummy priors
   if(length(priors[["dummy"]]) > 0) {
@@ -77,6 +80,8 @@ bv_ml <- function(
 
 
   # Output ------------------------------------------------------------------
+
+  if(opt) return(log_ml)
 
   # Return log_ml and objects necessary for drawing
   out <- list("log_ml" = log_ml, "Y" = Y, "X" = X, "N" = N, "psi" = psi,
