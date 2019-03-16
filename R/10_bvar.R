@@ -1,8 +1,8 @@
 bvar <- function(
   data, lags,
   draws = 10000, burns = 10000, thin = 1,
-  priors,
-  mh,
+  priors = bv_priors(),
+  metropolis = bv_metropolis(),
   fcast,
   irf,
   verbose = FALSE, ...) {
@@ -79,7 +79,7 @@ bvar <- function(
 
   # Hessian -----------------------------------------------------------------
 
-  H <- diag(length(opt$par)) * mh$scale_hess
+  H <- diag(length(opt$par)) * metropolis$scale_hess
   J <- sapply(priors$hyperpars, function(name) {
     exp(opt$par[[name]]) / (1 + exp(opt$par[[name]])) ^ 2 *
       (priors[[name]]$max - priors[[name]]$min)
@@ -134,19 +134,21 @@ bvar <- function(
     }
 
     # Tune acceptance
-    # These variables will be moved into the mh object and set via a constructor
-    if(scale_adj && i < 0 && (i + nburn) %% 100 == 0) {
+    if(metropolis[["adjust_acc"]] && i < 0 && (i + nburn) %% 100 == 0) {
       acc_rate <- accepted_adj / 100
-      if(acc_rate < 0.25) {
-        HH <- HH * 0.99
-      } else if(acc_rate > 0.35) {HH <- HH * 1.01}
+      if(acc_rate < metropolis[["lower"]]) {
+        HH <- HH * metropolis[["acc_tighten"]]
+      } else if(acc_rate > metropolis[["upper"]]) {
+        HH <- HH * metropolis[["acc_loosen"]]
+      }
       accepted_adj <- 0
     }
 
     if(i > 0 && i %% thin == 0) {
       # Stored iterations
+
       ml_store[(i / thin)] <- ml_draw[["log_ml"]]
-      para_store[(i / thin), ] <- par_draw
+      par_store[(i / thin), ] <- par_draw
       # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
       draws <- bv_draw(Y = ml_draw[["Y"]], X = ml_draw[["X"]],
                        N = ml_draw[["N"]], lags = lags, M = M, priors[["b"]],
@@ -154,11 +156,22 @@ bvar <- function(
                        beta_hat = ml_draw[["beta_hat"]],
                        omega_inv = ml_draw[["omega_inv"]])
 
-      # companion matrix
+      beta_store[[(i / thin)]] <- draws$beta_draw
+      sigma_store[[(i / thin)]] <- draws$sigma_draw
+
+      # Companion matrix is necessary for forecasts and impulse responses
+      beta_comp <- matrix(0, K - 1, K - 1)
+      beta_comp[1:M, ] <- t(log_mlike_draw$beta_draw[2:K, ])
+      if(lags > 1) {
+        beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
+      }
+
       # fcast
       # irf
     }
+
     if(verbose) setTxtProgressBar(pb, (i + nburn))
+
   } # End loop
 
 
