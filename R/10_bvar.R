@@ -111,6 +111,8 @@ bvar <- function(
   # Storage
   ml_store <- vector("numeric", (draws / thin))
   para_store <- matrix(NA, (draws / thin), length(pars_draw))
+  beta_store <- list()
+
 
 
   if(verbose) pb <- txtProgressBar(min = 0, max = (nburn + nsave), style = 3)
@@ -155,8 +157,29 @@ bvar <- function(
                        omega_inv = ml_draw[["omega_inv"]])
 
       # companion matrix
-      # fcast
+      if(!is.null(fcast) || !is.null(irf)){
+        beta_comp <- matrix(0, K - 1, K - 1)
+        beta_comp[1:M, ] <- t(draws[["beta_draw"]][2:K, ])
+        if(lags > 1) {
+          beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
+        }
+      }
+
       # irf
+      if(!is.null(irf)){
+        irf_draw  <- bv_irf(beta_comp = beta_comp,
+                            sigma_draw = draws[["sigma_draw"]],
+                            M = M, lags = lags,
+                            irf_hor = irf[["irf_hor"]],
+                            irf_id = irf[["irf_id"]],
+                            irf_signs = irf[["irf_signs"]],
+                            fevd = irf[["fevd"]])
+
+      }
+
+
+
+      # fcast
     }
     if(verbose) setTxtProgressBar(pb, (i + nburn))
   } # End loop
