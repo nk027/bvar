@@ -1,10 +1,10 @@
 bvar <- function(
   data, lags,
-  draws = 10000, burns = 10000, thin = 1,
+  n_draw = 10000, n_burn = 5000, thin = 1,
   priors = bv_priors(),
   metropolis = bv_metropolis(),
-  fcast,
-  irf,
+  fcast = NULL,
+  irf = NULL,
   verbose = FALSE, ...) {
 
   # Input Checking ----------------------------------------------------------
@@ -12,18 +12,17 @@ bvar <- function(
   # Data
   if(!is.numeric(data) || any(is.na(data)) || length(data) < 2) {
     stop("Problem with the data. Make sure it's numeric without NAs.")
-  } else {
-    Y <- as.matrix(data)
-  }
+  } else {Y <- as.matrix(data)}
 
   # Integers
-  lags <- .int_check(lags, min = 1, max = nrow(Y))
-  draws <- .int_check(draws, min = 1)
-  burns <- .int_check(burns, min = 0)
-  thin <- .int_check(thin, min = 1, max = draws / 10)
+  lags <- int_check(lags, min = 1, max = nrow(Y))
+  n_draw <- int_check(n_draw, min = 1)
+  n_burn <- int_check(n_burn, min = 0, max = n_draw)
+  thin <- int_check(thin, min = 1, max = n_draw / 10)
 
   # Constructors
   if(!inherits(priors, "bv_priors")) stop()
+  if(!inherits(metropolis, "bv_metropolis")) stop()
   if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) stop()
   if(!is.null(irf) && !inherits(irf, "bv_irf")) stop()
 
@@ -46,13 +45,14 @@ bvar <- function(
   # Minnesota prior
   priors$b <- matrix(0, nrow = K, ncol = M)
   priors$b[2:(M + 1), ] <- diag(M)
-
-  if(priors$psi == "auto") priors$psi <- .auto_psi(Y, lags)
+  if(length(priors$psi) == 1 && priors$psi == "auto") {
+    priors$psi <- auto_psi(Y, lags)
+  }
 
   # Parameters
   pars_names <- names(priors)[!names(priors) %in% c("hyper", "var", "b")]
-  pars_full <- do.call(c, lapply(pars_names, function(x) priors[[x]]$mode))
-  names(pars_full) <- .name_pars(pars_names)
+  pars_full <- do.call(c, lapply(pars_names, function(x) priors[[x]][["mode"]]))
+  names(pars_full) <- name_pars(pars_names)
 
   # Dummy priors
   priors$dummy <- pars_names[!pars_names %in% c("lambda", "alpha", "psi")]
@@ -64,7 +64,7 @@ bvar <- function(
   hyper <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$mode))
   hyper_min <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$min))
   hyper_max <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$max))
-  names(hyper) <- .name_pars(priors$hyper)
+  names(hyper) <- name_pars(priors$hyper)
 
 
   # Optimise ----------------------------------------------------------------
@@ -84,7 +84,6 @@ bvar <- function(
     exp(opt$par[[name]]) / (1 + exp(opt$par[[name]])) ^ 2 *
       (priors[[name]]$max - priors[[name]]$min)
   })
-
   if(hyper_n != 1) J <- diag(J)
   HH <- J %*% H %*% t(J)
 
@@ -109,24 +108,24 @@ bvar <- function(
   # Loop --------------------------------------------------------------------
 
   # Storage
-  ml_store <- vector("numeric", (draws / thin))
-  hyper_store <- matrix(NA, nrow = (draws / thin), ncol = length(hyper_draw),
+  accepted <- accepted_adj <- 0
+  ml_store <- vector("numeric", (n_draw / thin))
+  hyper_store <- matrix(NA, nrow = (n_draw / thin), ncol = length(hyper_draw),
                         dimnames = list(NULL, names(hyper)))
-  beta_store <- vector("list", (draws / thin))
-  sigma_store <- vector("list", (draws / thin))
+  beta_store <- vector("list", (n_draw / thin))
+  sigma_store <- vector("list", (n_draw / thin))
 
+  # Loop
+  if(verbose) pb <- txtProgressBar(min = 0, max = n_draw, style = 3)
 
-
-  if(verbose) pb <- txtProgressBar(min = 0, max = (nburn + nsave), style = 3)
-
-  for(i in (1 - burns):(draws - burns)) { # Start loop
+  for(i in (1 - n_burn):(n_draw - n_burn)) { # Start loop
 
     # Metropolis-Hastings
     hyper_temp <- MASS::mvrnorm(mu = hyper_draw, Sigma = HH)
-    ml_temp <- bv_ml(hyper = hyper_temp, hyper_min, hyper_max, pars = par_full,
+    ml_temp <- bv_ml(hyper = hyper_temp, hyper_min, hyper_max, pars = pars_full,
                      priors, Y, X, K, M, N, lags)
 
-    if(runif(1) < exp(ml_temp$log_ml - ml_temp$log_ml)) {
+    if(runif(1) < exp(ml_temp$log_ml - ml_draw$log_ml)) {
       # Accept draw
       ml_draw <- ml_temp
       hyper_draw <- hyper_temp
@@ -137,7 +136,7 @@ bvar <- function(
     }
 
     # Tune acceptance during burn-in phase
-    if(metropolis[["adjust_acc"]] && i < 0 && (i + nburn) %% 100 == 0) {
+    if(metropolis[["adjust_acc"]] && i < 0 && (i + n_burn) %% 100 == 0) {
       acc_rate <- accepted_adj / 100
       if(acc_rate < metropolis[["lower"]]) {
         HH <- HH * metropolis[["acc_tighten"]]
@@ -159,11 +158,11 @@ bvar <- function(
                        beta_hat = ml_draw[["beta_hat"]],
                        omega_inv = ml_draw[["omega_inv"]])
 
-      beta_store[[(i / thin)]] <- draws$beta_draw
-      sigma_store[[(i / thin)]] <- draws$sigma_draw
+      beta_store[[(i / thin)]] <- draws[["beta_draw"]]
+      sigma_store[[(i / thin)]] <- draws[["sigma_draw"]]
 
       # Companion matrix is necessary for forecasts and impulse responses
-      if(!is.null(fcast) || !is.null(irf)){
+      if(!is.null(fcast) || !is.null(irf)) {
         beta_comp <- matrix(0, K - 1, K - 1)
         beta_comp[1:M, ] <- t(draws[["beta_draw"]][2:K, ])
         if(lags > 1) {
@@ -174,7 +173,7 @@ bvar <- function(
       # fcast
 
       # irf
-      if(!is.null(irf)){
+      if(!is.null(irf)) {
         irf_draw  <- bv_irf(beta_comp = beta_comp,
                             sigma_draw = draws[["sigma_draw"]],
                             M = M, lags = lags,
@@ -182,15 +181,10 @@ bvar <- function(
                             irf_id = irf[["irf_id"]],
                             irf_signs = irf[["irf_signs"]],
                             fevd = irf[["fevd"]])
-
       }
-
-
-
-      # fcast
     }
 
-    if(verbose) setTxtProgressBar(pb, (i + nburn))
+    if(verbose) setTxtProgressBar(pb, (i + n_burn))
 
   } # End loop
 
@@ -198,6 +192,10 @@ bvar <- function(
 
   # Outputs -----------------------------------------------------------------
 
+  out <- list("beta" = beta_store, "sigma" = sigma_store,
+              "hyper" = hyper_store, "ml" = ml_store,
+              "accepted" = accepted, "optim" = opt)
   class(out) <- "bvar"
+
   return(out)
 }

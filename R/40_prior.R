@@ -29,8 +29,8 @@ bv_priors <- function(
   # Output ------------------------------------------------------------------
 
   out <- if(!is.null(mn)) {
-    list(hyper = hyper, lambda = mn$lambda, alpha = mn$alpha, psi = mn$psi,
-         var = mn$var, b = mn$b, ...)
+    list(hyper = hyper, lambda = mn[["lambda"]], alpha = mn[["alpha"]],
+         psi = mn[["psi"]], var = mn[["var"]], ...)
   } else {
     list(hyper = hyper, ...)
   }
@@ -71,15 +71,13 @@ bv_dummy <- function(
 bv_minnesota <- function(
   lambda = bv_lambda(0.2, 0.4, 0.0001, 5), # mode, sd, min, max
   alpha = bv_alpha(2, 0.1, 0.5), # mode, min, max
-  psi = "auto",
-  var = 1e07,
-  b = NULL) {
+  psi = "auto", var = 1e07) {
 
   if(!is(lambda, "bv_dummy") && !is(alpha, "bv_dummy")) {
     stop("Please use 'bv_lambda' and/or 'bv_alpha' to set lambda and alpha.")
   }
 
-  out <- list(lambda = lambda, alpha = alpha, psi = psi, var = var, b = b)
+  out <- list(lambda = lambda, alpha = alpha, psi = psi, var = var)
   class(out) <- "bv_minnesota"
 
   return(out)

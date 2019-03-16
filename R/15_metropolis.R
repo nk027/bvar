@@ -19,6 +19,7 @@ bv_metropolis <- function(
               "adjust_acc" = adjust_acc,
               "acc_lower" = acc_lower, "acc_upper" = acc_upper,
               "acc_tighten" = acc_tighten, "acc_loosen" = acc_loosen)
+  class(out) <- "bv_metropolis"
 
   return(out)
 }

@@ -1,5 +1,5 @@
 bv_ml <- function(
-  hyper = NULL, hyper_min = NULL, hyper_max = NULL,
+  hyper, hyper_min = NULL, hyper_max = NULL,
   pars,
   priors,
   Y, X, K, M, N, lags,
@@ -8,15 +8,18 @@ bv_ml <- function(
 
   # Bounds ------------------------------------------------------------------
 
-  if(any(hyper_min > hyper | hyper > hyper_max)) return(list("log_ml" = -1e18))
+  if(!any(is.null(hyper_min), is.null(hyper_max))) {
+    if(any(hyper_min > hyper | hyper > hyper_max)) {
+      return(list("log_ml" = -1e18))
+    }
+  }
 
 
   # Priors ------------------------------------------------------------------
 
   # Overwrite passed parameters with hyperparameters
-  if(!is.null(hyper)) {
-    for(name in unique(names(hyper)))
-      pars[names(pars) == name] <- hyper[names(hyper) == name]
+  for(name in unique(names(hyper))) {
+    pars[names(pars) == name] <- hyper[names(hyper) == name]
   }
 
   psi <- diag(pars[names(pars) == "psi"])
@@ -51,8 +54,7 @@ bv_ml <- function(
   omega_ml <- diag(sqrt(omega)) %*% XX %*% diag(sqrt(omega))
   psi_ml <- psi_inv %*%
     (sse + t(beta_hat - priors[["b"]]) %*% omega_inv %*%
-      (beta_hat - priors[["b"]])) %*%
-    psi_inv
+      (beta_hat - priors[["b"]])) %*% psi_inv
 
   # Eigenvalues + 1 as another way of computing the determinants
   omega_ml_ev <- Re(eigen(omega_ml, only.values = TRUE)[["values"]])
@@ -65,18 +67,17 @@ bv_ml <- function(
   # Likelihood
   log_ml <- (-M * N * log(pi) / 2) +
     sum(lgamma(((N + M + 2) - 0:(M - 1)) / 2) -
-      lgamma(((M + 2) - 0:(M -1)) / 2)) -
+        lgamma(((M + 2) - 0:(M -1)) / 2)) -
     (N * sum(log(diag(psi))) / 2) - (M * sum(log(omega_ml_ev)) / 2) -
     ((N + M + 2) * sum(log(psi_ml_ev)) / 2)
 
   # Add prior-pdfs
-  if(length(priors[["dummy"]]) > 0) {
+  if(length(priors[["dummy"]]) > 0)
     log_ml <- log_ml + sum(sapply(priors[["dummy"]], function(x) {
       log(dgamma(pars[[x]],
                  shape = priors[[x]][["coef"]][["k"]],
                  scale = priors[[x]][["coef"]][["theta"]]))
-      }))
-  }
+    }))
 
 
   # Output ------------------------------------------------------------------

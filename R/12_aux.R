@@ -22,7 +22,7 @@ gamma_coef <- function(mode, sd) {
   return(list("k" = k, "theta" = theta))
 }
 
-.name_pars <- function(x) {
+name_pars <- function(x) {
 
   Reduce(c, sapply(x, function(y) if(y == "psi") rep(y, M) else y))
 }
