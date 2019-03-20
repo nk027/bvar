@@ -43,28 +43,32 @@ bvar <- function(
   # Priors ------------------------------------------------------------------
 
   # Minnesota prior
-  priors$b <- matrix(0, nrow = K, ncol = M)
-  priors$b[2:(M + 1), ] <- diag(M)
-  if(length(priors$psi) == 1 && priors$psi == "auto") {
-    priors$psi <- auto_psi(Y, lags)
+  priors[["b"]] <- matrix(0, nrow = K, ncol = M)
+  priors[["b"]][2:(M + 1), ] <- diag(M)
+  if(length(priors[["psi"]]) == 1 && priors[["psi"]] == "auto") {
+    priors[["psi"]] <- auto_psi(Y, lags)
   }
 
   # Parameters
   pars_names <- names(priors)[!names(priors) %in% c("hyper", "var", "b")]
   pars_full <- do.call(c, lapply(pars_names, function(x) priors[[x]][["mode"]]))
-  names(pars_full) <- name_pars(pars_names)
+  names(pars_full) <- name_pars(pars_names, M)
 
   # Dummy priors
-  priors$dummy <- pars_names[!pars_names %in% c("lambda", "alpha", "psi")]
+  priors[["dummy"]] <- pars_names[!pars_names %in% c("lambda", "alpha", "psi")]
 
   # Hierarchical priors
-  hyper_n <- length(priors$hyper) + sum(priors$hyper == "psi") * (M - 1)
+  hyper_n <- length(priors[["hyper"]]) +
+    sum(priors[["hyper"]] == "psi") * (M - 1)
   if(hyper_n == 0) bv_non_hierarchical(...)
 
-  hyper <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$mode))
-  hyper_min <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$min))
-  hyper_max <- do.call(c, lapply(priors$hyper, function(x) priors[[x]]$max))
-  names(hyper) <- name_pars(priors$hyper)
+  hyper <- do.call(c, lapply(priors[["hyper"]],
+                             function(x) priors[[x]][["mode"]]))
+  hyper_min <- do.call(c, lapply(priors[["hyper"]],
+                                 function(x) priors[[x]][["min"]]))
+  hyper_max <- do.call(c, lapply(priors[["hyper"]],
+                                 function(x) priors[[x]][["max"]]))
+  names(hyper) <- name_pars(priors[["hyper"]], M)
 
 
   # Optimise ----------------------------------------------------------------
@@ -74,15 +78,15 @@ bvar <- function(
                method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
                lower = hyper_min, upper = hyper_max,
                control = list("fnscale" = -1))
-  names(opt$par) <- names(hyper)
+  names(opt[["par"]]) <- names(hyper)
 
 
   # Hessian -----------------------------------------------------------------
 
-  H <- diag(length(opt$par)) * metropolis$scale_hess
-  J <- sapply(priors$hyper, function(name) {
-    exp(opt$par[[name]]) / (1 + exp(opt$par[[name]])) ^ 2 *
-      (priors[[name]]$max - priors[[name]]$min)
+  H <- diag(length(opt[["par"]])) * metropolis[["scale_hess"]]
+  J <- sapply(priors[["hyper"]], function(name) {
+    exp(opt[["par"]][[name]]) / (1 + exp(opt[["par"]][[name]])) ^ 2 *
+      (priors[[name]][["max"]] - priors[[name]][["min"]])
   })
   if(hyper_n != 1) J <- diag(J)
   HH <- J %*% H %*% t(J)
@@ -90,7 +94,8 @@ bvar <- function(
   # Make sure HH is positive definite
   if(hyper_n != 1) {
     HH_eig <- eigen(HH)
-    HH <- HH_eig$vectors %*% diag(abs(HH_eig$values)) %*% t(HH_eig$vectors)
+    HH <- HH_eig[["vectors"]] %*% diag(abs(HH_eig[["values"]])) %*%
+      t(HH_eig[["vectors"]])
   } else {HH <- abs(HH)}
 
 
@@ -98,10 +103,10 @@ bvar <- function(
 
   draw_necessary <- TRUE
   while(draw_necessary) {
-    hyper_draw <- MASS::mvrnorm(mu = opt$par, Sigma = HH)
+    hyper_draw <- MASS::mvrnorm(mu = opt[["par"]], Sigma = HH)
     ml_draw <- bv_ml(hyper = hyper_draw, hyper_min, hyper_max, pars = pars_full,
                      priors, Y, X, K, M, N, lags)
-    if(ml_draw$log_ml > -1e16) draw_necessary <- FALSE
+    if(ml_draw[["log_ml"]] > -1e16) draw_necessary <- FALSE
   }
 
 
@@ -109,11 +114,13 @@ bvar <- function(
 
   # Storage
   accepted <- accepted_adj <- 0
-  ml_store <- vector("numeric", (n_draw / thin))
-  hyper_store <- matrix(NA, nrow = (n_draw / thin), ncol = length(hyper_draw),
+  ml_store <- vector("numeric", (n_draw / thin) - n_burn)
+  hyper_store <- matrix(NA,
+                        nrow = (n_draw / thin) - n_burb,
+                        ncol = length(hyper_draw),
                         dimnames = list(NULL, names(hyper)))
-  beta_store <- vector("list", (n_draw / thin))
-  sigma_store <- vector("list", (n_draw / thin))
+  beta_store <- vector("list", (n_draw / thin) - n_burn)
+  sigma_store <- vector("list", (n_draw / thin) - n_burn)
 
   # Loop
   if(verbose) pb <- txtProgressBar(min = 0, max = n_draw, style = 3)
@@ -125,7 +132,7 @@ bvar <- function(
     ml_temp <- bv_ml(hyper = hyper_temp, hyper_min, hyper_max, pars = pars_full,
                      priors, Y, X, K, M, N, lags)
 
-    if(runif(1) < exp(ml_temp$log_ml - ml_draw$log_ml)) {
+    if(runif(1) < exp(ml_temp[["log_ml"]] - ml_draw[["log_ml"]])) {
       # Accept draw
       ml_draw <- ml_temp
       hyper_draw <- hyper_temp
@@ -170,9 +177,12 @@ bvar <- function(
         }
       }
 
-      # fcast
+      # Forecast
+      if(!is.null(irf)) {
 
-      # irf
+      }
+
+      # IRF
       if(!is.null(irf)) {
         irf_draw  <- bv_irf(beta_comp = beta_comp,
                             sigma_draw = draws[["sigma_draw"]],
