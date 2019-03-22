@@ -24,16 +24,16 @@ bv_irf <- function(beta_comp, sigma_draw,
 
   # FEVD
   if(fevd){
-    fevd_draw <- apply(irf_comp[1:M, , 1:M] * irf_comp[1:M, , 1:M],
+    fevd_comp<- apply(irf_comp[1:M, , 1:M] * irf_comp[1:M, , 1:M],
                        c(1, 3), cumsum)
-    fevd_draw <- aperm(fevd_draw, c(2, 3, 1))
+    fevd_comp <- aperm(fevd_comp, c(2, 3, 1))
     accm <- matrix(0, M, M)
     for (i in 1:irf_hor) {
       accm <- accm + irf_comp[1:M, i, 1:M] %*% t(irf_comp[1:M, i, 1:M])
       denm <- matrix((diag(accm)), M, M)
-      fevd_draw[, , i] <- fevd_draw[, , i] / denm
+      fevd_comp[, , i] <- fevd_comp[, , i] / denm
     }
-    out[["fevd_draw"]] <- fevd_draw
+    out[["fevd_comp"]] <- fevd_comp
   }
 
 

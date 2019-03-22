@@ -114,13 +114,23 @@ bvar <- function(
 
   # Storage
   accepted <- accepted_adj <- 0
-  ml_store <- vector("numeric", (n_draw / thin) - n_burn)
+  ml_store <- vector("numeric", (n_draw  - n_burn) / thin)
   hyper_store <- matrix(NA,
-                        nrow = (n_draw / thin) - n_burb,
+                        nrow = (n_draw  - n_burn) / thin,
                         ncol = length(hyper_draw),
                         dimnames = list(NULL, names(hyper)))
-  beta_store <- vector("list", (n_draw / thin) - n_burn)
-  sigma_store <- vector("list", (n_draw / thin) - n_burn)
+  beta_store <- vector("list", (n_draw  - n_burn) / thin)
+  sigma_store <- vector("list", (n_draw  - n_burn) / thin)
+
+  if(!is.null(irf)) {
+    irf_store <- list(irf = array(NA, c((n_draw  - n_burn) / thin,
+                                        M, irf[["irf_hor"]], M)),
+                      fevd = array(NA, c((n_draw  - n_burn) / thin, M, M)),
+                      irf_hor = irf[["irf_hor"]],
+                      irf_id = irf[["irf_id"]],
+                      irf_signs = irf[["irf_signs"]])
+    sign_rejected <- 0
+  }
 
   # Loop
   if(verbose) pb <- txtProgressBar(min = 0, max = n_draw, style = 3)
@@ -178,9 +188,6 @@ bvar <- function(
       }
 
       # Forecast
-      if(!is.null(irf)) {
-
-      }
 
       # IRF
       if(!is.null(irf)) {
@@ -191,6 +198,10 @@ bvar <- function(
                             irf_id = irf[["irf_id"]],
                             irf_signs = irf[["irf_signs"]],
                             fevd = irf[["fevd"]])
+        irf_store[["irf"]][(i / thin), , , ] <- irf_draw[["irf_comp"]]
+        irf_store[["fevd"]][(i / thin), , ] <- apply(irf_draw[["fevd_comp"]],
+                                                     c(1, 2),
+                                                     mean, na.rm = TRUE)
       }
     }
 
