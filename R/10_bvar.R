@@ -3,7 +3,7 @@ bvar <- function(
   n_draw = 10000, n_burn = 5000, thin = 1,
   priors = bv_priors(),
   metropolis = bv_metropolis(),
-  fcast = NULL,
+  fcast = bv_fcast(),
   irf = bv_irf(),
   verbose = FALSE, ...) {
 
@@ -11,7 +11,7 @@ bvar <- function(
 
   # Data
   if(!is.numeric(data) || any(is.na(data)) || length(data) < 2) {
-    stop("Problem with the data. Make sure it's numeric without NAs.")
+    stop("Problem with the data. Make sure it is numeric without any NAs.")
   } else {Y <- as.matrix(data)}
 
   # Integers
@@ -20,8 +20,7 @@ bvar <- function(
   n_burn <- int_check(n_burn, min = 0, max = n_draw)
   thin <- int_check(thin, min = 1, max = ((n_draw - n_burn) / 10))
   n_save <- int_check(((n_draw - n_burn) / thin),
-                      min = 1,
-                      max = (n_draw - n_burn))
+                      min = 1, max = (n_draw - n_burn))
 
   # Constructors
   if(!inherits(priors, "bv_priors")) stop()
@@ -94,7 +93,7 @@ bvar <- function(
   if(hyper_n != 1) J <- diag(J)
   HH <- J %*% H %*% t(J)
 
-  # Make sure HH is positive definite
+  # Make sure HH is positive (definite)
   if(hyper_n != 1) {
     HH_eig <- eigen(HH)
     HH <- HH_eig[["vectors"]] %*% diag(abs(HH_eig[["values"]])) %*%
@@ -118,20 +117,18 @@ bvar <- function(
   # Storage
   accepted <- accepted_adj <- 0
   ml_store <- vector("numeric", n_save)
-  hyper_store <- matrix(NA,
-                        nrow = n_save,
-                        ncol = length(hyper_draw),
+  hyper_store <- matrix(NA, nrow = n_save, ncol = length(hyper_draw),
                         dimnames = list(NULL, names(hyper)))
   beta_store <- vector("list", n_save)
   sigma_store <- vector("list", n_save)
 
   if(!is.null(irf)) {
-    irf_store <- list(irf = array(NA, c(n_save, M, irf[["irf_hor"]], M)),
-                      fevd = if(irf[["fevd"]]){array(NA, c(n_save, M, M))}else{
-                                               irf[["fevd"]]},
-                      irf_hor = irf[["irf_hor"]],
-                      irf_id = irf[["irf_id"]],
-                      irf_signs = irf[["irf_signs"]])
+    irf_store <- list(
+      irf = array(NA, c(n_save, M, irf[["irf_hor"]], M)),
+      fevd = if(irf[["fevd"]]) array(NA, c(n_save, M, M)) else irf[["fevd"]],
+      horizon = irf[["irf_hor"]],
+      identify = irf[["irf_id"]],
+      sign_restr = irf[["irf_signs"]])
     sign_rejected <- 0
   }
 
@@ -167,16 +164,18 @@ bvar <- function(
     }
 
     if(i > 0 && i %% thin == 0) {
-      # Stored iterations
 
+      # Stored iterations
       ml_store[(i / thin)] <- ml_draw[["log_ml"]]
       hyper_store[(i / thin), ] <- hyper_draw
+
       # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
-      draws <- bv_draw(Y = ml_draw[["Y"]], X = ml_draw[["X"]],
-                       N = ml_draw[["N"]], lags = lags, M = M, priors[["b"]],
-                       psi = ml_draw[["psi"]], sse = ml_draw[["sse"]],
-                       beta_hat = ml_draw[["beta_hat"]],
-                       omega_inv = ml_draw[["omega_inv"]])
+      # These need X and N including the dummy priors from `ml_draw`
+      draws <- draw_post(X = ml_draw[["X"]], N = ml_draw[["N"]],
+                         lags = lags, M = M, b = priors[["b"]],
+                         psi = ml_draw[["psi"]], sse = ml_draw[["sse"]],
+                         beta_hat = ml_draw[["beta_hat"]],
+                         omega_inv = ml_draw[["omega_inv"]])
 
       beta_store[[(i / thin)]] <- draws[["beta_draw"]]
       sigma_store[[(i / thin)]] <- draws[["sigma_draw"]]
@@ -185,14 +184,22 @@ bvar <- function(
       if(!is.null(fcast) || !is.null(irf)) {
         beta_comp <- matrix(0, K - 1, K - 1)
         beta_comp[1:M, ] <- t(draws[["beta_draw"]][2:K, ])
-        if(lags > 1) {
+        if(lags > 1) { # add diagonal matrix
           beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
         }
       }
 
       # Forecast
+      if(!is.null(fcast)) {
+        beta_const <- draws[["beta_draw"]][1, ]
+        fcast_draw <- compute_fcast(Y = Y, K = K, M = M, N = N, lags = lags,
+                                    horizon = fcast[["horizon"]],
+                                    beta_comp = beta_comp,
+                                    beta_const = beta_const,
+                                    sigma = draws[["sigma_draw"]])
+      } # Forecast
 
-      # IRF
+      # Impulse responses
       if(!is.null(irf)) {
         irf_comp  <- irf_draw(beta_comp = beta_comp,
                               sigma_draw = draws[["sigma_draw"]],
@@ -203,13 +210,13 @@ bvar <- function(
                               fevd = irf[["fevd"]])
         irf_store[["irf"]][(i / thin), , , ] <- irf_comp[["irf_comp"]]
 
-        if(irf[["fevd"]]){
+        if(irf[["fevd"]]) {
           irf_store[["fevd"]][(i / thin), , ] <- apply(irf_comp[["fevd_comp"]],
                                                        c(1, 2),
                                                        mean, na.rm = TRUE)
         }
+      } # Impulse responses
 
-      }
     }
 
     if(verbose) setTxtProgressBar(pb, (i + n_burn))
@@ -218,13 +225,14 @@ bvar <- function(
 
   close(pb)
 
+
   # Outputs -----------------------------------------------------------------
 
   out <- list("beta" = beta_store, "sigma" = sigma_store,
               "hyper" = hyper_store, "ml" = ml_store,
               "accepted" = accepted, "optim" = opt)
 
-  if(!is.null(irf)){
+  if(!is.null(irf)) {
     out[["irf"]] <- irf_store
   }
 
