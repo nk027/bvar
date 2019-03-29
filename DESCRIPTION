@@ -5,8 +5,7 @@ Version: 0.1.0.9000
 Author: c(person("Nikolas",  "Kuschnig", role = c("aut", "cre")),
     person("Lukas", "Vashold", role = "aut"))
 Maintainer: Nikolas Kuschnig <nikolas.kuschnig@wu.ac.at>
-Description: Toolkit for estimation of hierarchical Bayesian VARs with 
-    stochastic volatility.
+Description: Toolkit for estimation of hierarchical Bayesian VARs.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
