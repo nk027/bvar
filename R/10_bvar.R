@@ -4,7 +4,7 @@ bvar <- function(
   priors = bv_priors(),
   metropolis = bv_metropolis(),
   fcast = NULL,
-  irf = NULL,
+  irf = bv_irf(),
   verbose = FALSE, ...) {
 
   # Input Checking ----------------------------------------------------------
@@ -18,7 +18,10 @@ bvar <- function(
   lags <- int_check(lags, min = 1, max = nrow(Y))
   n_draw <- int_check(n_draw, min = 1)
   n_burn <- int_check(n_burn, min = 0, max = n_draw)
-  thin <- int_check(thin, min = 1, max = n_draw / 10)
+  thin <- int_check(thin, min = 1, max = ((n_draw - n_burn) / 10))
+  n_save <- int_check(((n_draw - n_burn) / thin),
+                      min = 1,
+                      max = (n_draw - n_burn))
 
   # Constructors
   if(!inherits(priors, "bv_priors")) stop()
@@ -114,18 +117,18 @@ bvar <- function(
 
   # Storage
   accepted <- accepted_adj <- 0
-  ml_store <- vector("numeric", (n_draw  - n_burn) / thin)
+  ml_store <- vector("numeric", n_save)
   hyper_store <- matrix(NA,
-                        nrow = (n_draw  - n_burn) / thin,
+                        nrow = n_save,
                         ncol = length(hyper_draw),
                         dimnames = list(NULL, names(hyper)))
-  beta_store <- vector("list", (n_draw  - n_burn) / thin)
-  sigma_store <- vector("list", (n_draw  - n_burn) / thin)
+  beta_store <- vector("list", n_save)
+  sigma_store <- vector("list", n_save)
 
   if(!is.null(irf)) {
-    irf_store <- list(irf = array(NA, c((n_draw  - n_burn) / thin,
-                                        M, irf[["irf_hor"]], M)),
-                      fevd = array(NA, c((n_draw  - n_burn) / thin, M, M)),
+    irf_store <- list(irf = array(NA, c(n_save, M, irf[["irf_hor"]], M)),
+                      fevd = if(irf[["fevd"]]){array(NA, c(n_save, M, M))}else{
+                                               irf[["fevd"]]},
                       irf_hor = irf[["irf_hor"]],
                       irf_id = irf[["irf_id"]],
                       irf_signs = irf[["irf_signs"]])
@@ -191,17 +194,21 @@ bvar <- function(
 
       # IRF
       if(!is.null(irf)) {
-        irf_draw  <- bv_irf(beta_comp = beta_comp,
-                            sigma_draw = draws[["sigma_draw"]],
-                            M = M, lags = lags,
-                            irf_hor = irf[["irf_hor"]],
-                            irf_id = irf[["irf_id"]],
-                            irf_signs = irf[["irf_signs"]],
-                            fevd = irf[["fevd"]])
-        irf_store[["irf"]][(i / thin), , , ] <- irf_draw[["irf_comp"]]
-        irf_store[["fevd"]][(i / thin), , ] <- apply(irf_draw[["fevd_comp"]],
-                                                     c(1, 2),
-                                                     mean, na.rm = TRUE)
+        irf_comp  <- irf_draw(beta_comp = beta_comp,
+                              sigma_draw = draws[["sigma_draw"]],
+                              M = M, lags = lags,
+                              irf_hor = irf[["irf_hor"]],
+                              irf_id = irf[["irf_id"]],
+                              irf_signs = irf[["irf_signs"]],
+                              fevd = irf[["fevd"]])
+        irf_store[["irf"]][(i / thin), , , ] <- irf_comp[["irf_comp"]]
+
+        if(irf[["fevd"]]){
+          irf_store[["fevd"]][(i / thin), , ] <- apply(irf_comp[["fevd_comp"]],
+                                                       c(1, 2),
+                                                       mean, na.rm = TRUE)
+        }
+
       }
     }
 
@@ -216,6 +223,11 @@ bvar <- function(
   out <- list("beta" = beta_store, "sigma" = sigma_store,
               "hyper" = hyper_store, "ml" = ml_store,
               "accepted" = accepted, "optim" = opt)
+
+  if(!is.null(irf)){
+    out[["irf"]] <- irf_store
+  }
+
   class(out) <- "bvar"
 
   return(out)
