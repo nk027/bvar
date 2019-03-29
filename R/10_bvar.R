@@ -3,7 +3,7 @@ bvar <- function(
   n_draw = 10000, n_burn = 5000, thin = 1,
   priors = bv_priors(),
   metropolis = bv_metropolis(),
-  fcast = NULL,
+  fcast = bv_fcast(),
   irf = NULL,
   verbose = FALSE, ...) {
 
@@ -11,7 +11,7 @@ bvar <- function(
 
   # Data
   if(!is.numeric(data) || any(is.na(data)) || length(data) < 2) {
-    stop("Problem with the data. Make sure it's numeric without NAs.")
+    stop("Problem with the data. Make sure it is numeric without any NAs.")
   } else {Y <- as.matrix(data)}
 
   # Integers
@@ -164,16 +164,18 @@ bvar <- function(
     }
 
     if(i > 0 && i %% thin == 0) {
-      # Stored iterations
 
+      # Stored iterations
       ml_store[(i / thin)] <- ml_draw[["log_ml"]]
       hyper_store[(i / thin), ] <- hyper_draw
+
       # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
-      draws <- bv_draw(Y = ml_draw[["Y"]], X = ml_draw[["X"]],
-                       N = ml_draw[["N"]], lags = lags, M = M, priors[["b"]],
-                       psi = ml_draw[["psi"]], sse = ml_draw[["sse"]],
-                       beta_hat = ml_draw[["beta_hat"]],
-                       omega_inv = ml_draw[["omega_inv"]])
+      # These need X and N including the dummy priors from `ml_draw`
+      draws <- draw_post(X = ml_draw[["X"]], N = ml_draw[["N"]],
+                         lags = lags, M = M, b = priors[["b"]],
+                         psi = ml_draw[["psi"]], sse = ml_draw[["sse"]],
+                         beta_hat = ml_draw[["beta_hat"]],
+                         omega_inv = ml_draw[["omega_inv"]])
 
       beta_store[[(i / thin)]] <- draws[["beta_draw"]]
       sigma_store[[(i / thin)]] <- draws[["sigma_draw"]]
@@ -182,14 +184,23 @@ bvar <- function(
       if(!is.null(fcast) || !is.null(irf)) {
         beta_comp <- matrix(0, K - 1, K - 1)
         beta_comp[1:M, ] <- t(draws[["beta_draw"]][2:K, ])
-        if(lags > 1) {
+        if(lags > 1) { # add diagonal matrix
           beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
         }
       }
 
       # Forecast
+      if(!is.null(fcast)) {
+        beta_const <- draws[["beta_draw"]][1, ]
 
-      # IRF
+        fcast_draw <- compute_fcast(Y = Y, K = K, M = M, N = N, lags = lags,
+                                    horizon = fcast[["horizon"]],
+                                    beta_comp = beta_comp,
+                                    beta_const = beta_const,
+                                    sigma = draws[["sigma_draw"]])
+      }
+
+      # Impulse responses
       if(!is.null(irf)) {
         irf_draw  <- bv_irf(beta_comp = beta_comp,
                             sigma_draw = draws[["sigma_draw"]],

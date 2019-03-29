@@ -1,5 +1,6 @@
-int_check <- function(x, min = 0, max = Inf,
-                      msg = "Please check the integer parameters.") {
+int_check <- function(
+  x, min = 0, max = Inf,
+  msg = "Please check the integer parameters.") {
 
   if(!is.numeric(x) || length(x) != 1 || x < min || x > max) {
     stop(msg)
