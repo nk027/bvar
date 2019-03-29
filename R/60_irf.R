@@ -1,7 +1,7 @@
 
-bv_irf <- function(beta_comp, sigma_draw,
-                   M = NULL, lags = NULL,
-                   irf_hor = 12, irf_id, irf_signs = NULL, fevd){
+irf_draw <- function(beta_comp, sigma_draw,
+                        M = NULL, lags = NULL,
+                        irf_hor = 12, irf_id, irf_signs = NULL, fevd){
 
   if(irf_id){
     if(is.null(irf_signs)){
@@ -35,8 +35,6 @@ bv_irf <- function(beta_comp, sigma_draw,
     }
     out[["fevd_comp"]] <- fevd_comp
   }
-
-
 
   return(out)
 
