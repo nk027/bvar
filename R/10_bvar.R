@@ -123,11 +123,12 @@ bvar <- function(
   sigma_store <- vector("list", n_save)
 
   if(!is.null(irf)) {
-    irf_store <- list(irf = array(NA, c(n_save, M, irf[["irf_hor"]], M)),
-                      fevd = if(irf[["fevd"]]){array(NA, c(n_save, M, M))} else {irf[["fevd"]]},
-                      irf_hor = irf[["irf_hor"]],
-                      irf_id = irf[["irf_id"]],
-                      irf_signs = irf[["irf_signs"]])
+    irf_store <- list(
+      irf = array(NA, c(n_save, M, irf[["irf_hor"]], M)),
+      fevd = if(irf[["fevd"]]) array(NA, c(n_save, M, M)) else irf[["fevd"]],
+      horizon = irf[["irf_hor"]],
+      identify = irf[["irf_id"]],
+      sign_restr = irf[["irf_signs"]])
     sign_rejected <- 0
   }
 
@@ -209,7 +210,7 @@ bvar <- function(
                               fevd = irf[["fevd"]])
         irf_store[["irf"]][(i / thin), , , ] <- irf_comp[["irf_comp"]]
 
-        if(irf[["fevd"]]){
+        if(irf[["fevd"]]) {
           irf_store[["fevd"]][(i / thin), , ] <- apply(irf_comp[["fevd_comp"]],
                                                        c(1, 2),
                                                        mean, na.rm = TRUE)
