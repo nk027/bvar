@@ -1,4 +1,4 @@
-to_source <- c(10, 11, 12, 30, 20, 21, 40)
+to_source <- c(10, 11, 12, 20, 30, 21, 40, 41, 42, 50, 60, 61, 65)
 
 sapply(list.files("R"), function(x) {
   if(any(stringr::str_detect(x, as.character(to_source))))
@@ -14,7 +14,8 @@ fcast = NULL
 irf = NULL
 verbose <- TRUE
 priors <- bv_priors()
-# priors <- bv_priors(soc = bv_dummy(fun = mean))
 metropolis <- bv_metropolis()
 
-x <- bvar(data, lags, n_draw, n_burn, thin, priors, metropolis, verbose = TRUE)
+x <- bvar(data, lags, n_draw, n_burn, thin, priors, metropolis, fcast, irf, verbose = TRUE)
+y <- bvar(data, lags, n_draw, n_burn, thin, priors, metropolis, fcast, irf, verbose = TRUE)
+z <- bvar(data, lags, n_draw, n_burn, thin, verbose = TRUE)
