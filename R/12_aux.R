@@ -12,6 +12,7 @@ var_lag <- function(x, p) {
   return(x_lagged)
 }
 
+
 gamma_coef <- function(mode, sd) {
 
   mode_sq <- mode ^ 2
@@ -21,6 +22,7 @@ gamma_coef <- function(mode, sd) {
 
   return(list("k" = k, "theta" = theta))
 }
+
 
 name_pars <- function(x, M) {
 

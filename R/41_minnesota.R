@@ -13,6 +13,7 @@ bv_minnesota <- function(
   return(out)
 }
 
+
 bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 50) {
 
   if(sd <= 0) stop("Parameter sd misspecified.")
@@ -21,6 +22,7 @@ bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 50) {
 
   return(out)
 }
+
 
 bv_alpha <- function(mode = 0.2, min = 0.1, max = 0.5) {
 

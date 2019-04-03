@@ -14,11 +14,11 @@ bv_priors <- function(
   if(!all(vapply(dots, is, TRUE, "bv_dummy"))) {
     stop("Please use 'bv_dummy' to set dummy priors.")
   }
-  if(hyper == "auto") {
+  if(hyper[[1]] == "auto") {
     hyper <- c(if(!is.null(mn)) "lambda", names(dots))
   } else {
     full <- c(if(!is.null(mn)) c("lambda", "alpha", "psi"), names(dots))
-    if(hyper == "full") {
+    if(hyper[[1]] == "full") {
       hyper <- full
     } else {
       if(!all(hyper %in% full)) stop("Hyperprior not found.")

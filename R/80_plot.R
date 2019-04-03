@@ -1,6 +1,51 @@
+hyper_plot <- function(x) {
+
+  if(!inherits(x, "bvar")) stop()
+
+  K <- ncol(x[["hyper"]])
+  name <- x[["priors"]][["hyper"]]
+
+  op <- par(mar = c(2, 2, 2, 0.5), mfrow = c(K, 2))
+
+  for(i in 1:K) {
+    trace_plot(x[["hyper"]][, i], name[i], x[["priors"]][[name[i]]][["min"]],
+               x[["priors"]][[hyper[i]]][["max"]])
+    dens_plot(x[["hyper"]][, i], name[i], x[["priors"]][[name[i]]][["min"]],
+              x[["priors"]][[name[i]]][["max"]])
+  }
+  par(op)
+}
+
 # trace
 
+trace_plot <- function(x, name, min, max) {
+
+  plot(x, type = "l", xlab = "Index", ylab = "Value",
+       main = paste("Trace of", name))
+  abline(h = mean(x), lty = "dotted", col = "gray")
+  abline(h = c(min, max), lty = "dashed", col = "darkgray")
+
+  invisible(x)
+}
+
 # density
+
+dens_plot <- function(x, name, min, max) {
+
+  plot(density(x), main = paste("Density of", name))
+  abline(v = x[length(x)], lty = "dotted", col = "gray")
+  abline(v = c(min, max), lty = "dashed", col = "darkgray")
+  invisible(x)
+}
+
+hist_plot <- function(x, name, min, max) {
+
+  hist(x, xlab = "Value", main = paste("Histogram of", name))
+  abline(v = x[length(x)], lty = "dotted", col = "gray")
+  abline(v = c(min, max), lty = "dashed", col = "darkrgray")
+  invisible(x)
+
+}
 
 # irf
 

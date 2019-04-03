@@ -9,6 +9,7 @@ int_check <- function(
   }
 }
 
+
 auto_psi <- function(Y, lags) {
 
   x <- list()
