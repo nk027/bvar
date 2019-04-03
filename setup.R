@@ -10,13 +10,17 @@ lags <- 2
 n_draw <- 10000
 n_burn <- 5000
 thin <- 1
-fcast = NULL
-irf = NULL
+fcast <- NULL
+irf <- NULL
 verbose <- TRUE
 priors <- bv_priors()
 metropolis <- bv_metropolis()
 
-x <- bvar(data, lags, n_draw, n_burn, thin, priors, metropolis, fcast, irf, verbose = TRUE)
-y <- bvar(data, lags, n_draw, n_burn, thin, priors = bv_priors(hyper = c("lambda", "alpha")), metropolis, fcast, irf, verbose = TRUE)
-z <- bvar(data, lags, n_draw, n_burn, thin, priors, metropolis, irf = irf, verbose = TRUE)
+x <- bvar(data, lags, n_draw, n_burn, thin,
+          priors, metropolis, fcast, irf, verbose = TRUE)
+y <- bvar(data, lags, n_draw, n_burn, thin,
+          priors = bv_priors(hyper = c("lambda", "alpha")),
+          metropolis, fcast, irf, verbose = TRUE)
+z <- bvar(data, lags, n_draw, n_burn, thin,
+          priors, metropolis, irf = irf, verbose = TRUE)
 default <- bvar(data, lags, n_draw, n_burn, thin, verbose = TRUE)

@@ -122,6 +122,9 @@ bvar <- function(
   beta_store <- vector("list", n_save)
   sigma_store <- vector("list", n_save)
 
+  if(!is.null(fcast)) {
+    fcast_store <-  array(NA, c(n_save, fcast[["horizon"]], M))
+  }
   if(!is.null(irf)) {
     irf_store <- list(
       irf = array(NA, c(n_save, M, irf[["irf_hor"]], M)),
@@ -192,11 +195,12 @@ bvar <- function(
       # Forecast
       if(!is.null(fcast)) {
         beta_const <- draws[["beta_draw"]][1, ]
-        fcast_draw <- compute_fcast(Y = Y, K = K, M = M, N = N, lags = lags,
-                                    horizon = fcast[["horizon"]],
-                                    beta_comp = beta_comp,
-                                    beta_const = beta_const,
-                                    sigma = draws[["sigma_draw"]])
+        fcast_store[(i / thin), , ] <- compute_fcast(
+          Y = Y, K = K, M = M, N = N, lags = lags,
+          horizon = fcast[["horizon"]],
+          beta_comp = beta_comp,
+          beta_const = beta_const,
+          sigma = draws[["sigma_draw"]])
       } # Forecast
 
       # Impulse responses
@@ -230,11 +234,10 @@ bvar <- function(
 
   out <- list("beta" = beta_store, "sigma" = sigma_store,
               "hyper" = hyper_store, "ml" = ml_store,
-              "accepted" = accepted, "optim" = opt)
+              "accepted" = accepted, "optim" = opt, "priors" = priors)
 
-  if(!is.null(irf)) {
-    out[["irf"]] <- irf_store
-  }
+  if(!is.null(fcast)) out[["fcast"]] <- fcast_store
+  if(!is.null(irf)) out[["irf"]] <- irf_store
 
   class(out) <- "bvar"
 

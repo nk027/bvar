@@ -14,6 +14,8 @@ hyper_plot <- function(x) {
               x[["priors"]][[name[i]]][["max"]])
   }
   par(op)
+
+  invisible(x)
 }
 
 # trace
@@ -88,3 +90,25 @@ irf_plot <- function(bvar_obj, sign_level = c(0.05, 0.16), var_names = NULL) {
 
 # fcast
 
+fcast_plot <- function(x, quantiles = c(0.16, 0.5, 0.84)) {
+
+  x <- apply(x, c(2, 3), quantile, quantiles)
+
+  M <- dim(x)[3]
+  P <- dim(x)[1]
+
+  n_gray <- if(P %% 2 == 0) 0 else P %/% 2
+  col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
+
+  op <- par(mfrow = c(M, 1), mar = c(2, 2, 2, 0.5))
+
+  for(i in 1:M) {
+    ts.plot(t(as.matrix(x[, , i])),
+            col = col, lty = 1,
+            main = "<Variable>")
+    grid()
+  }
+  par(op)
+
+  invisible(x)
+}
