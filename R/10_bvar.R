@@ -7,6 +7,8 @@ bvar <- function(
   irf = bv_irf(),
   verbose = FALSE, ...) {
 
+  cl <- match.call()
+
   # Input Checking ----------------------------------------------------------
 
   # Data
@@ -118,12 +120,12 @@ bvar <- function(
   # Loop --------------------------------------------------------------------
 
   # Storage
-  accepted <- accepted_adj <- 0
+  accepted <- 0 -> accepted_adj # Beauty
   ml_store <- vector("numeric", n_save)
   hyper_store <- matrix(NA, nrow = n_save, ncol = length(hyper_draw),
                         dimnames = list(NULL, names(hyper)))
-  beta_store <- vector("list", n_save)
-  sigma_store <- vector("list", n_save)
+  beta_store <- array(NA, c(nsave, K, M))
+  sigma_store <- array(NA, c(nsave, M, M))
 
   if(!is.null(fcast)) {
     fcast_store <-  array(NA, c(n_save, fcast[["horizon"]], M))
@@ -183,8 +185,8 @@ bvar <- function(
                          beta_hat = ml_draw[["beta_hat"]],
                          omega_inv = ml_draw[["omega_inv"]])
 
-      beta_store[[(i / thin)]] <- draws[["beta_draw"]]
-      sigma_store[[(i / thin)]] <- draws[["sigma_draw"]]
+      beta_store[(i / thin), , ] <- draws[["beta_draw"]]
+      sigma_store[(i / thin), , ] <- draws[["sigma_draw"]]
 
       # Companion matrix is necessary for forecasts and impulse responses
       if(!is.null(fcast) || !is.null(irf)) {

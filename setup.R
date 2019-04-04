@@ -23,4 +23,4 @@ y <- bvar(data, lags, n_draw, n_burn, thin,
           metropolis, fcast, irf, verbose = TRUE)
 z <- bvar(data, lags, n_draw, n_burn, thin,
           priors, metropolis, irf = irf, verbose = TRUE)
-default <- bvar(data, lags, n_draw, n_burn, thin, verbose = TRUE)
+default <- bvar(data, lags, n_draw, n_burn, thin = 3, irf = irf, verbose = TRUE)
