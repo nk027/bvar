@@ -45,7 +45,10 @@ dens_plot <- function(x, name, bounds = NULL, ...) {
   xlim <- c(min(vapply(dots, min, double(1)), x),
             max(vapply(dots, max, double(1)), x))
   plot(density(x), main = paste("Density of", name), xlim = xlim)
-  for(dot in dots) lines(density(dot), col = "lightgray")
+  polygon(density(x), col = rgb(0.8, 0.8, 0.8, 0.2), border = NA)
+  for(dot in dots)
+    polygon(density(dot), col = rgb(0.8, 0.8, 0.8, 0.2), border = NA)
+  lines(density(x))
   # abline(v = x[length(x)], col = "gray") # Last position
   abline(v = bounds, lty = "dashed", col = "darkgray")
 
