@@ -2,18 +2,19 @@ hyper_plot <- function(x) {
 
   if(!inherits(x, "bvar")) stop()
 
-  K <- ncol(x[["hyper"]])
-  name <- x[["priors"]][["hyper"]]
+  y <- x[["hyper"]]
+  K <- ncol(y)
+  name <- colnames(y)
+  bounds <- vapply(name, function(z) {
+    c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])}, double(2))
 
   op <- par(mar = c(2, 2, 2, 0.5), mfrow = c(K + 1, 2))
 
   trace_plot(x[["ml"]], "marginal likelihood")
   dens_plot(x[["ml"]], "marginal likelihood")
   for(i in 1:K) {
-    trace_plot(x[["hyper"]][, i], name[i], x[["priors"]][[name[i]]][["min"]],
-               x[["priors"]][[name[i]]][["max"]])
-    dens_plot(x[["hyper"]][, i], name[i], x[["priors"]][[name[i]]][["min"]],
-              x[["priors"]][[name[i]]][["max"]])
+    trace_plot(y[, i], name[i], bounds[, i])
+    dens_plot(y[, i], name[i], bounds[, i])
   }
   par(op)
 
@@ -22,7 +23,7 @@ hyper_plot <- function(x) {
 
 # trace
 
-trace_plot <- function(x, name, min = NULL, max = NULL, ...) {
+trace_plot <- function(x, name, bounds = NULL, ...) {
 
   dots <- list(...)
   ylim <- c(min(vapply(dots, min, double(1)), x),
@@ -31,14 +32,14 @@ trace_plot <- function(x, name, min = NULL, max = NULL, ...) {
        main = paste("Trace of", name))
   for(dot in dots) lines(dot, col = "lightgray")
   # abline(h = mean(x), lty = "dotted", col = "gray") # Mean
-  abline(h = c(min, max), lty = "dashed", col = "darkgray")
+  abline(h = bounds, lty = "dashed", col = "darkgray")
 
   invisible(x)
 }
 
 # density
 
-dens_plot <- function(x, name, min = NULL, max = NULL, ...) {
+dens_plot <- function(x, name, bounds = NULL, ...) {
 
   dots <- list(...)
   xlim <- c(min(vapply(dots, min, double(1)), x),
@@ -46,18 +47,18 @@ dens_plot <- function(x, name, min = NULL, max = NULL, ...) {
   plot(density(x), main = paste("Density of", name), xlim = xlim)
   for(dot in dots) lines(density(dot), col = "lightgray")
   # abline(v = x[length(x)], col = "gray") # Last position
-  abline(v = c(min, max), lty = "dashed", col = "darkgray")
+  abline(v = bounds, lty = "dashed", col = "darkgray")
 
   invisible(x)
 }
 
-hist_plot <- function(x, name, min = NULL, max = NULL) {
+hist_plot <- function(x, name, bounds = NULL) {
 
   hist(x, xlab = "Value", main = paste("Histogram of", name))
   # abline(v = x[length(x)], col = "gray") # Last position
-  abline(v = c(min, max), lty = "dashed", col = "darkrgray")
-  invisible(x)
+  abline(v = bounds, lty = "dashed", col = "darkrgray")
 
+  invisible(x)
 }
 
 # irf
@@ -97,26 +98,32 @@ irf_plot <- function(bvar_obj, sign_level = c(0.05, 0.16), var_names = NULL) {
 
   return(invisible(irf_quants))
 }
-# fevd
 
 # fcast
 
-fcast_plot <- function(x, quantiles = c(0.16, 0.5, 0.84)) {
+fcast_plot <- function(
+  x,
+  quantiles = c(0.16, 0.5, 0.84),
+  mar = c(2, 2, 2, 0.5), col,
+  ...) {
 
-  x <- apply(x, c(2, 3), quantile, quantiles)
+  y <- apply(x[["fcast"]], c(2, 3), quantile, quantiles)
+  variables <- x[["variables"]]
 
-  M <- dim(x)[3]
-  P <- dim(x)[1]
+  M <- dim(y)[3]
+  P <- dim(y)[1]
 
-  n_gray <- if(P %% 2 == 0) 0 else P %/% 2
-  col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
+  if(missing(col)) {
+    n_gray <- if(P %% 2 == 0) 0 else P %/% 2
+    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
+  }
 
-  op <- par(mfrow = c(M, 1), mar = c(2, 2, 2, 0.5))
+  op <- par(mfrow = c(M, 1), ...)
 
   for(i in 1:M) {
-    ts.plot(t(as.matrix(x[, , i])),
+    ts.plot(t(as.matrix(y[, , i])),
             col = col, lty = 1,
-            main = "<Variable>")
+            main = variables[i])
     grid()
   }
   par(op)

@@ -12,7 +12,10 @@ bvar <- function(
   # Data
   if(!is.numeric(data) || any(is.na(data)) || length(data) < 2) {
     stop("Problem with the data. Make sure it is numeric without any NAs.")
-  } else {Y <- as.matrix(data)}
+  } else {
+    Y <- as.matrix(data)
+    variables <- colnames(data)
+  }
 
   # Integers
   lags <- int_check(lags, min = 1, max = nrow(Y))
@@ -234,7 +237,8 @@ bvar <- function(
 
   out <- list("beta" = beta_store, "sigma" = sigma_store,
               "hyper" = hyper_store, "ml" = ml_store,
-              "accepted" = accepted, "optim" = opt, "priors" = priors)
+              "accepted" = accepted, "optim" = opt, "priors" = priors,
+              "variables" = variables)
 
   if(!is.null(fcast)) out[["fcast"]] <- fcast_store
   if(!is.null(irf)) out[["irf"]] <- irf_store
