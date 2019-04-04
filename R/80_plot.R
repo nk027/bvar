@@ -5,11 +5,13 @@ hyper_plot <- function(x) {
   K <- ncol(x[["hyper"]])
   name <- x[["priors"]][["hyper"]]
 
-  op <- par(mar = c(2, 2, 2, 0.5), mfrow = c(K, 2))
+  op <- par(mar = c(2, 2, 2, 0.5), mfrow = c(K + 1, 2))
 
+  trace_plot(x[["ml"]], "marginal likelihood")
+  dens_plot(x[["ml"]], "marginal likelihood")
   for(i in 1:K) {
     trace_plot(x[["hyper"]][, i], name[i], x[["priors"]][[name[i]]][["min"]],
-               x[["priors"]][[hyper[i]]][["max"]])
+               x[["priors"]][[name[i]]][["max"]])
     dens_plot(x[["hyper"]][, i], name[i], x[["priors"]][[name[i]]][["min"]],
               x[["priors"]][[name[i]]][["max"]])
   }
@@ -20,11 +22,15 @@ hyper_plot <- function(x) {
 
 # trace
 
-trace_plot <- function(x, name, min, max) {
+trace_plot <- function(x, name, min = NULL, max = NULL, ...) {
 
-  plot(x, type = "l", xlab = "Index", ylab = "Value",
+  dots <- list(...)
+  ylim <- c(min(vapply(dots, min, double(1)), x),
+            max(vapply(dots, max, double(1)), x))
+  plot(x, type = "l", xlab = "Index", ylab = "Value", ylim = ylim,
        main = paste("Trace of", name))
-  abline(h = mean(x), lty = "dotted", col = "gray")
+  for(dot in dots) lines(dot, col = "lightgray")
+  # abline(h = mean(x), lty = "dotted", col = "gray") # Mean
   abline(h = c(min, max), lty = "dashed", col = "darkgray")
 
   invisible(x)
@@ -32,18 +38,23 @@ trace_plot <- function(x, name, min, max) {
 
 # density
 
-dens_plot <- function(x, name, min, max) {
+dens_plot <- function(x, name, min = NULL, max = NULL, ...) {
 
-  plot(density(x), main = paste("Density of", name))
-  abline(v = x[length(x)], lty = "dotted", col = "gray")
+  dots <- list(...)
+  xlim <- c(min(vapply(dots, min, double(1)), x),
+            max(vapply(dots, max, double(1)), x))
+  plot(density(x), main = paste("Density of", name), xlim = xlim)
+  for(dot in dots) lines(density(dot), col = "lightgray")
+  # abline(v = x[length(x)], col = "gray") # Last position
   abline(v = c(min, max), lty = "dashed", col = "darkgray")
+
   invisible(x)
 }
 
-hist_plot <- function(x, name, min, max) {
+hist_plot <- function(x, name, min = NULL, max = NULL) {
 
   hist(x, xlab = "Value", main = paste("Histogram of", name))
-  abline(v = x[length(x)], lty = "dotted", col = "gray")
+  # abline(v = x[length(x)], col = "gray") # Last position
   abline(v = c(min, max), lty = "dashed", col = "darkrgray")
   invisible(x)
 
