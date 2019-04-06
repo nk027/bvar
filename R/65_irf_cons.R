@@ -1,26 +1,22 @@
 bv_irf <- function(
-  irf_hor = 12,
-  irf_id = TRUE,
-  irf_signs = NULL,
-  fevd = FALSE) {
+  horizon = 12,
+  fevd = FALSE,
+  identification = TRUE,
+  sign_restr = NULL) {
 
-  if(!is.numeric(irf_hor) || irf_hor < 1){
-    stop("IRF horizon misspecified.")
+  horizon <- int_check(horizon, min = 1, max = 1e6,
+                       msg = "Invalid value for horizon (outside of [1, 1e6]).")
+
+  if(!is.logical(c(identification, fevd))){
+    stop("Parameter(s) are not provided as the correct type.")
   }
 
-  if(!is.logical(c(irf_id, fevd))){
-    stop("irf_id and fevd have to be logical.")
-  }
-
-  if(!is.null(irf_signs) && !all(irf_signs %in% c(-1, 0, 1))){
+  if(!is.null(sign_restr) && !all(sign_restr %in% c(-1, 0, 1))){
     stop("Sign restrictions misspecified.")
   }
 
-
-  out <- list("irf_hor" = irf_hor,
-              "irf_id" = irf_id,
-              "irf_signs" = irf_signs,
-              "fevd" = fevd)
+  out <- list("horizon" = horizon, "fevd" = fevd,
+              "identification" = identification, "sign_restr" = sign_restr)
   class(out) <- "bv_irf"
 
   return(out)

@@ -133,10 +133,8 @@ bvar <- function(
   if(!is.null(irf)) {
     irf_store <- list(
       irf = array(NA, c(n_save, M, irf[["irf_hor"]], M)),
-      fevd = if(irf[["fevd"]]) array(NA, c(n_save, M, M)) else irf[["fevd"]],
-      horizon = irf[["irf_hor"]],
-      identify = irf[["irf_id"]],
-      sign_restr = irf[["irf_signs"]])
+      fevd = if(irf[["fevd"]]) array(NA, c(n_save, M, M)) else NULL,
+      setup = irf)
     sign_rejected <- 0
   }
 
@@ -203,26 +201,22 @@ bvar <- function(
         fcast_store[(i / thin), , ] <- compute_fcast(
           Y = Y, K = K, M = M, N = N, lags = lags,
           horizon = fcast[["horizon"]],
-          beta_comp = beta_comp,
-          beta_const = beta_const,
+          beta_comp = beta_comp, beta_const = beta_const,
           sigma = draws[["sigma_draw"]])
       } # Forecast
 
       # Impulse responses
       if(!is.null(irf)) {
-        irf_comp  <- irf_draw(beta_comp = beta_comp,
-                              sigma_draw = draws[["sigma_draw"]],
-                              M = M, lags = lags,
-                              irf_hor = irf[["irf_hor"]],
-                              irf_id = irf[["irf_id"]],
-                              irf_signs = irf[["irf_signs"]],
-                              fevd = irf[["fevd"]])
-        irf_store[["irf"]][(i / thin), , , ] <- irf_comp[["irf_comp"]]
+        irf_comp  <- irf_draw(
+          beta_comp = beta_comp,
+          sigma = draws[["sigma_draw"]], sigma_chol = draws[["sigma_chol"]],
+          M = M, lags = lags,
+          horizon = irf[["horizon"]], identification = irf[["identification"]],
+          sign_restr = irf[["sign_restr"]], fevd = irf[["fevd"]])
 
+        irf_store[["irf"]][(i / thin), , , ] <- irf_comp[["irf"]]
         if(irf[["fevd"]]) {
-          irf_store[["fevd"]][(i / thin), , ] <- apply(irf_comp[["fevd_comp"]],
-                                                       c(1, 2),
-                                                       mean, na.rm = TRUE)
+          irf_store[["fevd"]][(i / thin), , ] <- irf_comp[["fevd"]]
         }
       } # Impulse responses
 
