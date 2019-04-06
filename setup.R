@@ -1,4 +1,4 @@
-to_source <- c(10, 11, 12, 20, 30, 21, 40, 41, 42, 50, 60, 61, 65)
+to_source <- c(10, 11, 12, 20, 30, 21, 40, 41, 42, 50, 60:65)
 
 sapply(list.files("R"), function(x) {
   if(any(stringr::str_detect(x, as.character(to_source))))
@@ -23,4 +23,5 @@ y <- bvar(data, lags, n_draw, n_burn, thin,
           metropolis, fcast, irf, verbose = TRUE)
 z <- bvar(data, lags, n_draw, n_burn, thin,
           priors, metropolis, irf = irf, verbose = TRUE)
-default <- bvar(data, lags, n_draw, n_burn, thin = 3, irf = irf, verbose = TRUE)
+w <- bvar(data, lags, n_draw, n_burn, thin = 3, irf = irf, verbose = TRUE)
+v <- bvar(data, lags, n_draw, n_burn, thin = 3, verbose = TRUE)

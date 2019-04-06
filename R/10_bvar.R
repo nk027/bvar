@@ -124,15 +124,15 @@ bvar <- function(
   ml_store <- vector("numeric", n_save)
   hyper_store <- matrix(NA, nrow = n_save, ncol = length(hyper_draw),
                         dimnames = list(NULL, names(hyper)))
-  beta_store <- array(NA, c(nsave, K, M))
-  sigma_store <- array(NA, c(nsave, M, M))
+  beta_store <- array(NA, c(n_save, K, M))
+  sigma_store <- array(NA, c(n_save, M, M))
 
   if(!is.null(fcast)) {
     fcast_store <-  array(NA, c(n_save, fcast[["horizon"]], M))
   }
   if(!is.null(irf)) {
     irf_store <- list(
-      irf = array(NA, c(n_save, M, irf[["irf_hor"]], M)),
+      irf = array(NA, c(n_save, M, irf[["horizon"]], M)),
       fevd = if(irf[["fevd"]]) array(NA, c(n_save, M, M)) else NULL,
       setup = irf)
     sign_rejected <- 0

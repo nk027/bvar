@@ -66,40 +66,46 @@ hist_plot <- function(x, name, bounds = NULL) {
 
 # irf
 
-irf_plot <- function(bvar_obj, sign_level = c(0.05, 0.16), var_names = NULL) {
+irf_plot <- function(
+  x,
+  quantiles = c(0.16, 0.5, 0.84),
+  var_names = NULL,
+  mar = c(2, 2, 2, 0.5), col,
+  ...) {
 
-  if(!inherits(bvar_obj, "bvar")) stop("Please provide object of type bvar.")
+  if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
 
-  if(any(!is.numeric(sign_level),
-         any(sign_level > 1), any(sign_level < 0),
-         length(sign_level) > 2)){
-    stop("Level(s) of significance misspecified.")
+  if(any(!is.numeric(quantiles), any(quantiles > 1), any(quantiles < 0))) {
+    stop("Quantiles misspecified.")
+  }
+  # Cool idea - maybe do this for all functions instead of quantiles
+  # quants <- sort(c(sign_level, 0.5, (1 - sign_level)))
+
+  y <- apply(x[["irf"]][["irf"]], c(2, 3, 4), quantile, quantiles, na.rm = TRUE)
+  # Maybe do this
+  # aperm(y, c(1, 3, 2, 4))
+
+  M <- dim(y)[2]
+  P <- dim(y)[1]
+
+  variables <- x[["variables"]]
+  if(missing(col)) {
+    n_gray <- if(P %% 2 == 0) 0 else P %/% 2
+    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
   }
 
-  irf_store <- bvar_obj[["irf"]][["irf_store"]]
-  M <- bvar_obj[["meta"]][["M"]]
-
-  quants <- sort(c(sign_level, 0.5, (1 - sign_level)))
-  irf_quants <- apply(irf_store, c(2, 3, 4), quantile, quants, na.rm = TRUE)
-
-  main <- if(!is.null(var_names)) {paste0(var_names, " impulse")} else {NULL}
-  ngray <- length(sign_level)
-  col <- c(rep("darkgray", ngray), "black", rep("darkgray", ngray))
-
-  op <- par(no.readonly = TRUE)
-  par(mfrow = c(M, M), mar = c(2, 2, 2, 1))
+  op <- par(mfrow = c(M, M), mar = mar, ...)
   for(i in 1:M) {
     for(j in 1:M) {
-      ts.plot(t(as.matrix(irf_quants[, i, , j])),
+      ts.plot(t(as.matrix(y[, i, , j])),
               col = col, lty = 1,
-              main = main[[j]],
-              ylab = "", xlab = "")
-      abline(h = 0, col = "black")
+              main = variables[i])
+      abline(h = 0, lty = "dashed", col = "black")
     }
   }
   par(op)
 
-  return(invisible(irf_quants))
+  invisible(x)
 }
 
 # fcast
@@ -110,7 +116,7 @@ fcast_plot <- function(
   mar = c(2, 2, 2, 0.5), col,
   ...) {
 
-  y <- apply(x[["fcast"]], c(2, 3), quantile, quantiles)
+  y <- apply(x[["fcast"]], c(2, 3), quantile, quantiles, na.rm = TRUE)
   variables <- x[["variables"]]
 
   M <- dim(y)[3]
@@ -121,8 +127,7 @@ fcast_plot <- function(
     col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
   }
 
-  op <- par(mfrow = c(M, 1), ...)
-
+  op <- par(mfrow = c(M, 1), mar = mar, ...)
   for(i in 1:M) {
     ts.plot(t(as.matrix(y[, , i])),
             col = col, lty = 1,
