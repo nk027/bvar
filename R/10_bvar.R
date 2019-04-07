@@ -233,6 +233,9 @@ bvar <- function(
               "accepted" = accepted, "optim" = opt, "priors" = priors,
               "variables" = variables, "call" = cl)
 
+  out[["meta"]] <- list("N" = N, "M" = M, "lags" = lags, "n_draw" = n_draw,
+                        "n_burn" = n_burn)
+
   if(!is.null(fcast)) out[["fcast"]] <- fcast_store
   if(!is.null(irf)) out[["irf"]] <- irf_store
 
