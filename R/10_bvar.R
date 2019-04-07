@@ -204,7 +204,7 @@ bvar <- function(
 
       # Impulse responses
       if(!is.null(irf)) {
-        irf_comp  <- irf_draw(
+        irf_comp  <- compute_irf(
           beta_comp = beta_comp,
           sigma = draws[["sigma_draw"]], sigma_chol = draws[["sigma_chol"]],
           M = M, lags = lags,

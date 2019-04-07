@@ -25,8 +25,6 @@ hyper_plot <- function(x) {
 
 trace_plot <- function(x, name, bounds = NULL, ...) {
 
-  if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
-
   dots <- list(...)
   ylim <- c(min(vapply(dots, min, double(1)), x),
             max(vapply(dots, max, double(1)), x))
@@ -42,8 +40,6 @@ trace_plot <- function(x, name, bounds = NULL, ...) {
 # density
 
 dens_plot <- function(x, name, bounds = NULL, ...) {
-
-  if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
 
   dots <- list(...)
   xlim <- c(min(vapply(dots, min, double(1)), x),
@@ -63,7 +59,7 @@ hist_plot <- function(x, name, bounds = NULL) {
 
   hist(x, xlab = "Value", main = paste("Histogram of", name))
   # abline(v = x[length(x)], col = "gray") # Last position
-  abline(v = bounds, lty = "dashed", col = "darkrgray")
+  abline(v = bounds, lty = "dashed", col = "darkgray")
 
   invisible(x)
 }
