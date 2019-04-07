@@ -4,16 +4,16 @@ int_check <- function(
 
   if(!is.numeric(x) || length(x) != 1 || x < min || x > max) {
     stop(msg)
-  } else {
-    return(as.integer(x))
   }
+
+  return(as.integer(x))
 }
 
 
-auto_psi <- function(Y, lags) {
+auto_psi <- function(x, lags) {
 
-  x <- list()
-  x[["mode"]] <- tryCatch(apply(Y, 2, function(x) {
+  out <- list()
+  out[["mode"]] <- tryCatch(apply(x, 2, function(x) {
     sqrt(arima(x, order = c(lags, 0, 0))$sigma2)
   }), error = function(x) {
     # Could increase the order of integration here - not done for transparency
@@ -21,8 +21,8 @@ auto_psi <- function(Y, lags) {
          "Setting psi automatically via 'arima()' (p = ", lags, ") failed.")
   })
 
-  x[["min"]] <- x[["mode"]] / 100
-  x[["max"]] <- x[["mode"]] * 100
+  out[["min"]] <- out[["mode"]] / 100
+  out[["max"]] <- out[["mode"]] * 100
 
-  return(x)
+  return(out)
 }

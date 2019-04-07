@@ -14,24 +14,23 @@ bvar <- function(
   # Data
   if(!is.numeric(data) || any(is.na(data)) || length(data) < 2) {
     stop("Problem with the data. Make sure it is numeric without any NAs.")
-  } else {
-    Y <- as.matrix(data)
-    variables <- colnames(data)
   }
+
+  Y <- as.matrix(data)
+  variables <- colnames(data)
 
   # Integers
   lags <- int_check(lags, min = 1, max = nrow(Y))
   n_draw <- int_check(n_draw, min = 1)
   n_burn <- int_check(n_burn, min = 0, max = n_draw)
   thin <- int_check(thin, min = 1, max = ((n_draw - n_burn) / 10))
-  n_save <- int_check(((n_draw - n_burn) / thin),
-                      min = 1, max = (n_draw - n_burn))
+  n_save <- int_check(((n_draw - n_burn) / thin), min = 1)
 
   # Constructors
-  if(!inherits(priors, "bv_priors")) stop()
-  if(!inherits(metropolis, "bv_metropolis")) stop()
-  if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) stop()
-  if(!is.null(irf) && !inherits(irf, "bv_irf")) stop()
+  if(!inherits(priors, "bv_priors")) {stop()}
+  if(!inherits(metropolis, "bv_metropolis")) {stop()}
+  if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) {stop()}
+  if(!is.null(irf) && !inherits(irf, "bv_irf")) {stop()}
 
 
   # Preparation -------------------------------------------------------------
@@ -95,7 +94,7 @@ bvar <- function(
     exp(opt[["par"]][[name]]) / (1 + exp(opt[["par"]][[name]])) ^ 2 *
       (priors[[name]][["max"]] - priors[[name]][["min"]])
   })
-  if(hyper_n != 1) J <- diag(J)
+  if(hyper_n != 1) {J <- diag(J)}
   HH <- J %*% H %*% t(J)
 
   # Make sure HH is positive (definite)
@@ -108,12 +107,11 @@ bvar <- function(
 
   # Initial draw ------------------------------------------------------------
 
-  draw_necessary <- TRUE
-  while(draw_necessary) {
+  while(TRUE) {
     hyper_draw <- MASS::mvrnorm(mu = opt[["par"]], Sigma = HH)
-    ml_draw <- bv_ml(hyper = hyper_draw, hyper_min, hyper_max, pars = pars_full,
-                     priors, Y, X, K, M, N, lags)
-    if(ml_draw[["log_ml"]] > -1e16) draw_necessary <- FALSE
+    ml_draw <- bv_ml(hyper = hyper_draw, hyper_min, hyper_max,
+                     pars = pars_full, priors, Y, X, K, M, N, lags)
+    if(ml_draw[["log_ml"]] > -1e16) break
   }
 
 
@@ -128,25 +126,24 @@ bvar <- function(
   sigma_store <- array(NA, c(n_save, M, M))
 
   if(!is.null(fcast)) {
-    fcast_store <-  array(NA, c(n_save, fcast[["horizon"]], M))
+    fcast_store <- array(NA, c(n_save, fcast[["horizon"]], M))
   }
   if(!is.null(irf)) {
     irf_store <- list(
       irf = array(NA, c(n_save, M, irf[["horizon"]], M)),
-      fevd = if(irf[["fevd"]]) array(NA, c(n_save, M, M)) else NULL,
-      setup = irf)
-    sign_rejected <- 0
+      fevd = if(irf[["fevd"]]) {array(NA, c(n_save, M, M))} else {NULL}
+    )
   }
 
   # Loop
-  if(verbose) pb <- txtProgressBar(min = 0, max = n_draw, style = 3)
+  if(verbose) {pb <- txtProgressBar(min = 0, max = n_draw, style = 3)}
 
   for(i in (1 - n_burn):(n_draw - n_burn)) { # Start loop
 
     # Metropolis-Hastings
     hyper_temp <- MASS::mvrnorm(mu = hyper_draw, Sigma = HH)
-    ml_temp <- bv_ml(hyper = hyper_temp, hyper_min, hyper_max, pars = pars_full,
-                     priors, Y, X, K, M, N, lags)
+    ml_temp <- bv_ml(hyper = hyper_temp, hyper_min, hyper_max,
+                     pars = pars_full, priors, Y, X, K, M, N, lags)
 
     if(runif(1) < exp(ml_temp[["log_ml"]] - ml_draw[["log_ml"]])) {
       # Accept draw
@@ -159,7 +156,7 @@ bvar <- function(
     }
 
     # Tune acceptance during burn-in phase
-    if(metropolis[["adjust_acc"]] && i < 0 && (i + n_burn) %% 100 == 0) {
+    if(metropolis[["adjust_acc"]] && i <= 0 && (i + n_burn) %% 100 == 0) {
       acc_rate <- accepted_adj / 100
       if(acc_rate < metropolis[["lower"]]) {
         HH <- HH * metropolis[["acc_tighten"]]
@@ -190,7 +187,7 @@ bvar <- function(
       if(!is.null(fcast) || !is.null(irf)) {
         beta_comp <- matrix(0, K - 1, K - 1)
         beta_comp[1:M, ] <- t(draws[["beta_draw"]][2:K, ])
-        if(lags > 1) { # add diagonal matrix
+        if(lags > 1) { # Add diagonal matrix
           beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
         }
       }
@@ -234,7 +231,7 @@ bvar <- function(
   out <- list("beta" = beta_store, "sigma" = sigma_store,
               "hyper" = hyper_store, "ml" = ml_store,
               "accepted" = accepted, "optim" = opt, "priors" = priors,
-              "variables" = variables)
+              "variables" = variables, "call" = cl)
 
   if(!is.null(fcast)) out[["fcast"]] <- fcast_store
   if(!is.null(irf)) out[["irf"]] <- irf_store

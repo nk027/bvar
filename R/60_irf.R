@@ -1,24 +1,23 @@
-irf_draw <- function(beta_comp, sigma, sigma_chol, M, lags,
-                     horizon, identification, sign_restr, fevd) {
+bv_irf <- function(
+  horizon = 12,
+  fevd = FALSE,
+  identification = TRUE,
+  sign_restr = NULL) {
 
-  # Identification
-  shock <- if(identification) {
-    if(is.null(sign_restr)) {
-      sigma_chol
-    } else {sign_restr(sigma_chol, sign_restr, M)}
-  } else {sigma}
+  horizon <- int_check(horizon, min = 1, max = 1e6,
+                       msg = "Invalid value for horizon (outside of [1, 1e6]).")
 
-  # IRF
-  irf_comp <- array(0, c(M * lags, horizon, M * lags))
-  irf_comp[1:M, 1, 1:M] <- shock
-  for(i in 2:horizon) {
-    irf_comp[, i, ] <- irf_comp[, i - 1, ] %*% t(beta_comp)
+  if(!is.logical(c(identification, fevd))){
+    stop("Parameter(s) are not provided as the correct type.")
   }
-  irf_comp <- irf_comp[1:M, , 1:M]
-  out <- list("irf" = irf_comp)
 
-  # FEVD
-  if(fevd) out[["fevd"]] <- fevd(irf_comp, M, horizon)
+  if(!is.null(sign_restr) && !all(sign_restr %in% c(-1, 0, 1))){
+    stop("Sign restrictions misspecified.")
+  }
+
+  out <- list("horizon" = horizon, "fevd" = fevd,
+              "identification" = identification, "sign_restr" = sign_restr)
+  class(out) <- "bv_irf"
 
   return(out)
 }

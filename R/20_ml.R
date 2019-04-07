@@ -5,7 +5,6 @@ bv_ml <- function(
   Y, X, K, M, N, lags,
   opt = FALSE) {
 
-
   # Bounds ------------------------------------------------------------------
 
   if(!any(is.null(hyper_min), is.null(hyper_max))) {
@@ -35,10 +34,10 @@ bv_ml <- function(
     dmy <- lapply(priors[["dummy"]], function(x) {
       priors[[x]][["fun"]](Y = Y, lags = lags, pars = pars[[x]])
     })
-    Y <- rbind(do.call(rbind, lapply(dmy, function(x)
-      matrix(x[["Y"]], ncol = M))), Y)
-    X <- rbind(do.call(rbind, lapply(dmy, function(x)
-      matrix(x[["X"]], ncol = K))), X)
+    Y <- rbind(do.call(rbind,
+                       lapply(dmy, function(x) matrix(x[["Y"]], ncol = M))), Y)
+    X <- rbind(do.call(rbind,
+                       lapply(dmy, function(x) matrix(x[["X"]], ncol = K))), X)
     N <- nrow(Y)
   }
 
@@ -85,8 +84,6 @@ bv_ml <- function(
   if(opt) return(log_ml)
 
   # Return log_ml and objects necessary for drawing
-  out <- list("log_ml" = log_ml, "Y" = Y, "X" = X, "N" = N, "psi" = psi,
-              "sse" = sse, "beta_hat" = beta_hat, "omega_inv" = omega_inv)
-
-  return(out)
+  return(list("log_ml" = log_ml, "Y" = Y, "X" = X, "N" = N, "psi" = psi,
+              "sse" = sse, "beta_hat" = beta_hat, "omega_inv" = omega_inv))
 }
