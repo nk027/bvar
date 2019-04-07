@@ -1,6 +1,6 @@
 hyper_plot <- function(x) {
 
-  if(!inherits(x, "bvar")) stop()
+  if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
 
   y <- x[["hyper"]]
   K <- ncol(y)
@@ -25,6 +25,8 @@ hyper_plot <- function(x) {
 
 trace_plot <- function(x, name, bounds = NULL, ...) {
 
+  if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
+
   dots <- list(...)
   ylim <- c(min(vapply(dots, min, double(1)), x),
             max(vapply(dots, max, double(1)), x))
@@ -40,6 +42,8 @@ trace_plot <- function(x, name, bounds = NULL, ...) {
 # density
 
 dens_plot <- function(x, name, bounds = NULL, ...) {
+
+  if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
 
   dots <- list(...)
   xlim <- c(min(vapply(dots, min, double(1)), x),
@@ -69,17 +73,17 @@ hist_plot <- function(x, name, bounds = NULL) {
 irf_plot <- function(
   x,
   quantiles = c(0.16, 0.5, 0.84),
+  # conf_bands = 0.16,
   var_names = NULL,
   mar = c(2, 2, 2, 0.5), col,
   ...) {
 
   if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
 
+  # quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
   if(any(!is.numeric(quantiles), any(quantiles > 1), any(quantiles < 0))) {
     stop("Quantiles misspecified.")
   }
-  # Cool idea - maybe do this for all functions instead of quantiles
-  # quants <- sort(c(sign_level, 0.5, (1 - sign_level)))
 
   y <- apply(x[["irf"]][["irf"]], c(2, 3, 4), quantile, quantiles, na.rm = TRUE)
   # Maybe do this
@@ -113,8 +117,16 @@ irf_plot <- function(
 fcast_plot <- function(
   x,
   quantiles = c(0.16, 0.5, 0.84),
+  # conf_bands = 0.16,
   mar = c(2, 2, 2, 0.5), col,
   ...) {
+
+  if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
+
+  # quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
+  if(any(!is.numeric(quantiles), any(quantiles > 1), any(quantiles < 0))) {
+    stop("Quantiles misspecified.")
+  }
 
   y <- apply(x[["fcast"]], c(2, 3), quantile, quantiles, na.rm = TRUE)
   variables <- x[["variables"]]
