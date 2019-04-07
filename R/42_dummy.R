@@ -21,8 +21,6 @@ bv_dummy <- function(
   if(sd <= 0) stop("Parameter sd misspecified.")
   fun <- match.fun(fun)
 
-  out <- dummy(mode, min, max, sd = sd, fun = fun,
-               coef = gamma_coef(mode, sd))
-
-  return(out)
+  return(dummy(mode, min, max, sd = sd, fun = fun,
+               coef = gamma_coef(mode, sd)))
 }

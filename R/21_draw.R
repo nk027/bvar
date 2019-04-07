@@ -15,9 +15,7 @@ draw_post <- function(
       Sigma = solve(crossprod(X) + omega_inv) %*% diag(1 + M * lags))) %*%
     sigma_chol
 
-  out <- list("beta_draw" = beta_draw,
+  return(list("beta_draw" = beta_draw,
               "sigma_draw" = sigma_draw,
-              "sigma_chol" = sigma_chol)
-
-  return(out)
+              "sigma_chol" = sigma_chol))
 }

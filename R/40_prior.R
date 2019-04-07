@@ -2,16 +2,17 @@ bv_priors <- function(
   hyper = "auto",
   mn = bv_minnesota(bv_lambda(0.2, 0.4, 0.0001, 5),
                     bv_alpha(2, 0.1, 0.5),
-                    psi = "auto", var = 1e07),
+                    psi = "auto",
+                    var = 1e07),
   ...) {
 
   # Check inputs ------------------------------------------------------------
 
-  if(!is.null(mn) && !is(mn, "bv_minnesota")) {
+  if(!is.null(mn) && !inherits(mn, "bv_minnesota")) {
     stop("Please use 'bv_minnesota' to set the minnesota prior.")
   }
   dots <- list(...)
-  if(!all(vapply(dots, is, TRUE, "bv_dummy"))) {
+  if(!all(vapply(dots, inherits, TRUE, "bv_dummy"))) {
     stop("Please use 'bv_dummy' to set dummy priors.")
   }
   if(hyper[[1]] == "auto") {
