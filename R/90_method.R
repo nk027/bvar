@@ -1,5 +1,7 @@
 plot.bvar <- function(x, ...) {
-
+  hyper_plot(x)
+  if(any(names(x)=="irf")){irf_plot(x, ...)}
+  if(any(names(x)=="fcast")){fcast_plot(x, ...)}
 }
 
 summary.bvar <- function(x, ...) {

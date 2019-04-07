@@ -68,27 +68,29 @@ hist_plot <- function(x, name, bounds = NULL) {
 
 irf_plot <- function(
   x,
-  quantiles = c(0.16, 0.5, 0.84),
-  # conf_bands = 0.16,
-  var_names = NULL,
+  conf_bands = 0.16,
+  variables,
   mar = c(2, 2, 2, 0.5), col,
   ...) {
 
   if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
 
-  # quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
+  quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
   if(any(!is.numeric(quantiles), any(quantiles > 1), any(quantiles < 0))) {
     stop("Quantiles misspecified.")
   }
 
   y <- apply(x[["irf"]][["irf"]], c(2, 3, 4), quantile, quantiles, na.rm = TRUE)
-  # Maybe do this
-  # aperm(y, c(1, 3, 2, 4))
 
   M <- dim(y)[2]
   P <- dim(y)[1]
 
-  variables <- x[["variables"]]
+  if(missing(variables)){
+    variables <- x[["variables"]]
+  } else if(length(variables) != M){
+    stop("Number of names for variables provided does not match number of variables.")
+  }
+
   if(missing(col)) {
     n_gray <- if(P %% 2 == 0) 0 else P %/% 2
     col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
@@ -112,23 +114,29 @@ irf_plot <- function(
 
 fcast_plot <- function(
   x,
-  quantiles = c(0.16, 0.5, 0.84),
-  # conf_bands = 0.16,
+  conf_bands = 0.16,
+  variables,
   mar = c(2, 2, 2, 0.5), col,
   ...) {
 
-  if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
+  if(!inherits(x, "bvar")) {stop("Please provide an object of type bvar.")}
 
-  # quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
+  quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
   if(any(!is.numeric(quantiles), any(quantiles > 1), any(quantiles < 0))) {
     stop("Quantiles misspecified.")
   }
 
   y <- apply(x[["fcast"]], c(2, 3), quantile, quantiles, na.rm = TRUE)
-  variables <- x[["variables"]]
 
   M <- dim(y)[3]
   P <- dim(y)[1]
+
+  if(missing(variables)){
+    variables <- x[["variables"]]
+  } else if(length(variables) != M){
+    stop("Number of names for variables provided does not match number of variables.")
+  }
+
 
   if(missing(col)) {
     n_gray <- if(P %% 2 == 0) 0 else P %/% 2
