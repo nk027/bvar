@@ -30,7 +30,7 @@ trace_plot <- function(x, name, bounds = NULL, ...) {
             max(vapply(dots, max, double(1)), x))
   plot(x, type = "l", xlab = "Index", ylab = "Value", ylim = ylim,
        main = paste("Trace of", name))
-  for(dot in dots) lines(dot, col = "lightgray")
+  for(dot in dots) {lines(dot, col = "lightgray")}
   # abline(h = mean(x), lty = "dotted", col = "gray") # Mean
   abline(h = bounds, lty = "dashed", col = "darkgray")
 
@@ -46,8 +46,9 @@ dens_plot <- function(x, name, bounds = NULL, ...) {
             max(vapply(dots, max, double(1)), x))
   plot(density(x), main = paste("Density of", name), xlim = xlim)
   polygon(density(x), col = rgb(0.8, 0.8, 0.8, 0.2), border = NA)
-  for(dot in dots)
+  for(dot in dots) {
     polygon(density(dot), col = rgb(0.8, 0.8, 0.8, 0.2), border = NA)
+  }
   lines(density(x))
   # abline(v = x[length(x)], col = "gray") # Last position
   abline(v = bounds, lty = "dashed", col = "darkgray")
@@ -68,33 +69,39 @@ hist_plot <- function(x, name, bounds = NULL) {
 
 irf_plot <- function(
   x,
+  impulse_vars,
+  response_vars = NULL,
   conf_bands = 0.16,
-  variables,
   mar = c(2, 2, 2, 0.5), col,
   ...) {
 
   if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
 
-  quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
-  if(any(!is.numeric(quantiles), any(quantiles > 1), any(quantiles < 0))) {
-    stop("Quantiles misspecified.")
+  if(any(!is.numeric(conf_bands), any(conf_bands > 1), any(conf_bands < 0))) {
+    stop("Confidence bands misspecified.")
   }
+
+  if(missing(col)) {
+    n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
+    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
+  }
+
+  # Do the same for response
+  if(missing(impulse_var)) {
+    # Attempt full set of variables -> tryCatch?
+    impulse_var <- x[["variables"]]
+  } else if(FALSE) {
+    # Attempt to use specified subset
+    # Allow integers (pos) & strings (name)
+  }
+
+
+  quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
 
   y <- apply(x[["irf"]][["irf"]], c(2, 3, 4), quantile, quantiles, na.rm = TRUE)
 
   M <- dim(y)[2]
   P <- dim(y)[1]
-
-  if(missing(variables)){
-    variables <- x[["variables"]]
-  } else if(length(variables) != M){
-    stop("Number of names for variables provided does not match number of variables.")
-  }
-
-  if(missing(col)) {
-    n_gray <- if(P %% 2 == 0) 0 else P %/% 2
-    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
-  }
 
   op <- par(mfrow = c(M, M), mar = mar, ...)
   for(i in 1:M) {
@@ -114,34 +121,36 @@ irf_plot <- function(
 
 fcast_plot <- function(
   x,
+  vars,
   conf_bands = 0.16,
-  variables,
   mar = c(2, 2, 2, 0.5), col,
   ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide an object of type bvar.")}
 
-  quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
-  if(any(!is.numeric(quantiles), any(quantiles > 1), any(quantiles < 0))) {
-    stop("Quantiles misspecified.")
+  if(any(!is.numeric(conf_bands), any(conf_bands > 1), any(conf_bands < 0))) {
+    stop("Confidence bands misspecified.")
   }
+
+  if(missing(col)) {
+    n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
+    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
+  }
+
+  if(missing(vars)) {
+    # Attempt full set of variables -> tryCatch?
+    vars <- x[["variables"]]
+  } else if(FALSE) {
+    # Attempt to use specified subset
+    # Allow integers (pos) & strings (name)
+  }
+
+  quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
 
   y <- apply(x[["fcast"]], c(2, 3), quantile, quantiles, na.rm = TRUE)
 
   M <- dim(y)[3]
   P <- dim(y)[1]
-
-  if(missing(variables)){
-    variables <- x[["variables"]]
-  } else if(length(variables) != M){
-    stop("Number of names for variables provided does not match number of variables.")
-  }
-
-
-  if(missing(col)) {
-    n_gray <- if(P %% 2 == 0) 0 else P %/% 2
-    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
-  }
 
   op <- par(mfrow = c(M, 1), mar = mar, ...)
   for(i in 1:M) {
