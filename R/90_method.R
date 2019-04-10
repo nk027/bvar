@@ -1,12 +1,9 @@
 plot.bvar <- function(x, ...) {
-  hyper_plot(x)
-  # if(any(names(x) == "irf")) {irf_plot(x, ...)}
-  # if(any(names(x) == "fcast")) {fcast_plot(x, ...)}
-}
 
-summary.bvar <- function(x, ...) {
+  hyper_plot(x, ...)
 
 }
+
 
 print.bvar <- function(x, ...) {
 
@@ -21,4 +18,38 @@ print.bvar <- function(x, ...) {
       round(x$accepted / x$meta$n_draw, 3), ")", sep = "")
 
   return(invisible(x))
+}
+
+summary.bvar <- function(x, ...) {
+
+  cat("...")
+
+}
+
+
+plot.bvar_irf <- function(x, ...) {
+
+  bv_plot_irf(...)
+
+}
+
+
+print.bvar_irf <- function(x, ...) {
+
+  cat("...")
+
+}
+
+
+plot.bvar_fcast <- function(x, ...) {
+
+  bv_plot_irf(...)
+
+}
+
+
+print.bvar_fcast <- function(x, ...) {
+
+  cat("...")
+
 }

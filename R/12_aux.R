@@ -26,5 +26,5 @@ gamma_coef <- function(mode, sd) {
 
 name_pars <- function(x, M) {
 
-  return(Reduce(c, sapply(x, function(y) if(y == "psi") rep(y, M) else y)))
+  return(Reduce(c, sapply(x, function(y) if(y == "psi") {rep(y, M)} else {y})))
 }
