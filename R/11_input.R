@@ -1,3 +1,14 @@
+#' Check an integer scalar
+#'
+#' `int_check()` checks whether an object is properly bounded, coercible to an
+#' integer and returns it as an integer.
+#'
+#' @param x Numeric scalar to check.
+#' @param min Numeric scalar. Minimum value of \emph{x}.
+#' @param max Numeric scalar. Maximum value of \emph{x}.
+#' @param msg String fed to \link[base]{stop} if an error occurs.
+#'
+#' @return Returns \emph{x} as integer.
 int_check <- function(
   x, min = 0, max = Inf,
   msg = "Please check the integer parameters.") {
@@ -10,6 +21,15 @@ int_check <- function(
 }
 
 
+#' Automatically set psi of the Minnesota prior
+#'
+#' Set the prior values of psi by fitting an \eqn{AR(p)} model and using the
+#' squareroot of the innovations variance.
+#'
+#' @param x Numeric matrix with the data.
+#' @param lags Numeric scalar. Number of lags in the model.
+#'
+#' @return Returns a list with the modes, minimum, and maximum values for psi.
 auto_psi <- function(x, lags) {
 
   out <- list()

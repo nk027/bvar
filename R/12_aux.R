@@ -1,18 +1,37 @@
-var_lag <- function(x, p) {
+#' Lag a matrix of time series
+#'
+#' Compute a lagged version of matrix to be used on vector autoregressions.
+#' Multiple lags are added side by side.
+#'
+#' @param x Matrix (\eqn{N * M}) to lag.
+#' @param lags Numeric scalar. Number of lags to create.
+#'
+#' @return Returns an \eqn{N * (M * lags)} matrix with consecutive lags at the
+#' right.
+lag_var <- function(x, lags) {
 
   x_rows <- nrow(x)
   x_cols <- ncol(x)
 
-  x_lagged <- matrix(0, x_rows, p * x_cols)
-  for(i in 1:p) {
-    x_lagged[(p + 1):x_rows, (x_cols * (i - 1) + 1):(x_cols * i)] <-
-      x[(p + 1 - i):(x_rows - i), (1:x_cols)]
+  x_lagged <- matrix(0, x_rows, lags * x_cols)
+  for(i in 1:lags) {
+    x_lagged[(lags + 1):x_rows, (x_cols * (i - 1) + 1):(x_cols * i)] <-
+      x[(lags + 1 - i):(x_rows - i), (1:x_cols)]
   }
 
   return(x_lagged)
 }
 
 
+#' Compute gamma coefficients
+#'
+#' Compute the shape \emph{k} and scale \emph{theta} of a gamma
+#' distribution via mode and standard deviation.
+#'
+#' @param mode Numeric scalar.
+#' @param sd Numeric scalar.
+#'
+#' @return Returns a list with shape \emph{k} and scale paramter \emph{theta}.
 gamma_coef <- function(mode, sd) {
 
   mode_sq <- mode ^ 2
@@ -24,7 +43,16 @@ gamma_coef <- function(mode, sd) {
 }
 
 
-name_pars <- function(x, M) {
+#' Create parameter names
+#'
+#' Function to help name prior parameters. Accounts for multiple occurences
+#' of psi when \eqn{M > 1}.
+#'
+#' @param x Character vector with names of all relevant paramters.
+#' @param M Integer scalar with the number of columns in the data.
+#'
+#' @return Returns a character vector of parameter names.
+name_pars <- function(x, M = NULL) {
 
   return(Reduce(c, sapply(x, function(y) if(y == "psi") {rep(y, M)} else {y})))
 }

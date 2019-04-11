@@ -35,7 +35,7 @@ bvar <- function(
 
   # Preparation -------------------------------------------------------------
 
-  X <- var_lag(Y, lags)
+  X <- lag_var(Y, lags)
 
   Y <- Y[(lags + 1):nrow(Y), ]
   X <- X[(lags + 1):nrow(X), ]

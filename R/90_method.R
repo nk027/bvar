@@ -22,7 +22,14 @@ print.bvar <- function(x, ...) {
 
 summary.bvar <- function(x, ...) {
 
-  cat("...")
+  0
+  class(out) <- "summary.bvar"
+
+}
+
+print.summary.bvar <- function(x, ...) {
+
+  0
 
 }
 
