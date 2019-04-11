@@ -1,3 +1,38 @@
+#' Log-posterior of a BVAR
+#'
+#' Compute the log-posterior (or log-marginal-likelihood) of a Bayesian VAR
+#' with a Minnesota prior and optional dummy priors. Prior parameters may be
+#' treated hierarchically. Create objects necessary for drawing from the
+#' posterior distributions of coefficients and covariance matrix of the
+#' residuals.
+#'
+#' @param hyper Named numerical vector with hyperparameters for hierarchical
+#' estimation.
+#' @param hyper_min Optional numerical vector. Minimum values allowed for
+#' hyperparameters. If these are breached a value of -1e18 is returned.
+#' @param hyper_max Optional numerical vector. Maximum values allowed for
+#' hyperparameters. If these are breached a value of -1e18 is returned.
+#' @param pars Named numerical vector with prior parameters. Values also found
+#' in \emph{hyper} are overwritten with their hierarchical counterpart.
+#' @param priors List created via \link{bv_priors}. Contains information on the
+#' Minnesota prior and optional dummy priors (named in \code{priors$dummy}).
+#' @param Y Numeric \eqn{N * M} matrix.
+#' @param X Numeric \eqn{N * K} matrix.
+#' @param K Integer scalar. Columns of \emph{X}, i.e. \eqn{M * lags + 1}.
+#' @param M Integer scalar. Columns of \emph{Y}.
+#' @param N Integer scalar. Rows of \emph{Y} / \emph{X}.
+#' @param lags Integer scalar. Number of lags in the model.
+#' @param opt Optional logical scalar. Determines whether the return values is
+#' a numeric scalar or a list. Used to call `bv_ml()` in \link[base]{optim}.
+#'
+#' @return Returns a list with the following objects by default:
+#' \itemize{
+#'   \item log_ml - a numerical scalar with the log-posterior
+#'   \item Y, X, N - The respective parameters adjusted for eventual dummy
+#'   priors. Necessary for drawing from posterior distributions.
+#'   \item psi, sse, beta_hat, omega_inv - Further values necessary for drawing
+#'   from posterior distributions.
+#' }
 bv_ml <- function(
   hyper, hyper_min = NULL, hyper_max = NULL,
   pars,
@@ -9,7 +44,7 @@ bv_ml <- function(
 
   if(!any(is.null(hyper_min), is.null(hyper_max))) {
     if(any(hyper_min > hyper | hyper > hyper_max)) {
-      return(list("log_ml" = -1e18))
+      if(opt) {return(-1e18)} else {return(list("log_ml" = -1e18))}
     }
   }
 
