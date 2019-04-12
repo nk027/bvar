@@ -45,6 +45,10 @@ bvar <- function(
   M <- ncol(Y)
   N <- nrow(Y)
 
+  # Check sign restrictions
+  if(!is.null(irf[["sign_restr"]]) &&
+     length(irf[["sign_restr"]]) != M ^ 2) {stop()}
+
 
   # Priors ------------------------------------------------------------------
 
@@ -53,6 +57,9 @@ bvar <- function(
   priors[["b"]][2:(M + 1), ] <- diag(M)
   if(length(priors[["psi"]]) == 1 && priors[["psi"]] == "auto") {
     priors[["psi"]] <- auto_psi(Y, lags)
+  }
+  if(!all(vapply(priors[["psi"]], function(x) length(x) == M, logical(1)))) {
+    stop()
   }
 
   # Parameters
@@ -66,7 +73,7 @@ bvar <- function(
   # Hierarchical priors
   hyper_n <- length(priors[["hyper"]]) +
     sum(priors[["hyper"]] == "psi") * (M - 1)
-  if(hyper_n == 0) bv_non_hierarchical(...)
+  if(hyper_n == 0) stop("Non-hierarchical estimation not yet implemented.")
 
   hyper <- do.call(c, lapply(priors[["hyper"]],
                              function(x) priors[[x]][["mode"]]))
@@ -175,7 +182,7 @@ bvar <- function(
       # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
       # These need X and N including the dummy priors from `ml_draw`
       draws <- draw_post(X = ml_draw[["X"]], N = ml_draw[["N"]],
-                         lags = lags, M = M, b = priors[["b"]],
+                         M = M, lags = lags, b = priors[["b"]],
                          psi = ml_draw[["psi"]], sse = ml_draw[["sse"]],
                          beta_hat = ml_draw[["beta_hat"]],
                          omega_inv = ml_draw[["omega_inv"]])
