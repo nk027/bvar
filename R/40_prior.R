@@ -2,7 +2,6 @@ bv_priors <- function(
   hyper = "auto",
   mn = bv_minnesota(bv_lambda(0.2, 0.4, 0.0001, 5),
                     bv_alpha(2, 0.1, 0.5),
-                    psi = "auto",
                     var = 1e07),
   ...) {
 
@@ -31,7 +30,7 @@ bv_priors <- function(
 
   out <- if(!is.null(mn)) {
     list(hyper = hyper, lambda = mn[["lambda"]], alpha = mn[["alpha"]],
-         psi = mn[["psi"]], var = mn[["var"]], ...)
+         psi = mn[["psi"]], var = mn[["var"]], b = mn[["b"]], ...)
   } else {
     list(hyper = hyper, ...)
   }
