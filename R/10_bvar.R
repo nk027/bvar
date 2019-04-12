@@ -1,6 +1,6 @@
 bvar <- function(
   data, lags,
-  n_draw = 10000, n_burn = 5000, thin = 1,
+  n_draw = 10000, n_burn = 5000, n_thin = 1,
   priors = bv_priors(),
   metropolis = bv_metropolis(),
   fcast = bv_fcast(),
@@ -23,8 +23,8 @@ bvar <- function(
   lags <- int_check(lags, min = 1, max = nrow(Y))
   n_draw <- int_check(n_draw, min = 1)
   n_burn <- int_check(n_burn, min = 0, max = n_draw)
-  thin <- int_check(thin, min = 1, max = ((n_draw - n_burn) / 10))
-  n_save <- int_check(((n_draw - n_burn) / thin), min = 1)
+  n_thin <- int_check(n_thin, min = 1, max = ((n_draw - n_burn) / 10))
+  n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1)
 
   # Constructors
   if(!inherits(priors, "bv_priors")) {stop()}
@@ -45,14 +45,25 @@ bvar <- function(
   M <- ncol(Y)
   N <- nrow(Y)
 
+  # Check sign restrictions
+  if(!is.null(irf[["sign_restr"]]) &&
+     length(irf[["sign_restr"]]) != M ^ 2) {stop()}
+
 
   # Priors ------------------------------------------------------------------
 
   # Minnesota prior
-  priors[["b"]] <- matrix(0, nrow = K, ncol = M)
-  priors[["b"]][2:(M + 1), ] <- diag(M)
+  if(is.null(priors[["b"]])) {
+    priors[["b"]] <- matrix(0, nrow = K, ncol = M)
+    priors[["b"]][2:(M + 1), ] <- diag(M)
+  } else if(dim(priors[["b"]]) != c(K, M)) {
+    stop("Dimensions of the prior mean (b) do not match the data.")
+  }
   if(length(priors[["psi"]]) == 1 && priors[["psi"]] == "auto") {
     priors[["psi"]] <- auto_psi(Y, lags)
+  }
+  if(!all(vapply(priors[["psi"]], function(x) length(x) == M, logical(1)))) {
+    stop()
   }
 
   # Parameters
@@ -66,7 +77,7 @@ bvar <- function(
   # Hierarchical priors
   hyper_n <- length(priors[["hyper"]]) +
     sum(priors[["hyper"]] == "psi") * (M - 1)
-  if(hyper_n == 0) bv_non_hierarchical(...)
+  if(hyper_n == 0) stop("Non-hierarchical estimation not yet implemented.")
 
   hyper <- do.call(c, lapply(priors[["hyper"]],
                              function(x) priors[[x]][["mode"]]))
@@ -126,13 +137,19 @@ bvar <- function(
   sigma_store <- array(NA, c(n_save, M, M))
 
   if(!is.null(fcast)) {
-    fcast_store <- array(NA, c(n_save, fcast[["horizon"]], M))
+    fcast_store <- list(
+      "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
+      "setup" = fcast
+    )
+    class(fcast_store) <- "bvar_fcast"
   }
   if(!is.null(irf)) {
     irf_store <- list(
-      irf = array(NA, c(n_save, M, irf[["horizon"]], M)),
-      fevd = if(irf[["fevd"]]) {array(NA, c(n_save, M, M))} else {NULL}
+      "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
+      "fevd" = if(irf[["fevd"]]) {array(NA, c(n_save, M, M))} else {NULL},
+      "setup" = irf
     )
+    class(irf_store) <- "bvar_irf"
   }
 
   # Loop
@@ -166,22 +183,22 @@ bvar <- function(
       accepted_adj <- 0
     }
 
-    if(i > 0 && i %% thin == 0) {
+    if(i > 0 && i %% n_thin == 0) {
 
       # Stored iterations
-      ml_store[(i / thin)] <- ml_draw[["log_ml"]]
-      hyper_store[(i / thin), ] <- hyper_draw
+      ml_store[(i / n_thin)] <- ml_draw[["log_ml"]]
+      hyper_store[(i / n_thin), ] <- hyper_draw
 
       # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
       # These need X and N including the dummy priors from `ml_draw`
       draws <- draw_post(X = ml_draw[["X"]], N = ml_draw[["N"]],
-                         lags = lags, M = M, b = priors[["b"]],
+                         M = M, lags = lags, b = priors[["b"]],
                          psi = ml_draw[["psi"]], sse = ml_draw[["sse"]],
                          beta_hat = ml_draw[["beta_hat"]],
                          omega_inv = ml_draw[["omega_inv"]])
 
-      beta_store[(i / thin), , ] <- draws[["beta_draw"]]
-      sigma_store[(i / thin), , ] <- draws[["sigma_draw"]]
+      beta_store[(i / n_thin), , ] <- draws[["beta_draw"]]
+      sigma_store[(i / n_thin), , ] <- draws[["sigma_draw"]]
 
       # Companion matrix is necessary for forecasts and impulse responses
       if(!is.null(fcast) || !is.null(irf)) {
@@ -195,12 +212,12 @@ bvar <- function(
       # Forecast
       if(!is.null(fcast)) {
         beta_const <- draws[["beta_draw"]][1, ]
-        fcast_store[(i / thin), , ] <- compute_fcast(
+        fcast_store[["fcast"]][(i / n_thin), , ] <- compute_fcast(
           Y = Y, K = K, M = M, N = N, lags = lags,
           horizon = fcast[["horizon"]],
           beta_comp = beta_comp, beta_const = beta_const,
           sigma = draws[["sigma_draw"]])
-      } # Forecast
+      } # End forecast
 
       # Impulse responses
       if(!is.null(irf)) {
@@ -210,12 +227,11 @@ bvar <- function(
           M = M, lags = lags,
           horizon = irf[["horizon"]], identification = irf[["identification"]],
           sign_restr = irf[["sign_restr"]], fevd = irf[["fevd"]])
-
-        irf_store[["irf"]][(i / thin), , , ] <- irf_comp[["irf"]]
+        irf_store[["irf"]][(i / n_thin), , , ] <- irf_comp[["irf"]]
         if(irf[["fevd"]]) {
-          irf_store[["fevd"]][(i / thin), , ] <- irf_comp[["fevd"]]
+          irf_store[["fevd"]][(i / n_thin), , ] <- irf_comp[["fevd"]]
         }
-      } # Impulse responses
+      } # End impulse responses
 
     }
 
@@ -234,7 +250,7 @@ bvar <- function(
               "variables" = variables, "call" = cl)
 
   out[["meta"]] <- list("N" = N, "M" = M, "lags" = lags, "n_draw" = n_draw,
-                        "n_burn" = n_burn)
+                        "n_burn" = n_burn, "n_save" = n_save)
 
   if(!is.null(fcast)) out[["fcast"]] <- fcast_store
   if(!is.null(irf)) out[["irf"]] <- irf_store

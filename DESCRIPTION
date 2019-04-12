@@ -9,4 +9,4 @@ Description: Toolkit for estimation of hierarchical Bayesian VARs.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: stats, graphics, methods, utils, MASS, stochvol
+Imports: stats, graphics, methods, utils, MASS

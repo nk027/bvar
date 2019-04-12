@@ -1,5 +1,27 @@
+#' BVAR posterior draws
+#'
+#' Draw beta and sigma from the posterior of a BVAR.
+#'
+#' @param X Numeric matrix. Possibly extended with dummy priors.
+#' @param N Integer scalar. Rows of \emph{X}.
+#' @param M Integer scalar. Columns of \emph{X}.
+#' @param lags Integer scalar. Number of lags in the model.
+#' @param b Numeric marix. Minnesota prior mean.
+#' @param psi Numeric matrix. Scale of the IW prior on the residual covariance.
+#' @param sse Numeric matrix. Squared VAR residuals.
+#' @param beta_hat Numeric matrix.
+#' @param omega_inv Numeric matrix.
+#'
+#' @return Returns a list with the following elements:
+#' \itemize{
+#'   \item beta_draw, sigma_draw - Draws from the posterior.
+#'   \item sigma_chol - The Cholesky factorisation of sigma_draw. Calculated
+#'   as \code{t(chol(sigma_draw))}.
+#' }
+
 draw_post <- function(
-  X, N, lags, M, b,
+  X,
+  N = nrow(X), M = ncol(X), lags, b,
   psi, sse, beta_hat, omega_inv) {
 
   S_post <- psi + sse + t(beta_hat - b) %*% omega_inv %*% (beta_hat - b)

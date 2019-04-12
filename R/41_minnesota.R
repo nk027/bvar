@@ -2,13 +2,15 @@ bv_minnesota <- function(
   lambda = bv_lambda(0.2, 0.4, 0.0001, 5), # mode, sd, min, max
   alpha = bv_alpha(2, 0.1, 0.5), # mode, min, max
   psi = "auto",
+  b = "auto",
   var = 1e07) {
 
   if(!inherits(lambda, "bv_dummy") && !inherits(alpha, "bv_dummy")) {
     stop("Please use 'bv_lambda' / 'bv_alpha' to set lambda / alpha.")
   }
 
-  out <- list(lambda = lambda, alpha = alpha, psi = psi, var = var)
+  out <- list("lambda" = lambda, "alpha" = alpha,
+              "psi" = psi, "b" = b, "var" = var)
   class(out) <- "bv_minnesota"
 
   return(out)
