@@ -28,7 +28,7 @@
 #' @return Returns a list with the following objects by default:
 #' \itemize{
 #'   \item log_ml - a numerical scalar with the log-posterior
-#'   \item Y, X, N - The respective parameters adjusted for eventual dummy
+#'   \item X, N - The respective parameters adjusted for eventual dummy
 #'   priors. Necessary for drawing from posterior distributions.
 #'   \item psi, sse, beta_hat, omega_inv - Further values necessary for drawing
 #'   from posterior distributions.
@@ -119,6 +119,6 @@ bv_ml <- function(
   if(opt) return(log_ml)
 
   # Return log_ml and objects necessary for drawing
-  return(list("log_ml" = log_ml, "Y" = Y, "X" = X, "N" = N, "psi" = psi,
+  return(list("log_ml" = log_ml, "X" = X, "N" = N, "psi" = psi,
               "sse" = sse, "beta_hat" = beta_hat, "omega_inv" = omega_inv))
 }

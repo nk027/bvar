@@ -16,41 +16,17 @@ print.bvar <- function(x, ...) {
       sep = "")
   cat("\nAccepted draws (rate): ", x$accepted, " (",
       round(x$accepted / x$meta$n_draw, 3), ")", sep = "")
+  # if(irf)
+  #   if(fevd) if(M < x)
+  # if(fcast)
 
   return(invisible(x))
-}
-
-summary.bvar <- function(x, ...) {
-
-  0
-  class(out) <- "summary.bvar"
-
-}
-
-print.summary.bvar <- function(x, ...) {
-
-  0
-
-}
-
-
-plot.bvar_irf <- function(x, ...) {
-
-  bv_plot_irf(...)
-
 }
 
 
 print.bvar_irf <- function(x, ...) {
 
   cat("...")
-
-}
-
-
-plot.bvar_fcast <- function(x, ...) {
-
-  bv_plot_irf(...)
 
 }
 

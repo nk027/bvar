@@ -1,5 +1,24 @@
+#' BVAR posterior draws
+#'
+#' Draw beta and sigma from the posterior of a BVAR.
+#'
+#' @param X Numeric matrix. Possibly extended with dummy priors.
+#' @param N Integer scalar. Rows of \emph{X}.
+#' @param M Integer scalar. Columns of \emph{X}.
+#' @param lags Integer scalar. Number of lags in the model.
+#' @param b
+#' @param psi
+#' @param sse
+#' @param beta_hat
+#' @param omega_inv
+#'
+#' @return
+#' @export
+#'
+#' @examples
 draw_post <- function(
-  X, N, lags, M, b,
+  X,
+  N = nrow(X), M = ncol(X), lags, b,
   psi, sse, beta_hat, omega_inv) {
 
   S_post <- psi + sse + t(beta_hat - b) %*% omega_inv %*% (beta_hat - b)
