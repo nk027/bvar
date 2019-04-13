@@ -81,21 +81,6 @@ irf_plot <- function(
     stop("Confidence bands misspecified.")
   }
 
-  if(missing(col)) {
-    n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
-    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
-  }
-
-  # Do the same for response
-  if(missing(impulse_var)) {
-    # Attempt full set of variables -> tryCatch?
-    impulse_var <- x[["variables"]]
-  } else if(FALSE) {
-    # Attempt to use specified subset
-    # Allow integers (pos) & strings (name)
-  }
-
-
   quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
 
   y <- apply(x[["irf"]][["irf"]], c(2, 3, 4), quantile, quantiles, na.rm = TRUE)
@@ -103,12 +88,45 @@ irf_plot <- function(
   M <- dim(y)[2]
   P <- dim(y)[1]
 
-  op <- par(mfrow = c(M, M), mar = mar, ...)
-  for(i in 1:M) {
-    for(j in 1:M) {
+  variables <- x[["variables"]]
+  if(is.null(variables)) {variables <- 1:M}
+
+  if(missing(col)) {
+    n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
+    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
+  }
+
+  if(missing(impulse_vars)) {
+    # Attempt full set of variables -> tryCatch?
+    pos_imp <- 1:M
+  } else if(is.numeric(impulse_vars)) {
+    pos_imp <- sapply(impulse_vars, int_check, 1, M)
+  } else if(is.character(impulse_vars)){
+    pos_imp <- which(variables %in% impulse_vars)
+    if(length(pos_imp) == 0) {
+      stop("Impulse variable(s) not matching any variable name(s).")
+      }
+  }
+
+  if(is.null(response_vars)) {
+    # Attempt full set of variables -> tryCatch?
+    pos_res <- 1:M
+  } else if(is.numeric(response_vars)) {
+    pos_res <- sapply(response_vars, int_check, 1, M)
+  } else if(is.character(response_vars)){
+    pos_res <- which(variables %in% response_vars)
+    if(length(pos_res) == 0) {
+      stop("Response variable(s) not matching any variable name(s).")
+    }
+  }
+
+  op <- par(mfrow = c(length(pos_res), length(pos_imp)), mar = mar, ...)
+  for(i in pos_res) {
+    for(j in pos_imp) {
       ts.plot(t(as.matrix(y[, i, , j])),
               col = col, lty = 1,
-              main = variables[i])
+              main = paste(variables[i], "response after",
+                           variables[j], "impulse"))
       abline(h = 0, lty = "dashed", col = "black")
     }
   }
@@ -132,19 +150,6 @@ fcast_plot <- function(
     stop("Confidence bands misspecified.")
   }
 
-  if(missing(col)) {
-    n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
-    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
-  }
-
-  if(missing(vars)) {
-    # Attempt full set of variables -> tryCatch?
-    vars <- x[["variables"]]
-  } else if(FALSE) {
-    # Attempt to use specified subset
-    # Allow integers (pos) & strings (name)
-  }
-
   quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
 
   y <- apply(x[["fcast"]], c(2, 3), quantile, quantiles, na.rm = TRUE)
@@ -152,11 +157,31 @@ fcast_plot <- function(
   M <- dim(y)[3]
   P <- dim(y)[1]
 
-  op <- par(mfrow = c(M, 1), mar = mar, ...)
-  for(i in 1:M) {
+  variables <- x[["variables"]]
+  if(is.null(variables)) {variables <- 1:M}
+
+  if(missing(col)) {
+    n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
+    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
+  }
+
+  if(missing(vars)) {
+    # Attempt full set of variables -> tryCatch?
+    pos_fore <- 1:M
+  } else if(is.numeric(vars)) {
+    pos_fore <- sapply(vars, int_check, 1, M)
+  } else if(is.character(vars)){
+    pos_fore <- which(variables %in% vars)
+    if(length(pos_fore) == 0) {
+      stop("Selected variable(s) not matching any variable name(s).")
+    }
+  }
+
+  op <- par(mfrow = c(length(pos_fore), 1), mar = mar, ...)
+  for(i in pos_fore) {
     ts.plot(t(as.matrix(y[, , i])),
             col = col, lty = 1,
-            main = variables[i])
+            main = paste(variables[i], "forecast"))
     grid()
   }
   par(op)
