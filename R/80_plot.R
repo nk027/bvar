@@ -100,25 +100,25 @@ irf_plot <- function(
     # Attempt full set of variables -> tryCatch?
     pos_imp <- 1:M
   } else if(is.numeric(impulse_vars)) {
-    pos_imp <- sapply(impulse_vars, int_check, 1, M)
+    pos_imp <- sort(sapply(impulse_vars, int_check, 1, M))
   } else if(is.character(impulse_vars)){
     pos_imp <- which(variables %in% impulse_vars)
     if(length(pos_imp) == 0) {
       stop("Impulse variable(s) not matching any variable name(s).")
-      }
-  }
+    }
+  } else {stop("Impulse variable selection in the wrong format.")}
 
   if(is.null(response_vars)) {
     # Attempt full set of variables -> tryCatch?
     pos_res <- 1:M
   } else if(is.numeric(response_vars)) {
-    pos_res <- sapply(response_vars, int_check, 1, M)
+    pos_res <- sort(sapply(response_vars, int_check, 1, M))
   } else if(is.character(response_vars)){
     pos_res <- which(variables %in% response_vars)
     if(length(pos_res) == 0) {
       stop("Response variable(s) not matching any variable name(s).")
     }
-  }
+  } else {stop("Response variable selection in the wrong format.")}
 
   op <- par(mfrow = c(length(pos_res), length(pos_imp)), mar = mar, ...)
   for(i in pos_res) {
@@ -169,13 +169,13 @@ fcast_plot <- function(
     # Attempt full set of variables -> tryCatch?
     pos_fore <- 1:M
   } else if(is.numeric(vars)) {
-    pos_fore <- sapply(vars, int_check, 1, M)
+    pos_fore <- sort(sapply(vars, int_check, 1, M))
   } else if(is.character(vars)){
     pos_fore <- which(variables %in% vars)
     if(length(pos_fore) == 0) {
       stop("Selected variable(s) not matching any variable name(s).")
     }
-  }
+  } else {stop("Variable selection in the wrong format.")}
 
   op <- par(mfrow = c(length(pos_fore), 1), mar = mar, ...)
   for(i in pos_fore) {
