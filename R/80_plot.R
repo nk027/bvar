@@ -18,7 +18,7 @@ hyper_plot <- function(x) {
   }
   par(op)
 
-  invisible(x)
+  return(invisible(x))
 }
 
 # trace
@@ -34,7 +34,7 @@ trace_plot <- function(x, name, bounds = NULL, ...) {
   # abline(h = mean(x), lty = "dotted", col = "gray") # Mean
   abline(h = bounds, lty = "dashed", col = "darkgray")
 
-  invisible(x)
+  return(invisible(x))
 }
 
 # density
@@ -53,7 +53,7 @@ dens_plot <- function(x, name, bounds = NULL, ...) {
   # abline(v = x[length(x)], col = "gray") # Last position
   abline(v = bounds, lty = "dashed", col = "darkgray")
 
-  invisible(x)
+  return(invisible(x))
 }
 
 hist_plot <- function(x, name, bounds = NULL) {
@@ -62,7 +62,7 @@ hist_plot <- function(x, name, bounds = NULL) {
   # abline(v = x[length(x)], col = "gray") # Last position
   abline(v = bounds, lty = "dashed", col = "darkgray")
 
-  invisible(x)
+  return(invisible(x))
 }
 
 # irf
@@ -88,8 +88,7 @@ irf_plot <- function(
   M <- dim(y)[2]
   P <- dim(y)[1]
 
-  variables <- x[["variables"]]
-  if(is.null(variables)) {variables <- 1:M}
+  variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
 
   if(missing(col)) {
     n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
@@ -125,7 +124,7 @@ irf_plot <- function(
     for(j in pos_imp) {
       ts.plot(t(as.matrix(y[, i, , j])),
               col = col, lty = 1,
-              main = paste(variables[i], "response after",
+              main = paste(variables[i], "response to",
                            variables[j], "impulse"))
       abline(h = 0, lty = "dashed", col = "black")
     }
@@ -157,8 +156,7 @@ fcast_plot <- function(
   M <- dim(y)[3]
   P <- dim(y)[1]
 
-  variables <- x[["variables"]]
-  if(is.null(variables)) {variables <- 1:M}
+  variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
 
   if(missing(col)) {
     n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
