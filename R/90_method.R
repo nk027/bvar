@@ -11,7 +11,7 @@ print.bvar <- function(x, ...) {
 
   if(!inherits(x, "bvar")) {stop()}
 
-  cat("\nBayesian VAR consisting of", x$meta$N, "observations,",
+  cat("Bayesian VAR consisting of", x$meta$N, "observations,",
       x$meta$M, "variables and", x$meta$lags, "lags.")
   cat("\nHyperparameters:",
       paste(x$priors$hyper, collapse = ", "),

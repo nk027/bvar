@@ -46,3 +46,13 @@ auto_psi <- function(x, lags) {
 
   return(out)
 }
+
+
+quantile_check <- function(conf_bands) {
+
+  if(any(!is.numeric(conf_bands), any(conf_bands > 1), any(conf_bands < 0))) {
+    stop("Confidence bands misspecified.")
+  }
+
+  return(sort(c(conf_bands, 0.5, (1 - conf_bands))))
+}

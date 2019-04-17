@@ -1,6 +1,6 @@
-hyper_plot <- function(x) {
+bv_plot <- function(x, mar = c(2, 2, 2, 0.5), ...) {
 
-  if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
+  if(!inherits(x, "bvar")) {stop("Please provide an object of type bvar.")}
 
   y <- x[["hyper"]]
   K <- ncol(y)
@@ -8,181 +8,94 @@ hyper_plot <- function(x) {
   bounds <- vapply(name, function(z) {
     c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])}, double(2))
 
-  op <- par(mar = c(2, 2, 2, 0.5), mfrow = c(K + 1, 2))
+  op <- par(mfrow = c(K + 1, 2), mar = mar, ...)
 
-  trace_plot(x[["ml"]], "marginal likelihood")
-  dens_plot(x[["ml"]], "marginal likelihood")
+  plot_trace(x[["ml"]], name = "marginal likelihood")
+  plot_dens(x[["ml"]], name = "marginal likelihood")
   for(i in 1:K) {
-    trace_plot(y[, i], name[i], bounds[, i])
-    dens_plot(y[, i], name[i], bounds[, i])
+    plot_trace(y[, i], name[i], bounds[, i])
+    plot_dens(y[, i], name[i], bounds[, i])
   }
+
   par(op)
 
   return(invisible(x))
 }
 
-# trace
 
-trace_plot <- function(x, name, bounds = NULL, ...) {
+plot_hyper <- function(x, name, fun, ...) {
+
+  if(!inherits(x, "bvar")) {stop("Please provide an object of type bvar.")}
+
+  if(missing(name)) {stop("Please use name to specify a parameter to plot.")}
 
   dots <- list(...)
-  ylim <- c(min(vapply(dots, min, double(1)), x),
-            max(vapply(dots, max, double(1)), x))
+  lapply(dots, function(x) {
+    if(!inherits(x, "bvar")) {stop("Please provide objects of type bvar.")}
+  })
+
+  if(name == "ml") {
+    y <- x[["ml"]]
+    dots <- lapply(dots, function(x) x[["ml"]])
+  } else {
+    y <- x[["hyper"]][, which(colnames(x[["hyper"]]) == name)]
+    dots <- lapply(dots, function(x) {
+      x[["hyper"]][, which(colnames(x[["hyper"]]) == name)]
+    })
+  }
+  bounds <- vapply(name, function(z) {
+    c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])}, double(2))
+
+  fun(y, name, bounds, dots)
+
+  return(invisible(x))
+}
+
+
+bv_plot_trace <- function(x, name, fun, ...) {
+
+  plot_hyper(x, name, fun = plot_trace, ...)
+
+}
+
+bv_plot_density <- function(x, name, fun, ...) {
+
+  plot_hyper(x, name, fun = plot_dens, ...)
+
+}
+
+
+plot_trace <- function(x, name = NULL, bounds = NULL, ...) {
+
+  dots <- list(...)
+  ylim <- c(
+    min(if(length(dots) > 1) {vapply(dots, min, double(1))} else {dots}, x),
+    max(if(length(dots) > 1) {vapply(dots, max, double(1))} else {dots}, x)
+  )
   plot(x, type = "l", xlab = "Index", ylab = "Value", ylim = ylim,
-       main = paste("Trace of", name))
+       main = paste("Trace", if(!is.null(name)) {paste("of", name)} else {""}))
   for(dot in dots) {lines(dot, col = "lightgray")}
-  # abline(h = mean(x), lty = "dotted", col = "gray") # Mean
   abline(h = bounds, lty = "dashed", col = "darkgray")
 
   return(invisible(x))
 }
 
-# density
 
-dens_plot <- function(x, name, bounds = NULL, ...) {
+plot_dens <- function(x, name = NULL, bounds = NULL, ...) {
 
   dots <- list(...)
-  xlim <- c(min(vapply(dots, min, double(1)), x),
-            max(vapply(dots, max, double(1)), x))
-  plot(density(x), main = paste("Density of", name), xlim = xlim)
+  xlim <- c(
+    min(if(length(dots) > 1) {vapply(dots, min, double(1))} else {dots}, x),
+    max(if(length(dots) > 1) {vapply(dots, max, double(1))} else {dots}, x)
+  )
+  plot(density(x), xlim = xlim,
+       main = paste("Trace", if(!is.null(name)) {paste("of", name)} else {""}))
   polygon(density(x), col = rgb(0.8, 0.8, 0.8, 0.2), border = NA)
   for(dot in dots) {
     polygon(density(dot), col = rgb(0.8, 0.8, 0.8, 0.2), border = NA)
   }
   lines(density(x))
-  # abline(v = x[length(x)], col = "gray") # Last position
   abline(v = bounds, lty = "dashed", col = "darkgray")
 
   return(invisible(x))
-}
-
-hist_plot <- function(x, name, bounds = NULL) {
-
-  hist(x, xlab = "Value", main = paste("Histogram of", name))
-  # abline(v = x[length(x)], col = "gray") # Last position
-  abline(v = bounds, lty = "dashed", col = "darkgray")
-
-  return(invisible(x))
-}
-
-# irf
-
-irf_plot <- function(
-  x,
-  impulse_vars,
-  response_vars = NULL,
-  conf_bands = 0.16,
-  mar = c(2, 2, 2, 0.5), col,
-  ...) {
-
-  if(!inherits(x, "bvar")) stop("Please provide an object of type bvar.")
-
-  if(any(!is.numeric(conf_bands), any(conf_bands > 1), any(conf_bands < 0))) {
-    stop("Confidence bands misspecified.")
-  }
-
-  quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
-
-  y <- apply(x[["irf"]][["irf"]], c(2, 3, 4), quantile, quantiles, na.rm = TRUE)
-
-  M <- dim(y)[2]
-  P <- dim(y)[1]
-
-  variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
-
-  if(missing(col)) {
-    n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
-    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
-  }
-
-  if(missing(impulse_vars)) {
-    # Attempt full set of variables -> tryCatch?
-    pos_imp <- 1:M
-  } else if(is.numeric(impulse_vars)) {
-    pos_imp <- sort(sapply(impulse_vars, int_check, 1, M))
-  } else if(is.character(impulse_vars)){
-    pos_imp <- which(variables %in% impulse_vars)
-    if(length(pos_imp) == 0) {
-      stop("Impulse variable(s) not matching any variable name(s).")
-    }
-  } else {stop("Impulse variable selection in the wrong format.")}
-
-  if(is.null(response_vars)) {
-    # Attempt full set of variables -> tryCatch?
-    pos_res <- 1:M
-  } else if(is.numeric(response_vars)) {
-    pos_res <- sort(sapply(response_vars, int_check, 1, M))
-  } else if(is.character(response_vars)){
-    pos_res <- which(variables %in% response_vars)
-    if(length(pos_res) == 0) {
-      stop("Response variable(s) not matching any variable name(s).")
-    }
-  } else {stop("Response variable selection in the wrong format.")}
-
-  op <- par(mfrow = c(length(pos_res), length(pos_imp)), mar = mar, ...)
-  for(i in pos_res) {
-    for(j in pos_imp) {
-      ts.plot(t(as.matrix(y[, i, , j])),
-              col = col, lty = 1,
-              main = paste(variables[i], "response to",
-                           variables[j], "impulse"))
-      abline(h = 0, lty = "dashed", col = "black")
-    }
-  }
-  par(op)
-
-  invisible(x)
-}
-
-# fcast
-
-fcast_plot <- function(
-  x,
-  vars,
-  conf_bands = 0.16,
-  mar = c(2, 2, 2, 0.5), col,
-  ...) {
-
-  if(!inherits(x, "bvar")) {stop("Please provide an object of type bvar.")}
-
-  if(any(!is.numeric(conf_bands), any(conf_bands > 1), any(conf_bands < 0))) {
-    stop("Confidence bands misspecified.")
-  }
-
-  quantiles <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
-
-  y <- apply(x[["fcast"]], c(2, 3), quantile, quantiles, na.rm = TRUE)
-
-  M <- dim(y)[3]
-  P <- dim(y)[1]
-
-  variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
-
-  if(missing(col)) {
-    n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
-    col <- c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray))
-  }
-
-  if(missing(vars)) {
-    # Attempt full set of variables -> tryCatch?
-    pos_fore <- 1:M
-  } else if(is.numeric(vars)) {
-    pos_fore <- sort(sapply(vars, int_check, 1, M))
-  } else if(is.character(vars)){
-    pos_fore <- which(variables %in% vars)
-    if(length(pos_fore) == 0) {
-      stop("Selected variable(s) not matching any variable name(s).")
-    }
-  } else {stop("Variable selection in the wrong format.")}
-
-  op <- par(mfrow = c(length(pos_fore), 1), mar = mar, ...)
-  for(i in pos_fore) {
-    ts.plot(t(as.matrix(y[, , i])),
-            col = col, lty = 1,
-            main = paste(variables[i], "forecast"))
-    grid()
-  }
-  par(op)
-
-  invisible(x)
 }

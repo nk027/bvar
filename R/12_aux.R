@@ -56,3 +56,26 @@ name_pars <- function(x, M = NULL) {
 
   return(Reduce(c, sapply(x, function(y) if(y == "psi") {rep(y, M)} else {y})))
 }
+
+
+set_gray <- function(P) {
+
+  n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
+
+  return(c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray)))
+}
+
+
+
+choose_vars <- function(vars, variables, M) {
+
+  if(missing(vars)) {return(1:M)}
+  if(is.numeric(vars)) {
+    return(sort(vapply(vars, int_check, min = 1, max = M, integer(1))))
+  }
+  if(is.character(vars) && !is.null(variables)) {
+    return(which(variables %in% vars))
+  }
+
+  stop("Variables not found.")
+}
