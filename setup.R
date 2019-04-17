@@ -1,4 +1,4 @@
-to_source <- c(10, 11, 12, 20, 30, 21, 40, 41, 42, 50, 60:65, 90)
+to_source <- c(0:90)
 
 sapply(list.files("R"), function(x) {
   if(any(stringr::str_detect(x, as.character(to_source))))
@@ -16,12 +16,12 @@ verbose <- TRUE
 priors <- bv_priors()
 metropolis <- bv_metropolis()
 
-x <- bvar(data, lags, n_draw, n_burn, thin,
+run1 <- bvar(data, lags, n_draw, n_burn, thin,
           priors, metropolis, fcast, irf, verbose = TRUE)
-y <- bvar(data, lags, n_draw, n_burn, thin,
+run2 <- bvar(data, lags, n_draw, n_burn, thin,
           priors = bv_priors(hyper = c("lambda", "alpha")),
           metropolis, fcast, irf, verbose = TRUE)
-z <- bvar(data, lags, n_draw, n_burn, thin,
-          priors, metropolis, irf = irf, verbose = TRUE)
-w <- bvar(data, lags, n_draw, n_burn, thin = 3, irf = irf, verbose = TRUE)
-v <- bvar(data, lags, n_draw, n_burn, thin = 3, verbose = TRUE)
+run3 <- bvar(data, lags, n_draw, n_burn, thin,
+          priors, metropolis, fcast, irf, verbose = TRUE)
+run4 <- bvar(data, lags, n_draw, n_burn, thin = 3, irf = NULL, verbose = TRUE)
+run5 <- bvar(data, lags, n_draw, n_burn, thin = 3, fcast = NULL, verbose = TRUE)

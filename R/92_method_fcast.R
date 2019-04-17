@@ -14,12 +14,12 @@ print.bvar_fcast <- function(x, ...) {
 
   cat("Forecast from `bvar()`.\n")
 
-  print_fcast(x, ...)
+  print_fcast(x$setup, ...)
 }
 
 print_fcast <- function(x, ...) {
 
-  cat("\nHorizon: ", x$horizon, "\n", sep = "")
+  cat("Horizon: ", x$horizon, "\n", sep = "")
 
   if(!is.null(x$conditional)) {
     stop("Conditional forecasts not yet implemented")

@@ -20,7 +20,7 @@ print.bvar_irf <- function(x, ...) {
 
 print_irf <- function(x, ...) {
 
-  cat("\nHorizon:", x$horizon)
+  cat("Horizon:", x$horizon)
 
   cat("\nIdentification: ")
   if(x$identification) {

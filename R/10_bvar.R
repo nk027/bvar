@@ -53,7 +53,7 @@ bvar <- function(
   # Priors ------------------------------------------------------------------
 
   # Minnesota prior
-  if(is.null(priors[["b"]])) {
+  if(length(priors[["b"]]) == 1 && priors[["b"]] == "auto") {
     priors[["b"]] <- matrix(0, nrow = K, ncol = M)
     priors[["b"]][2:(M + 1), ] <- diag(M)
   } else if(dim(priors[["b"]]) != c(K, M)) {
@@ -250,7 +250,7 @@ bvar <- function(
               "variables" = variables, "call" = cl)
 
   out[["meta"]] <- list("N" = N, "M" = M, "lags" = lags, "n_draw" = n_draw,
-                        "n_burn" = n_burn, "n_save" = n_save)
+                        "n_burn" = n_burn, "n_save" = n_save, "n_thin" = n_thin)
 
   if(!is.null(fcast)) out[["fcast"]] <- fcast_store
   if(!is.null(irf)) out[["irf"]] <- irf_store

@@ -22,8 +22,8 @@ print.bvar <- function(x, ...) {
   cat("\nAccepted draws (rate): ", x$accepted, " (",
       round(x$accepted / x$meta$n_draw, 3), ")\n", sep = "")
 
-  if(!is.null(x$irf)) {print(x$irf)}
-  if(!is.null(x$fcast)) {print(x$fcast)}
+  if(!is.null(x$irf)) {cat("\n"); print(x$irf)}
+  if(!is.null(x$fcast)) {cat("\n"); print(x$fcast)}
 
   return(invisible(x))
 }
