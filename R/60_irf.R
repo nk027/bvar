@@ -8,12 +8,13 @@ bv_irf <- function(
                        msg = "Invalid value for horizon.")
 
   if(!is.logical(c(identification, fevd))){
-    stop("Parameter(s) are not provided as the correct type.")
+    stop("Please provide fevd and identification as logical scalars.")
   }
 
   if(!is.null(sign_restr) && !all(sign_restr %in% c(-1, 0, 1)) &&
-     sqrt(length(sign_restr)) %% 1 == 0) {
-    stop("Issue with sign restrictions.")
+     sqrt(length(sign_restr)) %% 1 != 0) {
+    stop("Please provide sign_restr as a numeric square matrix containing ",
+         "0s, 1s and -1s.")
   }
 
   if(is.vector(sign_restr)) {

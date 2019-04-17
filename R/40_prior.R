@@ -8,11 +8,11 @@ bv_priors <- function(
   # Check inputs ------------------------------------------------------------
 
   if(!is.null(mn) && !inherits(mn, "bv_minnesota")) {
-    stop("Please use 'bv_minnesota' to set the minnesota prior.")
+    stop("Please use 'bv_minnesota()' to set the minnesota prior.")
   }
   dots <- list(...)
   if(!all(vapply(dots, inherits, TRUE, "bv_dummy"))) {
-    stop("Please use 'bv_dummy' to set dummy priors.")
+    stop("Please use 'bv_dummy()' to set dummy priors.")
   }
   if(hyper[[1]] == "auto") {
     hyper <- c(if(!is.null(mn)) "lambda", names(dots))
