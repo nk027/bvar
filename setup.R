@@ -1,4 +1,4 @@
-to_source <- c(10, 11, 12, 20, 30, 21, 40, 41, 42, 50, 60:65)
+to_source <- c(10, 11, 12, 20, 30, 21, 40, 41, 42, 50, 60:65, 90)
 
 sapply(list.files("R"), function(x) {
   if(any(stringr::str_detect(x, as.character(to_source))))
@@ -10,8 +10,8 @@ lags <- 2
 n_draw <- 10000
 n_burn <- 5000
 thin <- 1
-fcast <- NULL
-irf <- NULL
+fcast <- bv_fcast()
+irf <- bv_irf()
 verbose <- TRUE
 priors <- bv_priors()
 metropolis <- bv_metropolis()
