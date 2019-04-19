@@ -46,13 +46,17 @@ gamma_coef <- function(mode, sd) {
 #' Create parameter names
 #'
 #' Function to help name prior parameters. Accounts for multiple occurences
-#' of psi when \eqn{M > 1}.
+#' of psi when \eqn{M > 1} by adding sequential numbers.
 #'
 #' @param x Character vector with names of all relevant paramters.
 #' @param M Integer scalar with the number of columns in the data.
 #'
 #' @return Returns a character vector of parameter names.
-name_pars <- function(x, M = NULL) {
+#'
+#' @examples
+#' name_pars(c("lambda", "alpha))
+#' name_pars(c("lambda", "psi"), M = 3)
+name_pars <- function(x, M) {
 
   out <- Reduce(c, sapply(x, function(y) {if(y == "psi") {
     paste0(y, 1:M)
@@ -62,6 +66,18 @@ name_pars <- function(x, M = NULL) {
 }
 
 
+#' Credible interval colour vector
+#'
+#' Create a character vector of colours for time series with credible
+#' intervals, e.g. \code{\link{bv_plot_irf}} and \code{\link{bv_plot_fcast}}.
+#' The central element is set to black, the rest to darkgray.
+#'
+#' @param P Integer scalar. Number of bands to plot.
+#'
+#' @return Returns a character vector of colours.
+#'
+#' @examples
+#' set_gray(3)
 set_gray <- function(P) {
 
   n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
@@ -70,13 +86,36 @@ set_gray <- function(P) {
 }
 
 
-get_var_pos <- function(vars, variables = NULL, M) {
+#' Get a subset of variables
+#'
+#' Helper functions to aid with variable selection in \code{\link{bv_plot_irf}}
+#' and \code{\link{bv_plot_fcast}}.
+#'
+#' @param vars Vector of variables to subset to. Numeric or character.
+#' @param variables Character vector of all variable names. Required if vars
+#' is provided as character vector.
+#' @param M Integer scalar. Count of all variables.
+#'
+#' @return Returns a numeric vector with the positions of desired variables.
+#'
+#' @examples
+#' # Assuming the variables are named.
+#' get_var_set("fx_rate", variables = c("gdp_pc", "fx_rate"))
+#'
+#' # Find via position
+#' get_var_set(c(1, 3))
+#'
+#' # Get the full set
+#' get_var_set(NULL, M = 3)
+get_var_set <- function(vars, variables, M) {
 
   if(is.null(vars)) {
     return(1:M)
   }
   if(is.numeric(vars)) {
-    return(sort(vapply(vars, int_check, min = 1, max = M, integer(1))))
+    return(sort(vapply(vars, int_check,
+                       min = 1, max = M, msg = "Variable(s) not found.",
+                       integer(1))))
   }
   if(is.character(vars) && !is.null(variables)) {
     return(which(variables %in% vars))

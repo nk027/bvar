@@ -39,7 +39,7 @@ bv_plot_fcast <- function(
   if(length(variables) != M) {stop("Named vector `variables` is incomplete.")}
 
   col <- set_gray(P)
-  pos <- get_var_pos(vars, variables, M)
+  pos <- get_var_set(vars, variables, M)
 
   plot_fcast(y, variables, pos, col, mar)
 

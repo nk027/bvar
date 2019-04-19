@@ -90,7 +90,7 @@ bvar <- function(
   # Split up psi
   for(i in 1:length(priors[["psi"]][["mode"]])) {
     priors[[paste0("psi", i)]] <-
-      lapply(x[["priors"]][["psi"]], function(x) x[i])
+      lapply(priors[["psi"]], function(x) x[i])
   }
 
   # Optimise ----------------------------------------------------------------

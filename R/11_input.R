@@ -21,13 +21,15 @@ int_check <- function(
 }
 
 
-#' Automatically set psi of the Minnesota prior
+#' Set psi of the Minnesota prior
 #'
 #' Set the prior values of psi by fitting an \eqn{AR(p)} model and using the
 #' squareroot of the innovations variance.
 #'
 #' @param x Numeric matrix with the data.
 #' @param lags Numeric scalar. Number of lags in the model.
+#'
+#' @importFrom stats arima
 #'
 #' @return Returns a list with the modes, minimum, and maximum values for psi.
 auto_psi <- function(x, lags) {
@@ -48,6 +50,17 @@ auto_psi <- function(x, lags) {
 }
 
 
+#' Generate quantiles
+#'
+#' Check and create a given vector of confidence bands and create suitable
+#' quantiles from it.
+#'
+#' @param conf_bands Numeric vector of probabilities i.e. between 0 and 1.
+#'
+#' @return Returns a sorted vector of quantiles created from conf_bands.
+#'
+#' @examples
+#' quantile_check(c(0.1, 0.16))
 quantile_check <- function(conf_bands) {
 
   if(any(!is.numeric(conf_bands), any(conf_bands > 1), any(conf_bands < 0))) {

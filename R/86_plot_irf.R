@@ -41,8 +41,8 @@ bv_plot_irf <- function(
   if(length(variables) != M) {stop("Named vector `variables` is incomplete.")}
 
   col <- set_gray(P)
-  pos_imp <- get_var_pos(vars_impulse, variables, M)
-  pos_res <- get_var_pos(vars_response, variables, M)
+  pos_imp <- get_var_set(vars_impulse, variables, M)
+  pos_res <- get_var_set(vars_response, variables, M)
 
   plot_irf(y, variables, pos_imp, pos_res, col, mar)
 
