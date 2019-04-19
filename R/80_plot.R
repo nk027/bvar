@@ -1,3 +1,12 @@
+plot.bvar <- function(x, ...) {
+
+  if(!inherits(x, "bvar")) {stop()}
+
+  bv_plot(x, ...)
+
+}
+
+
 bv_plot <- function(x, mar = c(2, 2, 2, 0.5), ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide an object of type bvar.")}
@@ -25,13 +34,13 @@ bv_plot <- function(x, mar = c(2, 2, 2, 0.5), ...) {
 
 plot_hyper <- function(x, name, fun, ...) {
 
-  if(!inherits(x, "bvar")) {stop("Please provide an object of type bvar.")}
+  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  if(missing(name)) {stop("Please use name to specify a parameter to plot.")}
+  if(missing(name)) {stop("Please set `name` to specify a parameter to plot.")}
 
   dots <- list(...)
   lapply(dots, function(x) {
-    if(!inherits(x, "bvar")) {stop("Please provide objects of type bvar.")}
+    if(!inherits(x, "bvar")) {stop("Provide `bvar` objects to the ellipsis.")}
   })
 
   if(name == "ml") {

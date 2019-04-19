@@ -66,10 +66,11 @@ set_gray <- function(P) {
 }
 
 
+get_var_pos <- function(vars, variables = NULL, M) {
 
-choose_vars <- function(vars, variables, M) {
-
-  if(missing(vars)) {return(1:M)}
+  if(is.null(vars)) {
+    return(1:M)
+  }
   if(is.numeric(vars)) {
     return(sort(vapply(vars, int_check, min = 1, max = M, integer(1))))
   }

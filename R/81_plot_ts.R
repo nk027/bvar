@@ -1,9 +1,10 @@
 bv_plot_irf <- function(
   x,
-  vars_impulse,
-  vars_response,
+  vars_impulse = NULL,
+  vars_response = NULL,
   conf_bands = 0.16,
-  mar = c(2, 2, 2, 0.5), col,
+  col,
+  mar = c(2, 2, 2, 0.5),
   ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide an object of type bvar.")}
@@ -38,7 +39,8 @@ bv_plot_fcast <- function(
   x,
   vars,
   conf_bands = 0.16,
-  mar = c(2, 2, 2, 0.5), col,
+  col,
+  mar = c(2, 2, 2, 0.5),
   ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide an object of type bvar.")}

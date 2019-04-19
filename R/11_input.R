@@ -38,7 +38,7 @@ auto_psi <- function(x, lags) {
   }), error = function(x) {
     # Could increase the order of integration here - not done for transparency
     stop("Data appears to be integrated. ",
-         "Setting psi automatically via 'arima()' (p = ", lags, ") failed.")
+         "Setting psi automatically via `arima()` (p = ", lags, ") failed.")
   })
 
   out[["min"]] <- out[["mode"]] / 100

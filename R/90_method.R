@@ -1,12 +1,3 @@
-plot.bvar <- function(x, ...) {
-
-  if(!inherits(x, "bvar")) {stop()}
-
-  hyper_plot(x, ...)
-
-}
-
-
 print.bvar <- function(x, ...) {
 
   if(!inherits(x, "bvar")) {stop()}
