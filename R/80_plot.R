@@ -15,7 +15,8 @@ bv_plot <- function(x, mar = c(2, 2, 2, 0.5), ...) {
   K <- ncol(y)
   name <- colnames(y)
   bounds <- vapply(name, function(z) {
-    c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])}, double(2))
+    c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])
+  }, double(2))
 
   op <- par(mfrow = c(K + 1, 2), mar = mar, ...)
 
@@ -32,11 +33,17 @@ bv_plot <- function(x, mar = c(2, 2, 2, 0.5), ...) {
 }
 
 
-plot_hyper <- function(x, name, fun, ...) {
+plot_hyper <- function(x, name, fun = c(plot_trace, plot_dens), ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  if(missing(name)) {stop("Please set `name` to specify a parameter to plot.")}
+  if(missing(name)) {
+    stop("Please set `name` to specify a parameter to plot.")
+  } else if(!name %in% c("ml", colnames(x[["hyper"]]))) {
+    stop("Parameter named '", name, "' not found.")
+  }
+
+  fun <- match.arg(fun)
 
   dots <- list(...)
   lapply(dots, function(x) {
@@ -77,10 +84,14 @@ bv_plot_density <- function(x, name, fun, ...) {
 plot_trace <- function(x, name = NULL, bounds = NULL, ...) {
 
   dots <- list(...)
-  ylim <- c(
-    min(if(length(dots) > 1) {vapply(dots, min, double(1))} else {dots}, x),
-    max(if(length(dots) > 1) {vapply(dots, max, double(1))} else {dots}, x)
-  )
+  dot_min <- if(length(dots) > 1) {
+    vapply(dots, min, double(1))
+  } else if(length(dots) == 1) {dots} else {Inf}
+  dot_max <- if(length(dots) > 1) {
+    vapply(dots, max, double(1))
+  } else if(length(dots) == 1) {dots} else {-Inf}
+  ylim <- c(min(dot_min, x), max(dot_max, x))
+
   plot(x, type = "l", xlab = "Index", ylab = "Value", ylim = ylim,
        main = paste("Trace", if(!is.null(name)) {paste("of", name)} else {""}))
   for(dot in dots) {lines(dot, col = "lightgray")}
@@ -93,10 +104,14 @@ plot_trace <- function(x, name = NULL, bounds = NULL, ...) {
 plot_dens <- function(x, name = NULL, bounds = NULL, ...) {
 
   dots <- list(...)
-  xlim <- c(
-    min(if(length(dots) > 1) {vapply(dots, min, double(1))} else {dots}, x),
-    max(if(length(dots) > 1) {vapply(dots, max, double(1))} else {dots}, x)
-  )
+  dot_min <- if(length(dots) > 1) {
+    vapply(dots, min, double(1))
+  } else if(length(dots) == 1) {dots} else {Inf}
+  dot_max <- if(length(dots) > 1) {
+    vapply(dots, max, double(1))
+  } else if(length(dots) == 1) {dots} else {-Inf}
+  xlim <- c(min(dot_min, x), max(dot_max, x))
+
   plot(density(x), xlim = xlim,
        main = paste("Trace", if(!is.null(name)) {paste("of", name)} else {""}))
   polygon(density(x), col = rgb(0.8, 0.8, 0.8, 0.2), border = NA)

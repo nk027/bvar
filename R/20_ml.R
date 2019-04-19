@@ -57,12 +57,13 @@ bv_ml <- function(
     pars[names(pars) == name] <- hyper[names(hyper) == name]
   }
 
-  psi <- diag(pars[names(pars) == "psi"])
+  psi <- diag(pars[grep("^psi[0-9]*", names(pars))])
   omega <- vector("numeric", 1 + M * lags)
   omega[1] <- priors[["var"]]
   for(i in 1:lags) {
     omega[seq(2 + M * (i - 1), 1 + i * M)] <-
-      pars[["lambda"]] ^ 2 / i ^ pars[["alpha"]] / pars[names(pars) == "psi"]
+      pars[["lambda"]] ^ 2 / i ^ pars[["alpha"]] /
+      pars[grep("^psi[0-9]*", names(pars))]
   }
 
   # Dummy priors
@@ -83,13 +84,13 @@ bv_ml <- function(
   omega_inv <- diag(1 / omega)
   XX <- crossprod(X)
   beta_hat <- solve(XX + omega_inv) %*% (crossprod(X, Y) +
-    omega_inv %*% priors[["b"]])
+                                           omega_inv %*% priors[["b"]])
   sse <- crossprod(Y - X %*% beta_hat)
   psi_inv <- solve(sqrt(psi))
   omega_ml <- diag(sqrt(omega)) %*% XX %*% diag(sqrt(omega))
   psi_ml <- psi_inv %*%
     (sse + t(beta_hat - priors[["b"]]) %*% omega_inv %*%
-      (beta_hat - priors[["b"]])) %*% psi_inv
+       (beta_hat - priors[["b"]])) %*% psi_inv
 
   # Eigenvalues + 1 as another way of computing the determinants
   omega_ml_ev <- Re(eigen(omega_ml, only.values = TRUE)[["values"]])

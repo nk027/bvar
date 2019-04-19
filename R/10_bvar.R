@@ -56,7 +56,7 @@ bvar <- function(
   if(length(priors[["b"]]) == 1 && priors[["b"]] == "auto") {
     priors[["b"]] <- matrix(0, nrow = K, ncol = M)
     priors[["b"]][2:(M + 1), ] <- diag(M)
-  } else if(dim(priors[["b"]]) != c(K, M)) {
+  } else if(!all(dim(priors[["b"]]) == c(K, M))) {
     stop("Dimensions of the prior mean (b) do not match the data.")
   }
   if(length(priors[["psi"]]) == 1 && priors[["psi"]] == "auto") {
@@ -87,6 +87,11 @@ bvar <- function(
                                  function(x) priors[[x]][["max"]]))
   names(hyper) <- name_pars(priors[["hyper"]], M)
 
+  # Split up psi
+  for(i in 1:length(priors[["psi"]][["mode"]])) {
+    priors[[paste0("psi", i)]] <-
+      lapply(x[["priors"]][["psi"]], function(x) x[i])
+  }
 
   # Optimise ----------------------------------------------------------------
 
@@ -95,16 +100,15 @@ bvar <- function(
                method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
                lower = hyper_min, upper = hyper_max,
                control = list("fnscale" = -1))
-  names(opt[["par"]]) <- names(hyper)
 
 
   # Hessian -----------------------------------------------------------------
 
   H <- diag(length(opt[["par"]])) * metropolis[["scale_hess"]]
-  J <- sapply(priors[["hyper"]], function(name) {
+  J <- unlist(lapply(names(hyper), function(name) {
     exp(opt[["par"]][[name]]) / (1 + exp(opt[["par"]][[name]])) ^ 2 *
       (priors[[name]][["max"]] - priors[[name]][["min"]])
-  })
+  }))
   if(hyper_n != 1) {J <- diag(J)}
   HH <- J %*% H %*% t(J)
 

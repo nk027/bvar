@@ -54,7 +54,11 @@ gamma_coef <- function(mode, sd) {
 #' @return Returns a character vector of parameter names.
 name_pars <- function(x, M = NULL) {
 
-  return(Reduce(c, sapply(x, function(y) if(y == "psi") {rep(y, M)} else {y})))
+  out <- Reduce(c, sapply(x, function(y) {if(y == "psi") {
+    paste0(y, 1:M)
+  } else {y}}))
+
+  return(out)
 }
 
 
