@@ -100,6 +100,7 @@ bvar <- function(
                method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
                lower = hyper_min, upper = hyper_max,
                control = list("fnscale" = -1))
+  names(opt[["par"]]) <- names(hyper)
 
 
   # Hessian -----------------------------------------------------------------

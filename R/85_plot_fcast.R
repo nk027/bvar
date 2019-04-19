@@ -5,8 +5,8 @@ plot.bvar_fcast <- function(
   vars = NULL,
   mar = c(2, 2, 2, 0.5)) {
 
-  if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_fcast` object.")}
-  bv_plot_fcast(x, conf_bands, variables, vars)
+  if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
+  bv_plot_fcast(x, conf_bands, variables, vars, mar)
 
 }
 
@@ -41,7 +41,7 @@ bv_plot_fcast <- function(
   col <- set_gray(P)
   pos <- get_var_pos(vars, variables, M)
 
-  plot_irf(y, variables, pos, col, mar)
+  plot_fcast(y, variables, pos, col, mar)
 
   return(invisible(x))
 }

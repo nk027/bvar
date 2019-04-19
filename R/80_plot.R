@@ -43,8 +43,6 @@ plot_hyper <- function(x, name, fun = c(plot_trace, plot_dens), ...) {
     stop("Parameter named '", name, "' not found.")
   }
 
-  fun <- match.arg(fun)
-
   dots <- list(...)
   lapply(dots, function(x) {
     if(!inherits(x, "bvar")) {stop("Provide `bvar` objects to the ellipsis.")}
@@ -68,29 +66,23 @@ plot_hyper <- function(x, name, fun = c(plot_trace, plot_dens), ...) {
 }
 
 
-bv_plot_trace <- function(x, name, fun, ...) {
+bv_plot_trace <- function(x, name, ...) {
 
   plot_hyper(x, name, fun = plot_trace, ...)
 
 }
 
-bv_plot_density <- function(x, name, fun, ...) {
+bv_plot_density <- function(x, name, ...) {
 
   plot_hyper(x, name, fun = plot_dens, ...)
 
 }
 
 
-plot_trace <- function(x, name = NULL, bounds = NULL, ...) {
+plot_trace <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
-  dots <- list(...)
-  dot_min <- if(length(dots) > 1) {
-    vapply(dots, min, double(1))
-  } else if(length(dots) == 1) {dots} else {Inf}
-  dot_max <- if(length(dots) > 1) {
-    vapply(dots, max, double(1))
-  } else if(length(dots) == 1) {dots} else {-Inf}
-  ylim <- c(min(dot_min, x), max(dot_max, x))
+  ylim <- c(min(vapply(dots, min, double(1)), x),
+            max(vapply(dots, max, double(1)), x))
 
   plot(x, type = "l", xlab = "Index", ylab = "Value", ylim = ylim,
        main = paste("Trace", if(!is.null(name)) {paste("of", name)} else {""}))
@@ -101,16 +93,10 @@ plot_trace <- function(x, name = NULL, bounds = NULL, ...) {
 }
 
 
-plot_dens <- function(x, name = NULL, bounds = NULL, ...) {
+plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
-  dots <- list(...)
-  dot_min <- if(length(dots) > 1) {
-    vapply(dots, min, double(1))
-  } else if(length(dots) == 1) {dots} else {Inf}
-  dot_max <- if(length(dots) > 1) {
-    vapply(dots, max, double(1))
-  } else if(length(dots) == 1) {dots} else {-Inf}
-  xlim <- c(min(dot_min, x), max(dot_max, x))
+  xlim <- c(min(vapply(dots, min, double(1)), x),
+            max(vapply(dots, max, double(1)), x))
 
   plot(density(x), xlim = xlim,
        main = paste("Trace", if(!is.null(name)) {paste("of", name)} else {""}))
