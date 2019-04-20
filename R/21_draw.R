@@ -3,8 +3,8 @@
 #' Draw beta and sigma from the posterior of a BVAR.
 #'
 #' @param X Numeric matrix. Possibly extended with dummy priors.
-#' @param N Integer scalar. Rows of \emph{X}.
-#' @param M Integer scalar. Columns of \emph{X}.
+#' @param N Integer scalar. Rows of X.
+#' @param M Integer scalar. Columns of X.
 #' @param lags Integer scalar. Number of lags in the model.
 #' @param b Numeric marix. Minnesota prior mean.
 #' @param psi Numeric matrix. Scale of the IW prior on the residual covariance.

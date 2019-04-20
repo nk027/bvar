@@ -13,17 +13,19 @@
 #' @param hyper_max Optional numerical vector. Maximum values allowed for
 #' hyperparameters. If these are breached a value of -1e18 is returned.
 #' @param pars Named numerical vector with prior parameters. Values also found
-#' in \emph{hyper} are overwritten with their hierarchical counterpart.
-#' @param priors List created via \link{bv_priors}. Contains information on the
-#' Minnesota prior and optional dummy priors (named in \code{priors$dummy}).
+#' in hyper are overwritten with their hierarchical counterpart.
+#' @param priors List created via \code{\link{bv_priors}}. Contains information
+#' on the Minnesota prior and optional dummy priors (that are named in
+#' \code{priors$dummy}).
 #' @param Y Numeric \eqn{N * M} matrix.
 #' @param X Numeric \eqn{N * K} matrix.
-#' @param K Integer scalar. Columns of \emph{X}, i.e. \eqn{M * lags + 1}.
-#' @param M Integer scalar. Columns of \emph{Y}.
-#' @param N Integer scalar. Rows of \emph{Y} / \emph{X}.
+#' @param K Integer scalar. Columns of X, i.e. \eqn{M * lags + 1}.
+#' @param M Integer scalar. Columns of Y.
+#' @param N Integer scalar. Rows of Y, alternatively X.
 #' @param lags Integer scalar. Number of lags in the model.
 #' @param opt Optional logical scalar. Determines whether the return values is
-#' a numeric scalar or a list. Used to call `bv_ml()` in \link[base]{optim}.
+#' a numeric scalar or a list. Used to call \code{\link{bv_ml}} in
+#' \code{\link[base]{optim}}.
 #'
 #' @return Returns a list with the following objects by default:
 #' \itemize{

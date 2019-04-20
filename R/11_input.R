@@ -1,14 +1,14 @@
 #' Check an integer scalar
 #'
-#' `int_check()` checks whether an object is properly bounded, coercible to an
-#' integer and returns it as an integer.
+#' Function to check whether an object is properly bounded and coercible to an
+#' integer.
 #'
 #' @param x Numeric scalar to check.
-#' @param min Numeric scalar. Minimum value of \emph{x}.
-#' @param max Numeric scalar. Maximum value of \emph{x}.
-#' @param msg String fed to \link[base]{stop} if an error occurs.
+#' @param min Numeric scalar. Minimum value of x.
+#' @param max Numeric scalar. Maximum value of x.
+#' @param msg String fed to \code{\link[base]{stop}} if an error occurs.
 #'
-#' @return Returns \emph{x} as integer.
+#' @return Returns x as integer.
 int_check <- function(
   x, min = 0, max = Inf,
   msg = "Please check the integer parameters.") {
