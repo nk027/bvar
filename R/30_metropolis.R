@@ -24,10 +24,15 @@
 #' @param acc_change Numeric scalar. Percent change applied to the Hessian
 #' matrix. Required if adjust_acc is set to \code{TRUE}. Defaults to 0.01.
 #'
-#' @return
+#' @return Returns a named list with options for \code{\link{bvar}}.
 #' @export
 #'
 #' @examples
+#' # Only adjust the scale parameter
+#' bv_metropolis(scale_hess = 10)
+#'
+#' # Turn on automatic scaling of the acceptance rate to [20, 40]
+#' bv_metropolis(adjust_acc = TRUE, acc_lower = 0.2, acc_upper = 0.4)
 bv_metropolis <- function(
   scale_hess = 0.01,
   adjust_acc = FALSE,

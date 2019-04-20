@@ -103,7 +103,7 @@ set_gray <- function(P) {
 #' get_var_set("fx_rate", variables = c("gdp_pc", "fx_rate"))
 #'
 #' # Find via position
-#' get_var_set(c(1, 3))
+#' get_var_set(c(1, 3), M = 3)
 #'
 #' # Get the full set
 #' get_var_set(NULL, M = 3)

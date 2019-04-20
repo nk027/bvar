@@ -5,7 +5,7 @@
 #'
 #' @param beta_comp Numeric matrix. Posterior draw of the VAR coefficients of
 #' the model in state space representation.
-#' @param sigma_draw Numeric matrix. Posterior draw of the vcoc-matrix of the
+#' @param sigma Numeric matrix. Posterior draw of the vcoc-matrix of the
 #' model.
 #' @param sigma_chol Numeric matrix. Lower part of the Choleski decomposition
 #' of sigma_draw. Calculated as \code{t(chol(sigma_draw))}.
