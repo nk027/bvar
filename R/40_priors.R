@@ -15,10 +15,11 @@
 #' dummy priors. Must be assigned a name in the function call. Created with
 #' \code{\link{bv_dummy}}
 #'
-#' @return Returns a named list with options for \code{\link{bvar}}.
+#' @return Returns a named list of class bv_priors with options for
+#' \code{\link{bvar}}.
 #' @export
 #'
-#' @seealso \code{\link{bv_minnesota}}, \code{\link{bv_dummy}}
+#' @seealso \code{\link{bv_minnesota}}; \code{\link{bv_dummy}}
 #'
 #' @examples
 #' # Extending hyperparameters
@@ -43,13 +44,13 @@ bv_priors <- function(
     stop("Please use `bv_dummy()` to set dummy priors.")
   }
   if(hyper[[1]] == "auto") {
-    hyper <- c(if(!is.null(mn)) "lambda", names(dots))
+    hyper <- c(if(!is.null(mn)) {"lambda"}, names(dots))
   } else {
-    full <- c(if(!is.null(mn)) c("lambda", "alpha", "psi"), names(dots))
+    full <- c(if(!is.null(mn)) {c("lambda", "alpha", "psi")}, names(dots))
     if(hyper[[1]] == "full") {
       hyper <- full
     } else {
-      if(!all(hyper %in% full)) stop("Hyperprior not found.")
+      if(!all(hyper %in% full)) {stop("Hyperprior not found.")}
     }
   }
 

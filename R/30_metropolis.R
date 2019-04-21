@@ -24,7 +24,8 @@
 #' @param acc_change Numeric scalar. Percent change applied to the Hessian
 #' matrix. Required if adjust_acc is set to \code{TRUE}. Defaults to 0.01.
 #'
-#' @return Returns a named list with options for \code{\link{bvar}}.
+#' @return Returns a named list of class bv_metropolis with options for
+#' \code{\link{bvar}}.
 #' @export
 #'
 #' @examples
@@ -39,12 +40,12 @@ bv_metropolis <- function(
   acc_lower = 0.25, acc_upper = 0.35,
   acc_change = 0.01) {
 
-  if(!is.numeric(c(scale_hess, acc_lower, acc_upper, acc_change)) ||
-     !is.logical(adjust_acc)) {
-    stop("Parameter(s) are not provided as the correct type.")
-  }
-  if(acc_lower >= acc_upper) {
-    stop("Acceptance boundaries misspecified.")
+  scale_hess <- num_check(scale_hess, 1e-18, 1e18, "Problem with scale_hess.")
+
+  if(adjust_acc) {
+    acc_lower <- num_check(acc_lower, 0, 1, "Problem with acc_lower.")
+    acc_upper <- num_check(acc_upper, acc_lower, 1, "Problem with acc_upper.")
+    acc_change <- num_check(acc_change, 1e-18, 1e18, "Problem with acc_change")
   }
 
   acc_tighten <- 1 - acc_change
