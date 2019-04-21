@@ -1,7 +1,7 @@
 #' Sign restrictions algorithm
 #'
 #' Draws orthogonal matrices and checks whether sign restrictions are fulfilled
-#' until suitable matrix is found.
+#' until a suitable matrix is found.
 #'
 #' @param sigma_chol Numeric matrix. Lower part of the Choleski decomposition
 #' of the posterior draw of the vcov-matrix of the system.
