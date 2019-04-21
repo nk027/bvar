@@ -1,7 +1,7 @@
 #' Impulse response draws
 #'
 #' Computes impulse responses using the posterior draws of the VAR coefficients
-#' and vcov-matrix obtained from `bv_draw()`.
+#' and vcov-matrix obtained from \code{\link{draw_post}}.
 #'
 #' @param beta_comp Numeric matrix. Posterior draw of the VAR coefficients of
 #' the model in state space representation.
@@ -14,10 +14,10 @@
 #' @param horizon Integer scalar. Specifies the horizon for which impulse
 #' responses should be computed.
 #' @param identification Logical scalar. Specifies whether or not the shocks
-#' used for calculating the impulse should be identified. Default is TRUE,
-#' identification will then be achieved recursively i.e. through a Cholesky
-#' decomposition of the vcov-matrix if \emph{sign_restr} is NULL. If set to
-#' FALSE, shocks will be unidentified.
+#' used for calculating the impulse should be identified. Default is
+#' \code{TRUE}, identification will then be achieved recursively i.e. through a
+#' Cholesky decomposition of the vcov-matrix if \emph{sign_restr} is
+#' \code{NULL}. If set to \code{FALSE}, shocks will be unidentified.
 #' @param sign_restr Numeric matrix. Elements inform about expected impacts
 #' of certain shocks. Can be either \eqn{1}, \eqn{-1} or \eqn{0}, depending
 #' on whether a positive, a negative or no contemporaneous effect of a certain
@@ -25,9 +25,9 @@
 #' @param fevd Logical scalar. Specifies whether or not forecast error variance
 #' decompositions should be calculated.
 #'
-#' @return Returns a matrix used as shock for computations of impulse responses
-#' identified via sign restrictions.
-
+#' @return Returns impulse reponses using the posterior draws of the VAR
+#' coefficients and the vcov-matrix of the model either to identified shocks,
+#' using a Cholesky decomposition or sign restrictions, or unidentified ones.
 compute_irf <- function(
   beta_comp,
   sigma, sigma_chol,
