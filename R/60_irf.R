@@ -16,7 +16,7 @@
 #' used for calculating the impulse should be identified. Default is
 #' \code{TRUE}, identification will then be achieved recursively i.e. through a
 #' identification will then be achieved recursively i.e. through a Cholesky
-#' Cholesky decomposition of the vcov-matrix if \code{\link{sign_restr}} is
+#' decomposition of the vcov-matrix if \code{\link{sign_restr}} is
 #' \code{NULL}. If set to \code{FALSE}, shocks will be unidentified.
 #' @param sign_restr Numeric matrix. Specifies sign restrictions for
 #' identification. Elements should be set to \eqn{1} (\eqn{-1}) to restrict for

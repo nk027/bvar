@@ -13,18 +13,14 @@
 #'
 #' @usage data(fred_qd)
 #'
-#' @format An object of class \code{"data.frame"}.
+#' @format An dataframe with 240 observations of 248 variables.
 #'
 #' @keywords datasets
 #'
-#' @references McCracken & Ng (2016) Journal of Business & Economic Statistics
-#' 34.4:574-589
-#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/23979570}{PubMed})
+#' @references
+#'   \insertRef{fred2016}
 #'
 #'
 #'
 #' @source \href{https://research.stlouisfed.org/econ/mccracken/fred-databases/}{McCracken website}
-#'
-#' @examples
-#' data(fred_qd)
-
+"fred_qd"
