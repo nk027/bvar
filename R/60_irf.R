@@ -15,8 +15,7 @@
 #' @param identification Logical scalar. Specifies whether or not the shocks
 #' used for calculating the impulse should be identified. Default is
 #' \code{TRUE}, identification will then be achieved recursively i.e. through a
-#' identification will then be achieved recursively i.e. through a Cholesky
-#' Cholesky decomposition of the vcov-matrix if \code{\link{sign_restr}} is
+#' Cholesky decomposition of the vcov-matrix if \emph{sign_restr} is
 #' \code{NULL}. If set to \code{FALSE}, shocks will be unidentified.
 #' @param sign_restr Numeric matrix. Specifies sign restrictions for
 #' identification. Elements should be set to \eqn{1} (\eqn{-1}) to restrict for
@@ -26,15 +25,20 @@
 #' @return Returns a named list with options for \code{\link{bvar}}.
 #'
 #' @examples
-#' # Compute impulse responses and FEVDs for 20 time periods with identification
-#' # achieved by means of a Cholesky decomposition of the vcov-matrix.
+#' # Settings to compute impulse responses and FEVDs for 20 time periods with
+#' # identification achieved by means of a Cholesky decomposition.
 #' bv_irf(horizon = 20, fevd = TRUE)
 #'
 #' # Compute impulse responses using sign restrictions for identification
-#' signs <- matrix(c(1, 0, 1, -1, 1, -1, 1, 1, 0), nrow = 3)
-#' bv_irf(sign_restr = signs)
-#'
-#' # ADD example with real dataset for better understanding!!!
+#' # Signs coming from economic theory
+#' data("fred_qd")
+#' data_small_VAR <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' data_small_VAR[5:nrow(data_small_VAR), 1] <- diff(log(data_small_VAR[, 1]),
+#'                                                   lag = 4) * 100
+#' data_small_VAR <- data_small_VAR[5:nrow(data_small_VAR), ]
+#' (signs <- matrix(c(1, 1, -1, -1, 1, -1, -1, 1, 1), nrow = 3))
+#' irf_signs <- bv_irf(sign_restr = signs)
+#' bvar(data_small_VAR, lags = 5, irf = irf_signs, verbose = TRUE)
 bv_irf <- function(
   horizon = 12,
   fevd = FALSE,

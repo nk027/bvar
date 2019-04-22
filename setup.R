@@ -5,6 +5,9 @@ sapply(list.files("R"), function(x) {
     source(paste0("R/", x))
 })
 
+#####
+# Simulated data
+
 data <- matrix(rnorm(20000), ncol = 5)
 lags <- 2
 n_draw <- 10000
@@ -39,3 +42,46 @@ plot(run4$fcast)
 run1
 run1$irf
 run1$fcast
+
+
+
+#####
+# Real data
+
+data("fred_qd")
+
+data_small_VAR <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+
+data_small_VAR[5:nrow(data_small_VAR), 1] <- diff(log(data_small_VAR[, 1]),
+                                                  lag = 4) * 100
+data_small_VAR <- data_small_VAR[5:nrow(data_small_VAR),]
+run7 <- bvar(data_small_VAR, lags = 5, irf = irf, verbose = TRUE)
+
+signs <- matrix(c(1,1,-1,-1,1,-1,-1,1,1), nrow = 3)
+irf_signs <- bv_irf(sign_restr = signs)
+run8 <- bvar(data_small_VAR, lags = 5, irf = irf_signs, verbose = TRUE)
+
+bv_plot_irf(run7)
+bv_plot_irf(run8)
+
+
+
+# data_med_VAR <- fred_qd[, c("RGDP", "PGDP", "Cons", "GPDInv",
+#                                   "Emp..Hours", "Real.Comp.Hour", "FedFunds")]
+# data_large_VAR <- fred_qd[, c("RGDP", "PGDP", "CPI.ALL",
+#                                     "Com..spot.price..real.", "IP..total" ,
+#                                     "Emp..total", "U..all", "Cons", "Res.Inv",
+#                                     "NonResInv", "PCED","PGPDI", "Capacity.Util",
+#                                     "Consumer.expect", "Emp..Hours", "Real.Comp.Hour",
+#                                     "FedFunds", "X1.yr.T.bond", "X5.yr.T.bond",
+#                                     "S.P.500", "Ex.rate..avg", "M2")]
+#
+# data_med_VAR[, -7] <- apply(data_med_VAR[, -7], 2, log) * 4
+# data_med_VAR[, 7]  <- data_med_VAR[, 7] / 100
+# data_med_VAR <- na.omit(data_med_VAR)
+#
+# data_large_VAR[, -c(7, 13, 14, 17, 18, 19)] <-
+#   apply(data_large_VAR[, -c(7, 13, 14, 17, 18, 19)], 2, log) * 4
+# data_large_VAR[, c(7, 13, 14, 17, 18, 19)]  <-
+#   data_large_VAR[, c(7, 13, 14, 17, 18, 19)] / 100
+# data_large_VAR <- na.omit(data_large_VAR)

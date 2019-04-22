@@ -12,7 +12,7 @@ bvar <- function(
   # Input Checking ----------------------------------------------------------
 
   # Data
-  if(!is.numeric(data) || any(is.na(data)) || length(data) < 2) {
+  if(!all(sapply(data, is.numeric)) || any(is.na(data)) || length(data) < 2) {
     stop("Problem with the data. Make sure it is numeric without any NAs.")
   }
 

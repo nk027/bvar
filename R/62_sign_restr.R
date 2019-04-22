@@ -13,12 +13,11 @@
 #'
 #' @return Returns a matrix used as shock for computations of impulse responses
 #' identified via sign restrictions.
-
-
 sign_restr <- function(sigma_chol, sign_restr, M) {
 
   counter <- 0
-  restricted <- which(sign_restr != 0)
+  sign_vec <- as.vector(sign_restr)
+  restricted <- which(sign_vec != 0)
 
   while(TRUE) {
     counter <- counter + 1
@@ -32,7 +31,7 @@ sign_restr <- function(sigma_chol, sign_restr, M) {
     shock_vec[which(shock_vec < 0)] <- -1
     shock_vec[which(shock_vec > 0)] <- 1
 
-    if(all.equal(shock_vec[restricted], sign_restr[restricted])) break
+    if(identical(shock_vec[restricted], sign_vec[restricted])) break
     if(counter > 10000) stop("No matrix fitting the sign-restrictions found.")
   }
 
