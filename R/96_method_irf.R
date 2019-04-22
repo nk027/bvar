@@ -25,7 +25,7 @@ print_irf <- function(x, ...) {
   cat("\nIdentification: ")
   if(x$identification) {
     if(is.null(x$sign_restr)) {
-      cat("Choleski decomposition")
+      cat("Cholesky decomposition")
     } else {
       cat("sign restrictions.", "\nChosen restrictions:\n", sep = "")
       sign_restr <- apply(x$sign_restr, 2, factor,
