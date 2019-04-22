@@ -1,25 +1,38 @@
-#' Check an integer scalar
+#' Check a numeric scalar
 #'
-#' Function to check whether an object is properly bounded and coercible to an
-#' integer.
+#' Function to check whether an object is properly bounded and coercible to a
+#' a numeric value.
 #'
 #' @param x Numeric scalar to check.
 #' @param min Numeric scalar. Minimum value of x.
 #' @param max Numeric scalar. Maximum value of x.
+#' @param fun Function to apply to x before returning.
 #' @param msg String fed to \code{\link[base]{stop}} if an error occurs.
 #'
-#' @return Returns x as integer.
-int_check <- function(
+#' @return Returns fun(x).
+num_check <- function(
   x, min = 0, max = Inf,
-  msg = "Please check the integer parameters.") {
+  msg = "Please check the integer parameters.",
+  fun = as.numeric) {
 
   if(!is.numeric(x) || length(x) != 1 || x < min || x > max) {
     stop(msg)
   }
 
-  return(as.integer(x))
+  return(fun(x))
 }
 
+#' Check an integer scalar
+#'
+#' Function to check whether an object is properly bounded and coercible to an
+#' integer. Shortcut to \code{\link{num_check}} with fun set to
+#' \code{\link[base]{as.integer}}.
+int_check <- function(
+  x, min = 0, max = Inf,
+  msg = "Please check the integer parameters.") {
+
+  num_check(x, min, max, msg, fun = as.integer)
+}
 
 #' Set psi of the Minnesota prior
 #'
@@ -37,8 +50,7 @@ auto_psi <- function(x, lags) {
   out <- list()
   out[["mode"]] <- tryCatch(apply(x, 2, function(x) {
     sqrt(arima(x, order = c(lags, 0, 0))$sigma2)
-  }), error = function(x) {
-    # Could increase the order of integration here - not done for transparency
+  }), error = function() {
     stop("Data appears to be integrated. ",
          "Setting psi automatically via `arima()` (p = ", lags, ") failed.")
   })
@@ -63,7 +75,7 @@ auto_psi <- function(x, lags) {
 #' quantile_check(c(0.1, 0.16))
 quantile_check <- function(conf_bands) {
 
-  if(any(!is.numeric(conf_bands), any(conf_bands > 1), any(conf_bands < 0))) {
+  if(any(!is.numeric(conf_bands), conf_bands > 1, conf_bands < 0)) {
     stop("Confidence bands misspecified.")
   }
 
