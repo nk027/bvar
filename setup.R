@@ -5,8 +5,8 @@ sapply(list.files("R"), function(x) {
     source(paste0("R/", x))
 })
 
-#####
-# Simulated data
+
+# Simulated data ----------------------------------------------------------
 
 data <- matrix(rnorm(20000), ncol = 5)
 lags <- 2
@@ -44,9 +44,7 @@ run1$irf
 run1$fcast
 
 
-
-#####
-# Real data
+# Real data ---------------------------------------------------------------
 
 data("fred_qd")
 
