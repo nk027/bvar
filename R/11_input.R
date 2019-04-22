@@ -22,11 +22,7 @@ num_check <- function(
   return(fun(x))
 }
 
-#' Check an integer scalar
-#'
-#' Function to check whether an object is properly bounded and coercible to an
-#' integer. Shortcut to \code{\link{num_check}} with fun set to
-#' \code{\link[base]{as.integer}}.
+#' @rdname num_check
 int_check <- function(
   x, min = 0, max = Inf,
   msg = "Please check the integer parameters.") {

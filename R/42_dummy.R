@@ -50,7 +50,7 @@ dummy <- function(
 #' soc <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_soc)
 #'
 #' # Create a single-unit-root prior
-#' .add_sur <- function(Y, lags, par) {
+#' add_sur <- function(Y, lags, par) {
 #'   sur <- if(lags == 1) {Y[1, ] / par} else {
 #'     colMeans(Y[1:lags, ]) / par
 #'   }
