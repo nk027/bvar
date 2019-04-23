@@ -1,10 +1,9 @@
-#' Forecast draws
+#' Forecast computation
 #'
-#' Computes unconditional forecasts using the posterior draws of the VAR
-#' coefficients and vcov-matrix obtained from \code{\link{draw_post}}.
+#' Compute unconditional forecasts from the VAR's posterior draws obtained via
+#' \code{\link{draw_post}}.
 #'
-#'
-#' @param Y Numeric \eqn{N * M} matrix.
+#' @param Y Numeric matrix (\eqn{N * M}).
 #' @param K Integer scalar. Columns of X, i.e. \eqn{M * lags + 1}.
 #' @param M Integer scalar. Columns of Y.
 #' @param N Integer scalar. Rows of Y, alternatively X.
@@ -14,12 +13,10 @@
 #' @param beta_comp Numeric matrix. Posterior draw of the VAR coefficients of
 #' the model in state space representation.
 #' @param beta_const Numeric vector. Posterior draw of the VAR coefficients
-#' corresponsing to the constant of the model.
+#' corresponding to the constant of the model.
 #' @param sigma Numeric matrix. Posterior draw of the vcoc-matrix of the
 #' model.
-#' @param conditional List containing the conditioning path of certain
-#' variables and their name or position in the dataset. Currently not
-#' implemented, thus not functionable.
+#' @param conditional Not yet implemented.
 #'
 #' @return Returns a matrix containing forecasts for all variables in the model.
 compute_fcast <- function(
