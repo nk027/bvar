@@ -22,6 +22,7 @@
 #'
 #' @return Returns a named list of class bv_irf with options for
 #' \code{\link{bvar}}.
+#' @export
 #'
 #' @examples
 #' # Set impulse responses to a horizon of 20 time periods and enable FEVD
@@ -39,7 +40,7 @@
 #'
 #' irf_signs <- bv_irf(sign_restr = signs)
 #'
-#' bvar(fred_qd, lags = 5, irf = irf_signs)
+#' # bvar(fred_qd, lags = 5, irf = irf_signs)
 bv_irf <- function(
   horizon = 12,
   fevd = FALSE,

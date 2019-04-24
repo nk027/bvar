@@ -25,7 +25,7 @@
 #' @param lags Integer scalar. Number of lags in the model.
 #' @param opt Optional logical scalar. Determines whether the return values is
 #' a numeric scalar or a list. Used to call \code{\link{bv_ml}} in
-#' \code{\link[base]{optim}}.
+#' \code{\link[stats]{optim}}.
 #'
 #' @return Returns a list with the following objects by default:
 #' \itemize{

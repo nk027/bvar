@@ -54,8 +54,8 @@ gamma_coef <- function(mode, sd) {
 #' @return Returns a character vector of parameter names.
 #'
 #' @examples
-#' name_pars(c("lambda", "alpha))
-#' name_pars(c("lambda", "psi"), M = 3)
+#' bvar:::name_pars(c("lambda", "alpha"))
+#' bvar:::name_pars(c("lambda", "psi"), M = 3)
 name_pars <- function(x, M) {
 
   out <- Reduce(c, sapply(x, function(y) {if(y == "psi") {
@@ -77,7 +77,7 @@ name_pars <- function(x, M) {
 #' @return Returns a character vector of colours.
 #'
 #' @examples
-#' set_gray(3)
+#' # set_gray(3)
 set_gray <- function(P) {
 
   n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
@@ -100,13 +100,13 @@ set_gray <- function(P) {
 #'
 #' @examples
 #' # Assuming the variables are named.
-#' get_var_set("fx_rate", variables = c("gdp_pc", "fx_rate"))
+#' bvar:::get_var_set("fx_rate", variables = c("gdp_pc", "fx_rate"))
 #'
 #' # Find via position
-#' get_var_set(c(1, 3), M = 3)
+#' bvar:::get_var_set(c(1, 3), M = 3)
 #'
 #' # Get the full set
-#' get_var_set(NULL, M = 3)
+#' bvar:::get_var_set(NULL, M = 3)
 get_var_set <- function(vars, variables, M) {
 
   if(is.null(vars)) {

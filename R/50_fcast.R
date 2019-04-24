@@ -25,7 +25,7 @@ bv_fcast <- function(
   horizon <- int_check(horizon, min = 1, max = 1e6,
                        msg = "Invalid value for horizon (outside of [1, 1e6]).")
 
-  if(!conditional) {stop("Conditional forecasts not yet implemented.")}
+  if(conditional) {stop("Conditional forecasts not yet implemented.")}
 
   out <- list("horizon" = horizon, "conditional" = conditional)
   class(out) <- "bv_fcast"

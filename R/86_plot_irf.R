@@ -5,8 +5,8 @@
 #'
 #' @param x A \code{bvar} / \code{bvar_irf} object, obtained from
 #' \code{\link{bvar}}.
-#' @param conf_bands Numeric vector of desired confidence bands. For 5%, 10%,
-#' 90% and 95% bands set this to \code{c(0.05, 0.1)}.
+#' @param conf_bands Numeric vector of desired confidence bands. For 5\%, 10\%,
+#' 90\% and 95\% bands set this to \code{c(0.05, 0.1)}.
 #' @param variables Optional character vector. Names of all variables in the
 #' object. Taken from \code{x$variables} if available.
 #' @param vars_impulse Optional numeric or character vector. Used to subset the
@@ -31,7 +31,7 @@
 #' # Subset to impulse variables in positions 2 and 4 via position and name
 #' bv_plot_irf(x, vars_impulse = c(2, 4))
 #' bv_plot_irf(x,
-#'   variables = c("solved", "for", "many", decades"),
+#'   variables = c("solved", "for", "many", "decades"),
 #'   vars_impulse = c("for", "decades")
 #' )
 #'

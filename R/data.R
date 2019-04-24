@@ -12,9 +12,7 @@
 #' @keywords datasets
 #'
 #' @references
-#'   \insertRef{fred2016}{bvar}
-#'
-#' @importFrom Rdpack reprompt
+#'   McCracken, M. W., & Ng, S. (2016): FRED-MD: A monthly database for macroeconomic research. Journal of Business & Economic Statistics, 34(4), 574-589.
 #'
 #' @source \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}
 "fred_qd"

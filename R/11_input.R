@@ -68,7 +68,7 @@ auto_psi <- function(x, lags) {
 #' @return Returns a sorted vector of quantiles created from conf_bands.
 #'
 #' @examples
-#' quantile_check(c(0.1, 0.16))
+#' bvar:::quantile_check(c(0.1, 0.16))
 quantile_check <- function(conf_bands) {
 
   if(any(!is.numeric(conf_bands), conf_bands > 1, conf_bands < 0)) {

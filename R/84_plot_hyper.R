@@ -147,9 +147,9 @@ plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
   plot(density(x), xlim = xlim,
        main = paste("Trace", if(!is.null(name)) {paste("of", name)} else {""}))
-  polygon(density(x), col = rgb(0.8, 0.8, 0.8, 0.2), border = NA)
+  polygon(density(x), col = "#CCCCCC33", border = NA)
   for(dot in dots) {
-    polygon(density(dot), col = rgb(0.8, 0.8, 0.8, 0.2), border = NA)
+    polygon(density(dot), col = "#CCCCCC33", border = NA)
   }
   lines(density(x))
   abline(v = bounds, lty = "dashed", col = "darkgray")

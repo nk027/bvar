@@ -12,10 +12,11 @@
 #' an \eqn{AR(p)} model to the data.
 #' @param b Numeric matrix with the prior mean. Best left as default.
 #' @param var Numeric scalar with the prior variance.
-#' @param mode
-#' @param sd
-#' @param min
-#' @param max
+#' @param mode Numeric scalar. Mode or the like of the parameter.
+#' @param sd Numeric scalar with the standard deviation. Applies to
+#' \code{lambda}.
+#' @param min Numeric scalar. Minimum allowed value.
+#' @param max Numeric scalar. Maximum allowed value.
 #'
 #' @return Returns a named list of class bv_minnesota with options for
 #' \code{\link{bvar}}.

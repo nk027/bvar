@@ -26,7 +26,7 @@
 #' bv_priors(c("lambda", "alpha", "psi"))
 #'
 #' # Adding already constructed dummy priors
-#' bv_priors(hyper = "auto", "soc" = soc_prior, "sur" = sur_prior)
+#' # bv_priors(hyper = "auto", "soc" = soc_prior, "sur" = sur_prior)
 bv_priors <- function(
   hyper = "auto",
   mn = bv_minnesota(bv_lambda(0.2, 0.4, 0.0001, 5),

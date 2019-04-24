@@ -11,4 +11,3 @@ Encoding: UTF-8
 LazyData: true
 Imports: stats, graphics, methods, utils, MASS
 RoxygenNote: 6.1.1
-RdMacros: Rdpack
