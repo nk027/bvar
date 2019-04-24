@@ -1,15 +1,16 @@
-#' Sign restrictions algorithm
+#' Sign restriction algorithm
 #'
 #' Draws orthogonal matrices and checks whether sign restrictions are fulfilled
-#' until a suitable matrix is found.
+#' until a suitable matrix is found. Is called by \code{\link{compute_irf}}.
+#' Throws an error if no suitable restrictions can be found.
 #'
-#' @param sigma_chol Numeric matrix. Lower part of the Choleski decomposition
+#' @param sigma_chol Numeric matrix. Lower part of the Cholesky decomposition
 #' of the posterior draw of the vcov-matrix of the system.
 #' @param sign_restr Numeric matrix. Elements inform about expected impacts
 #' of certain shocks. Can be either \eqn{1}, \eqn{-1} or \eqn{0}, depending
 #' on whether a positive, a negative or no contemporaneous effect of a certain
 #' shock is expected.
-#' @param M Integer scalar. Columns of \emph{X}.
+#' @param M Integer scalar. Columns of X.
 #'
 #' @return Returns a matrix used as shock for computations of impulse responses
 #' identified via sign restrictions.
@@ -31,9 +32,7 @@ sign_restr <- function(sigma_chol, sign_restr, M) {
     shock_vec[which(shock_vec < 0)] <- -1
     shock_vec[which(shock_vec > 0)] <- 1
 
-    if(identical(shock_vec[restricted], sign_vec[restricted])) break
-    if(counter > 10000) stop("No matrix fitting the sign-restrictions found.")
+    if(identical(shock_vec[restricted], sign_vec[restricted])) {return(shock)}
+    if(counter > 10000) {stop("No matrix fitting the sign-restrictions found.")}
   }
-
-  return(shock)
 }

@@ -3,42 +3,43 @@
 #' Function to provide settings for the computation of impulse repsonses to
 #' \code{\link{bvar}}. Provides options for setting the horizon for which
 #' impulse responses should be computed, whether or not forecast error variance
-#' decompositions should be computed and, if and what identification is to be
-#' used (either Cholesky decomposition or sign restrictions). If sign
-#' restrictions are chosen as means of identification, a matrix containing the
-#' expected impacts of the variables under investigation must be provided.
+#' decompositions (FEVDs) should be computed and, if and what kind of
+#' identification should be used (Cholesky decomposition and sign restrictions
+#' are supported).
 #'
 #' @param horizon Integer scalar. Specifies the horizon for which impulse
-#' responses should be computed.
-#' @param fevd Logical scalar. Specifies whether or not forecast error variance
-#' decompositions (FEVDs) should be calculated.
-#' @param identification Logical scalar. Specifies whether or not the shocks
-#' used for calculating the impulse should be identified. Default is
-#' \code{TRUE}, identification will then be achieved recursively i.e. through a
-#' Cholesky decomposition of the vcov-matrix if \emph{sign_restr} is
-#' \code{NULL}. If set to \code{FALSE}, shocks will be unidentified.
-#' @param sign_restr Numeric matrix. Specifies sign restrictions for
-#' identification. Elements should be set to \eqn{1} (\eqn{-1}) to restrict for
-#' a positive (negative) impact on the respective variables. If no presumption
-#' about the impact is available, set corresponding elements to \eqn{0}.
+#' responses (and FEVDs) should be computed. Set to 12 by default.
+#' @param fevd Logical scalar. Whether or not forecast error variance
+#' decompositions should be calculated. Defaults to FALSE.
+#' @param identification Logical scalar. Whether or not the shocks used for
+#' calculating impulses should be identified. Defaults to TRUE, i.e.
+#' identification via Cholesky decomposition unless sign_restr are provided.
+#' @param sign_restr Numeric matrix. Sign restrictions for identification.
+#' Elements should be set to \eqn{1} (\eqn{-1}) to restrict for positive
+#' (negative) impacts. If no presumption about the impact can be made the
+#' corresponding elements can be set to \eqn{0}. The default value is NULL,
+#' meaning identification would be done through Cholesky decomposition.
 #'
-#' @return Returns a named list with options for \code{\link{bvar}}.
+#' @return Returns a named list of class bv_irf with options for
+#' \code{\link{bvar}}.
 #'
 #' @examples
-#' # Settings to compute impulse responses and FEVDs for 20 time periods with
-#' # identification achieved by means of a Cholesky decomposition.
+#' # Set impulse responses to a horizon of 20 time periods and enable FEVD
+#' # (Identification by means of a Cholesky decomposition)
 #' bv_irf(horizon = 20, fevd = TRUE)
 #'
-#' # Compute impulse responses using sign restrictions for identification
-#' # Signs coming from economic theory
+#' # Identify impulse responses using sign restrictions
 #' data("fred_qd")
-#' data_small_VAR <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
-#' data_small_VAR[5:nrow(data_small_VAR), 1] <- diff(log(data_small_VAR[, 1]),
-#'                                                   lag = 4) * 100
-#' data_small_VAR <- data_small_VAR[5:nrow(data_small_VAR), ]
-#' (signs <- matrix(c(1, 1, -1, -1, 1, -1, -1, 1, 1), nrow = 3))
+#' fred_qd <-  fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' fred_qd[5:nrow(fred_qd), 1] <- diff(log(fred_qd[, 1]), lag = 4) * 100
+#' fred_qd <- fred_qd[5:nrow(fred_qd), ]
+#'
+#' # Signs should be based on economic theory
+#' signs <- matrix(c(1, 1, -1, -1, 1, -1, -1, 1, 1), nrow = 3)
+#'
 #' irf_signs <- bv_irf(sign_restr = signs)
-#' bvar(data_small_VAR, lags = 5, irf = irf_signs, verbose = TRUE)
+#'
+#' bvar(fred_qd, lags = 5, irf = irf_signs)
 bv_irf <- function(
   horizon = 12,
   fevd = FALSE,
@@ -57,7 +58,6 @@ bv_irf <- function(
     stop("Please provide sign_restr as a numeric square matrix containing ",
          "0s, 1s and -1s.")
   }
-
   if(is.vector(sign_restr)) {
     sign_restr <- matrix(sign_restr, nrow = sqrt(length(sign_restr)))
   }
