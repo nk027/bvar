@@ -1,10 +1,16 @@
 #' Hierarchical Bayesian Vector Autoregression
 #'
-#' @param data Numeric matrix or dataframe.
-#' @param lags Integer scalar.
-#' @param n_draw Integer scalar.
-#' @param n_burn Integer scalar.
-#' @param n_thin Integer scalar.
+#' @param data Numeric matrix or dataframe. Each column contains a variable,
+#' observations have to be ordered from earliest to latest one.
+#' @param lags Integer scalar. Number of lags to be used when estimating the
+#' model.
+#' @param n_draw Integer scalar. Number of total iterations that the model
+#' cycles through including the iterations to be bured (see \code{n_burn}).
+#' @param n_burn Integer scalar. Number of iterations that are discarded and
+#' whose associated draws from the posterior distributions are thus not saved.
+#' @param n_thin Integer scalar. Option to reduce the number of stored
+#' iterations. The number of saved iterations will be calculated as
+#' \code{(n_draw - n_burn) / n_thin}.
 #' @param priors \code{bv_priors} object. See \code{\link{bv_priors}}.
 #' @param metropolis \code{bv_metropolis} object.
 #' See \code{\link{bv_metropolis}}.
@@ -14,11 +20,52 @@
 #' progress.
 #' @param ... Not used.
 #'
-#' @return Returns a \code{bvar} object.
+#' @return Returns a \code{bvar} object, that may be displayed using
+#' \code{\link{print.bvar}}. The object contains the following elements:
+#' \itemize{
+#'   \item beta - Saved draws from the posterior distribution of the VAR
+#'   coefficients.
+#'   \item sigma - Saved draws from the posterior distribution of the
+#'   vcov-matrix of the model.
+#'   \item hyper - Saved draws from the posterior distributions of the
+#'   hyperparameters of the priors that were included.
+#'   \item ml - The value of the marginal likelihood corresponding to each draw
+#'   of the hyperparameters of the priors and the associated VAR coefficients.
+#'   \item accepted - Number of iterations the Metropolis-Hastings step led to
+#'   an acceptance of the drawn hyperparameters and coefficients of the model.
+#'   \item optim - Object coming from \code{\link[stats]{optim}} containing the
+#'   best set of starting values for the hyperparameters of the priors used as
+#'   well as associated components. See \code{\link[stats]{optim}} for more
+#'   information.
+#'   \item prior - \code{bv_priors} object. See \code{\link{bv_priors}}.
+#'   \item call - The original call to the \code{bvar} function.
+#'   \item meta - Meta information regarding the model like number of variables,
+#'   number of used time periods, number of iterations etc.
+#'   \item fcast - Stores the posterior draws of forecasts if they are computed
+#'   as well as information regarding them like the forecasting horizon.
+#'   \item irf - Stores the posterior draws of impulse responses if the are
+#'   computed as well as information regarding them like the reponse horizon or
+#'   the identification method.
+#' }
 #' @export
 #'
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom stats optim runif
+#'
+#' @examples
+#' # Get data com \code{\link{fred_qd}} dataset and transform it
+#' data("fred_qd")
+#' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+#' data <- data[5:nrow(data), ]
+#'
+#' # Compute VAR using 5 lags and standard settings
+#' x <- bvar(data = data, lags = 5)
+#'
+#' # Plotting various output generated
+#' plot(x)
+#' bv_plot_fcast(x)
+#' bv_plot_irf(x)
 bvar <- function(
   data, lags,
   n_draw = 10000, n_burn = 5000, n_thin = 1,
@@ -195,8 +242,6 @@ bvar <- function(
       hyper_draw <- hyper_temp
       accepted <- accepted + 1
       accepted_adj <- accepted_adj + 1
-    } else {
-      # Reject draw
     }
 
     # Tune acceptance during burn-in phase

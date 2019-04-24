@@ -31,16 +31,16 @@
 #'
 #' # Identify impulse responses using sign restrictions
 #' data("fred_qd")
-#' fred_qd <-  fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
-#' fred_qd[5:nrow(fred_qd), 1] <- diff(log(fred_qd[, 1]), lag = 4) * 100
-#' fred_qd <- fred_qd[5:nrow(fred_qd), ]
+#' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+#' data <- data[5:nrow(data), ]
 #'
 #' # Signs should be based on economic theory
 #' signs <- matrix(c(1, 1, -1, -1, 1, -1, -1, 1, 1), nrow = 3)
 #'
 #' irf_signs <- bv_irf(sign_restr = signs)
 #'
-#' # bvar(fred_qd, lags = 5, irf = irf_signs)
+#' # bvar(data, lags = 5, irf = irf_signs)
 bv_irf <- function(
   horizon = 12,
   fevd = FALSE,

@@ -18,6 +18,7 @@
 #'   \item sigma_chol - The Cholesky factorisation of sigma_draw. Calculated
 #'   as \code{t(chol(sigma_draw))}.
 #' }
+#' @importFrom MASS mvrnorm
 
 draw_post <- function(
   X,
