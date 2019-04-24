@@ -30,7 +30,7 @@ print_fcast <- function(x, ...) {
 
   cat("Horizon: ", x$horizon, "\n", sep = "")
 
-  if(!is.null(x$conditional)) {
+  if(x$conditional) {
     stop("Conditional forecasts not yet implemented")
   }
 }

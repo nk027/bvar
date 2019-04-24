@@ -19,6 +19,8 @@
 #' @param conditional Not yet implemented.
 #'
 #' @return Returns a matrix containing forecasts for all variables in the model.
+#'
+#' @importFrom stats rnorm
 compute_fcast <- function(
   Y, K, M, N, lags,
   horizon,

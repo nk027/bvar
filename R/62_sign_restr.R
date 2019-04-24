@@ -14,6 +14,8 @@
 #'
 #' @return Returns a matrix used as shock for computations of impulse responses
 #' identified via sign restrictions.
+#'
+#' @importFrom stats rnorm
 sign_restr <- function(sigma_chol, sign_restr, M) {
 
   counter <- 0

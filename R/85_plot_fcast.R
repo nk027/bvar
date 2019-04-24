@@ -54,6 +54,8 @@ plot.bvar_fcast <- function(
 
 #' @rdname plot.bvar_fcast
 #' @export
+#'
+#' @importFrom stats quantile
 bv_plot_fcast <- function(
   x,
   conf_bands = 0.16,
@@ -108,6 +110,9 @@ bv_plot_fcast <- function(
 #' @param mar Numeric vector with margins for \code{\link[graphics]{par}}.
 #' @param mfrow Numeric vector with layout for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
+#'
+#' @importFrom graphics par grid abline
+#' @importFrom stats ts.plot
 plot_fcast <- function(
   x,
   variables,
@@ -119,6 +124,7 @@ plot_fcast <- function(
     ts.plot(t(as.matrix(x[, , i])),
             col = col, lty = 1,
             main = paste("Forecast", variables[i]))
+    abline(h = 0, lty = "dashed", col = "black")
     grid()
   }
   par(op)

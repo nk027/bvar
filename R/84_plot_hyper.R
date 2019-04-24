@@ -1,5 +1,7 @@
 #' @export
 #' @rdname plot.bvar
+#'
+#' @importFrom graphics par
 bv_plot <- function(x, mar = c(2, 2, 2, 0.5), ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
@@ -127,6 +129,9 @@ bv_plot_density <- function(x, name, ...) {
 #' @param bounds Optional numeric vector plotted horizontally via
 #' \code{\link[graphics]{abline}}.
 #' @param dots Optional list of numeric vectors to add to the plot.
+#'
+#' @importFrom graphics plot polygon lines abline
+#' @importFrom stats density
 plot_trace <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
   ylim <- c(min(vapply(dots, min, double(1)), x),

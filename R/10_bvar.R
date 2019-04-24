@@ -16,6 +16,9 @@
 #'
 #' @return Returns a \code{bvar} object.
 #' @export
+#'
+#' @importFrom utils setTxtProgressBar txtProgressBar
+#' @importFrom stats optim runif
 bvar <- function(
   data, lags,
   n_draw = 10000, n_burn = 5000, n_thin = 1,

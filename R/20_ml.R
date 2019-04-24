@@ -36,6 +36,8 @@
 #'   from posterior distributions.
 #' }
 #' If opt is \code{TRUE} only the value of log_ml is returned.
+#'
+#' @importFrom stats dgamma
 bv_ml <- function(
   hyper, hyper_min = NULL, hyper_max = NULL,
   pars,
