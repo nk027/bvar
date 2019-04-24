@@ -1,3 +1,5 @@
+#' @rdname print.bvar
+#' @export
 print.bv_irf <- function(x, ...) {
 
   if(!inherits(x, "bv_irf")) {stop()}
@@ -8,6 +10,8 @@ print.bv_irf <- function(x, ...) {
 }
 
 
+#' @rdname print.bvar
+#' @export
 print.bvar_irf <- function(x, ...) {
 
   if(!inherits(x, "bvar_irf")) {stop()}
@@ -18,6 +22,10 @@ print.bvar_irf <- function(x, ...) {
 }
 
 
+#' Impulse response print method
+#'
+#' @param x A \code{bv_irf} object.
+#' @param ... Not used.
 print_irf <- function(x, ...) {
 
   cat("Horizon:", x$horizon)

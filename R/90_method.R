@@ -1,6 +1,20 @@
+#' BVAR print methods
+#'
+#' Print method for \code{bvar} objects. Provide a quick overview of results.
+#' The method for impulse response functions provides information on
+#' identification, horizon, et cetera; The forecast method on the horizon.
+#' Further methods for \code{bv_priors}, \code{bv_metropolis}, et cetera are
+#' in the works.
+#'
+#' @param x A \code{bvar} / \code{bvar_...} object, obtained from
+#' \code{\link{bvar}} or constructor functions.
+#' @param ... Not used.
+#'
+#' @return Returns \code{x} invisibly.
+#' @export
 print.bvar <- function(x, ...) {
 
-  if(!inherits(x, "bvar")) {stop()}
+  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
   cat("Bayesian VAR consisting of", x$meta$N, "observations,",
       x$meta$M, "variables and", x$meta$lags, "lags.")

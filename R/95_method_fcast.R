@@ -1,3 +1,5 @@
+#' @rdname print.bvar
+#' @export
 print.bv_fcast <- function(x, ...) {
 
   if(!inherits(x, "bv_fcast")) {stop()}
@@ -8,6 +10,8 @@ print.bv_fcast <- function(x, ...) {
 }
 
 
+#' @rdname print.bvar
+#' @export
 print.bvar_fcast <- function(x, ...) {
 
   if(!inherits(x, "bvar_fcast")) {stop()}
@@ -17,6 +21,11 @@ print.bvar_fcast <- function(x, ...) {
   print_fcast(x$setup, ...)
 }
 
+
+#' Forecast print method
+#'
+#' @param x A \code{bv_fcast} object.
+#' @param ... Not used.
 print_fcast <- function(x, ...) {
 
   cat("Horizon: ", x$horizon, "\n", sep = "")

@@ -1,3 +1,21 @@
+#' Hierarchical Bayesian Vector Autoregression
+#'
+#' @param data Numeric matrix or dataframe.
+#' @param lags Integer scalar.
+#' @param n_draw Integer scalar.
+#' @param n_burn Integer scalar.
+#' @param n_thin Integer scalar.
+#' @param priors \code{bv_priors} object. See \code{\link{bv_priors}}.
+#' @param metropolis \code{bv_metropolis} object.
+#' See \code{\link{bv_metropolis}}.
+#' @param fcast \code{bv_fcast} object. See \code{\link{bv_fcast}}.
+#' @param irf \code{bv_irf} object. See \code{\link{bv_irf}}.
+#' @param verbose Logical scalar. Whether to print intermediate results and
+#' progress.
+#' @param ... Not used.
+#'
+#' @return Returns a \code{bvar} object.
+#' @export
 bvar <- function(
   data, lags,
   n_draw = 10000, n_burn = 5000, n_thin = 1,
