@@ -1,24 +1,68 @@
+#' Impulse response plot
+#'
+#' Plot method for impulse responses obtained from \code{\link{bvar}}. Plot
+#' impulse responses for all or a subset of the available variables.
+#'
+#' @param x A \code{bvar} / \code{bvar_irf} object, obtained from
+#' \code{\link{bvar}}.
+#' @param conf_bands Numeric vector of desired confidence bands. For 5%, 10%,
+#' 90% and 95% bands set this to \code{c(0.05, 0.1)}.
+#' @param variables Optional character vector. Names of all variables in the
+#' object. Taken from \code{x$variables} if available.
+#' @param vars_impulse Optional numeric or character vector. Used to subset the
+#' plot's impulses to certain variables by position or name (\code{variables}
+#' must be available). Defaults to \code{NULL}, i.e. all variables.
+#' @param vars_response Optional numeric or character vector. Used to subset the
+#' plot's responses to certain variables by position or name (\code{variables}
+#' must be available). Defaults to \code{NULL}, i.e. all variables.
+#' @param mar Numeric vector with margins for \code{\link[graphics]{par}}.
+#' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
+#'
+#' @return Returns \code{x} invisibly.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # x <- bvar()
+#'
+#' # Plot impulse responses for all available variables
+#' bv_plot_irf(x)
+#'
+#' # Subset to impulse variables in positions 2 and 4 via position and name
+#' bv_plot_irf(x, vars_impulse = c(2, 4))
+#' bv_plot_irf(x,
+#'   variables = c("solved", "for", "many", decades"),
+#'   vars_impulse = c("for", "decades")
+#' )
+#'
+#' # Use the method to plot and adjust confidence bands
+#' plot(x$irf, conf_bands = c(0.01, 0.05))
+#' }
 plot.bvar_irf <- function(
   x,
   conf_bands = 0.16,
   variables = NULL,
   vars_impulse = NULL,
   vars_response = NULL,
-  mar = c(2, 2, 2, 0.5)) {
+  mar = c(2, 2, 2, 0.5),
+  ...) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
-  bv_plot_irf(x, conf_bands, variables, vars_impulse, vars_response)
+  bv_plot_irf(x, conf_bands, variables, vars_impulse, vars_response, mar, ...)
 
 }
 
 
+#' @rdname plot.bvar_irf
+#' @export
 bv_plot_irf <- function(
   x,
   conf_bands = 0.16,
   variables = NULL,
   vars_impulse = NULL,
   vars_response = NULL,
-  mar = c(2, 2, 2, 0.5)) {
+  mar = c(2, 2, 2, 0.5),
+  ...) {
 
   quantiles <- quantile_check(conf_bands)
 
@@ -36,7 +80,7 @@ bv_plot_irf <- function(
     P <- dim(y)[1]
     if(is.null(variables)) {variables <- 1:M}
 
-  } else {stop("Please provide an object of type bvar or bvar_irf.")}
+  } else {stop("Please provide a `bvar` or `bvar_fcast` object.")}
 
   if(length(variables) != M) {stop("Named vector `variables` is incomplete.")}
 
@@ -44,20 +88,34 @@ bv_plot_irf <- function(
   pos_imp <- get_var_set(vars_impulse, variables, M)
   pos_res <- get_var_set(vars_response, variables, M)
 
-  plot_irf(y, variables, pos_imp, pos_res, col, mar)
+  mfrow <- c(length(pos_res), length(pos_imp))
+
+  plot_irf(y, variables, pos_imp, pos_res, col, mar, mfrow, ...)
 
   return(invisible(x))
 }
 
 
+#' Impulse response plot
+#'
+#' @param x Numeric array (4-dimensional) with data to plot. The first
+#' dimension contains quantiles, the second responses, the third paths and the
+#' fourth impulses.
+#' @param variables Character vector with the names of variables.
+#' @param pos_imp Integer vector. Positions of the impulse variables to plot.
+#' @param pos_res Integer vector. Positions of the response variables to plot.
+#' @param col Character vector. Colours to feed to \code{\link[stats]{ts.plot}}.
+#' @param mar Numeric vector with margins for \code{\link[graphics]{par}}.
+#' @param mfrow Numeric vector with layout for \code{\link[graphics]{par}}.
+#' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 plot_irf <- function(
   x,
   variables,
   pos_imp,
   pos_res,
-  col, mar) {
+  col, mar, mfrow, ...) {
 
-  op <- par(mfrow = c(length(pos_res), length(pos_imp)), mar = mar)
+  op <- par(mfrow = mfrow, mar = mar, ...)
   for(i in pos_res) {
     for(j in pos_imp) {
       ts.plot(t(as.matrix(x[, i, , j])),
