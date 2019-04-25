@@ -39,18 +39,14 @@
 #'
 #' @importFrom stats dgamma
 bv_ml <- function(
-  hyper, hyper_min = NULL, hyper_max = NULL,
-  pars,
-  priors,
-  Y, X, K, M, N, lags,
+  hyper, hyper_min = -Inf, hyper_max = Inf,
+  pars, priors, Y, X, K, M, N, lags,
   opt = FALSE) {
 
   # Bounds ------------------------------------------------------------------
 
-  if(!any(is.null(hyper_min), is.null(hyper_max))) {
-    if(any(hyper_min > hyper | hyper > hyper_max)) {
+  if(any(hyper_min > hyper | hyper > hyper_max)) {
       if(opt) {return(-1e18)} else {return(list("log_ml" = -1e18))}
-    }
   }
 
 
@@ -124,7 +120,7 @@ bv_ml <- function(
 
   # Output ------------------------------------------------------------------
 
-  if(opt) return(log_ml)
+  if(opt) {return(log_ml)}
 
   # Return log_ml and objects necessary for drawing
   return(list("log_ml" = log_ml, "X" = X, "N" = N, "psi" = psi,

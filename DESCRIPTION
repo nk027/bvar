@@ -2,12 +2,19 @@ Package: bvar
 Type: Package
 Title: Hierarchical Bayesian Vector Autoregressions
 Version: 0.1.1.9000
-Author: c(person("Nikolas",  "Kuschnig", role = c("aut", "cre")),
-    person("Lukas", "Vashold", role = "aut"))
+Date: 2019-04-25
+Authors@R: c(person("Nikolas",  "Kuschnig", role = c("aut", "cre"), email = "nikolas.kuschnig@wu.ac.at"),
+    person("Lukas", "Vashold", role = "aut"),
+    person("Michael", "McCracken", role = "dtc", comment = "author of the FRED-QD dataset"))
+Author: Nikolas Kuschnig [aut, cre] (<https://orcid.org/0000-0002-7385-4723>), 
+  Lukas Vashold [aut], 
+  Michael McCracken [dtc],
 Maintainer: Nikolas Kuschnig <nikolas.kuschnig@wu.ac.at>
 Description: Toolkit for estimation of hierarchical Bayesian VARs.
+URL: https://github.com/nk027/bvar
+Depends: R (>= 3.3.0)
+Imports: MASS, stats, graphics, methods, utils
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: stats, graphics, methods, utils, MASS
 RoxygenNote: 6.1.1

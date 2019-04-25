@@ -151,7 +151,7 @@ plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
             max(vapply(dots, max, double(1)), x))
 
   plot(density(x), xlim = xlim,
-       main = paste("Trace", if(!is.null(name)) {paste("of", name)} else {""}))
+       main = paste("Density", if(!is.null(name)) {paste("of", name)} else {""}))
   polygon(density(x), col = "#CCCCCC33", border = NA)
   for(dot in dots) {
     polygon(density(dot), col = "#CCCCCC33", border = NA)

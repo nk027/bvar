@@ -146,7 +146,7 @@ bvar <- function(
   # Hierarchical priors
   hyper_n <- length(priors[["hyper"]]) +
     sum(priors[["hyper"]] == "psi") * (M - 1)
-  if(hyper_n == 0) stop("Non-hierarchical estimation not yet implemented.")
+  if(hyper_n == 0) {stop("Non-hierarchical estimation not yet implemented.")}
 
   hyper <- do.call(c, lapply(priors[["hyper"]],
                              function(x) priors[[x]][["mode"]]))
@@ -164,11 +164,13 @@ bvar <- function(
 
   # Optimise ----------------------------------------------------------------
 
-  opt <- optim(par = hyper, bv_ml, gr = NULL, hyper_min, hyper_max,
-               pars_full, priors, Y, X, K, M, N, lags, opt = TRUE,
-               method = if(hyper_n == 1) {"Brent"} else {"L-BFGS-B"},
-               lower = hyper_min, upper = hyper_max,
-               control = list("fnscale" = -1))
+  opt <- optim(
+    par = hyper, bv_ml, gr = NULL,
+    hyper_min = hyper_min, hyper_max = hyper_max, pars = pars_full,
+    priors = priors, Y = Y, X = X, K = K, M = M, N = N, lags = lags, opt = TRUE,
+    method = "L-BFGS-B", lower = hyper_min, upper = hyper_max,
+    control = list("fnscale" = -1)
+  )
   names(opt[["par"]]) <- names(hyper)
 
 
@@ -196,7 +198,7 @@ bvar <- function(
     hyper_draw <- MASS::mvrnorm(mu = opt[["par"]], Sigma = HH)
     ml_draw <- bv_ml(hyper = hyper_draw, hyper_min, hyper_max,
                      pars = pars_full, priors, Y, X, K, M, N, lags)
-    if(ml_draw[["log_ml"]] > -1e16) break
+    if(ml_draw[["log_ml"]] > -1e16) {break}
   }
 
 
@@ -307,11 +309,11 @@ bvar <- function(
 
     }
 
-    if(verbose) setTxtProgressBar(pb, (i + n_burn))
+    if(verbose) {setTxtProgressBar(pb, (i + n_burn))}
 
   } # End loop
 
-  close(pb)
+  if(verbose) {close(pb)}
 
 
   # Outputs -----------------------------------------------------------------
@@ -324,8 +326,8 @@ bvar <- function(
   out[["meta"]] <- list("N" = N, "M" = M, "lags" = lags, "n_draw" = n_draw,
                         "n_burn" = n_burn, "n_save" = n_save, "n_thin" = n_thin)
 
-  if(!is.null(fcast)) out[["fcast"]] <- fcast_store
-  if(!is.null(irf)) out[["irf"]] <- irf_store
+  if(!is.null(fcast)) {out[["fcast"]] <- fcast_store}
+  if(!is.null(irf)) {out[["irf"]] <- irf_store}
 
   class(out) <- "bvar"
 

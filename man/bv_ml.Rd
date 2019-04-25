@@ -4,7 +4,7 @@
 \alias{bv_ml}
 \title{Log-posterior of a BVAR}
 \usage{
-bv_ml(hyper, hyper_min = NULL, hyper_max = NULL, pars, priors, Y, X, K,
+bv_ml(hyper, hyper_min = -Inf, hyper_max = Inf, pars, priors, Y, X, K,
   M, N, lags, opt = FALSE)
 }
 \arguments{
