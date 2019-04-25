@@ -8,6 +8,8 @@
 #'
 #' @return Returns an \eqn{N * (M * lags)} matrix with consecutive lags at the
 #' right.
+#'
+#' @noRd
 lag_var <- function(x, lags) {
 
   x_rows <- nrow(x)
@@ -32,6 +34,8 @@ lag_var <- function(x, lags) {
 #' @param sd Numeric scalar.
 #'
 #' @return Returns a list with shape \emph{k} and scale paramter \emph{theta}.
+#'
+#' @noRd
 gamma_coef <- function(mode, sd) {
 
   mode_sq <- mode ^ 2
@@ -56,6 +60,8 @@ gamma_coef <- function(mode, sd) {
 #' @examples
 #' bvar:::name_pars(c("lambda", "alpha"))
 #' bvar:::name_pars(c("lambda", "psi"), M = 3)
+#'
+#' @noRd
 name_pars <- function(x, M) {
 
   out <- Reduce(c, sapply(x, function(y) {if(y == "psi") {
@@ -78,6 +84,8 @@ name_pars <- function(x, M) {
 #'
 #' @examples
 #' # set_gray(3)
+#'
+#' @noRd
 set_gray <- function(P) {
 
   n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
@@ -107,6 +115,8 @@ set_gray <- function(P) {
 #'
 #' # Get the full set
 #' bvar:::get_var_set(NULL, M = 3)
+#'
+#' @noRd
 get_var_set <- function(vars, variables, M) {
 
   if(is.null(vars)) {

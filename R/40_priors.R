@@ -10,7 +10,7 @@
 #' parameters "lambda", "alpha" and "psi" as well as the names of possible
 #' dummy priors.
 #' @param mn List of class "bv_minnesota". Options for the Minnesota prior,
-#' set via \code{\link{bv_minnesota}}.
+#' set via \code{\link{bv_mn}}.
 #' @param ... Optional lists of class "bv_dummy" with options for possible
 #' dummy priors. Must be assigned a name in the function call. Created with
 #' \code{\link{bv_dummy}}

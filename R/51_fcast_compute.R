@@ -21,6 +21,8 @@
 #' @return Returns a matrix containing forecasts for all variables in the model.
 #'
 #' @importFrom stats rnorm
+#'
+#' @noRd
 compute_fcast <- function(
   Y, K, M, N, lags,
   horizon,

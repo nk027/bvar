@@ -38,6 +38,8 @@
 #' If opt is \code{TRUE} only the value of log_ml is returned.
 #'
 #' @importFrom stats dgamma
+#'
+#' @noRd
 bv_ml <- function(
   hyper, hyper_min = -Inf, hyper_max = Inf,
   pars, priors, Y, X, K, M, N, lags,

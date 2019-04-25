@@ -2,10 +2,16 @@
 % Please edit documentation in R/41_minnesota.R
 \name{bv_mn}
 \alias{bv_mn}
+\alias{bv_lambda}
+\alias{bv_alpha}
 \title{Minnesota prior settings}
 \usage{
 bv_mn(lambda = bv_lambda(0.2, 0.4, 0.0001, 5), alpha = bv_alpha(2, 0.1,
   0.5), psi = "auto", b = "auto", var = 10000000)
+
+bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 50)
+
+bv_alpha(mode = 0.2, min = 0.1, max = 0.5)
 }
 \arguments{
 \item{lambda}{List constructed via \code{\link{bv_lambda}}.
@@ -41,13 +47,13 @@ Provide options for the Minnesota prior to \code{\link{bv_priors}}.
 }
 \examples{
 # Adjust alpha fully and the prior variance.
-bv_minnesota(
+bv_mn(
   alpha = bv_alpha(mode = 0.5, min = 1e-12, max = 10),
   var = 1e6
 )
 
 # Only adjust lambda's standard deviation
-bv_minnesota(
+bv_mn(
   lambda = bv_lambda(sd = 2)
 )
 }

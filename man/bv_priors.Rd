@@ -15,7 +15,7 @@ parameters "lambda", "alpha" and "psi" as well as the names of possible
 dummy priors.}
 
 \item{mn}{List of class "bv_minnesota". Options for the Minnesota prior,
-set via \code{\link{bv_minnesota}}.}
+set via \code{\link{bv_mn}}.}
 
 \item{...}{Optional lists of class "bv_dummy" with options for possible
 dummy priors. Must be assigned a name in the function call. Created with

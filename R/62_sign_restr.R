@@ -16,6 +16,8 @@
 #' identified via sign restrictions.
 #'
 #' @importFrom stats rnorm
+#'
+#' @noRd
 sign_restr <- function(sigma_chol, sign_restr, M) {
 
   counter <- 0

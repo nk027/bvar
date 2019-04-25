@@ -40,7 +40,7 @@
 #'
 #' irf_signs <- bv_irf(sign_restr = signs)
 #'
-#' # bvar(data, lags = 5, irf = irf_signs)
+#' bvar(data, lags = 5, irf = irf_signs)
 bv_irf <- function(
   horizon = 12,
   fevd = FALSE,

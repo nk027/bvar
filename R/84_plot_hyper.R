@@ -39,6 +39,8 @@ bv_plot <- function(x, mar = c(2, 2, 2, 0.5), ...) {
 #' @param ... Further \code{bvar} objects to include in the plot.
 #'
 #' @return Returns x invisibly.
+#'
+#' @noRd
 plot_hyper <- function(x, name, fun = c(plot_trace, plot_dens), ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
@@ -132,6 +134,8 @@ bv_plot_density <- function(x, name, ...) {
 #'
 #' @importFrom graphics plot polygon lines abline
 #' @importFrom stats density
+#'
+#' @noRd
 plot_trace <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
   ylim <- c(min(vapply(dots, min, double(1)), x),
@@ -145,6 +149,8 @@ plot_trace <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
 
 #' @rdname plot_trace
+#'
+#' @noRd
 plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
   xlim <- c(min(vapply(dots, min, double(1)), x),

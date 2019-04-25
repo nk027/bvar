@@ -9,6 +9,8 @@
 #' @param horizon Integer scalar. Horizon of impulse responses and FEVDs.
 #'
 #' @return Returns a numeric matrix of FEVDs.
+#'
+#' @noRd
 fevd <- function(irf_comp, M, horizon) {
 
   fevd_comp <- aperm(apply(irf_comp * irf_comp, c(1, 3), cumsum), c(2, 3, 1))

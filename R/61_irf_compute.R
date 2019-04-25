@@ -28,6 +28,8 @@
 #' @return Returns impulse reponses using the posterior draws of the VAR
 #' coefficients and the vcov-matrix of the model either to identified shocks,
 #' using a Cholesky decomposition or sign restrictions, or unidentified ones.
+#'
+#' @noRd
 compute_irf <- function(
   beta_comp,
   sigma, sigma_chol,

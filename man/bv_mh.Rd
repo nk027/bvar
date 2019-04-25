@@ -44,8 +44,8 @@ is multiplied with \eqn{1 + acc_change}.
 }
 \examples{
 # Only adjust the scale parameter
-bv_metropolis(scale_hess = 10)
+bv_mh(scale_hess = 10)
 
 # Turn on automatic scaling of the acceptance rate to [20, 40]
-bv_metropolis(adjust_acc = TRUE, acc_lower = 0.2, acc_upper = 0.4)
+bv_mh(adjust_acc = TRUE, acc_lower = 0.2, acc_upper = 0.4)
 }

@@ -6,6 +6,8 @@
 #' @param ... Other possible parameters such as sd or fun.
 #'
 #' @return Returns a list of class bv_dummy.
+#'
+#' @noRd
 dummy <- function(
   mode = 1,
   min = 0.0001, max = 5,

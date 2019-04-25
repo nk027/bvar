@@ -113,6 +113,8 @@ bv_plot_fcast <- function(
 #'
 #' @importFrom graphics par grid abline
 #' @importFrom stats ts.plot
+#'
+#' @noRd
 plot_fcast <- function(
   x,
   variables,

@@ -27,6 +27,8 @@ iterations. The number of saved iterations will be calculated as
 
 \item{priors}{\code{bv_priors} object. See \code{\link{bv_priors}}.}
 
+\item{mh}{\code{bv_metropolis} object. See \code{\link{bv_mh}}.}
+
 \item{fcast}{\code{bv_fcast} object. See \code{\link{bv_fcast}}.}
 
 \item{irf}{\code{bv_irf} object. See \code{\link{bv_irf}}.}
@@ -35,9 +37,6 @@ iterations. The number of saved iterations will be calculated as
 progress.}
 
 \item{...}{Not used.}
-
-\item{metropolis}{\code{bv_metropolis} object.
-See \code{\link{bv_metropolis}}.}
 }
 \value{
 Returns a \code{bvar} object, that may be displayed using
@@ -72,7 +71,7 @@ Returns a \code{bvar} object, that may be displayed using
 Toolkit for estimation of hierarchical Bayesian VARs.
 }
 \examples{
-# Get data com \\code{\\link{fred_qd}} dataset and transform it
+# Access the fred_qd dataset and transform it
 data("fred_qd")
 data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100

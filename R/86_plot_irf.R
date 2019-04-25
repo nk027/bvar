@@ -113,6 +113,8 @@ bv_plot_irf <- function(
 #'
 #' @importFrom graphics par grid abline
 #' @importFrom stats ts.plot
+#'
+#' @noRd
 plot_irf <- function(
   x,
   variables,

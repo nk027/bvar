@@ -12,7 +12,7 @@
 #' iterations. The number of saved iterations will be calculated as
 #' \code{(n_draw - n_burn) / n_thin}.
 #' @param priors \code{bv_priors} object. See \code{\link{bv_priors}}.
-#' @param mh \code{bv_metropolis} object. See \code{\link{bv_metropolis}}.
+#' @param mh \code{bv_metropolis} object. See \code{\link{bv_mh}}.
 #' @param fcast \code{bv_fcast} object. See \code{\link{bv_fcast}}.
 #' @param irf \code{bv_irf} object. See \code{\link{bv_irf}}.
 #' @param verbose Logical scalar. Whether to print intermediate results and
@@ -52,7 +52,7 @@
 #' @importFrom stats optim runif
 #'
 #' @examples
-#' # Get data com \code{\link{fred_qd}} dataset and transform it
+#' # Access the fred_qd dataset and transform it
 #' data("fred_qd")
 #' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 #' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
@@ -324,7 +324,7 @@ bvar <- function(
 
   if(verbose) {
     close(pb)
-    cat("Finished after ", format(timer), ".", sep = "")
+    cat("Finished after ", format(timer), ".\n", sep = "")
   }
 
 

@@ -10,6 +10,8 @@
 #' @param msg String fed to \code{\link[base]{stop}} if an error occurs.
 #'
 #' @return Returns fun(x).
+#'
+#' @noRd
 num_check <- function(
   x, min = 0, max = Inf,
   msg = "Please check the integer parameters.",
@@ -41,6 +43,8 @@ int_check <- function(
 #' @importFrom stats arima
 #'
 #' @return Returns a list with the modes, minimum, and maximum values for psi.
+#'
+#' @noRd
 auto_psi <- function(x, lags) {
 
   out <- list()
@@ -69,6 +73,8 @@ auto_psi <- function(x, lags) {
 #'
 #' @examples
 #' bvar:::quantile_check(c(0.1, 0.16))
+#'
+#' @noRd
 quantile_check <- function(conf_bands) {
 
   if(any(!is.numeric(conf_bands), conf_bands > 1, conf_bands < 0)) {

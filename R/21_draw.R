@@ -20,6 +20,8 @@
 #' }
 #'
 #' @importFrom MASS mvrnorm
+#'
+#' @noRd
 draw_post <- function(
   X,
   N = nrow(X), M = ncol(X), lags, b,

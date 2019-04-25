@@ -26,6 +26,8 @@ print.bvar_irf <- function(x, ...) {
 #'
 #' @param x A \code{bv_irf} object.
 #' @param ... Not used.
+#'
+#' @noRd
 print_irf <- function(x, ...) {
 
   cat("Horizon:", x$horizon)

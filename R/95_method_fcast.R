@@ -26,6 +26,8 @@ print.bvar_fcast <- function(x, ...) {
 #'
 #' @param x A \code{bv_fcast} object.
 #' @param ... Not used.
+#'
+#' @noRd
 print_fcast <- function(x, ...) {
 
   cat("Horizon: ", x$horizon, "\n", sep = "")
