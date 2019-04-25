@@ -19,7 +19,7 @@
 #' \code{\link{bvar}}.
 #' @export
 #'
-#' @seealso \code{\link{bv_minnesota}}; \code{\link{bv_dummy}}
+#' @seealso \code{\link{bv_mn}}; \code{\link{bv_dummy}}
 #'
 #' @examples
 #' # Extending hyperparameters
@@ -29,15 +29,15 @@
 #' # bv_priors(hyper = "auto", "soc" = soc_prior, "sur" = sur_prior)
 bv_priors <- function(
   hyper = "auto",
-  mn = bv_minnesota(bv_lambda(0.2, 0.4, 0.0001, 5),
-                    bv_alpha(2, 0.1, 0.5),
-                    var = 1e07),
+  mn = bv_mn(bv_lambda(0.2, 0.4, 0.0001, 5),
+             bv_alpha(2, 0.1, 0.5),
+             var = 1e07),
   ...) {
 
   # Check inputs ------------------------------------------------------------
 
   if(!is.null(mn) && !inherits(mn, "bv_minnesota")) {
-    stop("Please use `bv_minnesota()` to set the minnesota prior.")
+    stop("Please use `bv_mn()` to set the minnesota prior.")
   }
   dots <- list(...)
   if(!all(vapply(dots, inherits, TRUE, "bv_dummy"))) {

@@ -4,8 +4,8 @@
 \alias{bv_priors}
 \title{Prior settings}
 \usage{
-bv_priors(hyper = "auto", mn = bv_minnesota(bv_lambda(0.2, 0.4, 0.0001,
-  5), bv_alpha(2, 0.1, 0.5), var = 10000000), ...)
+bv_priors(hyper = "auto", mn = bv_mn(bv_lambda(0.2, 0.4, 0.0001, 5),
+  bv_alpha(2, 0.1, 0.5), var = 10000000), ...)
 }
 \arguments{
 \item{hyper}{Character vector. Used to specify the parameters to be treated
@@ -38,5 +38,5 @@ bv_priors(c("lambda", "alpha", "psi"))
 # bv_priors(hyper = "auto", "soc" = soc_prior, "sur" = sur_prior)
 }
 \seealso{
-\code{\link{bv_minnesota}}; \code{\link{bv_dummy}}
+\code{\link{bv_mn}}; \code{\link{bv_dummy}}
 }

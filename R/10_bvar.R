@@ -12,8 +12,7 @@
 #' iterations. The number of saved iterations will be calculated as
 #' \code{(n_draw - n_burn) / n_thin}.
 #' @param priors \code{bv_priors} object. See \code{\link{bv_priors}}.
-#' @param metropolis \code{bv_metropolis} object.
-#' See \code{\link{bv_metropolis}}.
+#' @param mh \code{bv_metropolis} object. See \code{\link{bv_metropolis}}.
 #' @param fcast \code{bv_fcast} object. See \code{\link{bv_fcast}}.
 #' @param irf \code{bv_irf} object. See \code{\link{bv_irf}}.
 #' @param verbose Logical scalar. Whether to print intermediate results and
@@ -62,7 +61,7 @@
 #' # Compute VAR using 5 lags and standard settings
 #' x <- bvar(data = data, lags = 5)
 #'
-#' # Plotting various output generated
+#' # Plot various outputs generated
 #' plot(x)
 #' bv_plot_fcast(x)
 #' bv_plot_irf(x)
@@ -70,12 +69,13 @@ bvar <- function(
   data, lags,
   n_draw = 10000, n_burn = 5000, n_thin = 1,
   priors = bv_priors(),
-  metropolis = bv_metropolis(),
+  mh = bv_mh(),
   fcast = bv_fcast(),
   irf = bv_irf(),
-  verbose = FALSE, ...) {
+  verbose = TRUE, ...) {
 
   cl <- match.call()
+  start_time <- Sys.time()
 
   # Input Checking ----------------------------------------------------------
 
@@ -97,7 +97,7 @@ bvar <- function(
 
   # Constructors
   if(!inherits(priors, "bv_priors")) {stop()}
-  if(!inherits(metropolis, "bv_metropolis")) {stop()}
+  if(!inherits(mh, "bv_metropolis")) {stop()}
   if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) {stop()}
   if(!is.null(irf) && !inherits(irf, "bv_irf")) {stop()}
 
@@ -172,11 +172,18 @@ bvar <- function(
     control = list("fnscale" = -1)
   )
   names(opt[["par"]]) <- names(hyper)
+  if(verbose) {
+    cat("Optimisation concluded.",
+        "\nPosterior marginal likelihood: ", round(opt[["value"]], 3),
+        "\nParameters: ",
+        paste(names(hyper), round(opt[["par"]], 2),
+              sep = " = ", collapse = "; "), "\n", sep = "")
+  }
 
 
   # Hessian -----------------------------------------------------------------
 
-  H <- diag(length(opt[["par"]])) * metropolis[["scale_hess"]]
+  H <- diag(length(opt[["par"]])) * mh[["scale_hess"]]
   J <- unlist(lapply(names(hyper), function(name) {
     exp(opt[["par"]][[name]]) / (1 + exp(opt[["par"]][[name]])) ^ 2 *
       (priors[[name]][["max"]] - priors[[name]][["min"]])
@@ -247,12 +254,12 @@ bvar <- function(
     }
 
     # Tune acceptance during burn-in phase
-    if(metropolis[["adjust_acc"]] && i <= 0 && (i + n_burn) %% 100 == 0) {
+    if(mh[["adjust_acc"]] && i <= 0 && (i + n_burn) %% 100 == 0) {
       acc_rate <- accepted_adj / 100
-      if(acc_rate < metropolis[["lower"]]) {
-        HH <- HH * metropolis[["acc_tighten"]]
-      } else if(acc_rate > metropolis[["upper"]]) {
-        HH <- HH * metropolis[["acc_loosen"]]
+      if(acc_rate < mh[["lower"]]) {
+        HH <- HH * mh[["acc_tighten"]]
+      } else if(acc_rate > mh[["upper"]]) {
+        HH <- HH * mh[["acc_loosen"]]
       }
       accepted_adj <- 0
     }
@@ -313,7 +320,12 @@ bvar <- function(
 
   } # End loop
 
-  if(verbose) {close(pb)}
+  timer <- Sys.time() - start_time
+
+  if(verbose) {
+    close(pb)
+    cat("Finished after ", format(timer), ".", sep = "")
+  }
 
 
   # Outputs -----------------------------------------------------------------
@@ -324,7 +336,8 @@ bvar <- function(
               "variables" = variables, "call" = cl)
 
   out[["meta"]] <- list("N" = N, "M" = M, "lags" = lags, "n_draw" = n_draw,
-                        "n_burn" = n_burn, "n_save" = n_save, "n_thin" = n_thin)
+                        "n_burn" = n_burn, "n_save" = n_save, "n_thin" = n_thin,
+                        "timer" = timer)
 
   if(!is.null(fcast)) {out[["fcast"]] <- fcast_store}
   if(!is.null(irf)) {out[["irf"]] <- irf_store}

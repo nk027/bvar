@@ -5,8 +5,8 @@
 \title{Hierarchical Bayesian Vector Autoregression}
 \usage{
 bvar(data, lags, n_draw = 10000, n_burn = 5000, n_thin = 1,
-  priors = bv_priors(), metropolis = bv_metropolis(),
-  fcast = bv_fcast(), irf = bv_irf(), verbose = FALSE, ...)
+  priors = bv_priors(), mh = bv_mh(), fcast = bv_fcast(),
+  irf = bv_irf(), verbose = TRUE, ...)
 }
 \arguments{
 \item{data}{Numeric matrix or dataframe. Each column contains a variable,
@@ -27,9 +27,6 @@ iterations. The number of saved iterations will be calculated as
 
 \item{priors}{\code{bv_priors} object. See \code{\link{bv_priors}}.}
 
-\item{metropolis}{\code{bv_metropolis} object.
-See \code{\link{bv_metropolis}}.}
-
 \item{fcast}{\code{bv_fcast} object. See \code{\link{bv_fcast}}.}
 
 \item{irf}{\code{bv_irf} object. See \code{\link{bv_irf}}.}
@@ -38,6 +35,9 @@ See \code{\link{bv_metropolis}}.}
 progress.}
 
 \item{...}{Not used.}
+
+\item{metropolis}{\code{bv_metropolis} object.
+See \code{\link{bv_metropolis}}.}
 }
 \value{
 Returns a \code{bvar} object, that may be displayed using
@@ -81,7 +81,7 @@ data <- data[5:nrow(data), ]
 # Compute VAR using 5 lags and standard settings
 x <- bvar(data = data, lags = 5)
 
-# Plotting various output generated
+# Plot various outputs generated
 plot(x)
 bv_plot_fcast(x)
 bv_plot_irf(x)

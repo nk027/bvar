@@ -35,7 +35,7 @@ print_irf <- function(x, ...) {
     if(is.null(x$sign_restr)) {
       cat("Cholesky decomposition")
     } else {
-      cat("sign restrictions.", "\nChosen restrictions:\n", sep = "")
+      cat("Sign restrictions", "\nChosen restrictions:\n", sep = "")
       sign_restr <- apply(x$sign_restr, 2, factor,
                           levels = c(-1, 0, 1), labels = c("-", "0", "+"))
       if(length(sign_restr) < 10 ^ 2) {

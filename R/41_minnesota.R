@@ -24,16 +24,16 @@
 #'
 #' @examples
 #' # Adjust alpha fully and the prior variance.
-#' bv_minnesota(
+#' bv_mn(
 #'   alpha = bv_alpha(mode = 0.5, min = 1e-12, max = 10),
 #'   var = 1e6
 #' )
 #'
 #' # Only adjust lambda's standard deviation
-#' bv_minnesota(
+#' bv_mn(
 #'   lambda = bv_lambda(sd = 2)
 #' )
-bv_minnesota <- function(
+bv_mn <- function(
   lambda = bv_lambda(0.2, 0.4, 0.0001, 5), # mode, sd, min, max
   alpha = bv_alpha(2, 0.1, 0.5), # mode, min, max
   psi = "auto",
@@ -53,7 +53,7 @@ bv_minnesota <- function(
 
 
 #' @export
-#' @rdname bv_minnesota
+#' @rdname bv_mn
 bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 50) {
 
   if(sd <= 0) {stop("Parameter sd misspecified.")}
@@ -63,7 +63,7 @@ bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 50) {
 
 
 #' @export
-#' @rdname bv_minnesota
+#' @rdname bv_mn
 bv_alpha <- function(mode = 0.2, min = 0.1, max = 0.5) {
 
   return(dummy(mode, min, max))

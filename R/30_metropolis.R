@@ -34,7 +34,7 @@
 #'
 #' # Turn on automatic scaling of the acceptance rate to [20, 40]
 #' bv_metropolis(adjust_acc = TRUE, acc_lower = 0.2, acc_upper = 0.4)
-bv_metropolis <- function(
+bv_mh <- function(
   scale_hess = 0.01,
   adjust_acc = FALSE,
   acc_lower = 0.25, acc_upper = 0.35,
