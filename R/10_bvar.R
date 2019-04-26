@@ -33,16 +33,14 @@
 #'   hyperparameters of the priors that were included.
 #'   \item ml - The value of the marginal likelihood corresponding to each draw
 #'   of the hyperparameters of the priors and the associated VAR coefficients.
-#'   \item accepted - Number of iterations the Metropolis-Hastings step led to
-#'   an acceptance of the drawn hyperparameters and coefficients of the model.
 #'   \item optim - Object coming from \code{\link[stats]{optim}} containing the
 #'   best set of starting values for the hyperparameters of the priors used as
 #'   well as associated components. See \code{\link[stats]{optim}} for more
 #'   information.
 #'   \item prior - \code{bv_priors} object. See \code{\link{bv_priors}}.
 #'   \item call - The original call to the \code{bvar} function.
-#'   \item meta - Meta information regarding the model like number of variables,
-#'   number of used time periods, number of iterations etc.
+#'   \item meta - Meta information regarding the model such as number of
+#'   variables, accepted draws, number of iterations etc.
 #'   \item fcast - Stores the posterior draws of forecasts if they are computed
 #'   as well as information regarding them like the forecasting horizon.
 #'   \item irf - Stores the posterior draws of impulse responses if the are
@@ -338,11 +336,12 @@ bvar <- function(
 
   out <- list("beta" = beta_store, "sigma" = sigma_store,
               "hyper" = hyper_store, "ml" = ml_store,
-              "accepted" = accepted, "optim" = opt, "priors" = priors,
+              "optim" = opt, "priors" = priors,
               "variables" = variables, "call" = cl)
 
-  out[["meta"]] <- list("N" = N, "M" = M, "lags" = lags, "n_draw" = n_draw,
-                        "n_burn" = n_burn, "n_save" = n_save, "n_thin" = n_thin,
+  out[["meta"]] <- list("accepted" = accepted, "N" = N, "M" = M, "lags" = lags,
+                        "n_draw" = n_draw, "n_burn" = n_burn, "n_save" = n_save,
+                        "n_thin" = n_thin,
                         "timer" = timer)
 
   if(!is.null(fcast)) {out[["fcast"]] <- fcast_store}
