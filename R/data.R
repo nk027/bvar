@@ -1,18 +1,25 @@
 #' FRED-QD: Quarterly Database for Macroeconomic Research
 #'
-#' FRED-QD is a large macroeconomic database designed for the empirical analysis
-#' of "big data". They are updated in real-time through the FRED database.
-#' The current version included is from April 2019 and contains quarterly
-#' observations of many macroeconomic variables ranging from 1959Q1 to 2018Q4.
+#' FRED-QD is a quarterly frequency companion to FRED-MD, a large macroeconomic
+#' database. It is designed to emulate the dataset used in "Disentangling the
+#' Channels of the 2007-2009 Recession" by Stock and Watson (2012)
+#' <doi:10.3386/w18094> but also contains several additional series.
+#' The included dataset is from April 2019 and contains observations from
+#' 1959Q1 until 2018Q4.
+#'
+#' For further details see McCracken and Ng (2016)
+#' <doi:10.1080/07350015.2015.1086655> or the dataset's appendix at
+#' \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
 #'
 #' @docType data
 #'
-#' @format A dataframe with 240 observations of 248 variables.
+#' @format A \code{data.frame} with 240 observations of 248 variables.
 #'
-#' @keywords datasets
+#' @keywords datasets fred
 #'
 #' @references
-#'   McCracken, M. W., & Ng, S. (2016): FRED-MD: A monthly database for macroeconomic research. Journal of Business & Economic Statistics, 34(4), 574-589.
+#'   McCracken, M. W., and Ng, S. (2016): FRED-MD: A monthly database for macroeconomic research. Journal of Business & Economic Statistics, 34, 574-589.
+#'   Stock, J. H. and Watson, M. W. (2012): Disentangling the Channels of the 2007-2009 Recession. NBER Working Paper Series, 18094.
 #'
 #' @source \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}
 "fred_qd"

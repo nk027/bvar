@@ -1,23 +1,22 @@
 #' Forecast plot
 #'
-#' Plot method for forecasts obtained from \code{\link{bvar}}. Plot forecasts
-#' for all or a subset of the available variables.
+#' Plotting method for forecasts obtained from \code{\link{bvar}}. Forecasts
+#' of all or a subset of the available variables can be plotted.
 #'
 #' @param x A \code{bvar} / \code{bvar_fcast} object, obtained from
 #' \code{\link{bvar}}.
-#' @param conf_bands Numeric vector of desired confidence bands. For 5\%, 10\%,
-#' 90\% and 95\% bands set this to \code{c(0.05, 0.1)}.
+#' @param conf_bands Numeric vector of desired confidence bands. E.g. for bands
+#' at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
 #' @param variables Optional character vector. Names of all variables in the
 #' object. Taken from \code{x$variables} if available.
 #' @param vars Optional numeric or character vector. Used to subset the plot to
 #' certain variables by position or name (\code{variables} must be available).
 #' Defaults to \code{NULL}, i.e. all variables.
-#' @param mar Numeric vector with margins for \code{\link[graphics]{par}}.
 #' @param orientation String indicating the orientation of the plots. Defaults
-#' to "v" (i.e. "vertical"); may be set to "h" (i.e. "horizontal").
+#' to \code{"v"} (i.e. vertical); may be set to \code{"h"} (i.e. horizontal).
+#' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
-#' @return Returns \code{x} invisibly.
 #' @export
 #'
 #' @examples
@@ -34,7 +33,7 @@
 #'   vars = c("gdp", "flux", "capacitor")
 #' )
 #'
-#' # Use the method to plot and adjust confidence bands and orientation
+#' # Use the method to plot, adjust confidence bands and orientation
 #' plot(x$fcast, conf_bands = c(0.01, 0.05), orientation = "h")
 #' }
 plot.bvar_fcast <- function(
@@ -42,8 +41,8 @@ plot.bvar_fcast <- function(
   conf_bands = 0.16,
   variables = NULL,
   vars = NULL,
-  mar = c(2, 2, 2, 0.5),
   orientation = c("vertical", "horizontal"),
+  mar = c(2, 2, 2, 0.5),
   ...) {
 
   if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
@@ -61,8 +60,8 @@ bv_plot_fcast <- function(
   conf_bands = 0.16,
   variables = NULL,
   vars = NULL,
-  mar = c(2, 2, 2, 0.5),
   orientation = c("vertical", "horizontal"),
+  mar = c(2, 2, 2, 0.5),
   ...) {
 
   quantiles <- quantile_check(conf_bands)
@@ -107,8 +106,8 @@ bv_plot_fcast <- function(
 #' @param variables Character vector with the names of variables.
 #' @param pos Integer vector. Positions of the variables to plot.
 #' @param col Character vector. Colours to feed to \code{\link[stats]{ts.plot}}.
-#' @param mar Numeric vector with margins for \code{\link[graphics]{par}}.
-#' @param mfrow Numeric vector with layout for \code{\link[graphics]{par}}.
+#' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
+#' @param mfrow Numeric vector. Layout for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
 #' @importFrom graphics par grid abline
@@ -119,7 +118,8 @@ plot_fcast <- function(
   x,
   variables,
   pos,
-  col, mar, mfrow, ...) {
+  col, mar, mfrow,
+  ...) {
 
   op <- par(mfrow = mfrow, mar = mar, ...)
   for(i in pos) {

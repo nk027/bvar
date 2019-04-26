@@ -1,4 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^setup[.]R$
-^get_data[.]R$
+^setup\.R$
+^data/get_data\.R$
+^cran-comments\.md$
+^NEWS\.md$

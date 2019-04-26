@@ -1,12 +1,13 @@
 #' Impulse response plot
 #'
-#' Plot method for impulse responses obtained from \code{\link{bvar}}. Plot
-#' impulse responses for all or a subset of the available variables.
+#' Plotting method for impulse responses obtained from \code{\link{bvar}}.
+#' Impulse responses of all or a subset of the available variables can be
+#' plotted.
 #'
 #' @param x A \code{bvar} / \code{bvar_irf} object, obtained from
 #' \code{\link{bvar}}.
-#' @param conf_bands Numeric vector of desired confidence bands. For 5\%, 10\%,
-#' 90\% and 95\% bands set this to \code{c(0.05, 0.1)}.
+#' @param conf_bands Numeric vector of desired confidence bands. E.g. for bands
+#' at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
 #' @param variables Optional character vector. Names of all variables in the
 #' object. Taken from \code{x$variables} if available.
 #' @param vars_impulse Optional numeric or character vector. Used to subset the
@@ -15,10 +16,9 @@
 #' @param vars_response Optional numeric or character vector. Used to subset the
 #' plot's responses to certain variables by position or name (\code{variables}
 #' must be available). Defaults to \code{NULL}, i.e. all variables.
-#' @param mar Numeric vector with margins for \code{\link[graphics]{par}}.
+#' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
-#' @return Returns \code{x} invisibly.
 #' @export
 #'
 #' @examples
@@ -107,8 +107,8 @@ bv_plot_irf <- function(
 #' @param pos_imp Integer vector. Positions of the impulse variables to plot.
 #' @param pos_res Integer vector. Positions of the response variables to plot.
 #' @param col Character vector. Colours to feed to \code{\link[stats]{ts.plot}}.
-#' @param mar Numeric vector with margins for \code{\link[graphics]{par}}.
-#' @param mfrow Numeric vector with layout for \code{\link[graphics]{par}}.
+#' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
+#' @param mfrow Numeric vector. Layout for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
 #' @importFrom graphics par grid abline
@@ -120,7 +120,8 @@ plot_irf <- function(
   variables,
   pos_imp,
   pos_res,
-  col, mar, mfrow, ...) {
+  col, mar, mfrow,
+  ...) {
 
   op <- par(mfrow = mfrow, mar = mar, ...)
   for(i in pos_res) {
