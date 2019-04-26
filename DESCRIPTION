@@ -10,7 +10,11 @@ Author: Nikolas Kuschnig [aut, cre] (<https://orcid.org/0000-0002-7385-4723>),
   Lukas Vashold [aut], 
   Michael McCracken [dtc],
 Maintainer: Nikolas Kuschnig <nikolas.kuschnig@wu.ac.at>
-Description: Toolkit for estimation of hierarchical Bayesian VARs.
+Description: Toolkit for estimation of hierarchical Bayesian VARs. Implements 
+prior selection for conjugate priors in the fashion of Giannone et al. (2015)  
+that accounts for uncertainty about prior hyperparameters. Allows for the  
+computation of impulse responses as well as forecasts based on draws of 
+coefficients from their respective posterior distribution. 
 URL: https://github.com/nk027/bvar
 Depends: R (>= 3.3.0)
 Imports: MASS, stats, graphics, methods, utils

@@ -1,5 +1,8 @@
 #' Hierarchical Bayesian Vector Autoregression
 #'
+#' Hierarchical Bayesian estimation of VAR models in the fashion of Giannone et
+#' al. (2015) accounting for uncertainty of prior hyperparameters.
+#'
 #' @param data Numeric matrix or dataframe. Each column contains a variable,
 #' observations have to be ordered from earliest to latest one.
 #' @param lags Integer scalar. Number of lags to be used when estimating the
@@ -44,6 +47,9 @@
 #'   computed as well as information regarding them like the reponse horizon or
 #'   the identification method.
 #' }
+#'
+#' @references Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior selection for vector autoregressions. Review of Economics and Statistics, 97(2), 436-451. Accompanying Matlab code available at \url{http://faculty.wcas.northwestern.edu/~gep575/research.html}.
+#'
 #' @export
 #'
 #' @importFrom utils setTxtProgressBar txtProgressBar
