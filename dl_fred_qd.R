@@ -3,7 +3,7 @@
 link <- "https://s3.amazonaws.com/files.fred.stlouisfed.org/fred-md/quarterly/"
 file <- "2019-03.csv"
 
-fred_qd <- read.csv(paste(link, file, sep = ""), stringsAsFactors = FALSE)
+fred_qd <- base::read.csv(paste(link, file, sep = ""), stringsAsFactors = FALSE)
 
 # Rows to remove
 fred_qd[c(1:2, nrow(fred_qd)), ]

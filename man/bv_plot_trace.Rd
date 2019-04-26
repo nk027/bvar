@@ -13,20 +13,17 @@ bv_plot_density(x, name, ...)
 \item{x}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
 
 \item{name}{String with the name of the hyperparameter to plot. Possible
-values are the names of hyperparameters and "ml" for the posterior marginal
-likelihood.}
+values are names of hyperparameters and \code{"ml"} for the posterior
+marginal likelihood.}
 
 \item{...}{Further \code{bvar} objects to include in the plot. The desired
-parameter must be available and priors of the objects should match.}
-}
-\value{
-Returns x invisibly.
+hyperparameter must be available and priors of the objects should match.}
 }
 \description{
 Diagnostic plots of the trace / density of a single hyperparameter.
 A parameter may be plotted across multiple iterations of \code{\link{bvar}}
-via the ellipsis parameter. Givent that the settings for \code{\link{bvar}}
-are identical this feature can be used to assess convergence.
+via the ellipsis parameter. Given that the settings for \code{\link{bvar}}
+are identical this can be used to assess convergence.
 }
 \examples{
 \dontrun{

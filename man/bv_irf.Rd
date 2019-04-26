@@ -8,37 +8,43 @@ bv_irf(horizon = 12, fevd = FALSE, identification = TRUE,
   sign_restr = NULL)
 }
 \arguments{
-\item{horizon}{Integer scalar. Specifies the horizon for which impulse
-responses (and FEVDs) should be computed. Set to 12 by default.}
+\item{horizon}{Integer scalar. The horizon for which impulse responses
+(and FEVDs) should be computed.}
 
 \item{fevd}{Logical scalar. Whether or not forecast error variance
-decompositions should be calculated. Defaults to FALSE.}
+decompositions should be calculated.}
 
 \item{identification}{Logical scalar. Whether or not the shocks used for
-calculating impulses should be identified. Defaults to TRUE, i.e.
-identification via Cholesky decomposition unless sign_restr are provided.}
+calculating impulses should be identified. Defaults to \code{TRUE}, i.e.
+identification via Cholesky decomposition unless \emph{sign_restr} is
+provided.}
 
 \item{sign_restr}{Numeric matrix. Sign restrictions for identification.
 Elements should be set to \eqn{1} (\eqn{-1}) to restrict for positive
 (negative) impacts. If no presumption about the impact can be made the
-corresponding elements can be set to \eqn{0}. The default value is NULL,
-meaning identification would be done through Cholesky decomposition.}
+corresponding elements can be set to \eqn{0}. The default value is
+\code{NULL}, meaning identification would be performed via Cholesky
+decomposition.}
 }
 \value{
-Returns a named list of class bv_irf with options for
+Returns a named list of class \code{bv_irf} with options for
 \code{\link{bvar}}.
 }
 \description{
-Function to provide settings for the computation of impulse repsonses to
-\code{\link{bvar}}. Provides options for setting the horizon for which
-impulse responses should be computed, whether or not forecast error variance
-decompositions (FEVDs) should be computed and, if and what kind of
-identification should be used (Cholesky decomposition and sign restrictions
-are supported).
+Provide settings for the computation of impulse repsonses to
+\code{\link{bvar}}. Allows setting the horizon for which impulse responses
+should be computed, whether or not forecast error variance decompositions
+(FEVDs) should be computed and, if and what kind of identification should
+be used.
+}
+\details{
+Identification can be performed via Cholesky decomposition and sign
+restrictions. The algorithm for generating suitable sign restrictions
+follows  Rubio-Ramirez et al. (2010) <doi:10.1111/j.1467-937X.2009.00578.x>.
 }
 \examples{
 # Set impulse responses to a horizon of 20 time periods and enable FEVD
-# (Identification by means of a Cholesky decomposition)
+# (Identification is performed via Cholesky decomposition)
 bv_irf(horizon = 20, fevd = TRUE)
 
 # Identify impulse responses using sign restrictions
@@ -53,4 +59,7 @@ signs <- matrix(c(1, 1, -1, -1, 1, -1, -1, 1, 1), nrow = 3)
 irf_signs <- bv_irf(sign_restr = signs)
 
 bvar(data, lags = 5, irf = irf_signs)
+}
+\references{
+Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696.
 }

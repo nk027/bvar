@@ -6,15 +6,11 @@ Date: 2019-04-25
 Authors@R: c(person("Nikolas",  "Kuschnig", role = c("aut", "cre"), email = "nikolas.kuschnig@wu.ac.at"),
     person("Lukas", "Vashold", role = "aut"),
     person("Michael", "McCracken", role = "dtc", comment = "author of the FRED-QD dataset"))
-Author: Nikolas Kuschnig [aut, cre] (<https://orcid.org/0000-0002-7385-4723>), 
+Author: Nikolas Kuschnig [aut, cre], 
   Lukas Vashold [aut], 
-  Michael McCracken [dtc],
+  Michael McCracken [dtc]
 Maintainer: Nikolas Kuschnig <nikolas.kuschnig@wu.ac.at>
-Description: Toolkit for estimation of hierarchical Bayesian VARs. Implements 
-prior selection for conjugate priors in the fashion of Giannone et al. (2015)  
-that accounts for uncertainty about prior hyperparameters. Allows for the  
-computation of impulse responses as well as forecasts based on draws of 
-coefficients from their respective posterior distribution. 
+Description: Toolkit for the estimation of hierarchical Bayesian VARs. Implements hierarchical prior selection for conjugate priors in the fashion of Giannone et al. (2015) <doi:10.1162/REST_a_00483> that accounts for uncertainty. Allows for the computation of impulse responses and forecasts and provides functionality for assessing results.
 URL: https://github.com/nk027/bvar
 Depends: R (>= 3.3.0)
 Imports: MASS, stats, graphics, methods, utils

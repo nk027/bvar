@@ -6,19 +6,19 @@
 \title{Forecast plot}
 \usage{
 \method{plot}{bvar_fcast}(x, conf_bands = 0.16, variables = NULL,
-  vars = NULL, mar = c(2, 2, 2, 0.5), orientation = c("vertical",
-  "horizontal"), ...)
+  vars = NULL, orientation = c("vertical", "horizontal"), mar = c(2,
+  2, 2, 0.5), ...)
 
 bv_plot_fcast(x, conf_bands = 0.16, variables = NULL, vars = NULL,
-  mar = c(2, 2, 2, 0.5), orientation = c("vertical", "horizontal"),
+  orientation = c("vertical", "horizontal"), mar = c(2, 2, 2, 0.5),
   ...)
 }
 \arguments{
 \item{x}{A \code{bvar} / \code{bvar_fcast} object, obtained from
 \code{\link{bvar}}.}
 
-\item{conf_bands}{Numeric vector of desired confidence bands. For 5\%, 10\%,
-90\% and 95\% bands set this to \code{c(0.05, 0.1)}.}
+\item{conf_bands}{Numeric vector of desired confidence bands. E.g. for bands
+at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.}
 
 \item{variables}{Optional character vector. Names of all variables in the
 object. Taken from \code{x$variables} if available.}
@@ -27,19 +27,16 @@ object. Taken from \code{x$variables} if available.}
 certain variables by position or name (\code{variables} must be available).
 Defaults to \code{NULL}, i.e. all variables.}
 
-\item{mar}{Numeric vector with margins for \code{\link[graphics]{par}}.}
-
 \item{orientation}{String indicating the orientation of the plots. Defaults
-to "v" (i.e. "vertical"); may be set to "h" (i.e. "horizontal").}
+to \code{"v"} (i.e. vertical); may be set to \code{"h"} (i.e. horizontal).}
+
+\item{mar}{Numeric vector. Margins for \code{\link[graphics]{par}}.}
 
 \item{...}{Other graphical parameters for \code{\link[graphics]{par}}.}
 }
-\value{
-Returns \code{x} invisibly.
-}
 \description{
-Plot method for forecasts obtained from \code{\link{bvar}}. Plot forecasts
-for all or a subset of the available variables.
+Plotting method for forecasts obtained from \code{\link{bvar}}. Forecasts
+of all or a subset of the available variables can be plotted.
 }
 \examples{
 \dontrun{
@@ -55,7 +52,7 @@ bv_plot_fcast(x,
   vars = c("gdp", "flux", "capacitor")
 )
 
-# Use the method to plot and adjust confidence bands and orientation
+# Use the method to plot, adjust confidence bands and orientation
 plot(x$fcast, conf_bands = c(0.01, 0.05), orientation = "h")
 }
 }

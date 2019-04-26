@@ -1,6 +1,6 @@
 #' Lag a matrix of time series
 #'
-#' Compute a lagged version of matrix to be used on vector autoregressions.
+#' Compute a lagged version of matrix to be used in vector autoregressions.
 #' Multiple lags are added side by side.
 #'
 #' @param x Matrix (\eqn{N * M}) to lag.
@@ -50,10 +50,10 @@ gamma_coef <- function(mode, sd) {
 #' Create parameter names
 #'
 #' Function to help name prior parameters. Accounts for multiple occurences
-#' of psi when \eqn{M > 1} by adding sequential numbers.
+#' of \emph{psi} when \eqn{M > 1} by adding sequential numbers.
 #'
-#' @param x Character vector with names of all relevant paramters.
-#' @param M Integer scalar with the number of columns in the data.
+#' @param x Character vector. Names of all relevant paramters.
+#' @param M Integer scalar. Number of columns in the data.
 #'
 #' @return Returns a character vector of parameter names.
 #'
@@ -76,14 +76,14 @@ name_pars <- function(x, M) {
 #'
 #' Create a character vector of colours for time series with credible
 #' intervals, e.g. \code{\link{bv_plot_irf}} and \code{\link{bv_plot_fcast}}.
-#' The central element is set to black, the rest to darkgray.
+#' The central element is coloured \code{"black"}, the rest \code{"darkgray"}.
 #'
 #' @param P Integer scalar. Number of bands to plot.
 #'
 #' @return Returns a character vector of colours.
 #'
 #' @examples
-#' # set_gray(3)
+#' bvar:::set_gray(3)
 #'
 #' @noRd
 set_gray <- function(P) {
@@ -100,8 +100,8 @@ set_gray <- function(P) {
 #' and \code{\link{bv_plot_fcast}}.
 #'
 #' @param vars Vector of variables to subset to. Numeric or character.
-#' @param variables Character vector of all variable names. Required if vars
-#' is provided as character vector.
+#' @param variables Character vector of all variable names. Required if
+#' \emph{vars} is provided as character vector.
 #' @param M Integer scalar. Count of all variables.
 #'
 #' @return Returns a numeric vector with the positions of desired variables.

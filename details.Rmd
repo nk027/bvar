@@ -1,5 +1,5 @@
 ---
-title: "vignette_details"
+title: "Details"
 output: pdf_document
 ---
 

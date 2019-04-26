@@ -8,12 +8,12 @@ bv_fcast(horizon = 12, conditional = FALSE)
 }
 \arguments{
 \item{horizon}{Integer scalar. Horizon for which forecasts should be
-computed. Defaults to 12.}
+computed.}
 
 \item{conditional}{Logical scalar. Not yet implemented.}
 }
 \value{
-Returns a named list of class bv_fcast with options for
+Returns a named list of class \code{bv_fcast} with options for
 \code{\link{bvar}}.
 }
 \description{

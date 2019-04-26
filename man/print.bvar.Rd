@@ -21,17 +21,12 @@
 }
 \arguments{
 \item{x}{A \code{bvar} / \code{bvar_...} object, obtained from
-\code{\link{bvar}} or constructor functions.}
+\code{\link{bvar}} or related functions.}
 
 \item{...}{Not used.}
 }
-\value{
-Returns \code{x} invisibly.
-}
 \description{
-Print method for \code{bvar} objects. Provide a quick overview of results.
+Print methods for \code{bvar} objects providing a quick overview of results.
 The method for impulse response functions provides information on
 identification, horizon, et cetera; The forecast method on the horizon.
-Further methods for \code{bv_priors}, \code{bv_metropolis}, et cetera are
-in the works.
 }

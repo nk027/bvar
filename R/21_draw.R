@@ -1,10 +1,10 @@
 #' BVAR posterior draws
 #'
-#' Draw beta and sigma from the posterior of a BVAR.
+#' Draw beta and sigma from the posterior of a Bayesian VAR.
 #'
 #' @param X Numeric matrix. Possibly extended with dummy priors.
-#' @param N Integer scalar. Rows of X.
-#' @param M Integer scalar. Columns of X.
+#' @param N Integer scalar. Rows of \emph{X}.
+#' @param M Integer scalar. Columns of \emph{X}.
 #' @param lags Integer scalar. Number of lags in the model.
 #' @param b Numeric marix. Minnesota prior mean.
 #' @param psi Numeric matrix. Scale of the IW prior on the residual covariance.
@@ -14,9 +14,9 @@
 #'
 #' @return Returns a list with the following elements:
 #' \itemize{
-#'   \item beta_draw, sigma_draw - Draws from the posterior.
-#'   \item sigma_chol - The Cholesky factorisation of sigma_draw. Calculated
-#'   as \code{t(chol(sigma_draw))}.
+#'   \item \code{beta_draw}, \code{sigma_draw} - Draws from the posterior.
+#'   \item \code{sigma_chol} - The Cholesky factorisation of sigma_draw.
+#'   Calculated as \code{t(chol(sigma_draw))}.
 #' }
 #'
 #' @importFrom MASS mvrnorm

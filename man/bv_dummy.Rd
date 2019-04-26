@@ -7,19 +7,21 @@
 bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 5, fun)
 }
 \arguments{
-\item{mode}{Numeric scalar. Mode or the like of the parameter.}
+\item{mode}{Numeric scalar. Mode (or the like) of the parameter.}
 
-\item{sd}{Numeric scalar. Standard deviation or the like of the parameter.}
+\item{sd}{Numeric scalar. Standard deviation (or the like) of the parameter.}
 
 \item{min}{Numeric scalar. Minimum allowed value.}
 
 \item{max}{Numeric scalar. Maximum allowed value.}
 
-\item{fun}{Function taking Y, lags and the prior's parameter to generate
-and return a named list with elements X and Y (numeric matrices).}
+\item{fun}{Function taking \emph{Y}, \emph{lags} and the prior's parameter
+\emph{par} to generate and return a named list with elements \emph{X} and
+\emph{Y} (numeric matrices).}
 }
 \value{
-Returns a named list of class bv_dummy for \code{\link{bv_priors}}.
+Returns a named list of class \code{bv_dummy} for
+\code{\link{bv_priors}}.
 }
 \description{
 Allows the creation of dummy observation priors for \code{\link{bv_priors}}.

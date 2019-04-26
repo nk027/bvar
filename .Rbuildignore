@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^setup\.R$
-^data/get_data\.R$
+^details\....$
+^dl_fred_qd\.R$
 ^cran-comments\.md$
 ^NEWS\.md$

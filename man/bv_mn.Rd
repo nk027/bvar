@@ -7,7 +7,7 @@
 \title{Minnesota prior settings}
 \usage{
 bv_mn(lambda = bv_lambda(0.2, 0.4, 0.0001, 5), alpha = bv_alpha(2, 0.1,
-  0.5), psi = "auto", b = "auto", var = 10000000)
+  0.5), psi = "auto", var = 10000000, b = "auto")
 
 bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 50)
 
@@ -15,35 +15,34 @@ bv_alpha(mode = 0.2, min = 0.1, max = 0.5)
 }
 \arguments{
 \item{lambda}{List constructed via \code{\link{bv_lambda}}.
-Possible parameters are mode, sd, min and max.}
+Possible parameters are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}.}
 
 \item{alpha}{List constructed via \code{\link{bv_alpha}}.
-Possible parameters are mode, min and max.}
+Possible parameters are \emph{mode}, \emph{min} and \emph{max}.}
 
-\item{psi}{Named list with elements mode, min and max. Length needs to match
-the number of variables (i.e. columns) in the data. By default parameters are
-set automatically as the squareroot of the innovations variance after fitting
-an \eqn{AR(p)} model to the data.}
-
-\item{b}{Numeric matrix with the prior mean. Best left as default.}
+\item{psi}{Named list with elements \emph{mode}, \emph{min} and \emph{max}.
+Length needs to match the number of variables (i.e. columns) in the data.
+By default parameters are set automatically as the squareroot of the
+innovations variance after fitting an \eqn{AR(p)} model to the data.}
 
 \item{var}{Numeric scalar with the prior variance.}
 
-\item{mode}{Numeric scalar. Mode or the like of the parameter.}
+\item{b}{Numeric matrix with the prior mean.}
 
-\item{sd}{Numeric scalar with the standard deviation. Applies to
-\code{lambda}.}
+\item{mode}{Numeric scalar. Mode (or the like) of the parameter.}
+
+\item{sd}{Numeric scalar with the standard deviation.}
 
 \item{min}{Numeric scalar. Minimum allowed value.}
 
 \item{max}{Numeric scalar. Maximum allowed value.}
 }
 \value{
-Returns a named list of class bv_minnesota with options for
+Returns a named list of class \code{bv_minnesota} with options for
 \code{\link{bvar}}.
 }
 \description{
-Provide options for the Minnesota prior to \code{\link{bv_priors}}.
+Provide settings for the Minnesota prior to \code{\link{bv_priors}}.
 }
 \examples{
 # Adjust alpha fully and the prior variance.

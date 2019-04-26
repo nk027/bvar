@@ -1,27 +1,26 @@
 #' Log-posterior of a BVAR
 #'
 #' Compute the log-posterior (or log-marginal-likelihood) of a Bayesian VAR
-#' with a Minnesota prior and optional dummy priors. Prior parameters may be
+#' with a Minnesota and optional dummy priors. Prior parameters may be
 #' treated hierarchically. Create objects necessary for drawing from the
 #' posterior distributions of coefficients and covariance matrix of the
 #' residuals.
 #'
-#' @param hyper Named numerical vector with hyperparameters for hierarchical
+#' @param hyper Named numeric vector. Hyperparameters for hierarchical
 #' estimation.
-#' @param hyper_min Optional numerical vector. Minimum values allowed for
-#' hyperparameters. If these are breached a value of -1e18 is returned.
-#' @param hyper_max Optional numerical vector. Maximum values allowed for
-#' hyperparameters. If these are breached a value of -1e18 is returned.
-#' @param pars Named numerical vector with prior parameters. Values also found
-#' in hyper are overwritten with their hierarchical counterpart.
+#' @param hyper_min,hyper_max Optional numeric vector. Minimum / maximum values
+#' allowed for hyperparameters. If these are breached a value of -1e18 is
+#' returned.
+#' @param pars Named numeric vector with prior parameters. Values also found
+#' in \emph{hyper} are overwritten with their hierarchical counterpart.
 #' @param priors List created via \code{\link{bv_priors}}. Contains information
 #' on the Minnesota prior and optional dummy priors (that are named in
 #' \code{priors$dummy}).
 #' @param Y Numeric \eqn{N * M} matrix.
 #' @param X Numeric \eqn{N * K} matrix.
-#' @param K Integer scalar. Columns of X, i.e. \eqn{M * lags + 1}.
-#' @param M Integer scalar. Columns of Y.
-#' @param N Integer scalar. Rows of Y, alternatively X.
+#' @param K Integer scalar. Columns of \emph{X}, i.e. \eqn{M * lags + 1}.
+#' @param M Integer scalar. Columns of \emph{Y}.
+#' @param N Integer scalar. Rows of \emph{Y}, alternatively \emph{X}.
 #' @param lags Integer scalar. Number of lags in the model.
 #' @param opt Optional logical scalar. Determines whether the return values is
 #' a numeric scalar or a list. Used to call \code{\link{bv_ml}} in
@@ -29,13 +28,13 @@
 #'
 #' @return Returns a list with the following objects by default:
 #' \itemize{
-#'   \item log_ml - A numerical scalar with the log-posterior
-#'   \item X, N - The respective parameters adjusted for eventual dummy
-#'   priors. Necessary for drawing from posterior distributions.
-#'   \item psi, sse, beta_hat, omega_inv - Further values necessary for drawing
-#'   from posterior distributions.
+#'   \item \code{log_ml} - A numeric scalar with the log-posterior.
+#'   \item \code{X}, \code{N} - The respective parameters adjusted for eventual
+#'   dummy priors. Necessary for drawing from posterior distributions.
+#'   \item \code{psi}, \code{sse}, \code{beta_hat}, \code{omega_inv} - Further
+#'   values necessary for drawing from posterior distributions.
 #' }
-#' If opt is \code{TRUE} only the value of log_ml is returned.
+#' If opt is \code{TRUE} only the value of \code{log_ml} is returned.
 #'
 #' @importFrom stats dgamma
 #'

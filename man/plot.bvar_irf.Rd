@@ -17,8 +17,8 @@ bv_plot_irf(x, conf_bands = 0.16, variables = NULL,
 \item{x}{A \code{bvar} / \code{bvar_irf} object, obtained from
 \code{\link{bvar}}.}
 
-\item{conf_bands}{Numeric vector of desired confidence bands. For 5\%, 10\%,
-90\% and 95\% bands set this to \code{c(0.05, 0.1)}.}
+\item{conf_bands}{Numeric vector of desired confidence bands. E.g. for bands
+at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.}
 
 \item{variables}{Optional character vector. Names of all variables in the
 object. Taken from \code{x$variables} if available.}
@@ -31,16 +31,14 @@ must be available). Defaults to \code{NULL}, i.e. all variables.}
 plot's responses to certain variables by position or name (\code{variables}
 must be available). Defaults to \code{NULL}, i.e. all variables.}
 
-\item{mar}{Numeric vector with margins for \code{\link[graphics]{par}}.}
+\item{mar}{Numeric vector. Margins for \code{\link[graphics]{par}}.}
 
 \item{...}{Other graphical parameters for \code{\link[graphics]{par}}.}
 }
-\value{
-Returns \code{x} invisibly.
-}
 \description{
-Plot method for impulse responses obtained from \code{\link{bvar}}. Plot
-impulse responses for all or a subset of the available variables.
+Plotting method for impulse responses obtained from \code{\link{bvar}}.
+Impulse responses of all or a subset of the available variables can be
+plotted.
 }
 \examples{
 \dontrun{
