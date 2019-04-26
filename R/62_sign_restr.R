@@ -1,6 +1,6 @@
 #' Sign restriction algorithm
 #'
-#' Implements the algorithm by Rubio-Ramirez et al. (2005) in order to find
+#' Implements the algorithm by Rubio-Ramirez et al. (2010) in order to find
 #' suitable matrices containing sign restrictions for identification purposes.
 #' It is called by \code{\link{compute_irf}} and throws an error if no suitable
 #' restrictions can be found.
