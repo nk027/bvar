@@ -71,7 +71,7 @@ bv_ml <- function(
   # Dummy priors
   if(length(priors[["dummy"]]) > 0) {
     dmy <- lapply(priors[["dummy"]], function(x) {
-      tryCatch(priors[[x]][["fun"]](Y = Y, lags = lags, pars = pars[[x]]),
+      tryCatch(priors[[x]][["fun"]](Y = Y, lags = lags, par = pars[[x]]),
                error = stop("Issue with generating dummy observations for ",
                             x, ". Make sure the function works properly."))
     })

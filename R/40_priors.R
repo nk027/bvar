@@ -1,28 +1,28 @@
 #' Prior settings
 #'
-#' Helper function to set up parameters and informations on priors for
-#' \code{\link{bvar}}. Used for adjusting the parameters treated as
-#' hyperparameters, the Minnesota prior and adding various dummy priors.
+#' Function to provide priors and their parameters to \code{\link{bvar}}. Used
+#' for adjusting the parameters treated as hyperparameters, the Minnesota prior
+#' and adding various dummy priors through the ellipsis.
 #'
 #' @param hyper Character vector. Used to specify the parameters to be treated
-#' as hyperparameters. Can also be set to "auto" or "full" for
+#' as hyperparameters. May also be set to \code{"auto"} or \code{"full"} for
 #' an automatic / full subset. Other allowed values are the Minnesota prior's
-#' parameters "lambda", "alpha" and "psi" as well as the names of possible
-#' dummy priors.
-#' @param mn List of class "bv_minnesota". Options for the Minnesota prior,
-#' set via \code{\link{bv_mn}}.
-#' @param ... Optional lists of class "bv_dummy" with options for possible
-#' dummy priors. Must be assigned a name in the function call. Created with
-#' \code{\link{bv_dummy}}
+#' parameters \code{"lambda"}, \code{"alpha"} and \code{"psi"} as well as the
+#' names of additional dummy priors included via \emph{...}.
+#' @param mn List of class \code{"bv_minnesota"}. Options for the Minnesota
+#' prior, set via \code{\link{bv_mn}}.
+#' @param ... Optional lists of class \code{"bv_dummy"} with options for
+#' dummy priors. \emph{Must be assigned a name in the function call}. Created
+#' with \code{\link{bv_dummy}}.
 #'
-#' @return Returns a named list of class bv_priors with options for
+#' @return Returns a named list of class \code{bv_priors} with options for
 #' \code{\link{bvar}}.
 #' @export
 #'
 #' @seealso \code{\link{bv_mn}}; \code{\link{bv_dummy}}
 #'
 #' @examples
-#' # Extending hyperparameters
+#' # Extending hyperparameters to the full Minnesota prior
 #' bv_priors(c("lambda", "alpha", "psi"))
 #'
 #' # Adding already constructed dummy priors

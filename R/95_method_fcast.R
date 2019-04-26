@@ -2,7 +2,7 @@
 #' @export
 print.bv_fcast <- function(x, ...) {
 
-  if(!inherits(x, "bv_fcast")) {stop()}
+  if(!inherits(x, "bv_fcast")) {stop("Please provide a `bv_fcast` object.")}
 
   cat("Object with settings for computing forecasts in `bvar()`.\n")
 
@@ -14,9 +14,9 @@ print.bv_fcast <- function(x, ...) {
 #' @export
 print.bvar_fcast <- function(x, ...) {
 
-  if(!inherits(x, "bvar_fcast")) {stop()}
+  if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
 
-  cat("Forecast from `bvar()`.\n")
+  cat("Forecast object from `bvar()`.\n")
 
   print_fcast(x$setup, ...)
 }

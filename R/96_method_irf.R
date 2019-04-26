@@ -2,7 +2,7 @@
 #' @export
 print.bv_irf <- function(x, ...) {
 
-  if(!inherits(x, "bv_irf")) {stop()}
+  if(!inherits(x, "bv_irf")) {stop("Please provide a `bv_irf` object.")}
 
   cat("Object with settings for computing impulse responses in `bvar()`.\n")
 
@@ -14,9 +14,9 @@ print.bv_irf <- function(x, ...) {
 #' @export
 print.bvar_irf <- function(x, ...) {
 
-  if(!inherits(x, "bvar_irf")) {stop()}
+  if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
 
-  cat("Impulse responses from `bvar()`.\n")
+  cat("Impulse response object from `bvar()`.\n")
 
   print_irf(x$setup, ...)
 }

@@ -1,11 +1,11 @@
 #' Prior settings
 #'
-#' @param mode Numeric scalar. Mode or the like of the parameter.
+#' @param mode Numeric scalar. Mode (or the like) of the parameter.
 #' @param min Numeric scalar. Minimum allowed value.
 #' @param max Numeric scalar. Maximum allowed value.
 #' @param ... Other possible parameters such as sd or fun.
 #'
-#' @return Returns a list of class bv_dummy.
+#' @return Returns a list of class \code{bv_dummy.}
 #'
 #' @noRd
 dummy <- function(
@@ -13,8 +13,8 @@ dummy <- function(
   min = 0.0001, max = 5,
   ...) {
 
-  if(0 >= min || min >= max) stop("Boundaries misspecified.")
-  if(mode < 0) stop("Parameter misspecified.")
+  if(0 >= min || min >= max) {stop("Boundaries misspecified.")}
+  if(mode < 0) {stop("Parameter misspecified.")}
 
   out <- list(mode = mode, min = min, max = max, ...)
   class(out) <- "bv_dummy"
@@ -27,14 +27,16 @@ dummy <- function(
 #'
 #' Allows the creation of dummy observation priors for \code{\link{bv_priors}}.
 #'
-#' @param mode Numeric scalar. Mode or the like of the parameter.
-#' @param sd Numeric scalar. Standard deviation or the like of the parameter.
+#' @param mode Numeric scalar. Mode (or the like) of the parameter.
+#' @param sd Numeric scalar. Standard deviation (or the like) of the parameter.
 #' @param min Numeric scalar. Minimum allowed value.
 #' @param max Numeric scalar. Maximum allowed value.
-#' @param fun Function taking Y, lags and the prior's parameter to generate
-#' and return a named list with elements X and Y (numeric matrices).
+#' @param fun Function taking \emph{Y}, \emph{lags} and the prior's parameter
+#' \emph{par} to generate and return a named list with elements \emph{X} and
+#' \emph{Y} (numeric matrices).
 #'
-#' @return Returns a named list of class bv_dummy for \code{\link{bv_priors}}.
+#' @return Returns a named list of class \code{bv_dummy} for
+#' \code{\link{bv_priors}}.
 #' @export
 #'
 #' @examples
@@ -68,7 +70,7 @@ bv_dummy <- function(
   min = 0.0001, max = 5,
   fun) {
 
-  if(sd <= 0) stop("Parameter sd misspecified.")
+  if(sd <= 0) {stop("Parameter sd misspecified.")}
   fun <- match.fun(fun)
 
   return(dummy(mode, min, max, sd = sd, fun = fun,

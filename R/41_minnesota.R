@@ -1,24 +1,23 @@
 #' Minnesota prior settings
 #'
-#' Provide options for the Minnesota prior to \code{\link{bv_priors}}.
+#' Provide settings for the Minnesota prior to \code{\link{bv_priors}}.
 #'
 #' @param lambda List constructed via \code{\link{bv_lambda}}.
-#' Possible parameters are mode, sd, min and max.
+#' Possible parameters are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}.
 #' @param alpha List constructed via \code{\link{bv_alpha}}.
-#' Possible parameters are mode, min and max.
-#' @param psi Named list with elements mode, min and max. Length needs to match
-#' the number of variables (i.e. columns) in the data. By default parameters are
-#' set automatically as the squareroot of the innovations variance after fitting
-#' an \eqn{AR(p)} model to the data.
-#' @param b Numeric matrix with the prior mean. Best left as default.
+#' Possible parameters are \emph{mode}, \emph{min} and \emph{max}.
+#' @param psi Named list with elements \emph{mode}, \emph{min} and \emph{max}.
+#' Length needs to match the number of variables (i.e. columns) in the data.
+#' By default parameters are set automatically as the squareroot of the
+#' innovations variance after fitting an \eqn{AR(p)} model to the data.
 #' @param var Numeric scalar with the prior variance.
-#' @param mode Numeric scalar. Mode or the like of the parameter.
-#' @param sd Numeric scalar with the standard deviation. Applies to
-#' \code{lambda}.
+#' @param b Numeric matrix with the prior mean.
+#' @param mode Numeric scalar. Mode (or the like) of the parameter.
+#' @param sd Numeric scalar with the standard deviation.
 #' @param min Numeric scalar. Minimum allowed value.
 #' @param max Numeric scalar. Maximum allowed value.
 #'
-#' @return Returns a named list of class bv_minnesota with options for
+#' @return Returns a named list of class \code{bv_minnesota} with options for
 #' \code{\link{bvar}}.
 #' @export
 #'
@@ -37,8 +36,8 @@ bv_mn <- function(
   lambda = bv_lambda(0.2, 0.4, 0.0001, 5), # mode, sd, min, max
   alpha = bv_alpha(2, 0.1, 0.5), # mode, min, max
   psi = "auto",
-  b = "auto",
-  var = 1e07) {
+  var = 1e07,
+  b = "auto") {
 
   if(!inherits(lambda, "bv_dummy") && !inherits(alpha, "bv_dummy")) {
     stop("Please use `bv_lambda()` / `bv_alpha()` to set lambda / alpha.")

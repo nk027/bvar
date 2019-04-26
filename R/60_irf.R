@@ -1,32 +1,36 @@
 #' Impulse response settings
 #'
-#' Function to provide settings for the computation of impulse repsonses to
-#' \code{\link{bvar}}. Provides options for setting the horizon for which
-#' impulse responses should be computed, whether or not forecast error variance
-#' decompositions (FEVDs) should be computed and, if and what kind of
-#' identification should be used (Cholesky decomposition and sign restrictions
-#' are supported).
+#' Provide settings for the computation of impulse repsonses to
+#' \code{\link{bvar}}. Allows setting the horizon for which impulse responses
+#' should be computed, whether or not forecast error variance decompositions
+#' (FEVDs) should be computed and, if and what kind of identification should
+#' be used.
 #'
-#' @param horizon Integer scalar. Specifies the horizon for which impulse
-#' responses (and FEVDs) should be computed. Set to 12 by default.
+#' Identification can be performed via Cholesky decomposition and sign
+#' restrictions.
+#'
+#' @param horizon Integer scalar. The horizon for which impulse responses
+#' (and FEVDs) should be computed.
 #' @param fevd Logical scalar. Whether or not forecast error variance
-#' decompositions should be calculated. Defaults to FALSE.
+#' decompositions should be calculated.
 #' @param identification Logical scalar. Whether or not the shocks used for
-#' calculating impulses should be identified. Defaults to TRUE, i.e.
-#' identification via Cholesky decomposition unless sign_restr are provided.
+#' calculating impulses should be identified. Defaults to \code{TRUE}, i.e.
+#' identification via Cholesky decomposition unless \emph{sign_restr} is
+#' provided.
 #' @param sign_restr Numeric matrix. Sign restrictions for identification.
 #' Elements should be set to \eqn{1} (\eqn{-1}) to restrict for positive
 #' (negative) impacts. If no presumption about the impact can be made the
-#' corresponding elements can be set to \eqn{0}. The default value is NULL,
-#' meaning identification would be done through Cholesky decomposition.
+#' corresponding elements can be set to \eqn{0}. The default value is
+#' \code{NULL}, meaning identification would be performed via Cholesky
+#' decomposition.
 #'
-#' @return Returns a named list of class bv_irf with options for
+#' @return Returns a named list of class \code{bv_irf} with options for
 #' \code{\link{bvar}}.
 #' @export
 #'
 #' @examples
 #' # Set impulse responses to a horizon of 20 time periods and enable FEVD
-#' # (Identification by means of a Cholesky decomposition)
+#' # (Identification is performed via Cholesky decomposition)
 #' bv_irf(horizon = 20, fevd = TRUE)
 #'
 #' # Identify impulse responses using sign restrictions

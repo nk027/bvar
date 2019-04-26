@@ -8,10 +8,10 @@
 #' as variable paths.
 #'
 #' @param horizon Integer scalar. Horizon for which forecasts should be
-#' computed. Defaults to 12.
+#' computed.
 #' @param conditional Logical scalar. Not yet implemented.
 #'
-#' @return Returns a named list of class bv_fcast with options for
+#' @return Returns a named list of class \code{bv_fcast} with options for
 #' \code{\link{bvar}}.
 #' @export
 #'
