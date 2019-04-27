@@ -5,17 +5,17 @@
 #'
 #' @param beta_comp Numeric matrix. Posterior draw of the VAR coefficients in
 #' state space representation.
-#' @param sigma Numeric matrix. Posterior draw of the vcoc-matrix of the
+#' @param sigma Numeric matrix. Posterior draw of the vcov-matrix of the
 #' model.
 #' @param sigma_chol Numeric matrix. Lower part of the Cholesky decomposition
-#' of sigma_draw. Calculated as \code{t(chol(sigma_draw))}.
+#' of \emph{sigma}. Calculated as \code{t(chol(sigma))}.
 #' @param M Integer scalar. Columns of \emph{X}.
 #' @param lags Integer scalar. Number of lags in the model.
 #' @param horizon Integer scalar. Horizon for which impulse responses should be
 #' computed.
 #' @param identification Logical scalar. Whether or not the shocks used for
-#' calculating the impulse should be identified. Defaults tp \code{TRUE},
-#' meaining identification will be performed recursively through a
+#' calculating the impulse should be identified. Defaults to \code{TRUE},
+#' meaning identification will be performed recursively through a
 #' Cholesky decomposition of the vcov-matrix as long as \emph{sign_restr} is
 #' \code{NULL}. If set to \code{FALSE}, shocks will be unidentified.
 #' @param sign_restr Numeric matrix. Elements inform about expected impacts

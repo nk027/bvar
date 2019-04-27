@@ -25,7 +25,7 @@
 #' # Extending hyperparameters to the full Minnesota prior
 #' bv_priors(c("lambda", "alpha", "psi"))
 #'
-#' # Adding already constructed dummy priors
+#' # Adding already constructed dummy priors from 'bv_dummy()'
 #' # bv_priors(hyper = "auto", "soc" = soc_prior, "sur" = sur_prior)
 bv_priors <- function(
   hyper = "auto",

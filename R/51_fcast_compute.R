@@ -4,9 +4,9 @@
 #' \code{\link{draw_post}}.
 #'
 #' @param Y Numeric matrix (\eqn{N * M}).
-#' @param K Integer scalar. Columns of X, i.e. \eqn{M * lags + 1}.
-#' @param M Integer scalar. Columns of Y.
-#' @param N Integer scalar. Rows of Y, alternatively X.
+#' @param K Integer scalar. Columns of \emph{X}, i.e. \eqn{M * lags + 1}.
+#' @param M Integer scalar. Columns of \emph{Y}.
+#' @param N Integer scalar. Rows of \emph{Y}, alternatively \emph{X}.
 #' @param lags Integer scalar. Number of lags in the model.
 #' @param horizon Integer scalar. Specifies the horizon for which forecasts
 #' should be computed.
@@ -14,7 +14,7 @@
 #' the model in state space representation.
 #' @param beta_const Numeric vector. Posterior draw of the VAR coefficients
 #' corresponding to the constant of the model.
-#' @param sigma Numeric matrix. Posterior draw of the vcoc-matrix of the
+#' @param sigma Numeric matrix. Posterior draw of the vcov-matrix of the
 #' model.
 #' @param conditional Not yet implemented.
 #'

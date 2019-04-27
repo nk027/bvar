@@ -10,7 +10,8 @@
 #' Length needs to match the number of variables (i.e. columns) in the data.
 #' By default parameters are set automatically as the squareroot of the
 #' innovations variance after fitting an \eqn{AR(p)} model to the data.
-#' @param var Numeric scalar with the prior variance.
+#' @param var Numeric scalar with the prior variance on the constant of the
+#' model.
 #' @param b Numeric matrix with the prior mean.
 #' @param mode Numeric scalar. Mode (or the like) of the parameter.
 #' @param sd Numeric scalar with the standard deviation.

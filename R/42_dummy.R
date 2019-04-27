@@ -65,6 +65,9 @@ dummy <- function(
 #' }
 #'
 #' sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
+#'
+#' # Adding them to the prior list with 'bv_prior()' to be passed on to 'bvar()'
+#' priors_dum <- bv_priors(hyper = "auto", "soc" = soc, "sur" = sur)
 bv_dummy <- function(
   mode = 1, sd = 1,
   min = 0.0001, max = 5,

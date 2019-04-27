@@ -1,7 +1,7 @@
 #' Log-posterior of a BVAR
 #'
 #' Compute the log-posterior (or log-marginal-likelihood) of a Bayesian VAR
-#' with a Minnesota and optional dummy priors. Prior parameters may be
+#' with a Minnesota prior and optional dummy priors. Prior parameters may be
 #' treated hierarchically. Create objects necessary for drawing from the
 #' posterior distributions of coefficients and covariance matrix of the
 #' residuals.
@@ -19,18 +19,19 @@
 #' @param Y Numeric \eqn{N * M} matrix.
 #' @param X Numeric \eqn{N * K} matrix.
 #' @param K Integer scalar. Columns of \emph{X}, i.e. \eqn{M * lags + 1}.
-#' @param M Integer scalar. Columns of \emph{Y}.
+#' @param M Integer scalar. Columns of \emph{Y}, i.e. number of variables.
 #' @param N Integer scalar. Rows of \emph{Y}, alternatively \emph{X}.
 #' @param lags Integer scalar. Number of lags in the model.
-#' @param opt Optional logical scalar. Determines whether the return values is
+#' @param opt Optional logical scalar. Determines whether the return value is
 #' a numeric scalar or a list. Used to call \code{\link{bv_ml}} in
 #' \code{\link[stats]{optim}}.
 #'
 #' @return Returns a list with the following objects by default:
 #' \itemize{
 #'   \item \code{log_ml} - A numeric scalar with the log-posterior.
-#'   \item \code{X}, \code{N} - The respective parameters adjusted for eventual
-#'   dummy priors. Necessary for drawing from posterior distributions.
+#'   \item \code{X}, \code{N} - The lagged data matrix with possible dummy
+#'   priors appended and its number of rows, respectively. Necessary for drawing
+#'   from posterior distributions with \code{\link{draw_post}}.
 #'   \item \code{psi}, \code{sse}, \code{beta_hat}, \code{omega_inv} - Further
 #'   values necessary for drawing from posterior distributions.
 #' }

@@ -12,15 +12,15 @@
 #' @param n_thin Integer scalar. Option to reduce the number of stored
 #' iterations to every \emph{n_thin}th one. The number of saved iterations will
 #' thus be \code{(n_draw - n_burn) / n_thin}.
-#' @param priors \code{bv_priors} object containing priors and their setitngs.
+#' @param priors \code{bv_priors} object containing priors and their settings.
 #' See \code{\link{bv_priors}}.
 #' @param mh \code{bv_metropolis} object with settings regarding the acceptance
 #' rate of the Metropolis-Hastings step. See \code{\link{bv_mh}}.
 #' @param fcast \code{bv_fcast} object. Forecast options set with
 #' \code{\link{bv_fcast}}. May be set to \code{NULL} to skip forecasting.
 #' @param irf \code{bv_irf} object. Options regarding impulse responses, set via
-#'  \code{\link{bv_irf}}. May be set to \code{NULL} to skip the calculation of
-#'  impulse responses.
+#' \code{\link{bv_irf}}. May be set to \code{NULL} to skip the calculation of
+#' impulse responses.
 #' @param verbose Logical scalar. Whether to print intermediate results and
 #' progress.
 #' @param ... Not used.
@@ -29,7 +29,7 @@
 #' \itemize{
 #'   \item \code{beta} - Numeric array with saved draws from the posterior
 #'   distribution of the VAR coefficients.
-#'   \item {sigma} - Numeric array with saved draws from the posterior
+#'   \item \code{sigma} - Numeric array with saved draws from the posterior
 #'   distribution of the model's vcov-matrix.
 #'   \item \code{hyper} - Numeric matrix with saved draws from the posterior
 #'   distributions of hyperparameters of hierarchical priors.
@@ -100,10 +100,22 @@ bvar <- function(
   n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1)
 
   # Constructors
-  if(!inherits(priors, "bv_priors")) {stop()}
-  if(!inherits(mh, "bv_metropolis")) {stop()}
-  if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) {stop()}
-  if(!is.null(irf) && !inherits(irf, "bv_irf")) {stop()}
+  if(!inherits(priors, "bv_priors")) {
+    stop("Please use 'bv_priors()' to configure ",
+         "settings regarding prior configuration.")
+    }
+  if(!inherits(mh, "bv_metropolis")) {
+    stop("Please use 'bv_mh()' to configure ",
+         "setting regarding Metropolis-Hastings step.")
+    }
+  if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) {
+    stop("Please use 'bv_fcast()' to configure ",
+         "settings regarding computation of forecasts.")
+    }
+  if(!is.null(irf) && !inherits(irf, "bv_irf")) {
+    stop("Please use 'bv_irf()' to configure ",
+         "settings regarding the computation of imulse responses.")
+    }
 
 
   # Preparation -------------------------------------------------------------
@@ -289,7 +301,7 @@ bvar <- function(
       if(!is.null(fcast) || !is.null(irf)) {
         beta_comp <- matrix(0, K - 1, K - 1)
         beta_comp[1:M, ] <- t(draws[["beta_draw"]][2:K, ])
-        if(lags > 1) { # Add diagonal matrix
+        if(lags > 1) { # Add block-diagonal matrix beneath VAR coefficients
           beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
         }
       }

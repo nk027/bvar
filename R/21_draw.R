@@ -15,8 +15,8 @@
 #' @return Returns a list with the following elements:
 #' \itemize{
 #'   \item \code{beta_draw}, \code{sigma_draw} - Draws from the posterior.
-#'   \item \code{sigma_chol} - The Cholesky factorisation of sigma_draw.
-#'   Calculated as \code{t(chol(sigma_draw))}.
+#'   \item \code{sigma_chol} - The lower part of a Cholesky decomposition
+#'   of sigma_draw. Calculated as \code{t(chol(sigma_draw))}.
 #' }
 #'
 #' @importFrom MASS mvrnorm

@@ -7,12 +7,12 @@
 #' restrictions can be found.
 #'
 #' @param sigma_chol Numeric matrix. Lower part of the Cholesky decomposition
-#' of the posterior draw of the vcov-matrix of the system.
+#' of \emph{sigma}. Calculated as \code{t(chol(sigma))}.
 #' @param sign_restr Numeric matrix. Elements inform about expected impacts
 #' of certain shocks. Can be either \eqn{1}, \eqn{-1} or \eqn{0}, depending
 #' on whether a positive, a negative or no contemporaneous effect of a certain
 #' shock is expected.
-#' @param M Integer scalar. Columns of X.
+#' @param M Integer scalar. Columns of \emph{X}.
 #'
 #' @return Returns a matrix used as shock for computations of impulse responses
 #' identified via sign restrictions.

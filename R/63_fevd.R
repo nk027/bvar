@@ -5,7 +5,7 @@
 #'
 #' @param irf_comp Numeric matrix. Contains a draw of impulse responses
 #' obtained from \code{\link{compute_irf}}.
-#' @param M Integer scalar. Columns of X.
+#' @param M Integer scalar. Columns of \emph{X}.
 #' @param horizon Integer scalar. Horizon of impulse responses and FEVDs.
 #'
 #' @return Returns a numeric matrix of FEVDs.
