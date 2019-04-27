@@ -34,7 +34,7 @@
 #' )
 bv_mn <- function(
   lambda = bv_lambda(0.2, 0.4, 0.0001, 5), # mode, sd, min, max
-  alpha = bv_alpha(2, 0.1, 0.5), # mode, min, max
+  alpha = bv_alpha(2, 0.1, 5), # mode, min, max
   psi = "auto",
   var = 1e07,
   b = "auto") {
@@ -63,7 +63,7 @@ bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 50) {
 
 #' @export
 #' @rdname bv_mn
-bv_alpha <- function(mode = 0.2, min = 0.1, max = 0.5) {
+bv_alpha <- function(mode = 2, min = 0.1, max = 5) {
 
   return(dummy(mode, min, max))
 }
