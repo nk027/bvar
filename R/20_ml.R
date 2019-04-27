@@ -71,8 +71,9 @@ bv_ml <- function(
   if(length(priors[["dummy"]]) > 0) {
     dmy <- lapply(priors[["dummy"]], function(x) {
       tryCatch(priors[[x]][["fun"]](Y = Y, lags = lags, par = pars[[x]]),
-               error = stop("Issue with generating dummy observations for ",
-                            x, ". Make sure the function works properly."))
+               error = function(e) {
+                 stop("Issue with generating dummy observations for ",
+                      x, ". Make sure the function works properly.")})
     })
     Y <- rbind(do.call(rbind,
                        lapply(dmy, function(x) matrix(x[["Y"]], ncol = M))), Y)
