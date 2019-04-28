@@ -5,12 +5,6 @@
 #' is used to draw parameter proposals and automatic scaling to
 #' achieve a certain acceptance rate.
 #'
-#' If turned on, acceptance adjustment occurs only during the burn-in phase
-#' and on every 100th iteration. Scaling is applied based on the acceptance
-#' rate achieved for these 100 iterations. If this rate is below
-#' \emph{acc_lower} the Hessian is multiplied with \eqn{1 - acc_change}; if it
-#' is above \emph{acc_upper} it is multiplied with \eqn{1 + acc_change}.
-#'
 #' @param scale_hess Numeric scalar. Scaling parameter, determining the range
 #' of hyperparameter draws. \emph{Should be calibrated so a reasonable rate of
 #' acceptance is reached}.
