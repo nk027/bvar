@@ -264,7 +264,7 @@ bvar <- function(
       ml_draw <- ml_temp
       hyper_draw <- hyper_temp
       accepted_adj <- accepted_adj + 1
-      if(i > 0){accepted <- accepted + 1}
+      if(i > 0) {accepted <- accepted + 1}
 
     }
 
