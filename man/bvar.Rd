@@ -75,13 +75,18 @@ data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
 data <- data[5:nrow(data), ]
 
-# Compute VAR using 5 lags and standard settings
-x <- bvar(data = data, lags = 5, n_draw = 1000, n_burn = 500)
+# Compute VAR using 2 lags and a very low number of draws
+x <- bvar(
+  data = data, lags = 1,
+  n_draw = 1000, n_burn = 900, n_thin = 2, verbose = FALSE
+)
 
 # Plot various outputs generated
+\dontrun{
 plot(x)
 bv_plot_fcast(x)
 bv_plot_irf(x)
+}
 }
 \references{
 Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451.
