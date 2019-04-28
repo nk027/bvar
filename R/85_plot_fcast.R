@@ -46,7 +46,7 @@ plot.bvar_fcast <- function(
   ...) {
 
   if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
-  bv_plot_fcast(x, conf_bands, variables, vars, mar, orientation, ...)
+  bv_plot_fcast(x, conf_bands, variables, vars, orientation, mar, ...)
 
 }
 
@@ -89,7 +89,7 @@ bv_plot_fcast <- function(
   col <- set_gray(P)
   pos <- get_var_set(vars, variables, M)
 
-  mfrow <- if(grep("^vertical$", orientation)) {
+  mfrow <- if(grepl("^vertical$", orientation)) {
     c(length(pos), 1)
   } else {c(1, length(pos))}
 

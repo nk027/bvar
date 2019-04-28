@@ -35,8 +35,8 @@ run6 <- bvar(data, lags, n_draw, n_burn, n_thin,
 plot(run5)
 bv_plot_trace(run1, "lambda", run2, run3)
 bv_plot_irf(run1)
-bv_plot_fcast(run1)
-plot(run2$irf)
+bv_plot_fcast(run1, ori = "h")
+plot(run1$irf)
 plot(run4$fcast)
 
 run1
