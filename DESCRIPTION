@@ -1,4 +1,4 @@
-Package: bvar
+Package: BVAR
 Type: Package
 Title: Hierarchical Bayesian Vector Autoregressions
 Version: 0.1.2

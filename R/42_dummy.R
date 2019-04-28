@@ -1,4 +1,4 @@
-#' Prior settings
+#' Dummy prior settings
 #'
 #' @param mode Numeric scalar. Mode (or the like) of the parameter.
 #' @param min Numeric scalar. Minimum allowed value.
