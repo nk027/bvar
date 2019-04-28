@@ -263,19 +263,19 @@ bvar <- function(
       # Accept draw
       ml_draw <- ml_temp
       hyper_draw <- hyper_temp
-      accepted <- accepted + 1
       accepted_adj <- accepted_adj + 1
+      if(i > 0){accepted <- accepted + 1}
+
     }
 
     # Tune acceptance during burn-in phase
-    if(mh[["adjust_acc"]] && i <= 0 && (i + n_burn) %% 100 == 0) {
-      acc_rate <- accepted_adj / 100
+    if(mh[["adjust_acc"]] && i <= 0 && (i + n_burn) %% 10 == 0) {
+      acc_rate <- accepted_adj / (i + n_burn)
       if(acc_rate < mh[["acc_lower"]]) {
         HH <- HH * mh[["acc_tighten"]]
       } else if(acc_rate > mh[["acc_upper"]]) {
         HH <- HH * mh[["acc_loosen"]]
       }
-      accepted_adj <- 0
     }
 
     if(i > 0 && i %% n_thin == 0) {
