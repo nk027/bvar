@@ -272,9 +272,9 @@ bvar <- function(
     # Tune acceptance during burn-in phase
     if(mh[["adjust_acc"]] && i <= 0 && (i + n_burn) %% 100 == 0) {
       acc_rate <- accepted_adj / 100
-      if(acc_rate < mh[["lower"]]) {
+      if(acc_rate < mh[["acc_lower"]]) {
         HH <- HH * mh[["acc_tighten"]]
-      } else if(acc_rate > mh[["upper"]]) {
+      } else if(acc_rate > mh[["acc_upper"]]) {
         HH <- HH * mh[["acc_loosen"]]
       }
       accepted_adj <- 0

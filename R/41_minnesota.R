@@ -5,7 +5,9 @@
 #' @param lambda List constructed via \code{\link{bv_lambda}}.
 #' Possible parameters are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}.
 #' @param alpha List constructed via \code{\link{bv_alpha}}.
-#' Possible parameters are \emph{mode}, \emph{min} and \emph{max}.
+#' Possible parameters are \emph{mode}, \emph{min} and \emph{max}. Too high
+#' values of \emph{mode} affects invertibility of augmented data matrix,
+#' proceed with caution.
 #' @param psi Named list with elements \emph{mode}, \emph{min} and \emph{max}.
 #' Length needs to match the number of variables (i.e. columns) in the data.
 #' By default parameters are set automatically as the squareroot of the
