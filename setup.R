@@ -54,6 +54,12 @@ data_small_VAR[5:nrow(data_small_VAR), 1] <- diff(log(data_small_VAR[, 1]),
                                                   lag = 4) * 100
 data_small_VAR <- data_small_VAR[5:nrow(data_small_VAR),]
 
+data_med_VAR <- fred_qd[, c("GDPC1", "GDPCTPI", "PCECC96", "GPDIC1",
+                            "HOANBS", "COMPRNFB", "FEDFUNDS")]
+
+data_med_VAR[5:nrow(data_med_VAR), -7] <- apply(log(data_med_VAR[, -7]), 2,
+                                                diff, lag = 4) * 100
+data_med_VAR <- data_med_VAR[5:nrow(data_med_VAR),]
 
 
 add_soc <- function(Y, lags, par) {
@@ -82,23 +88,57 @@ add_sur <- function(Y, lags, par) {
 sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
 
 
-priors_dum <- bv_priors(hyper = "full", "soc" = soc, "sur" = sur, mn = bv_mn(alpha = bv_alpha(mode = 25, max = 3)))
+priors_v1 <- bv_priors(hyper = "auto",
+                       "soc" = soc,
+                       "sur" = sur,
+                       mn = bv_mn(alpha = bv_alpha(mode = 2, max = 3)))
+
+priors_v2 <- bv_priors(hyper = "full",
+                       "soc" = soc,
+                       "sur" = sur,
+                       mn = bv_mn(lambda = bv_lambda(mode = 5, sd = 2)))
+mh$acc_lower
+
+run7 <- bvar(data_small_VAR, priors = priors_v1, lags = 5,
+             irf = irf, mh = bv_mh(adjust_acc = TRUE), verbose = TRUE)
+run8 <- bvar(data_small_VAR, priors = priors_v1, lags = 12,
+             irf = irf, mh = bv_mh(adjust_acc = TRUE), verbose = TRUE)
 
 
-run7 <- bvar(data_small_VAR, priors = priors_dum, lags = 5, irf = irf, verbose = TRUE)
+run9 <- bvar(data_med_VAR, priors = priors_v1, lags = 5,
+             irf = irf, mh = bv_mh(adjust_acc = TRUE), verbose = TRUE)
+run10 <- bvar(data_med_VAR, priors = priors_v2, lags = 5,
+              irf = irf, mh = bv_mh(adjust_acc = TRUE), verbose = TRUE)
+
+bv_plot_irf(run7)
+bv_plot_irf(run8)
+
+
+bv_plot_irf(run9)
+bv_plot_irf(run10)
+
+bv_plot_irf(run9, vars_impulse = c(1, 7))
+
+bv_plot_trace(run8, "lambda") # dafuq
+bv_plot_trace(run9, "lambda")
+
+run7$meta$accepted/run7$meta$n_draw
+run8$meta$accepted/run8$meta$n_draw
+run9$meta$accepted/run9$meta$n_draw
+run10$meta$accepted/run10$meta$n_draw
+
+
 
 signs <- matrix(c(1,1,-1,-1,1,-1,-1,1,1), nrow = 3)
 irf_signs <- bv_irf(sign_restr = signs)
 
 run8 <- bvar(data_small_VAR, priors = priors_dum, lags = 5, irf = irf_signs, verbose = TRUE)
 
-bv_plot_irf(run7)
-bv_plot_irf(run8)
 
 
 
-# data_med_VAR <- fred_qd[, c("RGDP", "PGDP", "Cons", "GPDInv",
-#                                   "Emp..Hours", "Real.Comp.Hour", "FedFunds")]
+
+
 # data_large_VAR <- fred_qd[, c("RGDP", "PGDP", "CPI.ALL",
 #                                     "Com..spot.price..real.", "IP..total" ,
 #                                     "Emp..total", "U..all", "Cons", "Res.Inv",
