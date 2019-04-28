@@ -30,8 +30,8 @@
 #' \itemize{
 #'   \item \code{log_ml} - A numeric scalar with the log-posterior.
 #'   \item \code{X}, \code{N} - The lagged data matrix with possible dummy
-#'   priors appended and its number of rows, respectively. Necessary for drawing
-#'   from posterior distributions with \code{\link{draw_post}}.
+#'   priors appended and its number of rows. Necessary for drawing from
+#'   posterior distributions with \code{\link{draw_post}}.
 #'   \item \code{psi}, \code{sse}, \code{beta_hat}, \code{omega_inv} - Further
 #'   values necessary for drawing from posterior distributions.
 #' }
@@ -73,8 +73,9 @@ bv_ml <- function(
     dmy <- lapply(priors[["dummy"]], function(x) {
       tryCatch(priors[[x]][["fun"]](Y = Y, lags = lags, par = pars[[x]]),
                error = function(e) {
-                 stop("Issue with generating dummy observations for ",
-                      x, ". Make sure the function works properly.")})
+                 message("Issue with generating dummy observations for ",
+                         x, ". Make sure the function works properly.")
+                 stop(e)})
     })
     Y <- rbind(do.call(rbind,
                        lapply(dmy, function(x) matrix(x[["Y"]], ncol = M))), Y)

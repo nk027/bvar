@@ -101,21 +101,17 @@ bvar <- function(
 
   # Constructors
   if(!inherits(priors, "bv_priors")) {
-    stop("Please use 'bv_priors()' to configure ",
-         "settings regarding prior configuration.")
-    }
+    stop("Please use `bv_priors()` to configure the priors.")
+  }
   if(!inherits(mh, "bv_metropolis")) {
-    stop("Please use 'bv_mh()' to configure ",
-         "setting regarding Metropolis-Hastings step.")
-    }
+    stop("Please use `bv_mh()` to configure the Metropolis-Hastings step.")
+  }
   if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) {
-    stop("Please use 'bv_fcast()' to configure ",
-         "settings regarding computation of forecasts.")
-    }
+    stop("Please use `bv_fcast()` to configure forecasts.")
+  }
   if(!is.null(irf) && !inherits(irf, "bv_irf")) {
-    stop("Please use 'bv_irf()' to configure ",
-         "settings regarding the computation of imulse responses.")
-    }
+    stop("Please use `bv_irf()` to configure impulse responses.")
+  }
 
 
   # Preparation -------------------------------------------------------------
@@ -131,8 +127,9 @@ bvar <- function(
   N <- nrow(Y)
 
   # Check sign restrictions
-  if(!is.null(irf[["sign_restr"]]) &&
-     length(irf[["sign_restr"]]) != M ^ 2) {stop()}
+  if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {
+    stop("Length of provided sign restrictions does not fit data.")
+  }
 
 
   # Priors ------------------------------------------------------------------
@@ -142,13 +139,13 @@ bvar <- function(
     priors[["b"]] <- matrix(0, nrow = K, ncol = M)
     priors[["b"]][2:(M + 1), ] <- diag(M)
   } else if(!all(dim(priors[["b"]]) == c(K, M))) {
-    stop("Dimensions of the prior mean (b) do not match the data.")
+    stop("Dimensions of prior mean (b) do not match the data.")
   }
   if(length(priors[["psi"]]) == 1 && priors[["psi"]] == "auto") {
     priors[["psi"]] <- auto_psi(Y, lags)
   }
   if(!all(vapply(priors[["psi"]], function(x) length(x) == M, logical(1)))) {
-    stop("The dimension of the psi does not match the data.")
+    stop("Dimension of the psi do not match the data.")
   }
 
   # Parameters

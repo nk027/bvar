@@ -5,15 +5,13 @@
 #' @param lambda List constructed via \code{\link{bv_lambda}}.
 #' Possible parameters are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}.
 #' @param alpha List constructed via \code{\link{bv_alpha}}.
-#' Possible parameters are \emph{mode}, \emph{min} and \emph{max}. Too high
-#' values of \emph{mode} affects invertibility of augmented data matrix,
-#' proceed with caution.
+#' Possible parameters are \emph{mode}, \emph{min} and \emph{max}. High
+#' values for \emph{mode} may affect invertibility of the augmented data matrix.
 #' @param psi Named list with elements \emph{mode}, \emph{min} and \emph{max}.
 #' Length needs to match the number of variables (i.e. columns) in the data.
 #' By default parameters are set automatically as the squareroot of the
 #' innovations variance after fitting an \eqn{AR(p)} model to the data.
-#' @param var Numeric scalar with the prior variance on the constant of the
-#' model.
+#' @param var Numeric scalar with the prior variance on the model's constant.
 #' @param b Numeric matrix with the prior mean.
 #' @param mode Numeric scalar. Mode (or the like) of the parameter.
 #' @param sd Numeric scalar with the standard deviation.
