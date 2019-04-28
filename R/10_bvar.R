@@ -64,7 +64,7 @@
 #' data <- data[5:nrow(data), ]
 #'
 #' # Compute VAR using 5 lags and standard settings
-#' x <- bvar(data = data, lags = 5)
+#' x <- bvar(data = data, lags = 5, n_draw = 1000, n_burn = 500)
 #'
 #' # Plot various outputs generated
 #' plot(x)

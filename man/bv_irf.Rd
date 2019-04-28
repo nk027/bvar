@@ -58,7 +58,7 @@ signs <- matrix(c(1, 1, -1, -1, 1, -1, -1, 1, 1), nrow = 3)
 
 irf_signs <- bv_irf(sign_restr = signs)
 
-bvar(data, lags = 5, irf = irf_signs)
+bvar(data, lags = 5, irf = irf_signs, n_draw = 1000, n_burn = 500)
 }
 \references{
 Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696.
