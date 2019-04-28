@@ -75,10 +75,10 @@ data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
 data <- data[5:nrow(data), ]
 
-# Compute VAR using 2 lags and a very low number of draws
+# Compute VAR using 2 lags and a ridiculously low number of draws
 x <- bvar(
   data = data, lags = 1,
-  n_draw = 1000, n_burn = 900, n_thin = 2, verbose = FALSE
+  n_draw = 500, n_burn = 400, n_thin = 2, verbose = FALSE
 )
 
 # Plot various outputs generated
