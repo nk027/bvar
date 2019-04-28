@@ -23,7 +23,7 @@ to cycle through.}
 iterations to every \emph{n_thin}th one. The number of saved iterations will
 thus be \code{(n_draw - n_burn) / n_thin}.}
 
-\item{priors}{\code{bv_priors} object containing priors and their setitngs.
+\item{priors}{\code{bv_priors} object containing priors and their settings.
 See \code{\link{bv_priors}}.}
 
 \item{mh}{\code{bv_metropolis} object with settings regarding the acceptance
@@ -46,7 +46,7 @@ Returns a \code{bvar} object with the following elements:
 \itemize{
   \item \code{beta} - Numeric array with saved draws from the posterior
   distribution of the VAR coefficients.
-  \item {sigma} - Numeric array with saved draws from the posterior
+  \item \code{sigma} - Numeric array with saved draws from the posterior
   distribution of the model's vcov-matrix.
   \item \code{hyper} - Numeric matrix with saved draws from the posterior
   distributions of hyperparameters of hierarchical priors.

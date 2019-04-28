@@ -25,6 +25,8 @@ num_check <- function(
 }
 
 #' @rdname num_check
+#'
+#' @noRd
 int_check <- function(
   x, min = 0, max = Inf,
   msg = "Please check the integer parameters.") {
@@ -68,7 +70,7 @@ auto_psi <- function(x, lags) {
 #' Check and create a given vector of confidence bands and create suitable
 #' quantiles from it.
 #'
-#' @param conf_bands Numeric vector of probabilities (\eqn{[0, 1]).
+#' @param conf_bands Numeric vector of probabilities (\eqn{[0, 1]}).
 #'
 #' @return Returns a sorted vector of quantiles created from \emph{conf_bands}.
 #'

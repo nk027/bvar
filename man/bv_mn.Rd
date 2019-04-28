@@ -7,25 +7,26 @@
 \title{Minnesota prior settings}
 \usage{
 bv_mn(lambda = bv_lambda(0.2, 0.4, 0.0001, 5), alpha = bv_alpha(2, 0.1,
-  0.5), psi = "auto", var = 10000000, b = "auto")
+  5), psi = "auto", var = 10000000, b = "auto")
 
 bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 50)
 
-bv_alpha(mode = 0.2, min = 0.1, max = 0.5)
+bv_alpha(mode = 2, min = 0.1, max = 5)
 }
 \arguments{
 \item{lambda}{List constructed via \code{\link{bv_lambda}}.
 Possible parameters are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}.}
 
 \item{alpha}{List constructed via \code{\link{bv_alpha}}.
-Possible parameters are \emph{mode}, \emph{min} and \emph{max}.}
+Possible parameters are \emph{mode}, \emph{min} and \emph{max}. High
+values for \emph{mode} may affect invertibility of the augmented data matrix.}
 
 \item{psi}{Named list with elements \emph{mode}, \emph{min} and \emph{max}.
 Length needs to match the number of variables (i.e. columns) in the data.
 By default parameters are set automatically as the squareroot of the
 innovations variance after fitting an \eqn{AR(p)} model to the data.}
 
-\item{var}{Numeric scalar with the prior variance.}
+\item{var}{Numeric scalar with the prior variance on the model's constant.}
 
 \item{b}{Numeric matrix with the prior mean.}
 

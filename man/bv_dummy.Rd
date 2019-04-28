@@ -52,4 +52,7 @@ add_sur <- function(Y, lags, par) {
 }
 
 sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
+
+# Adding them to the prior list with `bv_prior()`
+priors_dum <- bv_priors(hyper = "auto", "soc" = soc, "sur" = sur)
 }
