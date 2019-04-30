@@ -89,5 +89,5 @@ bv_plot_irf(x)
 }
 }
 \references{
-Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{<doi:10.1162/REST_a_00483>}
+Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}
 }

@@ -24,8 +24,8 @@ For further details see McCracken and Ng (2016) or the dataset's appendix at
 \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
 }
 \references{
-McCracken, M. W., and Ng, S. (2016). FRED-MD: A Monthly Database for Macroeconomic Research. Journal of Business & Economic Statistics, 34, 574-589. \url{<doi:10.3386/w18094>}
-  Stock, J. H. and Watson, M. W. (2012). Disentangling the Channels of the 2007-2009 Recession. NBER Working Paper Series, 18094. \url{<doi:10.1080/07350015.2015.1086655>}
+McCracken, M. W., and Ng, S. (2016). FRED-MD: A Monthly Database for Macroeconomic Research. Journal of Business & Economic Statistics, 34, 574-589. \url{https://doi.org/10.1080/07350015.2015.1086655}
+  Stock, J. H. and Watson, M. W. (2012). Disentangling the Channels of the 2007-2009 Recession. NBER Working Paper Series, 18094. \url{https://doi.org/10.3386/w18094}
 }
 \keyword{datasets}
 \keyword{fred}
