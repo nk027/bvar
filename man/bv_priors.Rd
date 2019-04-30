@@ -34,8 +34,10 @@ and adding various dummy priors through the ellipsis.
 # Extending hyperparameters to the full Minnesota prior
 bv_priors(c("lambda", "alpha", "psi"))
 
-# Adding already constructed dummy priors from `bv_dummy()`
+# Adding dummy priors from `bv_dummy()`
+\dontrun{
 bv_priors(hyper = "auto", soc = soc, sur = sur)
+}
 }
 \seealso{
 \code{\link{bv_mn}}; \code{\link{bv_dummy}}
