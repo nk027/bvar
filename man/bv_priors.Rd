@@ -4,8 +4,8 @@
 \alias{bv_priors}
 \title{Prior settings}
 \usage{
-bv_priors(hyper = "auto", mn = bv_mn(bv_lambda(0.2, 0.4, 0.0001, 5),
-  bv_alpha(2, 0.1, 0.5), var = 10000000), ...)
+bv_priors(hyper = "auto", mn = bv_mn(bv_lambda(0.2, 0.4, 1e-04, 5),
+  bv_alpha(2, 0.1, 0.5), var = 1e+07), ...)
 }
 \arguments{
 \item{hyper}{Character vector. Used to specify the parameters to be treated
@@ -35,7 +35,7 @@ and adding various dummy priors through the ellipsis.
 bv_priors(c("lambda", "alpha", "psi"))
 
 # Adding already constructed dummy priors from `bv_dummy()`
-# bv_priors(hyper = "auto", "soc" = soc_prior, "sur" = sur_prior)
+bv_priors(hyper = "auto", soc = soc, sur = sur)
 }
 \seealso{
 \code{\link{bv_mn}}; \code{\link{bv_dummy}}

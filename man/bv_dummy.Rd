@@ -4,7 +4,7 @@
 \alias{bv_dummy}
 \title{Dummy prior settings}
 \usage{
-bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 5, fun)
+bv_dummy(mode = 1, sd = 1, min = 1e-04, max = 5, fun)
 }
 \arguments{
 \item{mode}{Numeric scalar. Mode (or the like) of the parameter.}
@@ -54,5 +54,5 @@ add_sur <- function(Y, lags, par) {
 sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
 
 # Adding them to the prior list with `bv_prior()`
-priors_dum <- bv_priors(hyper = "auto", "soc" = soc, "sur" = sur)
+priors_dum <- bv_priors(hyper = "auto", soc = soc, sur = sur)
 }

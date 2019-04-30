@@ -21,6 +21,14 @@ A collection of diagnostic plots with traces and densities of the marginal
 posterior likelihood and available hyperparameters. Minimum and maximum
 values of the hyperparameters are plotted as dashed lines in "darkgray".
 }
+\examples{
+\dontrun{
+# x <- bvar()
+
+# Plot various output generated
+plot(x)
+}
+}
 \seealso{
 \code{\link{bv_plot_trace}}; \code{\link{bv_plot_irf}}
 }

@@ -30,3 +30,11 @@ Print methods for \code{bvar} objects providing a quick overview of results.
 The method for impulse response functions provides information on
 identification, horizon, et cetera; The forecast method on the horizon.
 }
+\examples{
+\dontrun{
+x <- bvar()
+
+# Print various output generated
+print(x)
+}
+}

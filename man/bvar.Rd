@@ -66,7 +66,7 @@ Returns a \code{bvar} object with the following elements:
 }
 \description{
 Hierarchical Bayesian estimation of VAR models in the fashion of Giannone et
-al. (2015) <doi:10.1162/REST_a_00483>.
+al. (2015).
 }
 \examples{
 # Access the fred_qd dataset and transform it
@@ -89,5 +89,5 @@ bv_plot_irf(x)
 }
 }
 \references{
-Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451.
+Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{<doi:10.1162/REST_a_00483>}
 }
