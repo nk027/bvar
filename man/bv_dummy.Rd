@@ -4,7 +4,7 @@
 \alias{bv_dummy}
 \title{Dummy prior settings}
 \usage{
-bv_dummy(mode = 1, sd = 1, min = 1e-04, max = 5, fun)
+bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 5, fun)
 }
 \arguments{
 \item{mode}{Numeric scalar. Mode (or the like) of the parameter.}

@@ -6,10 +6,10 @@
 \alias{bv_alpha}
 \title{Minnesota prior settings}
 \usage{
-bv_mn(lambda = bv_lambda(0.2, 0.4, 1e-04, 5), alpha = bv_alpha(2, 0.1,
-  5), psi = "auto", var = 1e+07, b = "auto")
+bv_mn(lambda = bv_lambda(0.2, 0.4, 0.0001, 5), alpha = bv_alpha(2, 0.1,
+  5), psi = "auto", var = 10000000, b = "auto")
 
-bv_lambda(mode = 0.2, sd = 0.4, min = 1e-04, max = 50)
+bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 50)
 
 bv_alpha(mode = 2, min = 0.1, max = 5)
 }
