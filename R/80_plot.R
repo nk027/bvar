@@ -11,6 +11,14 @@
 #' @seealso \code{\link{bv_plot_trace}}; \code{\link{bv_plot_irf}}
 #'
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' # x <- bvar()
+#'
+#' # Plot various output generated
+#' plot(x)
+#' }
 plot.bvar <- function(x, mar = c(2, 2, 2, 0.5), ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide an object with class bvar.")}

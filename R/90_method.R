@@ -9,6 +9,14 @@
 #' @param ... Not used.
 #'
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' x <- bvar()
+#'
+#' # Print various output generated
+#' print(x)
+#' }
 print.bvar <- function(x, ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
