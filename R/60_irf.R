@@ -8,7 +8,7 @@
 #'
 #' Identification can be performed via Cholesky decomposition and sign
 #' restrictions. The algorithm for generating suitable sign restrictions
-#' follows Rubio-Ramirez et al. (2010) <doi:10.1111/j.1467-937X.2009.00578.x>.
+#' follows Rubio-Ramirez et al. (2010).
 #'
 #' @param horizon Integer scalar. The horizon for which impulse responses
 #' (and FEVDs) should be computed.
@@ -29,7 +29,7 @@
 #' \code{\link{bvar}}.
 #'
 #' @references
-#'     Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696.
+#'     Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696. \url{<doi:10.1111/j.1467-937X.2009.00578.x>}
 #'
 #' @export
 #'

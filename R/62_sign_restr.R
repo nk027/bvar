@@ -1,8 +1,7 @@
 #' Sign restriction algorithm
 #'
-#' Implements the algorithm by Rubio-Ramirez et al. (2010)
-#' <doi:10.1111/j.1467-937X.2009.00578.x> in order to find suitable matrices
-#' containing sign restrictions for identification purposes.
+#' Implements the algorithm by Rubio-Ramirez et al. (2010) in order to find
+#' suitable matrices containing sign restrictions for identification purposes.
 #' Called by \code{\link{compute_irf}} and throws an error if no suitable
 #' restrictions can be found.
 #'
@@ -18,7 +17,7 @@
 #' identified via sign restrictions.
 #'
 #' @references
-#'     Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696.
+#'     Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696. \url{<doi:10.1111/j.1467-937X.2009.00578.x>}
 #'
 #' @importFrom stats rnorm
 #'

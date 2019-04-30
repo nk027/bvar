@@ -1,7 +1,7 @@
 #' Hierarchical Bayesian Vector Autoregression
 #'
 #' Hierarchical Bayesian estimation of VAR models in the fashion of Giannone et
-#' al. (2015) <doi:10.1162/REST_a_00483>.
+#' al. (2015).
 #'
 #' @param data Numeric matrix or dataframe. Observations need to be ordered
 #' from earliest to latest one.
@@ -48,7 +48,7 @@
 #' }
 #'
 #' @references
-#'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451.
+#'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{<doi:10.1162/REST_a_00483>}
 #'
 #' @export
 #'
