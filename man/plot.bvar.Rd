@@ -23,7 +23,8 @@ values of the hyperparameters are plotted as dashed lines in "darkgray".
 }
 \examples{
 \donttest{
-x <- bvar()
+data <- matrix(rnorm(200), ncol = 2)
+x <- bvar(data, lags = 2)
 
 # Plot various output generated
 plot(x)

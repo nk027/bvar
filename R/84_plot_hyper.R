@@ -16,7 +16,8 @@
 #'
 #' @examples
 #' \donttest{
-#' # x <- bvar()
+#' data <- matrix(rnorm(200), ncol = 2)
+#' x <- bvar(data, lags = 2)
 #'
 #' # Plot the trace of lambda
 #' bv_plot_trace(x, "lambda")
@@ -27,8 +28,8 @@
 #' par(op)
 #'
 #' # Assess parameter convergence of several chains via their trace
-#' # y <- bvar()
-#' # z <- bvar()
+#' y <- bvar(data, lags = 2)
+#' z <- bvar(data, lags = 2)
 #' bv_plot_trace(x, "lambda", y, z)
 #' }
 bv_plot_trace <- function(x, name, ...) {
@@ -76,14 +77,15 @@ plot_hyper <- function(x, name, fun = c(plot_trace, plot_dens), ...) {
   if(name == "ml") {
     y <- x[["ml"]]
     dots <- lapply(dots, function(x) x[["ml"]])
+    bounds <- NULL
   } else {
     y <- x[["hyper"]][, which(colnames(x[["hyper"]]) == name)]
     dots <- lapply(dots, function(x) {
       x[["hyper"]][, which(colnames(x[["hyper"]]) == name)]
     })
+    bounds <- vapply(name, function(z) {
+      c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])}, double(2))
   }
-  bounds <- vapply(name, function(z) {
-    c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])}, double(2))
 
   fun(y, name, bounds, dots)
 

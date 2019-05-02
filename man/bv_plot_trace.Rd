@@ -27,7 +27,8 @@ are identical this can be used to assess convergence.
 }
 \examples{
 \donttest{
-# x <- bvar()
+data <- matrix(rnorm(200), ncol = 2)
+x <- bvar(data, lags = 2)
 
 # Plot the trace of lambda
 bv_plot_trace(x, "lambda")
@@ -38,8 +39,8 @@ bv_plot_density(x, "ml")
 par(op)
 
 # Assess parameter convergence of several chains via their trace
-# y <- bvar()
-# z <- bvar()
+y <- bvar(data, lags = 2)
+z <- bvar(data, lags = 2)
 bv_plot_trace(x, "lambda", y, z)
 }
 }

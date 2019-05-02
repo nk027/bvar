@@ -40,7 +40,8 @@ of all or a subset of the available variables can be plotted.
 }
 \examples{
 \donttest{
-x <- bvar()
+data <- matrix(rnorm(200), ncol = 2)
+x <- bvar(data, lags = 2)
 
 # Plot forecasts for all available variables
 bv_plot_fcast(x)
