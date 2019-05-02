@@ -7,7 +7,6 @@
 ^dl_fred_qd\.R$
 ^setup\.R$
 
-
 ^cran-comments\.md$
 ^NEWS\.md$
 ^README\.md$

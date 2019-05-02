@@ -3,6 +3,7 @@
 - Updated DESCRIPTION with linked DOI
 - Change `\dontrun{}` examples to `\donttest{}`
 - Improve plotting and printing method examples
+- Small fix to bounds in `plot_hyper()`
 - R CMD check --as-cran: No errors or warnings, one note (New submission)
 
 # v0.1.3, Submission 1
