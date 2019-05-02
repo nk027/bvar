@@ -15,7 +15,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # x <- bvar()
 #'
 #' # Plot the trace of lambda

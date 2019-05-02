@@ -22,8 +22,8 @@ posterior likelihood and available hyperparameters. Minimum and maximum
 values of the hyperparameters are plotted as dashed lines in "darkgray".
 }
 \examples{
-\dontrun{
-# x <- bvar()
+\donttest{
+x <- bvar()
 
 # Plot various output generated
 plot(x)

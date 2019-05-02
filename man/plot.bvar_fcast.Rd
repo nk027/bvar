@@ -39,8 +39,8 @@ Plotting method for forecasts obtained from \code{\link{bvar}}. Forecasts
 of all or a subset of the available variables can be plotted.
 }
 \examples{
-\dontrun{
-# x <- bvar()
+\donttest{
+x <- bvar()
 
 # Plot forecasts for all available variables
 bv_plot_fcast(x)

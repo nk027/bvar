@@ -1,11 +1,11 @@
+# v0.1.3, Submission 2
 
-# v0.1.3
+- Updated DESCRIPTION with linked DOI
+- Change `\dontrun{}` examples to `\donttest{}`
+- R CMD check --as-cran: No errors or warnings, one note (New submission)
 
-- Update references with links via DOI
-- Add examples to `print` and `plot` methods
+# v0.1.3, Submission 1
 
-### R CMD check --as-cran
-
-No errors or warnings, one note.
-
-- New submission
+- Updated references with links via DOI
+- Added examples to `print` and `plot` methods
+- R CMD check --as-cran: No errors or warnings, one note (New submission)

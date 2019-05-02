@@ -13,8 +13,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # x <- bvar()
+#' \donttest{
+#' x <- bvar()
 #'
 #' # Plot various output generated
 #' plot(x)

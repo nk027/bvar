@@ -34,10 +34,22 @@ and adding various dummy priors through the ellipsis.
 # Extending hyperparameters to the full Minnesota prior
 bv_priors(c("lambda", "alpha", "psi"))
 
-# Adding dummy priors from `bv_dummy()`
-\dontrun{
-bv_priors(hyper = "auto", soc = soc, sur = sur)
+# Add a dummy prior via `bv_dummy()`
+# Create a single-unit-root prior
+add_sur <- function(Y, lags, par) {
+  sur <- if(lags == 1) {Y[1, ] / par} else {
+    colMeans(Y[1:lags, ]) / par
+  }
+  Y_sur <- sur
+  X_sur <- c(1 / par, rep(sur, lags))
+
+  return(list("Y" = Y_sur, "X" = X_sur))
 }
+
+sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
+
+# Adding the prior with `bv_prior()`
+priors_dum <- bv_priors(hyper = "auto", sur = sur)
 }
 \seealso{
 \code{\link{bv_mn}}; \code{\link{bv_dummy}}

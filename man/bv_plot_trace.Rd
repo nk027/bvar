@@ -26,7 +26,7 @@ via the ellipsis parameter. Given that the settings for \code{\link{bvar}}
 are identical this can be used to assess convergence.
 }
 \examples{
-\dontrun{
+\donttest{
 # x <- bvar()
 
 # Plot the trace of lambda

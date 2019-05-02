@@ -20,8 +20,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # x <- bvar()
+#' \donttest{
+#' x <- bvar()
 #'
 #' # Plot forecasts for all available variables
 #' bv_plot_fcast(x)

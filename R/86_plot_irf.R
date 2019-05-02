@@ -22,8 +22,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # x <- bvar()
+#' \donttest{
+#' x <- bvar()
 #'
 #' # Plot impulse responses for all available variables
 #' bv_plot_irf(x)

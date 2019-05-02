@@ -57,7 +57,7 @@ data <- data[5:nrow(data), ]
 signs <- matrix(c(1, 1, -1, -1, 1, -1, -1, 1, 1), nrow = 3)
 
 irf_signs <- bv_irf(sign_restr = signs)
-\dontrun{
+\donttest{
 bvar(data, lags = 5, irf = irf_signs)
 }
 }

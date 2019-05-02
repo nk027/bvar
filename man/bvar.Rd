@@ -82,7 +82,7 @@ x <- bvar(
 )
 
 # Plot various outputs generated
-\dontrun{
+\donttest{
 plot(x)
 bv_plot_fcast(x)
 bv_plot_irf(x)
