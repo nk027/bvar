@@ -21,7 +21,7 @@
 #'
 #' @examples
 #' \donttest{
-#' data <- matrix(rnorm(200), ncol = 2)
+#' data <- matrix(rnorm(400), ncol = 4)
 #' x <- bvar(data, lags = 2)
 #'
 #' # Plot forecasts for all available variables
@@ -29,10 +29,10 @@
 #'
 #' # Subset to variables in positions 1, 2 and 4 via position and name
 #' bv_plot_fcast(x, vars = c(1, 2, 4))
-#' bv_plot_fcast(x,
-#'   variables = c("gdp", "flux", "cpi", "capacitor"),
-#'   vars = c("gdp", "flux", "capacitor")
-#' )
+# bv_plot_fcast(x,
+#   variables = c("gdp", "flux", "cpi", "capacitor"),
+#   vars = c("gdp", "flux", "capacitor")
+# )
 #'
 #' # Use the method to plot, adjust confidence bands and orientation
 #' plot(x$fcast, conf_bands = c(0.01, 0.05), orientation = "h")

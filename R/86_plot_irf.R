@@ -23,7 +23,7 @@
 #'
 #' @examples
 #' \donttest{
-#' data <- matrix(rnorm(200), ncol = 2)
+#' data <- matrix(rnorm(400), ncol = 4)
 #' x <- bvar(data, lags = 2)
 #'
 #' # Plot impulse responses for all available variables
@@ -31,10 +31,10 @@
 #'
 #' # Subset to impulse variables in positions 2 and 4 via position and name
 #' bv_plot_irf(x, vars_impulse = c(2, 4))
-#' bv_plot_irf(x,
-#'   variables = c("solved", "for", "many", "decades"),
-#'   vars_impulse = c("for", "decades")
-#' )
+# bv_plot_irf(x,
+#   variables = c("solved", "for", "many", "decades"),
+#   vars_impulse = c("for", "decades")
+# )
 #'
 #' # Use the method to plot and adjust confidence bands
 #' plot(x$irf, conf_bands = c(0.01, 0.05))
