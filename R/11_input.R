@@ -53,8 +53,8 @@ auto_psi <- function(x, lags) {
   out <- list()
   out[["mode"]] <- tryCatch(apply(x, 2, function(x) {
     sqrt(arima(x, order = c(lags, 0, 0))$sigma2)
-  }), error = function() {
-    stop("Data appears to be integrated. ",
+  }), error = function(e) {
+    stop("Some of the data appears to be integrated. ",
          "Setting psi automatically via `arima()` (p = ", lags, ") failed.")
   })
 
