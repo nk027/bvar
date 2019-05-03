@@ -151,7 +151,7 @@ bvar <- function(
     priors[["psi"]] <- auto_psi(Y, lags)
   }
   if(!all(vapply(priors[["psi"]], function(x) length(x) == M, logical(1)))) {
-    stop("Dimension of the psi do not match the data.")
+    stop("Dimensions of psi do not match the data.")
   }
 
   # Parameters
