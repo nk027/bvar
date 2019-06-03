@@ -44,7 +44,7 @@
 bv_priors <- function(
   hyper = "auto",
   mn = bv_mn(bv_lambda(0.2, 0.4, 0.0001, 5),
-             bv_alpha(2, 0.1, 0.5),
+             bv_alpha(8, 4, 0.1, 5),
              var = 1e07),
   ...) {
 

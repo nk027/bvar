@@ -25,7 +25,7 @@
 #' @examples
 #' # Adjust alpha fully and the prior variance.
 #' bv_mn(
-#'   alpha = bv_alpha(mode = 0.5, min = 1e-12, max = 10),
+#'   alpha = bv_alpha(mode = 0.5, sd = 1, min = 1e-12, max = 10),
 #'   var = 1e6
 #' )
 #'
@@ -35,7 +35,7 @@
 #' )
 bv_mn <- function(
   lambda = bv_lambda(0.2, 0.4, 0.0001, 5), # mode, sd, min, max
-  alpha = bv_alpha(2, 0.1, 5), # mode, min, max
+  alpha = bv_alpha(2, 1, 0.1, 5), # mode, sd, min, max
   psi = "auto",
   var = 1e07,
   b = "auto") {
@@ -54,17 +54,17 @@ bv_mn <- function(
 
 #' @export
 #' @rdname bv_mn
-bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 50) {
+bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 5) {
 
   if(sd <= 0) {stop("Parameter sd misspecified.")}
 
-  return(dummy(mode, min, max, sd = sd))
+  return(dummy(mode, min, max, sd = sd, coef = gamma_coef(mode, sd)))
 }
 
 
 #' @export
 #' @rdname bv_mn
-bv_alpha <- function(mode = 2, min = 0.1, max = 5) {
+bv_alpha <- function(mode = 8, sd = 4, min = 0.1, max = 5) {
 
-  return(dummy(mode, min, max))
+  return(bv_lambda(mode = mode, sd = sd, min = min, max = max))
 }

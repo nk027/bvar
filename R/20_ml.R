@@ -77,10 +77,13 @@ bv_ml <- function(
                          x, ". Make sure the function works properly.")
                  stop(e)})
     })
-    Y <- rbind(do.call(rbind,
-                       lapply(dmy, function(x) matrix(x[["Y"]], ncol = M))), Y)
-    X <- rbind(do.call(rbind,
-                       lapply(dmy, function(x) matrix(x[["X"]], ncol = K))), X)
+    Y_dummy <- do.call(rbind,
+                       lapply(dmy, function(x) matrix(x[["Y"]], ncol = M)))
+    X_dummy <- do.call(rbind,
+                       lapply(dmy, function(x) matrix(x[["X"]], ncol = K)))
+    N_dummy <- nrow(Y_dummy)
+    Y <- rbind(Y_dummy, Y)
+    X <- rbind(X_dummy, X)
     N <- nrow(Y)
   }
 
