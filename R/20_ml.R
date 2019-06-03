@@ -113,13 +113,13 @@ bv_ml <- function(
     (N * sum(log(diag(psi))) / 2) - (M * sum(log(omega_ml_ev)) / 2) -
     ((N + M + 2) * sum(log(psi_ml_ev)) / 2)
 
+
   # Add prior-pdfs
-  if(length(priors[["dummy"]]) > 0)
-    log_ml <- log_ml + sum(sapply(priors[["dummy"]], function(x) {
-      log(dgamma(pars[[x]],
-                 shape = priors[[x]][["coef"]][["k"]],
-                 scale = priors[[x]][["coef"]][["theta"]]))
-    }))
+  log_ml <- log_ml + sum(sapply(priors[["hyper"]], function(x) {
+    log(dgamma(pars[[x]],
+                shape = priors[[x]][["coef"]][["k"]],
+                scale = priors[[x]][["coef"]][["theta"]]))
+  }))
 
 
   # Output ------------------------------------------------------------------
