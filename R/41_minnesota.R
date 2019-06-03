@@ -54,17 +54,17 @@ bv_mn <- function(
 
 #' @export
 #' @rdname bv_mn
-bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 50) {
+bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 5) {
 
   if(sd <= 0) {stop("Parameter sd misspecified.")}
 
-  return(dummy(mode, min, max, sd = sd))
+  return(dummy(mode, min, max, sd = sd, coef = gamma_coef(mode, sd)))
 }
 
 
 #' @export
 #' @rdname bv_mn
-bv_alpha <- function(mode = 2.5, sd = 1, min = 0.01, max = 10) {
+bv_alpha <- function(mode = 8, sd = 4, min = 0.1, max = 5) {
 
   return(bv_lambda(mode = mode, sd = sd, min = min, max = max))
 }
