@@ -7,10 +7,10 @@
 #' @param alpha List constructed via \code{\link{bv_alpha}}.
 #' Possible parameters are \emph{mode}, \emph{min} and \emph{max}. High
 #' values for \emph{mode} may affect invertibility of the augmented data matrix.
-#' @param psi Named list with elements \emph{mode}, \emph{min} and \emph{max}.
-#' Length needs to match the number of variables (i.e. columns) in the data.
-#' By default parameters are set automatically as the squareroot of the
-#' innovations variance after fitting an \eqn{AR(p)} model to the data.
+#' @param psi Named list with elements \emph{scale}, \emph{shape} and
+#' \emph{mode}. Length needs to match the number of variables (i.e. columns) in
+#' the data. By default parameters are set automatically as the squareroot of
+#' the innovations variance after fitting an \eqn{AR(p)} model to the data.
 #' @param var Numeric scalar with the prior variance on the model's constant.
 #' @param b Numeric matrix with the prior mean.
 #' @param mode Numeric scalar. Mode (or the like) of the parameter.
@@ -35,8 +35,8 @@
 #' )
 bv_mn <- function(
   lambda = bv_lambda(0.2, 0.4, 0.0001, 5), # mode, sd, min, max
-  alpha = bv_alpha(2, 1, 0.1, 5), # mode, sd, min, max
-  psi = "auto",
+  alpha = bv_alpha(8, 4, 0.1, 10), # mode, sd, min, max
+  psi = bv_psi(0.004, 0.004, "auto"), # scale, shape, setmode
   var = 1e07,
   b = "auto") {
 
@@ -64,7 +64,16 @@ bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 5) {
 
 #' @export
 #' @rdname bv_mn
-bv_alpha <- function(mode = 8, sd = 4, min = 0.1, max = 5) {
+bv_alpha <- function(mode = 8, sd = 4, min = 0.1, max = 10) {
 
   return(bv_lambda(mode = mode, sd = sd, min = min, max = max))
+}
+
+
+#' @export
+#' @rdname bv_mn
+bv_psi <- function(scale = 0.004, shape = 0.004, mode = "auto"){
+
+  if(any(scale <= 0, shape <= 0)) {stop("Parameters of psi misspecified.")}
+  return(list(scale = scale, shape = shape, mode = mode))
 }
