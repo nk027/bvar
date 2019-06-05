@@ -18,7 +18,7 @@ get_ev <- function(
   } else {b}
   sse <- crossprod(Y - X %*% beta_hat)
   omega_ml <- omega_sqrt %*% XX %*% omega_sqrt
-  mostly_harmless <- if(beta_hat == b) {0} else {
+  mostly_harmless <- if(all(beta_hat == b)) {0} else {
     t(beta_hat - b) %*% omega_inv %*% (beta_hat - b) %*% psi_inv
   }
   psi_ml <- psi_inv %*% (sse + mostly_harmless)
