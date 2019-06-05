@@ -107,11 +107,21 @@ bv_ml <- function(
   }
 
   # Add prior-pdfs
-  log_ml <- log_ml + sum(sapply(priors[["hyper"]], function(x) {
-    log(dgamma(pars[[x]],
-                shape = priors[[x]][["coef"]][["k"]],
-                scale = priors[[x]][["coef"]][["theta"]]))
+  log_ml <- log_ml + sum(sapply(priors[["hyper"]][which(!priors$hyper == "psi")],
+                                function(x) {log(
+                                  dgamma(pars[[x]],
+                                         shape = priors[[x]][["coef"]][["k"]],
+                                         scale = priors[[x]][["coef"]][["theta"]]))
   }))
+
+  if(any(priors[["hyper"]] == "psi")){
+    log_ml <- log_ml + sum(sapply(names(pars)[grep("^psi[0-9]*", names(pars))],
+                                  function(x) {
+                                    logIGpdf(pars[[x]],
+                                             scale = priors[["psi"]][["scale"]],
+                                             shape = priors[["psi"]][["shape"]])
+                                             }))
+  }
 
 
   # Output ------------------------------------------------------------------
