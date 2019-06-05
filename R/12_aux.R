@@ -133,3 +133,25 @@ get_var_set <- function(vars, variables, M) {
 
   stop("Variables not found.")
 }
+
+#' Compute log pdf of inverse Gamma distribution
+#'
+#' Compute the logged pdf of a draw of a variable assumed to be inverse-Gamma
+#' (IG) distributed with parameters \emph{scale} and \emph{shape}.
+#'
+#' @param x Numeric scalar. Draw of the IG-distributed variable
+#' @param scale Numeric scalar. Scale of the IG prior distribution.
+#' @param shape Numeric scalar. Shape of the IG prior distribution.
+#'
+#' @return Numeric scalar. Log-likelihood of the draw of the variable.
+#'
+#' @examples
+#' # Computing log-likelihood of a draw with value 5
+#' logIGpdf(5, 0.004, 0.004)
+#'
+#' @noRd
+logIGpdf <- function(x, scale, shape){
+  out <- scale * log(shape) - (scale + 1) * log(x) - shape / x - lgamma(scale)
+
+  return(out)
+}
