@@ -130,5 +130,6 @@ bv_ml <- function(
 
   # Return log_ml and objects necessary for drawing
   return(list("log_ml" = log_ml, "X" = X, "N" = N, "psi" = psi,
-              "sse" = sse, "beta_hat" = beta_hat, "omega_inv" = omega_inv))
+              "sse" = ev_full[["sse"]], "beta_hat" = ev_full[["beta_hat"]],
+              "omega_inv" = omega_inv))
 }

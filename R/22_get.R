@@ -32,5 +32,6 @@ get_ev <- function(
   psi_ml_ev[psi_ml_ev < 1e-12] <- 0
   psi_ml_ev <- psi_ml_ev + 1
 
-  return(list("omega" = omega_ml_ev, "psi" = psi_ml_ev))
+  return(list("omega" = omega_ml_ev, "psi" = psi_ml_ev, "sse" = sse,
+              "beta_hat" = beta_hat))
 }
