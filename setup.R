@@ -103,7 +103,7 @@ priors_v3 <- bv_priors(hyper = c("alpha", "lambda", "soc", "sur"),
                        "sur" = sur)
 
 
-run7 <- bvar(data_small_VAR, priors = priors_v1, lags = 5,
+run7 <- bvar(data_small_VAR, n_draw = 20000, n_burn = 10000, priors = priors_v1, lags = 5,
              irf = irf, mh = bv_mh(adjust_acc = TRUE), verbose = TRUE)
 run8 <- bvar(data_med_VAR, priors = priors_v1, lags = 5,
              irf = irf, mh = bv_mh(adjust_acc = TRUE),
@@ -122,16 +122,21 @@ run12 <- bvar(data_med_VAR, priors = priors_v3, lags = 5,
               irf = irf, mh = bv_mh(adjust_acc = TRUE),
               verbose = TRUE)
 
-bv_plot_irf(run7)
-bv_plot_irf(run9)
-bv_plot_irf(run11)
+bv_plot_irf(run8, vars_impulse = 7)
+bv_plot_irf(run10, vars_impulse = 7, vars_response = 4:7)
+bv_plot_irf(run12, vars_impulse = 7, vars_response = 4:7)
 
 
-bv_plot_irf(run9, vars_impulse = c(1, 7))
+bv_plot_irf(run8, vars_impulse = c(1, 2))
 
 bv_plot_trace(run7, "lambda")
 bv_plot_trace(run9, "lambda")
 bv_plot_trace(run11, "lambda")
+
+bv_plot_density(run7, "lambda")
+bv_plot_density(run9, "lambda")
+bv_plot_density(run11, "alpha")
+
 
 run7$meta$accepted/(run7$meta$n_draw-run7$meta$n_burn)
 run8$meta$accepted/(run8$meta$n_draw-run8$meta$n_burn)
