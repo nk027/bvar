@@ -53,12 +53,18 @@ data_small_VAR <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
 data_small_VAR1 <- data_small_VAR
 data_small_VAR2 <- data_small_VAR
 
-data_small_VAR1[, 1:2] <- log(data_small_VAR1[, 1:2]) * 4
+data_small_VAR1[, 1:2] <- log(data_small_VAR1[, 1:2])
+data_small_VAR1 <- data_small_VAR1[5:nrow(data_small_VAR1), ]
 data_small_VAR1 <- data_small_VAR1[5:which(rownames(data_small_VAR1) ==  "2008-12-01"), ]
 
 
-data_small_VAR2[5:nrow(data_small_VAR2), 1:2] <-  apply(log(data_small_VAR2[, 1:2]),
-                                                   2, diff, lag = 4)
+# data_small_VAR2[2:nrow(data_small_VAR2), 1:2] <-  apply(log(data_small_VAR2[, 1:2]),
+#                                                    2, diff, lag = 2)
+
+data_small_VAR2[3:nrow(data_small_VAR2), 1] <- diff(log(data_small_VAR2[, 1]), lag = 2) * 100
+data_small_VAR2[3:nrow(data_small_VAR2), 2] <- diff(log(data_small_VAR2[, 2]), lag = 2) * 100
+data_small_VAR2 <- data_small_VAR2[3:nrow(data_small_VAR2), ]
+
 data_small_VAR2 <- data_small_VAR2[5:which(rownames(data_small_VAR2) ==  "2008-12-01"), ]
 
 
@@ -129,8 +135,8 @@ sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
 
 
 priors_v1 <- bv_priors(hyper = "auto",
-                       soc = soc,
-                       sur = sur)
+                       "soc" = soc,
+                       "sur" = sur)
 
 priors_v2 <- bv_priors(hyper = "full",
                        "soc" = soc,
