@@ -5,7 +5,8 @@
 \title{Prior settings}
 \usage{
 bv_priors(hyper = "auto", mn = bv_mn(bv_lambda(0.2, 0.4, 0.0001, 5),
-  bv_alpha(2, 0.1, 0.5), var = 10000000), ...)
+  bv_alpha(2, 0.25, 1, 3), bv_psi(0.004, 0.004, "auto"), var = 10000000),
+  ...)
 }
 \arguments{
 \item{hyper}{Character vector. Used to specify the parameters to be treated

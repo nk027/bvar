@@ -4,14 +4,19 @@
 \alias{bv_mn}
 \alias{bv_lambda}
 \alias{bv_alpha}
+\alias{bv_psi}
 \title{Minnesota prior settings}
 \usage{
-bv_mn(lambda = bv_lambda(0.2, 0.4, 0.0001, 5), alpha = bv_alpha(2, 0.1,
-  5), psi = "auto", var = 10000000, b = "auto")
+bv_mn(lambda = bv_lambda(0.2, 0.4, 0.0001, 5), alpha = bv_alpha(2,
+  0.25, 1, 3), psi = bv_psi(0.004, 0.004, "auto"), var = 10000000,
+  b = "auto")
 
-bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 50)
+bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5)
 
-bv_alpha(mode = 2, min = 0.1, max = 5)
+bv_alpha(mode = 2, sd = 0.25, min = 1, max = 3)
+
+bv_psi(scale = 0.004, shape = 0.004, mode = "auto", min = "auto",
+  max = "auto")
 }
 \arguments{
 \item{lambda}{List constructed via \code{\link{bv_lambda}}.
@@ -21,22 +26,25 @@ Possible parameters are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}.}
 Possible parameters are \emph{mode}, \emph{min} and \emph{max}. High
 values for \emph{mode} may affect invertibility of the augmented data matrix.}
 
-\item{psi}{Named list with elements \emph{mode}, \emph{min} and \emph{max}.
-Length needs to match the number of variables (i.e. columns) in the data.
-By default parameters are set automatically as the squareroot of the
-innovations variance after fitting an \eqn{AR(p)} model to the data.}
+\item{psi}{Named list with elements \emph{scale}, \emph{shape} and
+\emph{mode}. Length needs to match the number of variables (i.e. columns) in
+the data. By default parameters are set automatically as the squareroot of
+the innovations variance after fitting an \eqn{AR(p)} model to the data.}
 
 \item{var}{Numeric scalar with the prior variance on the model's constant.}
 
 \item{b}{Numeric matrix with the prior mean.}
 
-\item{mode}{Numeric scalar. Mode (or the like) of the parameter.}
+\item{mode}{Numeric scalar (/vector). Mode (or the like) of the parameter.}
 
 \item{sd}{Numeric scalar with the standard deviation.}
 
-\item{min}{Numeric scalar. Minimum allowed value.}
+\item{min}{Numeric scalar (/vector). Minimum allowed value.}
 
-\item{max}{Numeric scalar. Maximum allowed value.}
+\item{max}{Numeric scalar (/vector). Maximum allowed value.}
+
+\item{scale, shape}{Numeric scalar. Scale and shape parameters of the Gamma
+distribution.}
 }
 \value{
 Returns a named list of class \code{bv_minnesota} with options for
@@ -48,7 +56,7 @@ Provide settings for the Minnesota prior to \code{\link{bv_priors}}.
 \examples{
 # Adjust alpha fully and the prior variance.
 bv_mn(
-  alpha = bv_alpha(mode = 0.5, min = 1e-12, max = 10),
+  alpha = bv_alpha(mode = 0.5, sd = 1, min = 1e-12, max = 10),
   var = 1e6
 )
 

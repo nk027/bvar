@@ -13,10 +13,12 @@
 #' the innovations variance after fitting an \eqn{AR(p)} model to the data.
 #' @param var Numeric scalar with the prior variance on the model's constant.
 #' @param b Numeric matrix with the prior mean.
-#' @param mode Numeric scalar. Mode (or the like) of the parameter.
+#' @param mode Numeric scalar (/vector). Mode (or the like) of the parameter.
 #' @param sd Numeric scalar with the standard deviation.
-#' @param min Numeric scalar. Minimum allowed value.
-#' @param max Numeric scalar. Maximum allowed value.
+#' @param min Numeric scalar (/vector). Minimum allowed value.
+#' @param max Numeric scalar (/vector). Maximum allowed value.
+#' @param scale,shape  Numeric scalar. Scale and shape parameters of the Gamma
+#' distribution.
 #'
 #' @return Returns a named list of class \code{bv_minnesota} with options for
 #' \code{\link{bvar}}.
@@ -36,7 +38,7 @@
 bv_mn <- function(
   lambda = bv_lambda(0.2, 0.4, 0.0001, 5), # mode, sd, min, max
   alpha = bv_alpha(2, 0.25, 1, 3), # mode, sd, min, max
-  psi = bv_psi(0.004, 0.004, "auto"), # scale, shape, setmode
+  psi = bv_psi(0.004, 0.004, "auto"), # scale, shape, mode
   var = 1e07,
   b = "auto") {
 
@@ -79,9 +81,7 @@ bv_psi <- function(scale = 0.004, shape = 0.004, mode = "auto",
                    min = "auto", max = "auto") {
 
   if(any(scale <= 0, shape <= 0)) {stop("Parameters of psi misspecified.")}
-  if(mode == "auto") {
-    message("Automatically setting mode, min and max of psi.\n")
-  } else {
+  if(mode != "auto") {
     if(min == "auto") {min <- mode / 100}
     if(max == "auto") {max <- mode * 100}
     if(any(0 >= min, min >= max)) {stop("Boundaries misspecified.")}
