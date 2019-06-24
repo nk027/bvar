@@ -43,6 +43,9 @@ bv_mn <- function(
   if(!inherits(lambda, "bv_dummy") && !inherits(alpha, "bv_dummy")) {
     stop("Please use `bv_lambda()` / `bv_alpha()` to set lambda / alpha.")
   }
+  if(!inherits(psi, "bv_psi")) {
+    stop("Please use `bv_psi()` to set psi.")
+  }
 
   out <- list("lambda" = lambda, "alpha" = alpha,
               "psi" = psi, "b" = b, "var" = var)
@@ -72,8 +75,20 @@ bv_alpha <- function(mode = 2, sd = 0.25, min = 1, max = 3) {
 
 #' @export
 #' @rdname bv_mn
-bv_psi <- function(scale = 0.004, shape = 0.004, mode = "auto"){
+bv_psi <- function(scale = 0.004, shape = 0.004, mode = "auto",
+                   min = "auto", max = "auto") {
 
   if(any(scale <= 0, shape <= 0)) {stop("Parameters of psi misspecified.")}
-  return(list(scale = scale, shape = shape, mode = mode))
+  if(mode == "auto") {
+    message("Automatically setting mode, min and max of psi.\n")
+  } else {
+    if(min == "auto") {min <- mode / 100}
+    if(max == "auto") {max <- mode * 100}
+    if(any(0 >= min, min >= max)) {stop("Boundaries misspecified.")}
+  }
+
+  out <- list(scale = scale, shape = shape, mode = mode, min = min, max = max)
+  class(out) <- "bv_psi"
+
+  return(out)
 }
