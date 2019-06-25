@@ -347,7 +347,7 @@ bvar <- function(
 
   if(verbose) {
     close(pb)
-    cat("Finished after ", format(timer), ".\n", sep = "")
+    cat("Finished after ", format(round(timer, 2)), ".\n", sep = "")
   }
 
 
