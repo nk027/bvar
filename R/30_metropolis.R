@@ -5,9 +5,10 @@
 #' is used to draw parameter proposals and automatic scaling to
 #' achieve a certain acceptance rate.
 #'
-#' @param scale_hess Numeric scalar. Scaling parameter, determining the range
-#' of hyperparameter draws. \emph{Should be calibrated so a reasonable rate of
-#' acceptance is reached}.
+#' @param scale_hess Numeric scalar or vector. Scaling parameter, determining
+#' the range of hyperparameter draws. \emph{Should be calibrated so a reasonable
+#' rate of acceptance is reached}. If provided as vector the length must equal
+#' the number of hyperparameters (one per variable for \code{psi}).
 #' @param adjust_acc Logical scalar. Whether or not to further scale the
 #' variability of parameter draws during the burn-in phase. See details.
 #' @param acc_lower Numeric scalar. Lower bound of the target acceptance rate.
