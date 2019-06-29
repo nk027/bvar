@@ -129,7 +129,9 @@ plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
        main = paste("Density", if(!is.null(name)) {paste("of", name)} else {""}))
   polygon(density(x), col = "#CCCCCC33", border = NA)
   for(dot in dots) {
-    polygon(density(dot), col = "#CCCCCC33", border = NA)
+    dens <- density(dot)
+    polygon(dens, col = "#CCCCCC33", border = NA)
+    lines(dens)
   }
   lines(density(x))
   abline(v = bounds, lty = "dashed", col = "darkgray")
