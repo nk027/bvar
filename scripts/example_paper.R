@@ -1,11 +1,11 @@
 #####
-# Working example for "BVAR: Bayesian Vector Autoregressions with Hierarchical
-# Prior Selection in R"
+# Working example for
+# "BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R"
 
 
 # Preliminaries -----------------------------------------------------------
 
-install.packages("BVAR")
+install.packages("BVAR") # Version 0.1.4
 library("BVAR")
 set.seed(123)
 
@@ -17,14 +17,12 @@ df <- fred_qd[, c("GDPC1", "INDPRO", "PAYEMS",
                   "CPIAUCSL", "FEDFUNDS", "SP500")]
 
 ## year-on-year changes
-for(i in c("GDPC1", "CPIAUCSL")) {
+for(i in c("GDPC1", "CPIAUCSL"))
   df[5:nrow(df), i] <- diff(log(df[, i]), lag = 4) * 100
-}
 
 ## quarter-on-quarter changes
-for(i in c("INDPRO", "PAYEMS", "SP500")) {
+for(i in c("INDPRO", "PAYEMS", "SP500"))
   df[2:nrow(df), i] <- diff(log(df[, i]), lag = 1) * 100
-}
 
 df <- df[5:nrow(df), ]
 
@@ -95,14 +93,14 @@ print(run)
 
 # Various plots ------------------------------------------------------------
 
+pdf("../plots_all.pdf", width = 10, height = 12)
+plot(run)
+dev.off()
+
 pdf("../plots_lambda.pdf", width = 10, height = 5)
 op <- par(mfrow = c(2, 1), mar = c(2, 2, 2, 2))
 bv_plot_density(run, name = "lambda")
 bv_plot_trace(run, name = "lambda")
-dev.off()
-
-pdf("../plots_all.pdf", width = 10, height = 12)
-plot(run)
 dev.off()
 
 pdf("../plots_fcast.pdf", width = 10, height = 3)
@@ -145,13 +143,13 @@ priors_dum <- bv_priors(hyper = "auto", soc = soc)
 
 data("fred_qd")
 df_small <- fred_qd[, c("GDPC1", "CPIAUCSL", "FEDFUNDS")]
-for(i in c("GDPC1", "CPIAUCSL")) {
+for(i in c("GDPC1", "CPIAUCSL"))
   df_small[5:nrow(df_small), i] <- diff(log(df_small[, i]), lag = 4) * 100
-}
+
 df_small <- df_small[5:nrow(df_small), ]
 
 
-signs <- matrix(c(1,  1,  1, 0,  1,  1, -1, -1,  1), ncol = 3)
+signs <- matrix(c(1, 1, 1, 0, 1, 1, -1, -1, 1), ncol = 3)
 irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
                     identification = TRUE, sign_restr = signs)
 run_signs <- bvar(df_small, lags = 5, n_draw = 25000, n_burn = 10000,
