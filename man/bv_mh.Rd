@@ -8,9 +8,10 @@ bv_mh(scale_hess = 0.01, adjust_acc = FALSE, acc_lower = 0.25,
   acc_upper = 0.35, acc_change = 0.01)
 }
 \arguments{
-\item{scale_hess}{Numeric scalar. Scaling parameter, determining the range
-of hyperparameter draws. \emph{Should be calibrated so a reasonable rate of
-acceptance is reached}.}
+\item{scale_hess}{Numeric scalar or vector. Scaling parameter, determining
+the range of hyperparameter draws. \emph{Should be calibrated so a reasonable
+rate of acceptance is reached}. If provided as vector the length must equal
+the number of hyperparameters (one per variable for \code{psi}).}
 
 \item{adjust_acc}{Logical scalar. Whether or not to further scale the
 variability of parameter draws during the burn-in phase. See details.}
