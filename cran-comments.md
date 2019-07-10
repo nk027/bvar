@@ -1,3 +1,9 @@
+# v0.1.5, CRAN Update 1
+
+- Tried to clarify licensing terms with the Federal Reserve
+  - Some copyrighted series may have to be removed
+  - Subset the dataset to only include variables in public domain for now
+
 # v0.1.4, JSS Submission
 
 - Fix addition of prior pdfs to ML
@@ -6,6 +12,8 @@
   - Add normalising constant
 - Add lines to all density plots (when supplied via ellipsis)
 - Add documentation on using `scale_hess` as a vector
+- Add two pre-constructed dummy priors `soc` and `sur`
+- Further split up calculation of marginal likelihood
 
 # v0.1.3, CRAN Submission 2
 

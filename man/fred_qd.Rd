@@ -4,7 +4,7 @@
 \name{fred_qd}
 \alias{fred_qd}
 \title{FRED-QD: Quarterly Database for Macroeconomic Research}
-\format{A \code{data.frame} with 240 observations of 248 variables.}
+\format{A \code{data.frame} with 240 observations of 203 (248) variables.}
 \source{
 \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}
 }
@@ -21,7 +21,9 @@ The included dataset is from April 2019 and contains observations from
 }
 \details{
 For further details see McCracken and Ng (2016) or the dataset's appendix at
-\url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
+\url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}. The
+dataset included is a subset of the full FRED-QD with the 203 of 248
+variables that are in public domain.
 }
 \references{
 McCracken, M. W., and Ng, S. (2016). FRED-MD: A Monthly Database for Macroeconomic Research. Journal of Business & Economic Statistics, 34, 574-589. \url{https://doi.org/10.1080/07350015.2015.1086655}

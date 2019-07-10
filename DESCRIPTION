@@ -1,7 +1,7 @@
 Package: BVAR
 Type: Package
 Title: Hierarchical Bayesian Vector Autoregression
-Version: 0.1.4
+Version: 0.1.5
 Date: 2019-06-30
 Authors@R: c(person("Nikolas",  "Kuschnig", role = c("aut", "cre"), email = "nikolas.kuschnig@wu.ac.at"),
     person("Lukas", "Vashold", role = "aut"),

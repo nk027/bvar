@@ -8,11 +8,13 @@
 #' 1959Q1 until 2018Q4.
 #'
 #' For further details see McCracken and Ng (2016) or the dataset's appendix at
-#' \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
+#' \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}. The
+#' dataset included is a subset of the full FRED-QD with the 203 of 248
+#' variables that are in public domain.
 #'
 #' @docType data
 #'
-#' @format A \code{data.frame} with 240 observations of 248 variables.
+#' @format A \code{data.frame} with 240 observations of 203 (248) variables.
 #'
 #' @keywords datasets fred
 #'
