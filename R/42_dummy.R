@@ -3,7 +3,7 @@
 #' @param mode Numeric scalar. Mode (or the like) of the parameter.
 #' @param min Numeric scalar. Minimum allowed value.
 #' @param max Numeric scalar. Maximum allowed value.
-#' @param ... Other possible parameters such as sd or fun.
+#' @param ... Other possible parameters such as \emph{sd} or \emph{fun}.
 #'
 #' @return Returns a list of class \code{bv_dummy.}
 #'
@@ -26,6 +26,21 @@ dummy <- function(
 #' Dummy prior settings
 #'
 #' Allows the creation of dummy observation priors for \code{\link{bv_priors}}.
+#' See the Details section for information on some common dummy priors.
+#'
+#' Dummy priors are often used to "reduce the importance of the deterministic
+#' component implied by VARs estimated conditioning on the initial
+#' observations" (Giannone et al. 2015, p. 440). One such prior is the
+#' sum-of-coefficients (SOC) prior, which imposes the notion that a no-change
+#' forecast is optimal at the beginning of a time series. Its key parameter
+#' \eqn{\mu} controls the tightness - i.e. for low values the model is pulled
+#' towards a form with as many unit roots as variables and no cointegration.
+#' Another such prior is the single-unit-root (SUR) prior, that allows for
+#' cointegration relationships in the data. It pushes variables either towards
+#' their unconditional mean or towards the presence of at least one unit root.
+#' These priors are implemented via Theil mixed estimation, i.e. by adding
+#' dummy-observations on top of the data matrix. They are readily available
+#' via the shorthand functions \code{\link{bv_soc}} and \code{\link{bv_sur}}.
 #'
 #' @param mode Numeric scalar. Mode (or the like) of the parameter.
 #' @param sd Numeric scalar. Standard deviation (or the like) of the parameter.
@@ -37,6 +52,10 @@ dummy <- function(
 #'
 #' @return Returns a named list of class \code{bv_dummy} for
 #' \code{\link{bv_priors}}.
+#'
+#' @references
+#'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}
+#'
 #' @export
 #'
 #' @examples
@@ -73,7 +92,7 @@ bv_dummy <- function(
   min = 0.0001, max = 5,
   fun) {
 
-  if(sd <= 0) {stop("Parameter sd misspecified.")}
+  if(sd <= 0) {stop("Parameter `sd` misspecified.")}
   fun <- match.fun(fun)
 
   return(dummy(mode, min, max, sd = sd, fun = fun,

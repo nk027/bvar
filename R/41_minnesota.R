@@ -1,11 +1,24 @@
 #' Minnesota prior settings
 #'
-#' Provide settings for the Minnesota prior to \code{\link{bv_priors}}.
+#' Provide settings for the Minnesota prior to \code{\link{bv_priors}}. See the
+#' Details section for further information.
+#'
+#' Essentially this prior imposes the hypothesis, that the individual variables
+#' all follow random walk processes. This parsimonious specification typically
+#' performs well in forecasts of macroeconomic time series and is often used
+#' as a benchmark for evaluating accuracy (Kilian and Lütkepohl, 2017).
+#' The key parameter is \eqn{\lambda}, which controls the tightness of the
+#' prior. The parameter \eqn{\alpha} governs variance decay with increasing lag
+#' order, while \eqn{\psi} controls the prior's standard deviation on lags of
+#' variables other than the dependent.
+#' The Minnesota prior is often refined with additional priors, trying to
+#' minimise the importance of conditioning on initial observations. See
+#' \code{\link{bv_dummy}} for more information on such priors.
 #'
 #' @param lambda List constructed via \code{\link{bv_lambda}}.
-#' Possible parameters are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}.
+#' Possible settings are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}.
 #' @param alpha List constructed via \code{\link{bv_alpha}}.
-#' Possible parameters are \emph{mode}, \emph{min} and \emph{max}. High
+#' Possible settings are \emph{mode}, \emph{min} and \emph{max}. High
 #' values for \emph{mode} may affect invertibility of the augmented data matrix.
 #' @param psi Named list with elements \emph{scale}, \emph{shape} and
 #' \emph{mode}. Length needs to match the number of variables (i.e. columns) in
@@ -17,11 +30,15 @@
 #' @param sd Numeric scalar with the standard deviation.
 #' @param min Numeric scalar (/vector). Minimum allowed value.
 #' @param max Numeric scalar (/vector). Maximum allowed value.
-#' @param scale,shape  Numeric scalar. Scale and shape parameters of the Gamma
+#' @param scale,shape Numeric scalar. Scale and shape parameters of a Gamma
 #' distribution.
 #'
 #' @return Returns a named list of class \code{bv_minnesota} with options for
 #' \code{\link{bvar}}.
+#'
+#' @references
+#'     Kilian L, Lütkepohl H (2017). Structural Vector Autoregressive Analysis. Cambridge University Press.
+#'
 #' @export
 #'
 #' @examples

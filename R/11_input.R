@@ -24,6 +24,7 @@ num_check <- function(
   return(fun(x))
 }
 
+
 #' @rdname num_check
 #'
 #' @noRd
@@ -33,6 +34,7 @@ int_check <- function(
 
   num_check(x, min, max, msg, fun = as.integer)
 }
+
 
 #' Set psi of the Minnesota prior
 #'
