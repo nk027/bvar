@@ -105,13 +105,14 @@ bvar <- function(
   n_thin <- int_check(n_thin, min = 1, max = ((n_draw - n_burn) / 10))
   n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1)
 
-  # Constructors
+  # Constructors, required
   if(!inherits(priors, "bv_priors")) {
     stop("Please use `bv_priors()` to configure the priors.")
   }
   if(!inherits(mh, "bv_metropolis")) {
     stop("Please use `bv_mh()` to configure the Metropolis-Hastings step.")
   }
+  # Not required
   if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) {
     stop("Please use `bv_fcast()` to configure forecasts.")
   }

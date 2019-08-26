@@ -33,7 +33,7 @@ lag_var <- function(x, lags) {
 #' @param mode Numeric scalar.
 #' @param sd Numeric scalar.
 #'
-#' @return Returns a list with shape \emph{k} and scale paramter \emph{theta}.
+#' @return Returns a list with shape \emph{k} and scale parameter \emph{theta}.
 #'
 #' @noRd
 gamma_coef <- function(mode, sd) {
@@ -108,13 +108,13 @@ set_gray <- function(P) {
 #'
 #' @examples
 #' # Assuming the variables are named.
-#' bvar:::get_var_set("fx_rate", variables = c("gdp_pc", "fx_rate"))
+#' BVAR:::get_var_set("fx_rate", variables = c("gdp_pc", "fx_rate"))
 #'
 #' # Find via position
-#' bvar:::get_var_set(c(1, 3), M = 3)
+#' BVAR:::get_var_set(c(1, 3), M = 3)
 #'
 #' # Get the full set
-#' bvar:::get_var_set(NULL, M = 3)
+#' BVAR:::get_var_set(NULL, M = 3)
 #'
 #' @noRd
 get_var_set <- function(vars, variables, M) {
@@ -139,7 +139,7 @@ get_var_set <- function(vars, variables, M) {
 #' Compute the logged pdf of a draw of a variable assumed to be inverse-Gamma
 #' (IG) distributed with parameters \emph{scale} and \emph{shape}.
 #'
-#' @param x Numeric scalar. Draw of the IG-distributed variable
+#' @param x Numeric scalar. Draw of the IG-distributed variable.
 #' @param scale Numeric scalar. Scale of the IG prior distribution.
 #' @param shape Numeric scalar. Shape of the IG prior distribution.
 #'
@@ -147,11 +147,34 @@ get_var_set <- function(vars, variables, M) {
 #'
 #' @examples
 #' # Computing log-likelihood of a draw with value 5
-#' log_igamma_pdf(5, 0.004, 0.004)
+#' BVAR:::log_igamma_pdf(5, 0.004, 0.004)
 #'
 #' @noRd
 log_igamma_pdf <- function(x, scale, shape){
   out <- scale * log(shape) - (scale + 1) * log(x) - shape / x - lgamma(scale)
 
   return(out)
+}
+
+#' Compute companion matrix
+#'
+#' Compute the companion form of the VAR coefficients.
+#'
+#' @param beta Numeric matrix. Non-companion form of beta.
+#' @param K Integer scalar. Number of columns in \emph{Y}.
+#' @param M Integer scalar. Number of columns in \emph{X}.
+#' @param lags Integer scalar. Number of lags to applied.
+#'
+#' @return Returns a numeric matrix, i.e. \emph{beta} in companion form.
+#'
+#' @noRd
+get_beta_comp <- function(beta, K, M, lags) {
+  beta_comp <- matrix(0, K - 1, K - 1)
+
+  beta_comp[1:M, ] <- t(draws[["beta_draw"]][2:K, ])
+  if(lags > 1) { # Add block-diagonal matrix beneath VAR coefficients
+    beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
+  }
+
+  return(beta_comp)
 }
