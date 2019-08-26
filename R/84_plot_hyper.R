@@ -71,7 +71,9 @@ plot_hyper <- function(x, name, fun = c(plot_trace, plot_dens), ...) {
 
   dots <- list(...)
   lapply(dots, function(x) {
-    if(!inherits(x, "bvar")) {stop("Provide `bvar` objects to the ellipsis.")}
+    if(!inherits(x, "bvar")) {
+      stop("Please provide `bvar` objects to the ellipsis.")
+    }
   })
 
   if(name == "ml") {

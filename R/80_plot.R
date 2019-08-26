@@ -22,7 +22,7 @@
 #' }
 plot.bvar <- function(x, mar = c(2, 2, 2, 0.5), ...) {
 
-  if(!inherits(x, "bvar")) {stop("Please provide an object with class bvar.")}
+  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
   bv_plot(x, ...)
 
