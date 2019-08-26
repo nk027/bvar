@@ -49,7 +49,7 @@ plot.bvar_irf <- function(
   ...) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
-  bv_plot_irf(x, conf_bands, variables, vars_impulse, vars_response, mar, ...)
+  bv_plot_irf(x, conf_bands, vars_impulse, vars_response, variables, mar, ...)
 
 }
 

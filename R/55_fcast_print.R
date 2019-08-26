@@ -39,12 +39,17 @@ print_fcast <- function(x, ...) {
 
 #' Forecast summary method
 #'
+#' Print and return quantiles of forecasts from \code{\link{bvar}}.
+#'
 #' @param x A \code{bvar_fcast} object.
-#' @param vars Optional numeric or character vector. Used to subset the plot to
-#' certain variables by position or name (must be available). Defaults to
+#' @param vars Optional numeric or character vector. Used to subset the output
+#' to certain variables by position or name (must be available). Defaults to
 #' \code{NULL}, i.e. all variables.
-#' @param digits Integer scalar. Fed to \code{\link[base]{round}}.
+#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
+#' numeric outputs (i.e. the quantiles).
 #' @param ... Not used.
+#'
+#' @return Returns an array with the desired forecast quantiles.
 #'
 #' @noRd
 summary.bvar_fcast <- function(x, vars = NULL, digits = 2L, ...) {
@@ -62,4 +67,6 @@ summary.bvar_fcast <- function(x, vars = NULL, digits = 2L, ...) {
     cat("\tVariable ", variables[i], ":\n", sep = "")
     print(round(quants[, , i], digits = digits))
   }
+
+  return(invisible(quants[, , pos]))
 }

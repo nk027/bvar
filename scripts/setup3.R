@@ -27,5 +27,25 @@ run2 <- bvar(data, lags, n_draw, n_burn, n_thin,
 
 predict(run1)
 predict(run2)
-predict(run2, horizon = 14L)
 predict(run1, bv_fcast(8L))
+run2$fcast <- predict(run2, horizon = 14L)
+
+bv_plot_fcast(run1, vars = c(1, 3))
+bv_plot_fcast(run2, vars = c("a", "c"), variables = c("a", "b", "c", "d", "e"))
+bv_plot_fcast(run2, vars = c(1, 3))
+
+plot(run1$fcast)
+plot(run2$fcast)
+
+run1$fcast$variables <- run2$fcast$variables <- c("a", "b", "c", "d", "e")
+
+plot(predict(run1), vars = c("d"))
+plot(predict(run2), vars = 4)
+
+plot(predict(run2, conf_bands = c(0.25)))
+plot(predict(run2, n_draw = 10))
+
+summary(run1$fcast)
+summary(predict(run1), vars = 1)
+summary(predict(run1, conf_bands = 0.2), vars = 1)
+summary(predict(run1, conf_bands = c(0.25)))

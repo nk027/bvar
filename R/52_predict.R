@@ -51,7 +51,9 @@ predict.bvar <- function(x, ..., conf_bands, n_draw, newdata) {
   # If a forecast exists and no settings are provided
   if(is.null(fcast_store) || length(dots) != 0L || !missing(newdata)) {
 
-    fcast <- if(inherits(dots[[1]], "bv_fcast")) {dots[[1]]} else {bv_fcast(...)}
+    fcast <- if(length(dots) > 0 && inherits(dots[[1]], "bv_fcast")) {
+      dots[[1]]
+    } else {bv_fcast(...)}
 
     # If n_draw is provided sample from stored iterations in x
     if(missing(n_draw)) {
@@ -98,7 +100,11 @@ predict.bvar <- function(x, ..., conf_bands, n_draw, newdata) {
 
   # Apply confidence bands ------------------------------------------------
 
-  if(!missing(conf_bands)) {predict(fcast_store, conf_bands)}
+  if(is.null(fcast_store[["quants"]]) || !missing(conf_bands)) {
+    fcast_store <- if(!missing(conf_bands)) {
+      predict(fcast_store, conf_bands)
+    } else {predict(fcast_store, c(0.16))}
+  }
 
   return(fcast_store)
 }
@@ -110,8 +116,10 @@ predict.bvar_fcast <- function(x, conf_bands) {
 
   if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
 
-  quantiles <- quantile_check(conf_bands)
-  x[["quants"]] <- apply(x[["fcast"]], c(2, 3), quantile, quantiles)
+  if(!missing(conf_bands)) {
+    quantiles <- quantile_check(conf_bands)
+    x[["quants"]] <- apply(x[["fcast"]], c(2, 3), quantile, quantiles)
+  }
 
   return(x)
 }

@@ -50,7 +50,7 @@ plot.bvar_fcast <- function(
   ...) {
 
   if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
-  bv_plot_fcast(x, conf_bands, variables, vars, orientation, mar, ...)
+  bv_plot_fcast(x, conf_bands, vars, variables, orientation, mar, ...)
 
 }
 
@@ -68,7 +68,7 @@ bv_plot_fcast <- function(
   mar = c(2, 2, 2, 0.5),
   ...) {
 
-  if(!inherits(x, "bvar") || !inherits(x, "bvar_fcast")) {
+  if(!inherits(x, "bvar") && !inherits(x, "bvar_fcast")) {
     stop("Please provide a `bvar` or `bvar_fcast` object.")
   }
   if(inherits(x, "bvar")) {x <- predict(x)}
@@ -94,7 +94,7 @@ bv_plot_fcast <- function(
     c(length(pos), 1)
   } else {c(1, length(pos))}
 
-  plot_fcast(x, variables, pos, col, mar, mfrow, ...)
+  plot_fcast(x[["quants"]], variables, pos, col, mar, mfrow, ...)
 
   return(invisible(x))
 }
