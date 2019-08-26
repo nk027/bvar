@@ -307,20 +307,15 @@ bvar <- function(
 
       # Companion matrix is necessary for forecasts and impulse responses
       if(!is.null(fcast) || !is.null(irf)) {
-        beta_comp <- matrix(0, K - 1, K - 1)
-        beta_comp[1:M, ] <- t(draws[["beta_draw"]][2:K, ])
-        if(lags > 1) { # Add block-diagonal matrix beneath VAR coefficients
-          beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
-        }
+        beta_comp <- get_beta_comp(beta = draws[["beta_draw"]], K, M, lags)
       }
 
       # Forecast
       if(!is.null(fcast)) {
-        beta_const <- draws[["beta_draw"]][1, ]
         fcast_store[["fcast"]][(i / n_thin), , ] <- compute_fcast(
           Y = Y, K = K, M = M, N = N, lags = lags,
           horizon = fcast[["horizon"]],
-          beta_comp = beta_comp, beta_const = beta_const,
+          beta_comp = beta_comp, beta_const = draws[["beta_draw"]][1, ],
           sigma = draws[["sigma_draw"]])
       } # End forecast
 
@@ -359,7 +354,8 @@ bvar <- function(
               "optim" = opt, "priors" = priors,
               "variables" = variables, "call" = cl)
 
-  out[["meta"]] <- list("accepted" = accepted, "N" = N, "M" = M, "lags" = lags,
+  out[["meta"]] <- list("accepted" = accepted,
+                        "Y" = Y, "N" = N, "M" = M, "lags" = lags,
                         "n_draw" = n_draw, "n_burn" = n_burn, "n_save" = n_save,
                         "n_thin" = n_thin,
                         "timer" = timer)
