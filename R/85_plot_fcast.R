@@ -5,8 +5,8 @@
 #'
 #' @param x A \code{bvar} / \code{bvar_fcast} object, obtained from
 #' \code{\link{bvar}}.
-#' @param conf_bands Deprecated. Use \code{\link{predict.bvar}}. Numeric vector
-#' of desired confidence bands.
+#' @param conf_bands Numeric vector of desired confidence bands. E.g. for bands
+#' at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
 #' @param variables Optional character vector. Names of all variables in the
 #' object. Taken from \code{x$variables} if available.
 #' @param vars Optional numeric or character vector. Used to subset the plot to
@@ -29,20 +29,17 @@
 #'
 #' # Subset to variables in positions 1, 2 and 4 via position and name
 #' bv_plot_fcast(x, vars = c(1, 2, 4))
-#' bv_plot_fcast(x,
-#'   variables = c("gdp", "flux", "cpi", "capacitor"),
-#'   vars = c("gdp", "flux", "capacitor")
-#' )
+# bv_plot_fcast(x,
+#   variables = c("gdp", "flux", "cpi", "capacitor"),
+#   vars = c("gdp", "flux", "capacitor")
+# )
 #'
-#' # Use the method to plot and adjust orientation
+#' # Use the method to plot, adjust confidence bands and orientation
 #' plot(x$fcast, conf_bands = c(0.01, 0.05), orientation = "h")
-#'
-#' # Adjust confidence bands via predict
-#' plot(predict(x, conf_bands = c(0.01, 0.05)))
 #' }
 plot.bvar_fcast <- function(
   x,
-  conf_bands, # deprecated, see predict.bvar
+  conf_bands = 0.16,
   variables = NULL,
   vars = NULL,
   orientation = c("vertical", "horizontal"),
@@ -61,29 +58,32 @@ plot.bvar_fcast <- function(
 #' @importFrom stats quantile
 bv_plot_fcast <- function(
   x,
-  conf_bands, # deprecated, see predict.bvar
+  conf_bands = 0.16,
   variables = NULL,
   vars = NULL,
   orientation = c("vertical", "horizontal"),
   mar = c(2, 2, 2, 0.5),
   ...) {
 
-  if(!inherits(x, "bvar") || !inherits(x, "bvar_fcast")) {
-    stop("Please provide a `bvar` or `bvar_fcast` object.")
-  }
-  if(inherits(x, "bvar")) {x <- predict(x)}
+  quantiles <- quantile_check(conf_bands)
 
-  if(!missing(conf_bands)) {
-    message("Parameter `conf_bands` is deprecated. Please use `predict()`.")
-    x <- predict(x, conf_bands = conf_bands)
-  }
+  if(inherits(x, "bvar")) {
+    y <- apply(x[["fcast"]][["fcast"]], c(2, 3), quantile, quantiles)
+    M <- dim(y)[3]
+    P <- dim(y)[1]
+    if(is.null(variables)) {
+      variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
+    }
 
-  M <- dim(x[["quants"]])[3]
-  P <- dim(x[["quants"]])[1]
+  } else if(inherits(x, "bvar_fcast")) {
+    y <- apply(x[["fcast"]], c(2, 3), quantile, quantiles)
+    M <- dim(y)[3]
+    P <- dim(y)[1]
+    if(is.null(variables)) {variables <- 1:M}
 
-  if(is.null(variables)) {
-    variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
-  } else if(length(variables) != M) {stop("Vector `variables` is incomplete.")}
+  } else {stop("Please provide a `bvar` or `bvar_fcast` object.")}
+
+  if(length(variables) != M) {stop("Named vector `variables` is incomplete.")}
 
   orientation <- match.arg(orientation)
 
@@ -94,7 +94,7 @@ bv_plot_fcast <- function(
     c(length(pos), 1)
   } else {c(1, length(pos))}
 
-  plot_fcast(x, variables, pos, col, mar, mfrow, ...)
+  plot_fcast(y, variables, pos, col, mar, mfrow, ...)
 
   return(invisible(x))
 }

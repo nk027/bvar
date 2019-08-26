@@ -1,6 +1,5 @@
-library("MASS")
-
 to_source <- c(0:99)
+
 sapply(list.files("R"), function(x) {
   if(any(stringr::str_detect(x, as.character(to_source))))
     source(paste0("R/", x))

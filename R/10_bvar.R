@@ -92,7 +92,7 @@ bvar <- function(
   # Data
   if(!all(vapply(data, is.numeric, logical(1))) ||
      any(is.na(data)) || ncol(data) < 2) {
-    stop("Problem with the data. Make sure it is numeric, without any NAs.")
+    stop("Problem with the data. Make sure it is numeric without any NAs.")
   }
 
   Y <- as.matrix(data)
@@ -246,8 +246,7 @@ bvar <- function(
   if(!is.null(fcast)) {
     fcast_store <- list(
       "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
-      "setup" = fcast,
-      "variables" = variables
+      "setup" = fcast
     )
     class(fcast_store) <- "bvar_fcast"
   }
@@ -255,8 +254,7 @@ bvar <- function(
     irf_store <- list(
       "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
       "fevd" = if(irf[["fevd"]]) {array(NA, c(n_save, M, M))} else {NULL},
-      "setup" = irf,
-      "variables" = variables
+      "setup" = irf
     )
     class(irf_store) <- "bvar_irf"
   }
@@ -357,23 +355,13 @@ bvar <- function(
               "variables" = variables, "call" = cl)
 
   out[["meta"]] <- list("accepted" = accepted,
-                        "Y" = Y, "N" = N, "K" = K, "M" = M, "lags" = lags,
+                        "Y" = Y, "N" = N, "M" = M, "lags" = lags,
                         "n_draw" = n_draw, "n_burn" = n_burn, "n_save" = n_save,
                         "n_thin" = n_thin,
                         "timer" = timer)
 
-  if(!is.null(fcast)) {
-    # Add confidence bands
-    fcast_store[["quants"]] <- apply(fcast_store[["fcast"]],
-                                     c(2, 3), quantile, c(0.16, 0.50, 0.84))
-    out[["fcast"]] <- fcast_store
-  }
-  if(!is.null(irf)) {
-    # Add confidence bands
-    irf_store[["quants"]] <- apply(irf_store[["irf"]],
-                                   c(2, 3), quantile, c(0.16, 0.50, 0.84))
-    out[["irf"]] <- irf_store
-  }
+  if(!is.null(fcast)) {out[["fcast"]] <- fcast_store}
+  if(!is.null(irf)) {out[["irf"]] <- irf_store}
 
   class(out) <- "bvar"
 

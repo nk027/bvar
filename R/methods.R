@@ -19,8 +19,7 @@ predict.bvar <- function(x, ..., n_draw) {
 
   # If n_draw is provided sample from stored iterations in x
   if(missing(n_draw)) {
-    n_draw <- x[["meta"]][["n_save"]]
-    iters <- seq(1L, n_draw)
+    iters <- seq(1L, x[["meta"]][["n_save"]])
   } else {
     stopifnot(n_draw <= x[["meta"]][["n_save"]])
     iters <- sample(x[["meta"]][["n_save"]], size = n_draw, replace = FALSE)
@@ -35,7 +34,7 @@ predict.bvar <- function(x, ..., n_draw) {
   sigma <- x[["sigma"]]
 
   fcast_store <- list(
-    "fcast" = array(NA, c(n_draw, fcast[["horizon"]], M)),
+    "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
     "setup" = fcast
   )
   class(fcast_store) <- "bvar_fcast"
@@ -45,8 +44,7 @@ predict.bvar <- function(x, ..., n_draw) {
     fcast_store[["fcast"]][i, , ] <- compute_fcast(
       Y = Y, K = K, M = M, N = N, lags = lags,
       horizon = fcast[["horizon"]],
-      beta_comp = beta_comp,
-      beta_const = beta[iters[i], 1, ], sigma = sigma[iters[i], , ])
+      beta_comp = beta_comp, beta_const = beta[iters[i], 1, ], sigma = sigma)
   }
 
   return(fcast_store)
