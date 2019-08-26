@@ -41,10 +41,10 @@
 #' }
 plot.bvar_irf <- function(
   x,
-  conf_bands = 0.16,
-  variables = NULL,
+  conf_bands, # deprecated, see irf.bvar
   vars_impulse = NULL,
   vars_response = NULL,
+  variables = NULL,
   mar = c(2, 2, 2, 0.5),
   ...) {
 
@@ -56,36 +56,32 @@ plot.bvar_irf <- function(
 
 #' @rdname plot.bvar_irf
 #' @export
-#'
-#' @importFrom stats quantile
 bv_plot_irf <- function(
   x,
-  conf_bands = 0.16,
-  variables = NULL,
+  conf_bands, # deprecated, see irf.bvar
   vars_impulse = NULL,
   vars_response = NULL,
+  variables = NULL,
   mar = c(2, 2, 2, 0.5),
   ...) {
 
-  quantiles <- quantile_check(conf_bands)
+  if(!inherits(x, "bvar") && !inherits(x, "bvar_irf")) {
+    stop("Please provide a `bvar` or `bvar_irf` object.")
+  }
+  if(inherits(x, "bvar")) {x <- irf(x)}
 
-  if(inherits(x, "bvar")) {
-    y <- apply(x[["irf"]][["irf"]], c(2, 3, 4), quantile, quantiles)
-    M <- dim(y)[2]
-    P <- dim(y)[1]
-    if(is.null(variables)) {
-      variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
-    }
+  if(!missing(conf_bands)) {
+    message("Parameter `conf_bands` is deprecated. Please use `irf()`.")
+    x <- irf(x, conf_bands = conf_bands)
+  }
 
-  } else if(inherits(x, "bvar_irf")) {
-    y <- apply(x[["irf"]], c(2, 3, 4), quantile, quantiles)
-    M <- dim(y)[2]
-    P <- dim(y)[1]
-    if(is.null(variables)) {variables <- 1:M}
+  M <- dim(x[["quants"]])[2]
+  P <- dim(x[["quants"]])[1]
 
-  } else {stop("Please provide a `bvar` or `bvar_fcast` object.")}
 
-  if(length(variables) != M) {stop("Named vector `variables` is incomplete.")}
+  if(is.null(variables)) {
+    variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
+  } else if(length(variables) != M) {stop("Vector `variables` is incomplete.")}
 
   col <- set_gray(P)
   pos_imp <- get_var_set(vars_impulse, variables, M)
@@ -93,7 +89,7 @@ bv_plot_irf <- function(
 
   mfrow <- c(length(pos_res), length(pos_imp))
 
-  plot_irf(y, variables, pos_imp, pos_res, col, mar, mfrow, ...)
+  plot_irf(x[["quants"]], variables, pos_imp, pos_res, col, mar, mfrow, ...)
 
   return(invisible(x))
 }

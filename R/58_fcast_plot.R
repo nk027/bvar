@@ -57,8 +57,6 @@ plot.bvar_fcast <- function(
 
 #' @rdname plot.bvar_fcast
 #' @export
-#'
-#' @importFrom stats quantile
 bv_plot_fcast <- function(
   x,
   conf_bands, # deprecated, see predict.bvar

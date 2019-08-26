@@ -53,7 +53,7 @@
 #' @export
 #'
 #' @importFrom utils setTxtProgressBar txtProgressBar
-#' @importFrom stats optim runif
+#' @importFrom stats optim runif quantile
 #' @importFrom MASS mvrnorm
 #'
 #' @examples
@@ -371,7 +371,7 @@ bvar <- function(
   if(!is.null(irf)) {
     # Add confidence bands
     irf_store[["quants"]] <- apply(irf_store[["irf"]],
-                                   c(2, 3), quantile, c(0.16, 0.50, 0.84))
+                                   c(2, 3, 4), quantile, c(0.16, 0.50, 0.84))
     out[["irf"]] <- irf_store
   }
 

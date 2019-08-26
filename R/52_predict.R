@@ -112,6 +112,8 @@ predict.bvar <- function(x, ..., conf_bands, n_thin = 1L, newdata) {
 
 #' @rdname predict.bvar
 #' @export
+#'
+#' @importFrom stats quantile
 predict.bvar_fcast <- function(x, conf_bands) {
 
   if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}

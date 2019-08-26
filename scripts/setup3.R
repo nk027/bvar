@@ -20,10 +20,10 @@ verbose <- TRUE
 priors <- bv_priors()
 mh <- bv_mh()
 
-run1 <- bvar(data, lags, n_draw, n_burn, n_thin,
-             priors, mh, fcast, irf, verbose = TRUE)
+run1 <- bvar(data, lags, n_draw, n_burn, 1L,
+             priors, mh, fcast, bv_irf(), verbose = TRUE)
 run2 <- bvar(data, lags, n_draw, n_burn, n_thin,
-             fcast = NULL, verbose = TRUE)
+             fcast = NULL, irf = NULL, verbose = TRUE)
 
 predict(run1)
 predict(run2)
@@ -51,3 +51,16 @@ summary(predict(run1, conf_bands = 0.2), vars = 1)
 summary(predict(run1, conf_bands = c(0.25)))
 
 predict(run1, newdata = data[2000:nrow(data), ] * rnorm(1, mean = 10))
+
+run1$irf <- irf(run1, horizon = 10L)
+run2$irf <- irf(run2)
+
+bv_plot_irf(run1)
+bv_plot_irf(run2)
+
+plot(run1$irf)
+plot(irf(run2))
+plot(irf(run2, conf_bands = 0.45))
+
+summary(irf(run2, conf_bands = 0.01))
+summary(run2$irf)
