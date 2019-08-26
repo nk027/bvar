@@ -134,6 +134,7 @@ get_var_set <- function(vars, variables, M) {
   stop("Variables not found.")
 }
 
+
 #' Compute log pdf of inverse Gamma distribution
 #'
 #' Compute the logged pdf of a draw of a variable assumed to be inverse-Gamma
@@ -156,14 +157,15 @@ log_igamma_pdf <- function(x, scale, shape){
   return(out)
 }
 
+
 #' Compute companion matrix
 #'
 #' Compute the companion form of the VAR coefficients.
 #'
 #' @param beta Numeric matrix. Non-companion form of beta.
-#' @param K Integer scalar. Number of columns in \emph{Y}.
-#' @param M Integer scalar. Number of columns in \emph{X}.
-#' @param lags Integer scalar. Number of lags to applied.
+#' @param K Integer scalar. Number of columns in the data.
+#' @param M Integer scalar. Number of columns in the lagged data.
+#' @param lags Integer scalar. Number of lags applied.
 #'
 #' @return Returns a numeric matrix, i.e. \emph{beta} in companion form.
 #'
@@ -171,7 +173,7 @@ log_igamma_pdf <- function(x, scale, shape){
 get_beta_comp <- function(beta, K, M, lags) {
   beta_comp <- matrix(0, K - 1, K - 1)
 
-  beta_comp[1:M, ] <- t(draws[["beta_draw"]][2:K, ])
+  beta_comp[1:M, ] <- t(beta[2:K, ])
   if(lags > 1) { # Add block-diagonal matrix beneath VAR coefficients
     beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
   }
