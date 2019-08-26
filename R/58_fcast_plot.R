@@ -7,11 +7,11 @@
 #' \code{\link{bvar}}.
 #' @param conf_bands Deprecated. Use \code{\link{predict.bvar}}. Numeric vector
 #' of desired confidence bands.
-#' @param variables Optional character vector. Names of all variables in the
-#' object. Taken from \code{x$variables} if available.
 #' @param vars Optional numeric or character vector. Used to subset the plot to
-#' certain variables by position or name (\code{variables} must be available).
-#' Defaults to \code{NULL}, i.e. all variables.
+#' certain variables by position or name (must be available). Defaults to
+#' \code{NULL}, i.e. all variables.
+#' @param variables Optional character vector. Names of all variables in the
+#' object. Used to subset and title. Taken from \code{x$variables} if available.
 #' @param orientation String indicating the orientation of the plots. Defaults
 #' to \code{"v"} (i.e. vertical); may be set to \code{"h"} (i.e. horizontal).
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
@@ -35,7 +35,7 @@
 #' )
 #'
 #' # Use the method to plot and adjust orientation
-#' plot(x$fcast, conf_bands = c(0.01, 0.05), orientation = "h")
+#' plot(x$fcast, orientation = "h")
 #'
 #' # Adjust confidence bands via predict
 #' plot(predict(x, conf_bands = c(0.01, 0.05)))
@@ -43,8 +43,8 @@
 plot.bvar_fcast <- function(
   x,
   conf_bands, # deprecated, see predict.bvar
-  variables = NULL,
   vars = NULL,
+  variables = NULL,
   orientation = c("vertical", "horizontal"),
   mar = c(2, 2, 2, 0.5),
   ...) {
@@ -62,8 +62,8 @@ plot.bvar_fcast <- function(
 bv_plot_fcast <- function(
   x,
   conf_bands, # deprecated, see predict.bvar
-  variables = NULL,
   vars = NULL,
+  variables = NULL,
   orientation = c("vertical", "horizontal"),
   mar = c(2, 2, 2, 0.5),
   ...) {

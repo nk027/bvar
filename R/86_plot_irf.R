@@ -8,14 +8,14 @@
 #' \code{\link{bvar}}.
 #' @param conf_bands Numeric vector of desired confidence bands. E.g. for bands
 #' at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' @param variables Optional character vector. Names of all variables in the
-#' object. Taken from \code{x$variables} if available.
 #' @param vars_impulse Optional numeric or character vector. Used to subset the
-#' plot's impulses to certain variables by position or name (\code{variables}
-#' must be available). Defaults to \code{NULL}, i.e. all variables.
+#' plot's impulses to certain variables by position or name (must be available).
+#' Defaults to \code{NULL}, i.e. all variables.
 #' @param vars_response Optional numeric or character vector. Used to subset the
-#' plot's responses to certain variables by position or name (\code{variables}
-#' must be available). Defaults to \code{NULL}, i.e. all variables.
+#' plot's responses to certain variables by position or name (must be
+#' available). Defaults to \code{NULL}, i.e. all variables.
+#' @param variables Optional character vector. Names of all variables in the
+#' object. Used to subset and title. Taken from \code{x$variables} if available.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
