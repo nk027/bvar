@@ -49,3 +49,5 @@ summary(run1$fcast)
 summary(predict(run1), vars = 1)
 summary(predict(run1, conf_bands = 0.2), vars = 1)
 summary(predict(run1, conf_bands = c(0.25)))
+
+predict(run1, newdata = data[2000:nrow(data), ] * rnorm(1, mean = 10))

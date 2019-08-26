@@ -25,10 +25,10 @@
 #' data <- matrix(rnorm(200), ncol = 2)
 #' x <- bvar(data, lags = 2)
 #'
-#' # Access forecast with new confidence bands
+#' # Access forecast and update new confidence bands
 #' predict(x, conf_bands = 0.01)
 #'
-#' # Compute and store longer forecast
+#' # Compute and store a longer forecast
 #' x$fcast <- predict(x, horizon = 24L)
 #'
 #' # Speed up by lowering draws and use bv_fcast() to set options
@@ -36,6 +36,9 @@
 #'
 #' # Update the confidence bands
 #' x$fcast <- predict(x$fcast, conf_bands = c(0.05, 0.16))
+#'
+#' # Use new data to calculate a prediction
+#' predict(x, newdata = matrix(rnorm(200), ncol = 2))
 #' }
 predict.bvar <- function(x, ..., conf_bands, n_draw, newdata) {
 
@@ -66,19 +69,18 @@ predict.bvar <- function(x, ..., conf_bands, n_draw, newdata) {
 
     K <- x[["meta"]][["K"]]
     M <- x[["meta"]][["M"]]
-    N <- x[["meta"]][["N"]]
     lags <- x[["meta"]][["lags"]]
     beta <- x[["beta"]]
     sigma <- x[["sigma"]]
 
     if(missing(newdata)) {
       Y <- x[["meta"]][["Y"]]
+      N <- x[["meta"]][["N"]]
     } else {
-      if(!all(vapply(newdata, is.numeric, logical(1))) ||
-         any(is.na(newdata)) || ncol(newdata) != M) {
-        stop("Problem with the data. Make sure it is numeric, without any NAs.")
-      }
+      if(!all(vapply(newdata, is.numeric, logical(1))) || any(is.na(newdata)) ||
+         ncol(newdata) != M) {stop("Problem with `newdata`.")}
       Y <- as.matrix(newdata)
+      N <- nrow(Y)
     }
 
     fcast_store <- list(

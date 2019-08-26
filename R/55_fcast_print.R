@@ -49,7 +49,7 @@ print_fcast <- function(x, ...) {
 #' numeric outputs (i.e. the quantiles).
 #' @param ... Not used.
 #'
-#' @return Returns an array with the desired forecast quantiles.
+#' @return Returns an array with the desired forecast quantiles invisibly.
 #'
 #' @noRd
 summary.bvar_fcast <- function(x, vars = NULL, digits = 2L, ...) {
@@ -58,7 +58,7 @@ summary.bvar_fcast <- function(x, vars = NULL, digits = 2L, ...) {
 
   quants <- x[["quants"]]
   variables <- if(is.null(x[["variables"]])) {
-    1:dim(quants)[3]
+    1L:dim(quants)[3]
   } else {x[["variables"]]}
   pos <- get_var_set(vars, variables, dim(quants)[3])
 
