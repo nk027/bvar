@@ -11,9 +11,9 @@
 #' \code{\link{bv_fcast}}. Contains settings for the forecast.
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' @param n_draw Integer scalar. Number of draws in \emph{x} to use for
-#' forecasting. Defaults to the maximum number \emph{n_save}, i.e. the
-#' number of saved draws in \emph{x}.
+#' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
+#' for forecasting, others are dropped. Defaults to the maximum number - i.e.
+#' the number of saved draws in \emph{x}.
 #' @param newdata Optional numeric matrix or dataframe. Used to base the
 #' prediction on. Fitted values are used by default.
 #'
@@ -32,7 +32,7 @@
 #' x$fcast <- predict(x, horizon = 24L)
 #'
 #' # Speed up by lowering draws and use bv_fcast() to set options
-#' predict(x, bv_fcast(24L), n_draw = 1000L)
+#' predict(x, bv_fcast(24L), n_thin = 10L)
 #'
 #' # Update the confidence bands
 #' x$fcast <- predict(x$fcast, conf_bands = c(0.05, 0.16))
@@ -40,7 +40,7 @@
 #' # Use new data to calculate a prediction
 #' predict(x, newdata = matrix(rnorm(200), ncol = 2))
 #' }
-predict.bvar <- function(x, ..., conf_bands, n_draw, newdata) {
+predict.bvar <- function(x, ..., conf_bands, n_thin = 1L, newdata) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
@@ -58,14 +58,10 @@ predict.bvar <- function(x, ..., conf_bands, n_draw, newdata) {
       dots[[1]]
     } else {bv_fcast(...)}
 
-    # If n_draw is provided sample from stored iterations in x
-    if(missing(n_draw)) {
-      n_draw <- x[["meta"]][["n_save"]]
-      iters <- seq(1L, n_draw)
-    } else {
-      n_draw <- int_check(n_draw, min = 1, max = x[["meta"]][["n_save"]])
-      iters <- sample(x[["meta"]][["n_save"]], size = n_draw, replace = FALSE)
-    }
+    n_pres <- x[["meta"]][["n_save"]]
+    n_thin <- int_check(n_thin, min = 1, max = (n_pres / 10),
+                        "Problematic value for parameter `n_thin`.")
+    n_save <- int_check((n_pres / n_thin), min = 1)
 
     K <- x[["meta"]][["K"]]
     M <- x[["meta"]][["M"]]
@@ -84,18 +80,20 @@ predict.bvar <- function(x, ..., conf_bands, n_draw, newdata) {
     }
 
     fcast_store <- list(
-      "fcast" = array(NA, c(n_draw, fcast[["horizon"]], M)),
+      "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
       "setup" = fcast
     )
     class(fcast_store) <- "bvar_fcast"
 
-    for(i in seq_along(iters)) {
-      beta_comp <- get_beta_comp(beta[iters[i], , ], K, M, lags)
+    j <- 1
+    for(i in seq_len(n_save)) {
+      beta_comp <- get_beta_comp(beta[j, , ], K, M, lags)
       fcast_store[["fcast"]][i, , ] <- compute_fcast(
         Y = Y, K = K, M = M, N = N, lags = lags,
         horizon = fcast[["horizon"]],
         beta_comp = beta_comp,
-        beta_const = beta[iters[i], 1, ], sigma = sigma[iters[i], , ])
+        beta_const = beta[j, 1, ], sigma = sigma[j, , ])
+      j <- j + n_thin
     }
   }
 
@@ -104,8 +102,8 @@ predict.bvar <- function(x, ..., conf_bands, n_draw, newdata) {
 
   if(is.null(fcast_store[["quants"]]) || !missing(conf_bands)) {
     fcast_store <- if(!missing(conf_bands)) {
-      predict(fcast_store, conf_bands)
-    } else {predict(fcast_store, c(0.16))}
+      predict.bvar_fcast(fcast_store, conf_bands)
+    } else {predict.bvar_fcast(fcast_store, c(0.16))}
   }
 
   return(fcast_store)
