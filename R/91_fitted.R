@@ -1,10 +1,7 @@
-#' Fitted method for Bayesian VARs
+#' Fitted and residual methods for Bayesian VARs
 #'
-#' Retrieves / calculates forecasts for Bayesian VARs generated via
-#' \code{\link{bvar}}. If a forecast is already present and no settings are
-#' supplied it is simply retrieved. If no forecast is present or settings are
-#' provided one will be calculated ex-post. May also be used to update
-#' confidence bands.
+#' Calculates fitted values / resiudals for Bayesian VARs generated via
+#' \code{\link{bvar}}.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
@@ -14,11 +11,22 @@
 #' memory overflow.
 #' @param ... Not used.
 #'
-#' @return
+#' @return Returns a numeric array of class \code{bvar_fitted} /
+#' \code{bvar_resid} with fitted values and desired confidence bands.
 #' @export
 #'
 #' @examples
-fitted.bvar <- function(x, conf_bands = 0.16, n_thin = 100L, ...) {
+#' \dontrun{
+#' data <- matrix(rnorm(200), ncol = 2)
+#' x <- bvar(data, lags = 2)
+#'
+#' # Get fitted values and adjust confidence bands
+#' fitted(x, conf_bands = 0.10)
+#'
+#' # Only get the median and up the iterations
+#' fitted(x, conf_bands = 0.5, n_thin = 10L)
+#' }
+fitted.bvar <- function(x, conf_bands = 0.5, n_thin = 100L, ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
@@ -53,7 +61,56 @@ fitted.bvar <- function(x, conf_bands = 0.16, n_thin = 100L, ...) {
 
 #' @rdname fitted.bvar
 #' @export
+residuals.bvar <- function(x, conf_bands = 0.5, n_thin = 100L) {
+
+  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
+
+  fit <- fitted.bvar(x, conf_bands = conf_bands, n_thin = n_thin)
+
+  has_quants <- length(dim(fit)) == 3
+  if(has_quants) {
+    resids <- array(NA, dim(fit), dimnames(fit))
+    for(i in seq_len(dim(fit)[1])) {
+      resids[i, , ] <- x[["meta"]][["Y"]] - fit[i, , ]
+    }
+  } else {
+    resids <- x[["meta"]][["Y"]] - fit
+  }
+  class(resids) <- "bvar_resid"
+
+  return(resids)
+}
+
+
+#' @rdname fitted.bvar
+#' @export
 print.bvar_fitted <- function(x, ...) {
+
+  if(!inherits(x, "bvar_fitted")) {stop("Please provide a `bvar_fitted` object.")}
+  print_fitted(x, type = "fitted", ...)
+}
+
+
+#' @rdname fitted.bvar
+#' @export
+print.bvar_resid <- function(x, ...) {
+
+  if(!inherits(x, "bvar_resid")) {stop("Please provide a `bvar_resid` object.")}
+  print_fitted(x, type = "residual", ...)
+}
+
+
+#' Fitted and residual print method
+#'
+#' @param x Numeric array with residual or fitted values of a \code{bvar}
+#' object.
+#' @param type String indiciating whether \emph{x} contains fitted or resiudal
+#' values.
+#'
+#' @noRd
+print_fitted <- function(x, type = c("fitted", "residual"), ...) {
+
+  type <- match.arg(type)
 
   has_quants <- length(dim(x)) == 3
   if(has_quants) {
@@ -69,13 +126,14 @@ print.bvar_fitted <- function(x, ...) {
     tail <- x[(N - 2):N, ]
   }
 
-  cat("Fitted values of a Bayesian VAR with ", N, " observations and ",
+  cat(gsub("^(.)(.*)", "\\U\\1\\L\\2", type, perl = TRUE),
+      " values of a Bayesian VAR with ", N, " observations and ",
       M, " variables.\n", sep = "")
   if(has_quants) {
     cat("Computed confidence bands: ",
         paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")
   }
-  cat("Median fits:\n")
+  cat("Median values:\n")
   for(var in seq_len(M)) {
     cat("\tVariable ", var, ": ",
         paste0(round(head[, var], 2L), collapse = ", "), ", [...], ",
@@ -83,17 +141,4 @@ print.bvar_fitted <- function(x, ...) {
   }
 
   return(invisible(x))
-}
-
-
-residuals.bvar <- function(x, n_thin = 100L) {
-
-  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
-
-  fit <- fitted.bvar(x, conf_bands = 0.5, n_thin = n_thin)
-
-  resids <- x[["meta"]][["Y"]] - fit
-  class(resids) <- "bvar_resid"
-
-  return(resids)
 }

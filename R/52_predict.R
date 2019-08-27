@@ -17,7 +17,8 @@
 #' @param newdata Optional numeric matrix or dataframe. Used to base the
 #' prediction on. Fitted values are used by default.
 #'
-#' @return
+#' @return Returns a numeric array of class \code{bvar_fcast} with forecasts
+#' and desired confidence bands. See \code{\link{bvar}}.
 #' @export
 #'
 #' @examples
