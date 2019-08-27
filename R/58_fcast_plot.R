@@ -76,8 +76,18 @@ bv_plot_fcast <- function(
     x <- predict(x, conf_bands = conf_bands)
   }
 
-  M <- dim(x[["quants"]])[3]
-  P <- dim(x[["quants"]])[1]
+  has_quants <- length(dim(x[["quants"]])) == 3L
+  if(has_quants) {
+    M <- dim(x[["quants"]])[3]
+    P <- dim(x[["quants"]])[1]
+    quants <- x[["quants"]]
+  } else {
+    M <- dim(x[["quants"]])[2]
+    P <- 1
+    # Cheat day
+    quants <- array(NA, c(2, dim(x[["quants"]])))
+    quants[1, , ] <- x[["quants"]]
+  }
 
   if(is.null(variables)) {
     variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
@@ -92,7 +102,7 @@ bv_plot_fcast <- function(
     c(length(pos), 1)
   } else {c(1, length(pos))}
 
-  plot_fcast(x[["quants"]], variables, pos, col, mar, mfrow, ...)
+  plot_fcast(quants, variables, pos, col, mar, mfrow, ...)
 
   return(invisible(x))
 }

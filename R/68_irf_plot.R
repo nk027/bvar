@@ -75,9 +75,18 @@ bv_plot_irf <- function(
     x <- irf(x, conf_bands = conf_bands)
   }
 
-  M <- dim(x[["quants"]])[2]
-  P <- dim(x[["quants"]])[1]
-
+  has_quants <- length(dim(x[["quants"]])) == 4L
+  if(has_quants) {
+    M <- dim(x[["quants"]])[2]
+    P <- dim(x[["quants"]])[1]
+    quants <- x[["quants"]]
+  } else {
+    M <- dim(x[["quants"]])[1]
+    P <- 1
+    # Cheat day
+    quants <- array(NA, c(2, dim(x[["quants"]])))
+    quants[1, , , ] <- x[["quants"]]
+  }
 
   if(is.null(variables)) {
     variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
@@ -89,7 +98,7 @@ bv_plot_irf <- function(
 
   mfrow <- c(length(pos_res), length(pos_imp))
 
-  plot_irf(x[["quants"]], variables, pos_imp, pos_res, col, mar, mfrow, ...)
+  plot_irf(quants, variables, pos_imp, pos_res, col, mar, mfrow, ...)
 
   return(invisible(x))
 }
