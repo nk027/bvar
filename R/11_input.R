@@ -86,5 +86,8 @@ quantile_check <- function(conf_bands) {
     stop("Confidence bands misspecified.")
   }
 
+  # Allow median
+  if(length(conf_bands) == 1 && conf_bands == 0.5) {return(c(0.5))}
+
   return(sort(c(conf_bands, 0.5, (1 - conf_bands))))
 }

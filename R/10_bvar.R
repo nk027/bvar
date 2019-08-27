@@ -48,7 +48,7 @@
 #' }
 #'
 #' @references
-#'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}
+#'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
 #'
 #' @export
 #'
@@ -357,7 +357,8 @@ bvar <- function(
               "variables" = variables, "call" = cl)
 
   out[["meta"]] <- list("accepted" = accepted,
-                        "Y" = Y, "N" = N, "K" = K, "M" = M, "lags" = lags,
+                        "Y" = Y, "X" = X,
+                        "N" = N, "K" = K, "M" = M, "lags" = lags,
                         "n_draw" = n_draw, "n_burn" = n_burn, "n_save" = n_save,
                         "n_thin" = n_thin,
                         "timer" = timer)

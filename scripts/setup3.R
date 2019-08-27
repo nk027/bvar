@@ -9,13 +9,12 @@ sapply(list.files("R"), function(x) {
 
 # Simulated data ----------------------------------------------------------
 
-data <- matrix(rnorm(20000), ncol = 5)
-lags <- 5
+data <- matrix(rnorm(20000), ncol = 2)
+lags <- 1
 n_draw <- 10000
 n_burn <- 0
 n_thin <- 1
 fcast <- bv_fcast()
-irf <- bv_irf()
 verbose <- TRUE
 priors <- bv_priors()
 mh <- bv_mh()
