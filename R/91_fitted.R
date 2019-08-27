@@ -31,7 +31,6 @@ fitted.bvar <- function(x, conf_bands = 0.16, n_thin = 100L, ...) {
   N <- x[["meta"]][["N"]]
   K <- x[["meta"]][["K"]]
   M <- x[["meta"]][["M"]]
-  lags <- x[["meta"]][["lags"]]
   beta <- x[["beta"]]
 
   fit <- tryCatch(array(NA, c(n_save, N, M)), error = function(e) {
@@ -40,9 +39,7 @@ fitted.bvar <- function(x, conf_bands = 0.16, n_thin = 100L, ...) {
 
   j <- 1
   for(i in seq_len(n_save)) {
-    beta_comp <- get_beta_comp(beta[j, , ], K, M, lags)
-    fit[i, , ] <- (X[, -1] %*% beta_comp +
-      c(beta[j, 1, ], rep(0, M * (lags - 1))))[, 1L:M] # Constant
+    fit[i, , ] <- X %*% beta[j, , ]
     j <- j + n_thin
   }
 
@@ -89,11 +86,14 @@ print.bvar_fitted <- function(x, ...) {
 }
 
 
-residuals.bvar <- function(x, n_thin) {
+residuals.bvar <- function(x, n_thin = 100L) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
   fit <- fitted.bvar(x, conf_bands = 0.5, n_thin = n_thin)
 
+  resids <- x[["meta"]][["Y"]] - fit
+  class(resids) <- "bvar_resid"
 
+  return(resids)
 }
