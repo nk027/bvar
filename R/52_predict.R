@@ -53,7 +53,6 @@ predict.bvar <- function(x, ..., conf_bands, n_thin = 1L, newdata) {
 
   # If a forecast exists and no settings are provided
   if(is.null(fcast_store) || length(dots) != 0L || !missing(newdata)) {
-
     fcast <- if(length(dots) > 0 && inherits(dots[[1]], "bv_fcast")) {
       dots[[1]]
     } else {bv_fcast(...)}
@@ -96,6 +95,7 @@ predict.bvar <- function(x, ..., conf_bands, n_thin = 1L, newdata) {
       j <- j + n_thin
     }
   }
+  fcast_store[["setup"]][["M"]] <- x[["meta"]][["M"]]
 
 
   # Apply confidence bands ------------------------------------------------

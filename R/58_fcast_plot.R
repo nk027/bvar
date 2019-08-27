@@ -76,8 +76,8 @@ bv_plot_fcast <- function(
     x <- predict(x, conf_bands = conf_bands)
   }
 
-  M <- dim(x[["quants"]])[3]
-  P <- dim(x[["quants"]])[1]
+  M <- x[["setup"]][["M"]]
+  P <- x[["setup"]][["horizon"]]
 
   if(is.null(variables)) {
     variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
@@ -122,9 +122,10 @@ plot_fcast <- function(
 
   op <- par(mfrow = mfrow, mar = mar, ...)
   for(i in pos) {
-    ts.plot(t(as.matrix(x[, , i])),
+    ts.plot(if(length(dim(x)) == 3) {
+      t(as.matrix(x[, , i]))} else {as.matrix(x[, i])},
             col = col, lty = 1,
-            main = paste("Forecast", variables[i]))
+            main = paste("Forecast", variables[i]), ylab = "")
     abline(h = 0, lty = "dashed", col = "black")
     grid()
   }
