@@ -18,9 +18,11 @@
 #' rate of the Metropolis-Hastings step. See \code{\link{bv_mh}}.
 #' @param fcast \code{bv_fcast} object. Forecast options set with
 #' \code{\link{bv_fcast}}. May be set to \code{NULL} to skip forecasting.
+#' Forecasts may be calculated ex-post using \code{\link{predict}}.
 #' @param irf \code{bv_irf} object. Options regarding impulse responses, set via
 #' \code{\link{bv_irf}}. May be set to \code{NULL} to skip the calculation of
 #' impulse responses.
+#' Impulse responses may be calculated ex-post using \code{\link{irf}}.
 #' @param verbose Logical scalar. Whether to print intermediate results and
 #' progress.
 #' @param ... Not used.
