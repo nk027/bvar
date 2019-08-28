@@ -1,28 +1,30 @@
 #' Hierarchical Bayesian Vector Autoregression
 #'
-#' Hierarchical Bayesian estimation of VAR models in the fashion of Giannone et
-#' al. (2015).
+#' Hierarchical Bayesian estimation of Vector Autoregression (VAR) models in
+#' the fashion of Giannone et al. (2015).
 #'
-#' @param data Numeric matrix or dataframe. Observations need to be ordered
-#' from earliest to latest one.
+#' @author Nikolas Kuschnig, Lukas Vashold
+#'
+#' @param data Numeric matrix or dataframe. Note that observations need to be
+#' ordered from earliest to latest one.
 #' @param lags Integer scalar. Number of lags to apply to the data.
 #' @param n_draw Integer scalar. Number of total iterations for the model
 #' to cycle through.
 #' @param n_burn Integer scalar. Number of iterations to discard.
-#' @param n_thin Integer scalar. Option to reduce the number of stored
-#' iterations to every \emph{n_thin}th one. The number of saved iterations will
-#' thus be \code{(n_draw - n_burn) / n_thin}.
+#' @param n_thin Integer scalar. Provides the option of reducing the number of
+#' stored iterations to every \emph{n_thin}'th one. The number of saved
+#' iterations thus equals \code{(n_draw - n_burn) / n_thin}.
 #' @param priors \code{bv_priors} object containing priors and their settings.
 #' See \code{\link{bv_priors}}.
 #' @param mh \code{bv_metropolis} object with settings regarding the acceptance
 #' rate of the Metropolis-Hastings step. See \code{\link{bv_mh}}.
-#' @param fcast \code{bv_fcast} object. Forecast options set with
+#' @param fcast \code{bv_fcast} object of forecast options set with
 #' \code{\link{bv_fcast}}. May be set to \code{NULL} to skip forecasting.
-#' Forecasts may be calculated ex-post using \code{\link{predict}}.
-#' @param irf \code{bv_irf} object. Options regarding impulse responses, set via
-#' \code{\link{bv_irf}}. May be set to \code{NULL} to skip the calculation of
-#' impulse responses.
-#' Impulse responses may be calculated ex-post using \code{\link{irf}}.
+#' Forecasts may also be calculated ex-post using \code{\link{predict.bvar}}.
+#' @param irf \code{bv_irf} object with options regarding impulse responses and
+#' forecast error variance decompositions. Set via\code{\link{bv_irf}}. May be
+#' set to \code{NULL} to skip the calculation. May also be computed ex-post
+#' using \code{\link{irf.bvar}}.
 #' @param verbose Logical scalar. Whether to print intermediate results and
 #' progress.
 #' @param ... Not used.
@@ -30,27 +32,34 @@
 #' @return Returns a \code{bvar} object with the following elements:
 #' \itemize{
 #'   \item \code{beta} - Numeric array with saved draws from the posterior
-#'   distribution of the VAR coefficients.
+#'   distribution of the VAR coefficients. See \code{\link{coef.bvar}}.
 #'   \item \code{sigma} - Numeric array with saved draws from the posterior
-#'   distribution of the model's vcov-matrix.
+#'   distribution of the model's VCOV-matrix. See \code{\link{vcov.bvar}}.
 #'   \item \code{hyper} - Numeric matrix with saved draws from the posterior
-#'   distributions of hyperparameters of hierarchical priors.
-#'   \item \code{ml} - Numeric vector with the value of the posterior marginal
+#'   distributions of the hierarchical priors' hyperparameters.
+#'   \item \code{ml} - Numeric vector with the values of the posterior marginal
 #'   likelihood corresponding to each draw of hyperparameters and associated
 #'   VAR coefficients.
-#'   \item \code{optim} - List with outputs from \code{\link[stats]{optim}}.
+#'   \item \code{optim} - List with outputs from \code{\link[stats]{optim}},
+#'   which is used to find suitable starting values.
 #'   \item \code{prior} - \code{bv_priors} object. See \code{\link{bv_priors}}.
 #'   \item \code{call} - Call to the function. See \code{\link{match.call}}.
 #'   \item \code{meta} - List with meta information such as number of variables,
-#'   accepted draws, number of iterations et cetera.
+#'   accepted draws, number of iterations, et cetera.
+#'   \item \code{variables} - Character vector with column names of \emph{data}.
 #'   \item \code{fcast} - \code{bvar_fcast} object with posterior forecast
 #'   draws as well as the forecast's setup from \emph{fcast}.
 #'   \item \code{irf} - \code{bvar_irf} object with posterior impulse response
-#'   draws, as well as the impulse response setup from \emph{irf}.
+#'   and forecast error variance decomposition draws, as well as the setup
+#'   obtained from \emph{irf}.
 #' }
 #'
 #' @references
 #'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
+#'
+#' @seealso bv_priors bv_metropolis bv_fcast bv_irf predict.bvar irf.bvar
+#'
+#' @keywords VAR BVAR macroeconomics hierarchical prior vector autoregression
 #'
 #' @export
 #'
@@ -59,7 +68,7 @@
 #' @importFrom MASS mvrnorm
 #'
 #' @examples
-#' # Access the fred_qd dataset and transform it
+#' # Access a subset of the fred_qd dataset and transform it to be stationary
 #' data("fred_qd")
 #' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 #' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
@@ -71,11 +80,13 @@
 #'   n_draw = 500, n_burn = 400, n_thin = 2, verbose = FALSE
 #' )
 #'
-#' # Plot various outputs generated
 #' \donttest{
+#' # Check out some of the outputs generated
 #' plot(x)
-#' bv_plot_fcast(x)
-#' bv_plot_irf(x)
+#' predict(x)
+#' plot(predict(x))
+#' irf(x)
+#' plot(irf(x))
 #' }
 bvar <- function(
   data, lags,
@@ -188,6 +199,7 @@ bvar <- function(
       lapply(priors[["psi"]], function(x) x[i])
   }
 
+
   # Optimise ----------------------------------------------------------------
 
   opt <- optim(
@@ -279,7 +291,6 @@ bvar <- function(
       hyper_draw <- hyper_temp
       accepted_adj <- accepted_adj + 1
       if(i > 0) {accepted <- accepted + 1}
-
     }
 
     # Tune acceptance during burn-in phase
@@ -293,13 +304,13 @@ bvar <- function(
     }
 
     if(i > 0 && i %% n_thin == 0) {
+      # Store draws
 
-      # Stored iterations
       ml_store[(i / n_thin)] <- ml_draw[["log_ml"]]
       hyper_store[(i / n_thin), ] <- hyper_draw
 
       # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
-      # These need X and N including the dummy priors from `ml_draw`
+      # These need X and N including the dummy observations from `ml_draw`
       draws <- draw_post(X = ml_draw[["X"]], N = ml_draw[["N"]],
                          M = M, lags = lags, b = priors[["b"]],
                          psi = ml_draw[["psi"]], sse = ml_draw[["sse"]],
@@ -309,7 +320,7 @@ bvar <- function(
       beta_store[(i / n_thin), , ] <- draws[["beta_draw"]]
       sigma_store[(i / n_thin), , ] <- draws[["sigma_draw"]]
 
-      # Companion matrix is necessary for forecasts and impulse responses
+      # Companion matrix is used for both forecasts and impulse responses
       if(!is.null(fcast) || !is.null(irf)) {
         beta_comp <- get_beta_comp(beta = draws[["beta_draw"]], K, M, lags)
       }
@@ -353,17 +364,17 @@ bvar <- function(
 
   # Outputs -----------------------------------------------------------------
 
-  out <- list("beta" = beta_store, "sigma" = sigma_store,
-              "hyper" = hyper_store, "ml" = ml_store,
-              "optim" = opt, "priors" = priors,
-              "variables" = variables, "call" = cl)
-
-  out[["meta"]] <- list("accepted" = accepted,
-                        "Y" = Y, "X" = X,
-                        "N" = N, "K" = K, "M" = M, "lags" = lags,
-                        "n_draw" = n_draw, "n_burn" = n_burn, "n_save" = n_save,
-                        "n_thin" = n_thin,
-                        "timer" = timer)
+  out <- list(
+    "beta" = beta_store, "sigma" = sigma_store,
+    "hyper" = hyper_store, "ml" = ml_store,
+    "optim" = opt, "priors" = priors,
+    "variables" = variables, "call" = cl,
+    "meta" = list(
+      "accepted" = accepted, "timer" = timer,
+      "Y" = Y, "X" = X, "N" = N, "K" = K, "M" = M, "lags" = lags,
+      "n_draw" = n_draw, "n_burn" = n_burn, "n_save" = n_save, "n_thin" = n_thin
+    )
+  )
 
   if(!is.null(fcast)) {
     # Add confidence bands

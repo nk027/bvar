@@ -17,9 +17,7 @@ num_check <- function(
   msg = "Please check the numeric parameters.",
   fun = as.numeric) {
 
-  if(!is.numeric(x) || length(x) != 1 || x < min || x > max) {
-    stop(msg)
-  }
+  if(!is.numeric(x) || length(x) != 1 || x < min || x > max) {stop(msg)}
 
   return(fun(x))
 }
@@ -82,12 +80,15 @@ auto_psi <- function(x, lags) {
 #' @noRd
 quantile_check <- function(conf_bands) {
 
-  if(any(!is.numeric(conf_bands), conf_bands > 1, conf_bands < 0)) {
-    stop("Confidence bands misspecified.")
-  }
+  conf_bands <- sapply(conf_bands, num_check, min = 0 + 1e-16, max = 1 - 1e-16,
+                       msg = "Confidence bands misspecified.")
 
-  # Allow median
-  if(length(conf_bands) == 1 && conf_bands == 0.5) {return(c(0.5))}
+  # Allow only returning the median
+  if(length(conf_bands) == 1 && conf_bands == 0.5) {return(conf_bands)}
 
-  return(sort(c(conf_bands, 0.5, (1 - conf_bands))))
+  # Sort and make sure we have no duplicates (thank mr float)
+  quants <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
+  quants <- quants[!duplicated(round(quants, digits = 12L))]
+
+  return(quants)
 }

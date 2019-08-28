@@ -20,10 +20,13 @@
 #' @param alpha List constructed via \code{\link{bv_alpha}}.
 #' Possible settings are \emph{mode}, \emph{min} and \emph{max}. High
 #' values for \emph{mode} may affect invertibility of the augmented data matrix.
-#' @param psi Named list with elements \emph{scale}, \emph{shape} and
-#' \emph{mode}. Length needs to match the number of variables (i.e. columns) in
-#' the data. By default parameters are set automatically as the squareroot of
-#' the innovations variance after fitting an \eqn{AR(p)} model to the data.
+#' @param psi Named list with elements \emph{scale}, \emph{shape} of the prior
+#' as well as \emph{mode} and optionally \emph{min} and \emph{max}. The length
+#' of these needs to match the number of variables (i.e. columns) in the data.
+#' By default \emph{mode} is set automatically to the squareroot of the
+#' innovations variance after fitting an \eqn{AR(p)} model to the data. By
+#' default \emph{min} / \emph{max} are set to \emph{mode} divided / multiplied
+#' by 100.
 #' @param var Numeric scalar with the prior variance on the model's constant.
 #' @param b Numeric matrix with the prior mean.
 #' @param mode Numeric scalar (/vector). Mode (or the like) of the parameter.
