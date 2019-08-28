@@ -33,7 +33,7 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
       "fevd" = if(irf[["fevd"]]) {array(NA, c(n_save, M, M))} else {NULL},
       "setup" = irf,
-      "variables" = variables
+      "variables" = x[["variables"]]
     )
     class(irf_store) <- "bvar_irf"
 
@@ -82,6 +82,51 @@ irf.bvar_irf <- function(x, conf_bands) {
 
 #' @rdname irf.bvar
 #' @export
+fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
+
+  dots <- list(...)
+
+  irf_store <- x[["irf"]]
+
+  if(is.null(irf_store[["fevd"]]) || length(dots) != 0L) {
+
+    irf <- if(length(dots) > 0 && inherits(dots[[1]], "bv_irf")) {
+      dots[[1]]
+    } else {bv_irf(...)}
+    irf[["fevd"]] <- TRUE
+
+    irf_store <- irf.bvar(x, irf, n_thin = n_thin)
+  }
+
+  # Apply confidence bands ------------------------------------------------
+
+  fevd_store <- fevd.bv_fevd(irf_store[["fevd"]], conf_bands = conf_bands)
+
+  return(fevd_store)
+}
+
+
+#' @rdname irf.bvar
+#' @export
+fevd.bv_fevd <- function(x, conf_bands = 0.5) {
+
+  quantiles <- quantile_check(conf_bands)
+  fevd_store <- apply(x, c(2, 3), quantile, quantiles)
+  class(fevd_store) <- "bvar_fevd"
+
+  return(fevd_store)
+}
+
+
+#' @rdname irf.bvar
+#' @export
 irf <- function(x, ...) {
   UseMethod("irf", x)
+}
+
+
+#' @rdname irf.bvar
+#' @export
+fevd <- function(x, ...) {
+  UseMethod("fevd", x)
 }

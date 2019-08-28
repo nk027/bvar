@@ -55,7 +55,7 @@ compute_irf <- function(
   out <- list("irf" = irf_comp)
 
   # FEVD
-  if(fevd) {out[["fevd"]] <- fevd(irf_comp, M, horizon)}
+  if(fevd) {out[["fevd"]] <- compute_fevd(irf_comp, M, horizon)}
 
   return(out)
 }

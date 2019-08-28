@@ -82,7 +82,8 @@ predict.bvar <- function(x, ..., conf_bands, n_thin = 1L, newdata) {
 
     fcast_store <- list(
       "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
-      "setup" = fcast
+      "setup" = fcast,
+      "variables" = x[["variables"]]
     )
     class(fcast_store) <- "bvar_fcast"
 

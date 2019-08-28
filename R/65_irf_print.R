@@ -24,6 +24,21 @@ print.bvar_irf <- function(x, ...) {
       "Iterations: ", dim(x[["irf"]])[1], "\n", sep = "")
 }
 
+#' @rdname print.bvar
+#' @export
+print.bv_fevd <- function() {
+
+  if(!inherits(x, "bv_fevd")) {stop("Please provide a `bv_fevd` object.")}
+
+}
+
+print.bvar_fevd <- function() {
+
+  if(!inherits(x, "bvar_fevd")) {stop("Please provide a `bvar_fevd` object.")}
+
+
+}
+
 
 #' Impulse response print method
 #'
