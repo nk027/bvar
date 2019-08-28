@@ -16,6 +16,8 @@
 #' @param ... Optional lists of class \code{"bv_dummy"} with options for
 #' dummy priors. \strong{Must be assigned a name in the function call}. Created
 #' with \code{\link{bv_dummy}}.
+#' @param x Object of class \code{bv_priors}, \code{bv_dummy} or \code{bv_psi}.
+#' @param indent Logical scalar. Used internally to format printed outputs.
 #'
 #' @return Returns a named list of class \code{bv_priors} with options for
 #' \code{\link{bvar}}.

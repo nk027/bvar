@@ -3,9 +3,12 @@
 #' Retrieves coefficient / variance-covariance values for Bayesian VARs
 #' generated via \code{\link{bvar}}.
 #'
-#' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
+#' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
+#' @param digits Integer scalar. Fed to \code{\link[base]{round}} to format
+#' printed outputs.
+#' @param x Object of class \code{bvar_coefs} / \code{bvar_vcovs}.
 #' @param ... Not used.
 #'
 #' @return Returns a numeric array of class \code{bvar_coefs} /
@@ -23,12 +26,12 @@
 #' # Only get the median of the variance-covariance matrix
 #' vcov(x, conf_bands = 0.5)
 #' }
-coef.bvar <- function(x, conf_bands = 0.5, ...) {
+coef.bvar <- function(object, conf_bands = 0.5, ...) {
 
-  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
+  if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
   quantiles <- quantile_check(conf_bands)
-  coefs <- apply(x[["beta"]], c(2, 3), quantile, quantiles)
+  coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
   class(coefs) <- "bvar_coefs"
 
   return(coefs)
@@ -37,12 +40,12 @@ coef.bvar <- function(x, conf_bands = 0.5, ...) {
 
 #' @rdname coef.bvar
 #' @export
-vcov.bvar <- function(x, conf_bands = 0.5, ...) {
+vcov.bvar <- function(object, conf_bands = 0.5, ...) {
 
-  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
+  if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
   quantiles <- quantile_check(conf_bands)
-  vcovs <- apply(x[["sigma"]], c(2, 3), quantile, quantiles)
+  vcovs <- apply(object[["sigma"]], c(2, 3), quantile, quantiles)
   class(vcovs) <- "bvar_vcovs"
 
   return(vcovs)

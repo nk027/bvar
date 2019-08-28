@@ -15,6 +15,16 @@
 #' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
 #' for forecasting, others are dropped. Defaults to the maximum number - i.e.
 #' the number of saved draws in \emph{x}.
+#' @param object Object of class \code{bvar_irf}.
+#' @param vars_impulse Optional numeric or character vector. Used to subset the
+#' plot's impulses to certain variables by position or name (must be available).
+#' Defaults to \code{NULL}, i.e. all variables.
+#' @param vars_response Optional numeric or character vector. Used to subset the
+#' plot's responses to certain variables by position or name (must be
+#' available). Defaults to \code{NULL}, i.e. all variables.
+#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
+#' numeric outputs (i.e. the quantiles).
+
 #'
 #' @return Returns a list of class \code{bvar_irf} including IRFs, optionally
 #' FEVDs, and desired confidence bands. See \code{\link{bvar}}.
@@ -114,7 +124,7 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 #' @export
 #'
 #' @importFrom stats quantile
-irf.bvar_irf <- function(x, conf_bands) {
+irf.bvar_irf <- function(x, conf_bands, ...) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
 
@@ -157,7 +167,7 @@ fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
 
 #' @rdname irf.bvar
 #' @export
-fevd.bvar_irf <- function(x, conf_bands = 0.5) {
+fevd.bvar_irf <- function(x, conf_bands = 0.5, ...) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
 

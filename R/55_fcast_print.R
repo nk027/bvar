@@ -29,11 +29,6 @@ print.bvar_fcast <- function(x, vars = NULL, ...) {
 }
 
 
-#' Forecast print method
-#'
-#' @param x A \code{bv_fcast} or \code{bvar_fcast} object.
-#' @param ... Not used.
-#'
 #' @noRd
 print_fcast <- function(x, ...) {
 
@@ -47,27 +42,19 @@ print_fcast <- function(x, ...) {
 #'
 #' Print and return quantiles of forecasts from \code{\link{bvar}}.
 #'
-#' @param x A \code{bvar_fcast} object.
-#' @param vars Optional numeric or character vector. Used to subset the output
-#' to certain variables by position or name (must be available). Defaults to
-#' \code{NULL}, i.e. all variables.
-#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
-#' numeric outputs (i.e. the quantiles).
-#' @param ... Not used.
-#'
 #' @return Returns an array with the desired forecast quantiles invisibly.
 #'
 #' @export
 #'
 #' @rdname predict.bvar
-summary.bvar_fcast <- function(x, vars = NULL, digits = 2L, ...) {
+summary.bvar_fcast <- function(object, vars = NULL, digits = 2L, ...) {
 
-  print.bvar_fcast(x)
+  print.bvar_fcast(object)
 
-  quants <- x[["quants"]]
-  variables <- if(is.null(x[["variables"]])) {
+  quants <- object[["quants"]]
+  variables <- if(is.null(object[["variables"]])) {
     1L:dim(quants)[3]
-  } else {x[["variables"]]}
+  } else {object[["variables"]]}
   pos <- get_var_set(vars, variables, dim(quants)[3])
 
   cat("Forecast:\n")

@@ -9,8 +9,8 @@ bvar(data, lags, n_draw = 10000, n_burn = 5000, n_thin = 1,
   irf = bv_irf(), verbose = TRUE, ...)
 }
 \arguments{
-\item{data}{Numeric matrix or dataframe. Observations need to be ordered
-from earliest to latest one.}
+\item{data}{Numeric matrix or dataframe. Note that observations need to be
+ordered from earliest to latest one.}
 
 \item{lags}{Integer scalar. Number of lags to apply to the data.}
 
@@ -19,9 +19,9 @@ to cycle through.}
 
 \item{n_burn}{Integer scalar. Number of iterations to discard.}
 
-\item{n_thin}{Integer scalar. Option to reduce the number of stored
-iterations to every \emph{n_thin}th one. The number of saved iterations will
-thus be \code{(n_draw - n_burn) / n_thin}.}
+\item{n_thin}{Integer scalar. Provides the option of reducing the number of
+stored iterations to every \emph{n_thin}'th one. The number of saved
+iterations thus equals \code{(n_draw - n_burn) / n_thin}.}
 
 \item{priors}{\code{bv_priors} object containing priors and their settings.
 See \code{\link{bv_priors}}.}
@@ -29,12 +29,14 @@ See \code{\link{bv_priors}}.}
 \item{mh}{\code{bv_metropolis} object with settings regarding the acceptance
 rate of the Metropolis-Hastings step. See \code{\link{bv_mh}}.}
 
-\item{fcast}{\code{bv_fcast} object. Forecast options set with
-\code{\link{bv_fcast}}. May be set to \code{NULL} to skip forecasting.}
+\item{fcast}{\code{bv_fcast} object of forecast options set with
+\code{\link{bv_fcast}}. May be set to \code{NULL} to skip forecasting.
+Forecasts may also be calculated ex-post using \code{\link{predict.bvar}}.}
 
-\item{irf}{\code{bv_irf} object. Options regarding impulse responses, set via
-\code{\link{bv_irf}}. May be set to \code{NULL} to skip the calculation of
-impulse responses.}
+\item{irf}{\code{bv_irf} object with options regarding impulse responses and
+forecast error variance decompositions. Set via\code{\link{bv_irf}}. May be
+set to \code{NULL} to skip the calculation. May also be computed ex-post
+using \code{\link{irf.bvar}}.}
 
 \item{verbose}{Logical scalar. Whether to print intermediate results and
 progress.}
@@ -45,31 +47,34 @@ progress.}
 Returns a \code{bvar} object with the following elements:
 \itemize{
   \item \code{beta} - Numeric array with saved draws from the posterior
-  distribution of the VAR coefficients.
+  distribution of the VAR coefficients. See \code{\link{coef.bvar}}.
   \item \code{sigma} - Numeric array with saved draws from the posterior
-  distribution of the model's vcov-matrix.
+  distribution of the model's VCOV-matrix. See \code{\link{vcov.bvar}}.
   \item \code{hyper} - Numeric matrix with saved draws from the posterior
-  distributions of hyperparameters of hierarchical priors.
-  \item \code{ml} - Numeric vector with the value of the posterior marginal
+  distributions of the hierarchical priors' hyperparameters.
+  \item \code{ml} - Numeric vector with the values of the posterior marginal
   likelihood corresponding to each draw of hyperparameters and associated
   VAR coefficients.
-  \item \code{optim} - List with outputs from \code{\link[stats]{optim}}.
+  \item \code{optim} - List with outputs from \code{\link[stats]{optim}},
+  which is used to find suitable starting values.
   \item \code{prior} - \code{bv_priors} object. See \code{\link{bv_priors}}.
   \item \code{call} - Call to the function. See \code{\link{match.call}}.
   \item \code{meta} - List with meta information such as number of variables,
-  accepted draws, number of iterations et cetera.
+  accepted draws, number of iterations, et cetera.
+  \item \code{variables} - Character vector with column names of \emph{data}.
   \item \code{fcast} - \code{bvar_fcast} object with posterior forecast
   draws as well as the forecast's setup from \emph{fcast}.
   \item \code{irf} - \code{bvar_irf} object with posterior impulse response
-  draws, as well as the impulse response setup from \emph{irf}.
+  and forecast error variance decomposition draws, as well as the setup
+  obtained from \emph{irf}.
 }
 }
 \description{
-Hierarchical Bayesian estimation of VAR models in the fashion of Giannone et
-al. (2015).
+Hierarchical Bayesian estimation of Vector Autoregression (VAR) models in
+the fashion of Giannone et al. (2015).
 }
 \examples{
-# Access the fred_qd dataset and transform it
+# Access a subset of the fred_qd dataset and transform it to be stationary
 data("fred_qd")
 data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
@@ -81,13 +86,29 @@ x <- bvar(
   n_draw = 500, n_burn = 400, n_thin = 2, verbose = FALSE
 )
 
-# Plot various outputs generated
 \donttest{
+# Check out some of the outputs generated
 plot(x)
-bv_plot_fcast(x)
-bv_plot_irf(x)
+predict(x)
+plot(predict(x))
+irf(x)
+plot(irf(x))
 }
 }
 \references{
-Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}
+Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
 }
+\seealso{
+\code{\link{bv_priors}}; \code{\link{bv_mh}} \code{\link{bv_fcast}}
+\code{\link{bv_irf}} \code{\link{predict.bvar}} \code{\link{irf.bvar}}
+}
+\author{
+Nikolas Kuschnig, Lukas Vashold
+}
+\keyword{BVAR}
+\keyword{VAR}
+\keyword{autoregression}
+\keyword{hierarchical}
+\keyword{macroeconomics}
+\keyword{prior}
+\keyword{vector}

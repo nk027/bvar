@@ -41,11 +41,6 @@ print.bvar_fevd <- function(x, digits = 4L, ...) {
 }
 
 
-#' Impulse response print method
-#'
-#' @param x A \code{bv_irf} object.
-#' @param ... Not used.
-#'
 #' @noRd
 print_irf <- function(x, ...) {
 
@@ -88,33 +83,23 @@ print_irf <- function(x, ...) {
 #' Print and return quantiles of impulse response functions from
 #' \code{\link{bvar}}.
 #'
-#' @param x A \code{bvar_fcast} object.
-#' @param vars_impulse Optional numeric or character vector. Used to subset the
-#' plot's impulses to certain variables by position or name (must be available).
-#' Defaults to \code{NULL}, i.e. all variables.
-#' @param vars_response Optional numeric or character vector. Used to subset the
-#' plot's responses to certain variables by position or name (must be
-#' available). Defaults to \code{NULL}, i.e. all variables.
-#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
-#' numeric outputs (i.e. the quantiles).
-#' @param ... Not used.
-#'
 #' @return Returns an array with the desired impulse response quantiles
 #' invisibly.
 #'
 #' @export
 #'
 #' @rdname irf.bvar
-summary.bvar_irf <- function(x,
-                             vars_impulse = NULL, vars_response = NULL,
-                             digits = 2L, ...) {
+summary.bvar_irf <- function(
+  object,
+  vars_impulse = NULL, vars_response = NULL,
+  digits = 2L, ...) {
 
-  print.bvar_irf(x)
+  print.bvar_irf(object)
 
-  quants <- x[["quants"]]
-  variables <- if(is.null(x[["variables"]])) {
+  quants <- object[["quants"]]
+  variables <- if(is.null(object[["variables"]])) {
     1L:dim(quants)[2]
-  } else {x[["variables"]]}
+  } else {object[["variables"]]}
   pos_imp <- get_var_set(vars_impulse, variables, dim(quants)[2])
   pos_res <- get_var_set(vars_response, variables, dim(quants)[2])
 

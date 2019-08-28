@@ -168,7 +168,7 @@ bvar <- function(
     priors[["psi"]][["min"]] <- psi_temp[["min"]]
     priors[["psi"]][["max"]] <- psi_temp[["max"]]
   }
-  if(!all(vapply(priors[["psi"]][3:length(priors[["psi"]])],
+  if(!all(vapply(priors[["psi"]][1:3],
                  function(x) length(x) == M, logical(1)))) {
     stop("Dimensions of psi do not match the data.")
   }

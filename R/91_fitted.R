@@ -3,12 +3,13 @@
 #' Calculates fitted values / resiudals for Bayesian VARs generated via
 #' \code{\link{bvar}}.
 #'
-#' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
+#' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
-#' for forecasting, others are dropped. Defaults to \code{100L}, to prevent
-#' memory overflow.
+#' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{object}
+#' is used for forecasting, others are dropped. Defaults to \code{100L}, to
+#' prevent memory overflow.
+#' @param x Object of class \code{bvar_fitted} / \code{bvar_resid}.
 #' @param ... Not used.
 #'
 #' @return Returns a numeric array of class \code{bvar_fitted} /
@@ -29,20 +30,20 @@
 #' # Get residuals
 #' residuals(x)
 #' }
-fitted.bvar <- function(x, conf_bands = 0.5, n_thin = 100L, ...) {
+fitted.bvar <- function(object, conf_bands = 0.5, n_thin = 100L, ...) {
 
-  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
+  if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  n_pres <- x[["meta"]][["n_save"]]
+  n_pres <- object[["meta"]][["n_save"]]
   n_thin <- int_check(n_thin, min = 1, max = (n_pres / 10),
                       "Problematic value for parameter `n_thin`.")
   n_save <- int_check((n_pres / n_thin), min = 1)
 
-  X <- x[["meta"]][["X"]]
-  N <- x[["meta"]][["N"]]
-  K <- x[["meta"]][["K"]]
-  M <- x[["meta"]][["M"]]
-  beta <- x[["beta"]]
+  X <- object[["meta"]][["X"]]
+  N <- object[["meta"]][["N"]]
+  K <- object[["meta"]][["K"]]
+  M <- object[["meta"]][["M"]]
+  beta <- object[["beta"]]
 
   fit <- tryCatch(array(NA, c(n_save, N, M)), error = function(e) {
     stop(e, "Use `n_thin` to limit memory usage.")
@@ -64,20 +65,20 @@ fitted.bvar <- function(x, conf_bands = 0.5, n_thin = 100L, ...) {
 
 #' @rdname fitted.bvar
 #' @export
-residuals.bvar <- function(x, conf_bands = 0.5, n_thin = 100L) {
+residuals.bvar <- function(object, conf_bands = 0.5, n_thin = 100L, ...) {
 
-  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
+  if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  fit <- fitted.bvar(x, conf_bands = conf_bands, n_thin = n_thin)
+  fit <- fitted.bvar(object, conf_bands = conf_bands, n_thin = n_thin)
 
   has_quants <- length(dim(fit)) == 3
   if(has_quants) {
     resids <- array(NA, dim(fit), dimnames(fit))
     for(i in seq_len(dim(fit)[1])) {
-      resids[i, , ] <- x[["meta"]][["Y"]] - fit[i, , ]
+      resids[i, , ] <- object[["meta"]][["Y"]] - fit[i, , ]
     }
   } else {
-    resids <- x[["meta"]][["Y"]] - fit
+    resids <- object[["meta"]][["Y"]] - fit
   }
   class(resids) <- "bvar_resid"
 

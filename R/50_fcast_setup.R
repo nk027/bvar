@@ -10,6 +10,8 @@
 #' @param horizon Integer scalar. Horizon for which forecasts should be
 #' computed.
 #' @param conditional Logical scalar. Not yet implemented.
+#' @param x Object of class \code{bv_fcast}.
+#' @param ... Not used.
 #'
 #' @return Returns a named list of class \code{bv_fcast} with options for
 #' \code{\link{bvar}}.

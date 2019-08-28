@@ -38,7 +38,7 @@ dummy <- function(
 #' @param fun Function taking \emph{Y}, \emph{lags} and the prior's parameter
 #' \emph{par} to generate and return a named list with elements \emph{X} and
 #' \emph{Y} (numeric matrices).
-#' @inheritParams BVAR::bv_mn
+#' @inheritParams bv_mn
 #'
 #' @return Returns a named list of class \code{bv_dummy} for
 #' \code{\link{bv_priors}}.
