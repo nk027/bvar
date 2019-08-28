@@ -1,6 +1,3 @@
-
-fevd.bvar() <- function(x) {}
-
 summary.bvar() <- function(x) {
 
   print()

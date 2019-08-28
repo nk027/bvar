@@ -7,6 +7,8 @@ print.bv_irf <- function(x, ...) {
   cat("Object with settings for computing impulse responses in `bvar()`.\n")
 
   print_irf(x, ...)
+
+  return(invisible(x))
 }
 
 
@@ -22,6 +24,8 @@ print.bvar_irf <- function(x, ...) {
 
   cat("Variables: ", dim(x[["irf"]])[2], "\n",
       "Iterations: ", dim(x[["irf"]])[1], "\n", sep = "")
+
+  return(invisible(x))
 }
 
 #' @rdname print.bvar
@@ -30,13 +34,14 @@ print.bv_fevd <- function() {
 
   if(!inherits(x, "bv_fevd")) {stop("Please provide a `bv_fevd` object.")}
 
+  return(invisible(x))
 }
 
 print.bvar_fevd <- function() {
 
   if(!inherits(x, "bvar_fevd")) {stop("Please provide a `bvar_fevd` object.")}
 
-
+  return(invisible(x))
 }
 
 

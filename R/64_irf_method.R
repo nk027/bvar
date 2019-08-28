@@ -84,6 +84,8 @@ irf.bvar_irf <- function(x, conf_bands) {
 #' @export
 fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
 
+  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
+
   dots <- list(...)
 
   irf_store <- x[["irf"]]
@@ -105,10 +107,25 @@ fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
   return(fevd_store)
 }
 
+#' @rdname irf.bvar
+#' @export
+fevd.bvar_irf <- function(x, conf_bands = 0.5) {
+
+  if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
+
+  if(!is.null(x[["fevd"]])) {
+    return(fevd.bv_fevd(x[["fevd"]], conf_bands))
+  } else {
+    stop("No `fevd`s found. Compute some by calling `fevd()` on a `bvar` object.")
+  }
+}
+
 
 #' @rdname irf.bvar
 #' @export
 fevd.bv_fevd <- function(x, conf_bands = 0.5) {
+
+  if(!inherits(x, "bv_fevd")) {stop("Please provide a `bv_fevd` object.")}
 
   quantiles <- quantile_check(conf_bands)
   fevd_store <- apply(x, c(2, 3), quantile, quantiles)

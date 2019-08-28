@@ -88,6 +88,8 @@ print.bvar_fitted <- function(x, ...) {
 
   if(!inherits(x, "bvar_fitted")) {stop("Please provide a `bvar_fitted` object.")}
   print_fitted(x, type = "fitted", ...)
+
+  return(invisible(x))
 }
 
 
@@ -97,6 +99,8 @@ print.bvar_resid <- function(x, ...) {
 
   if(!inherits(x, "bvar_resid")) {stop("Please provide a `bvar_resid` object.")}
   print_fitted(x, type = "residual", ...)
+
+  return(invisible(x))
 }
 
 
