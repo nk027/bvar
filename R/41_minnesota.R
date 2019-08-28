@@ -119,8 +119,8 @@ bv_psi <- function(scale = 0.004, shape = 0.004, mode = "auto",
     if(any(0 >= min, min >= max)) {stop("Boundaries misspecified.")}
   }
 
-  out <- list("scale" = scale, "shape" = shape,
-              "mode" = mode, "min" = min, "max" = max)
+  out <- list("mode" = mode, "min" = min, "max" = max,
+              "coef" = list("k" = shape, "theta" = scale))
   class(out) <- "bv_psi"
 
   return(out)

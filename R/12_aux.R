@@ -152,7 +152,7 @@ get_var_set <- function(vars, variables, M) {
 #' BVAR:::log_igamma_pdf(5, 0.004, 0.004)
 #'
 #' @noRd
-log_igamma_pdf <- function(x, scale, shape){
+log_ig_pdf <- function(x, shape, scale){
 
   return(scale * log(shape) - (scale + 1) * log(x) - shape / x - lgamma(scale))
 }

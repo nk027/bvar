@@ -111,11 +111,12 @@ bv_ml <- function(
     ))
 
   if(any(priors[["hyper"]] == "psi")) {
+    psi_coef <- priors[["psi"]][["coef"]]
     log_ml <- log_ml +
       sum(sapply(names(pars)[grep("^psi[0-9]*", names(pars))],
-                 function(x) {log_igamma_pdf(pars[[x]],
-                                             scale = priors[["psi"]][["scale"]],
-                                             shape = priors[["psi"]][["shape"]]
+                 function(x) {log_ig_pdf(pars[[x]],
+                                         shape = psi_coef[["k"]],
+                                         scale = psi_coef[["theta"]]
                  )}
       ))
   }

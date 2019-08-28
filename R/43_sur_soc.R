@@ -1,8 +1,6 @@
-#' Sum-of-coefficients and single-unit-root prior functions
+#' Sum-of-coefficients and single-unit-root prior creation functions
 #'
-#' @param Y Numeric scalar. Mode (or the like) of the parameter.
-#' @param lags Numeric scalar. Minimum allowed value.
-#' @param par Numeric scalar. Maximum allowed value.
+#' @param par Numeric scalar. Parameter value of the prior.
 #'
 #' @return Returns a list with \emph{Y} and \emph{X} extended with the
 #' respective dummy observations.
@@ -12,10 +10,9 @@
   soc <- if(lags == 1) {diag(Y[1, ]) / par} else {
     diag(colMeans(Y[1:lags, ])) / par
   }
-  Y_soc <- soc
   X_soc <- cbind(rep(0, ncol(Y)), matrix(rep(soc, lags), nrow = ncol(Y)))
 
-  return(list("Y" = Y_soc, "X" = X_soc))
+  return(list("Y" = soc, "X" = X_soc))
 }
 
 
@@ -24,10 +21,9 @@
   sur <- if(lags == 1) {Y[1, ] / par} else {
     colMeans(Y[1:lags, ]) / par
   }
-  Y_sur <- sur
   X_sur <- c(1 / par, rep(sur, lags))
 
-  return(list("Y" = Y_sur, "X" = X_sur))
+  return(list("Y" = sur, "X" = X_sur))
 }
 
 
