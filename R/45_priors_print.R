@@ -9,15 +9,18 @@ print.bv_priors <- function(x, ...) {
       paste0(x[["hyper"]], collapse = ", "),
       "\n", sep = "")
   if(!is.null(x[["lambda"]])) {
-    cat("\tlambda:\n"); print(x[["lambda"]])
-    cat("\talpha:\n"); print(x[["alpha"]])
-    cat("\tpsi:\n"); print(x[["psi"]])
-    cat("\tvariance:", x[["var"]], "\n")
+    cat("Minnesota prior:\nlambda:\n"); print(x[["lambda"]], indent = TRUE)
+    cat("alpha:\n"); print(x[["alpha"]], indent = TRUE)
+    cat("psi:\n"); print(x[["psi"]], indent = TRUE)
+    cat("variance:", x[["var"]], "\n")
   }
   dummy_pos <- !names(x) %in% c("lambda", "alpha", "psi", "hyper", "var", "b")
   if(any(dummy_pos)) {
+    cat("Dummy prior(s):\n")
     dummies <- names(x)[dummy_pos]
-    for(dummy in dummies) {cat("\t", dummy, ":\n", sep = ""); print(x[[dummy]])}
+    for(dummy in dummies) {
+      cat(dummy, ":\n", sep = ""); print(x[[dummy]], indent = TRUE)
+    }
   }
 
   return(invisible(x))
@@ -26,12 +29,12 @@ print.bv_priors <- function(x, ...) {
 
 #' @rdname bv_dummy
 #' @export
-print.bv_dummy <- function(x, ...) {
+print.bv_dummy <- function(x, indent = FALSE, ...) {
 
   if(!inherits(x, "bv_dummy")) {stop("Please provide a `bv_dummy` object.")}
 
   print_priors(x, ...)
-  cat("Mode / Bounds = ",
+  cat(if(indent) {"\t"}, "Mode / Bounds: ",
       x[["mode"]], " / [", x[["min"]], ", ", x[["max"]], "]\n", sep = "")
 
   return(invisible(x))
@@ -40,13 +43,13 @@ print.bv_dummy <- function(x, ...) {
 
 #' @rdname bv_mn
 #' @export
-print.bv_psi <- function(x, ...) {
+print.bv_psi <- function(x, indent = FALSE, ...) {
 
   if(!inherits(x, "bv_psi")) {stop("Please provide a `bv_psi` object.")}
 
   print_priors(x, ...)
   for(i in seq_along(x[["mode"]])) {
-    cat("#", i, " Mode / Bounds = ",
+    cat(if(indent) {"\t"}, "#", i, " Mode / Bounds: ",
         x[["mode"]][i], " / [", x[["min"]][i], ", ", x[["max"]][i], "]\n",
         sep = "")
   }
@@ -61,9 +64,9 @@ print.bv_psi <- function(x, ...) {
 #' @param ... Not used.
 #'
 #' @noRd
-print_priors <- function(x, ...) {
+print_priors <- function(x, indent = FALSE, ...) {
 
-  cat("Shape / Scale = ",
+  cat(if(indent) {"\t"}, "Shape / Scale: ",
       round(x[["coef"]][["k"]], 3L), " / ",
       round(x[["coef"]][["theta"]], 3L), "\n", sep = "")
 
