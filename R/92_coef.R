@@ -51,11 +51,11 @@ vcov.bvar <- function(x, conf_bands = 0.5, ...) {
 
 #' @rdname coef.bvar
 #' @export
-print.bvar_coefs <- function(x, ...) {
+print.bvar_coefs <- function(x, digits = 3L, ...) {
 
   if(!inherits(x, "bvar_coefs")) {stop("Please provide a `bvar_coefs` object.")}
 
-  print_coefs(x, type = "coefficient", ...)
+  print_coefs(x, digits, type = "coefficient", ...)
 
   return(invisible(x))
 }
@@ -63,11 +63,11 @@ print.bvar_coefs <- function(x, ...) {
 
 #' @rdname coef.bvar
 #' @export
-print.bvar_vcovs <- function(x, ...) {
+print.bvar_vcovs <- function(x, digits = 3L, ...) {
 
   if(!inherits(x, "bvar_vcovs")) {stop("Please provide a `bvar_vcovs` object.")}
 
-  print_coefs(x, type = "variance-covariance", ...)
+  print_coefs(x, digits, type = "variance-covariance", ...)
 
   return(invisible(x))
 }
@@ -81,8 +81,11 @@ print.bvar_vcovs <- function(x, ...) {
 #' variance-covariance values.
 #'
 #' @noRd
-print_coefs <- function(x, digits = 2L,
-                        type = c("coefficient", "variance-covariance"), ...) {
+print_coefs <- function(
+  x, digits = 3L,
+  type = c("coefficient", "variance-covariance",
+           "forecast error variance decomposition"),
+  ...) {
 
   type <- match.arg(type)
 

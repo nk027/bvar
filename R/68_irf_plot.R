@@ -1,13 +1,13 @@
 #' Impulse response plot
 #'
-#' Plotting method for impulse responses obtained from \code{\link{bvar}}.
-#' Impulse responses of all or a subset of the available variables can be
-#' plotted.
+#' Plotting method for impulse responses obtained from \code{\link{bvar}} or
+#'  \code{\link{irf.bvar}}. Impulse responses of all or a subset of the
+#'  available variables can be plotted.
 #'
 #' @param x A \code{bvar} / \code{bvar_irf} object, obtained from
-#' \code{\link{bvar}}.
-#' @param conf_bands Numeric vector of desired confidence bands. E.g. for bands
-#' at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
+#' \code{\link{bvar}} or \code{\link{irf.bvar}}.
+#' @param conf_bands Deprecated. Use \code{\link{irf.bvar}}. Numeric vector
+#' of desired confidence bands.
 #' @param vars_impulse Optional numeric or character vector. Used to subset the
 #' plot's impulses to certain variables by position or name (must be available).
 #' Defaults to \code{NULL}, i.e. all variables.

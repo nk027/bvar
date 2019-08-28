@@ -1,3 +1,48 @@
+#' Impulse response and forecast error methods for Bayesian VARs
+#'
+#' Retrieves / calculates impulse response functions (IRFs) / forecast error
+#' variance decompositions (FEVDs) for Bayesian VARs generated via
+#' \code{\link{bvar}}. If the object is already present and no settings are
+#' supplied it is simply retrieved. Otherwise it will be calculated ex-post.
+#' Note that FEVDs require the presence / calculation of IRFs. May also be used
+#' to update confidence bands.
+#'
+#' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
+#' @param ... A \code{bv_fcast} object or parameters to be fed into
+#' \code{\link{bv_fcast}}. Contains settings for the forecast.
+#' @param conf_bands Numeric vector of desired confidence bands to apply.
+#' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
+#' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
+#' for forecasting, others are dropped. Defaults to the maximum number - i.e.
+#' the number of saved draws in \emph{x}.
+#'
+#' @return Returns a list of class \code{bvar_irf} including IRFs, optionally
+#' FEVDs, and desired confidence bands. See \code{\link{bvar}}.
+#' Note that \code{fevd} only returns a numeric array of FEVDs and desired
+#' confidence bands.
+#'
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' data <- matrix(rnorm(200), ncol = 2)
+#' x <- bvar(data, lags = 2)
+#'
+#' # Access forecast and update new confidence bands
+#' predict(x, conf_bands = 0.01)
+#'
+#' # Compute and store a longer forecast
+#' x$fcast <- predict(x, horizon = 24L)
+#'
+#' # Speed up by lowering draws and use bv_fcast() to set options
+#' predict(x, bv_fcast(24L), n_thin = 10L)
+#'
+#' # Update the confidence bands
+#' x$fcast <- predict(x$fcast, conf_bands = c(0.05, 0.16))
+#'
+#' # Use new data to calculate a prediction
+#' predict(x, newdata = matrix(rnorm(200), ncol = 2))
+#' }
 irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
@@ -67,6 +112,8 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 
 #' @rdname irf.bvar
 #' @export
+#'
+#' @importFrom stats quantile
 irf.bvar_irf <- function(x, conf_bands) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
@@ -102,10 +149,11 @@ fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
 
   # Apply confidence bands ------------------------------------------------
 
-  fevd_store <- fevd.bv_fevd(irf_store[["fevd"]], conf_bands = conf_bands)
+  fevd_store <- fevd.bvar_irf(irf_store, conf_bands = conf_bands)
 
   return(fevd_store)
 }
+
 
 #' @rdname irf.bvar
 #' @export
@@ -113,24 +161,12 @@ fevd.bvar_irf <- function(x, conf_bands = 0.5) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
 
-  if(!is.null(x[["fevd"]])) {
-    return(fevd.bv_fevd(x[["fevd"]], conf_bands))
-  } else {
+  if(is.null(x[["fevd"]])) {
     stop("No `fevd`s found. Compute some by calling `fevd()` on a `bvar` object.")
   }
-}
-
-
-#' @rdname irf.bvar
-#' @export
-#'
-#' @importFrom stats quantile
-fevd.bv_fevd <- function(x, conf_bands = 0.5) {
-
-  if(!inherits(x, "bv_fevd")) {stop("Please provide a `bv_fevd` object.")}
 
   quantiles <- quantile_check(conf_bands)
-  fevd_store <- apply(x, c(2, 3), quantile, quantiles)
+  fevd_store <- apply(x[["fevd"]], c(2, 3), quantile, quantiles)
   class(fevd_store) <- "bvar_fevd"
 
   return(fevd_store)

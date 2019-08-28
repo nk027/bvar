@@ -21,8 +21,5 @@ compute_fevd <- function(irf_comp, M, horizon) {
     fevd_comp[, , i] <- fevd_comp[, , i] / denm
   }
 
-  out <- apply(fevd_comp, c(1, 2), mean, na.rm = TRUE)
-  class(out) <- "bv_fevd"
-
-  return(out)
+  return(apply(fevd_comp, c(1, 2), mean, na.rm = TRUE))
 }

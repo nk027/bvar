@@ -1,4 +1,4 @@
-#' @rdname print.bvar
+#' @rdname bv_fcast
 #' @export
 print.bv_fcast <- function(x, ...) {
 
@@ -12,7 +12,7 @@ print.bv_fcast <- function(x, ...) {
 }
 
 
-#' @rdname print.bvar
+#' @rdname predict.bvar
 #' @export
 print.bvar_fcast <- function(x, vars = NULL, ...) {
 
@@ -57,7 +57,9 @@ print_fcast <- function(x, ...) {
 #'
 #' @return Returns an array with the desired forecast quantiles invisibly.
 #'
-#' @noRd
+#' @export
+#'
+#' @rdname predict.bvar
 summary.bvar_fcast <- function(x, vars = NULL, digits = 2L, ...) {
 
   print.bvar_fcast(x)

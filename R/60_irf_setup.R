@@ -1,10 +1,10 @@
 #' Impulse response settings
 #'
 #' Provide settings for the computation of impulse responses to
-#' \code{\link{bvar}}. Allows setting the horizon for which impulse responses
-#' should be computed, whether or not forecast error variance decompositions
-#' (FEVDs) should be computed and, if and what kind of identification should
-#' be used.
+#' \code{\link{bvar}}, \code{\link{irf.bvar}} or\code{\link{fevd.bvar}}. Allows
+#' setting the horizon for which impulse responses should be computed, whether
+#' or not forecast error variance decompositions (FEVDs) should be computed
+#' and if and what kind of identification should be used.
 #'
 #' Identification can be performed via Cholesky decomposition and sign
 #' restrictions. The algorithm for generating suitable sign restrictions

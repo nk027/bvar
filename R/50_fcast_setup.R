@@ -1,11 +1,11 @@
 #' Forecast settings
 #'
-#' Provide forecast settings to \code{\link{bvar}}. Allows adjusting the horizon
-#' of the forecast.
+#' Provide forecast settings to \code{\link{bvar}} or
+#' \code{\link{predict.bvar}}. Allows adjusting the horizon of the forecast.
 #'
 #' As of now only unconditional forecasts are implemented and conditional must
-#' be set to FALSE. Conditional forecasts will require further settings, such
-#' as variable paths.
+#' be set to \code{FALSE}. Conditional forecasts will require further options,
+#' such as variable paths.
 #'
 #' @param horizon Integer scalar. Horizon for which forecasts should be
 #' computed.
@@ -13,10 +13,11 @@
 #'
 #' @return Returns a named list of class \code{bv_fcast} with options for
 #' \code{\link{bvar}}.
+#'
 #' @export
 #'
 #' @examples
-#' # Set the forecast-horizon to 20 time periods
+#' # Set the forecast-horizon to 20 time periods instead of 12
 #' bv_fcast(horizon = 20)
 bv_fcast <- function(
   horizon = 12,

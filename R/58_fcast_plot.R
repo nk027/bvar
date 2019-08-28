@@ -1,7 +1,8 @@
 #' Forecast plot
 #'
-#' Plotting method for forecasts obtained from \code{\link{bvar}}. Forecasts
-#' of all or a subset of the available variables can be plotted.
+#' Plotting method for forecasts obtained from \code{\link{bvar}} or
+#' \code{\link{predict.bvar}}. Forecasts of all or a subset of the available
+#' variables can be plotted.
 #'
 #' @param x A \code{bvar} / \code{bvar_fcast} object, obtained from
 #' \code{\link{bvar}}.

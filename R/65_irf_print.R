@@ -1,4 +1,4 @@
-#' @rdname print.bvar
+#' @rdname irf.bvar
 #' @export
 print.bv_irf <- function(x, ...) {
 
@@ -12,7 +12,7 @@ print.bv_irf <- function(x, ...) {
 }
 
 
-#' @rdname print.bvar
+#' @rdname irf.bvar
 #' @export
 print.bvar_irf <- function(x, ...) {
 
@@ -28,18 +28,14 @@ print.bvar_irf <- function(x, ...) {
   return(invisible(x))
 }
 
-#' @rdname print.bvar
+
+#' @rdname irf.bvar
 #' @export
-print.bv_fevd <- function() {
-
-  if(!inherits(x, "bv_fevd")) {stop("Please provide a `bv_fevd` object.")}
-
-  return(invisible(x))
-}
-
-print.bvar_fevd <- function() {
+print.bvar_fevd <- function(x, digits = 4L, ...) {
 
   if(!inherits(x, "bvar_fevd")) {stop("Please provide a `bvar_fevd` object.")}
+
+  print_coefs(x, digits, type = "forecast error variance decomposition", ...)
 
   return(invisible(x))
 }
@@ -106,7 +102,9 @@ print_irf <- function(x, ...) {
 #' @return Returns an array with the desired impulse response quantiles
 #' invisibly.
 #'
-#' @noRd
+#' @export
+#'
+#' @rdname irf.bvar
 summary.bvar_irf <- function(x,
                              vars_impulse = NULL, vars_response = NULL,
                              digits = 2L, ...) {
