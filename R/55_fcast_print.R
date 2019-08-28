@@ -4,7 +4,7 @@ print.bv_fcast <- function(x, ...) {
 
   if(!inherits(x, "bv_fcast")) {stop("Please provide a `bv_fcast` object.")}
 
-  cat("Object with settings for computing forecasts in `bvar()`.\n")
+  cat("Object with settings for computing forecasts.\n")
 
   print_fcast(x, ...)
 

@@ -12,7 +12,7 @@
 #' @param ... Not used.
 #'
 #' @return Returns a numeric array of class \code{bvar_fitted} /
-#' \code{bvar_resid} with fitted values and desired confidence bands.
+#' \code{bvar_resid} with desired values and confidence bands.
 #' @export
 #'
 #' @examples
@@ -25,6 +25,9 @@
 #'
 #' # Only get the median and up the iterations
 #' fitted(x, conf_bands = 0.5, n_thin = 10L)
+#'
+#' # Get residuals
+#' residuals(x)
 #' }
 fitted.bvar <- function(x, conf_bands = 0.5, n_thin = 100L, ...) {
 
@@ -87,6 +90,7 @@ residuals.bvar <- function(x, conf_bands = 0.5, n_thin = 100L) {
 print.bvar_fitted <- function(x, ...) {
 
   if(!inherits(x, "bvar_fitted")) {stop("Please provide a `bvar_fitted` object.")}
+
   print_fitted(x, type = "fitted", ...)
 
   return(invisible(x))
@@ -98,6 +102,7 @@ print.bvar_fitted <- function(x, ...) {
 print.bvar_resid <- function(x, ...) {
 
   if(!inherits(x, "bvar_resid")) {stop("Please provide a `bvar_resid` object.")}
+
   print_fitted(x, type = "residual", ...)
 
   return(invisible(x))
@@ -112,7 +117,7 @@ print.bvar_resid <- function(x, ...) {
 #' values.
 #'
 #' @noRd
-print_fitted <- function(x, type = c("fitted", "residual"), ...) {
+print_fitted <- function(x, digits = 2L, type = c("fitted", "residual"), ...) {
 
   type <- match.arg(type)
 
@@ -140,8 +145,8 @@ print_fitted <- function(x, type = c("fitted", "residual"), ...) {
   cat("Median values:\n")
   for(var in seq_len(M)) {
     cat("\tVariable ", var, ": ",
-        paste0(round(head[, var], 2L), collapse = ", "), ", [...], ",
-        paste0(round(tail[, var], 2L), collapse = ", "), "\n", sep = "")
+        paste0(round(head[, var], digits), collapse = ", "), ", [...], ",
+        paste0(round(tail[, var], digits), collapse = ", "), "\n", sep = "")
   }
 
   return(invisible(x))

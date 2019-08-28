@@ -4,7 +4,7 @@ print.bv_irf <- function(x, ...) {
 
   if(!inherits(x, "bv_irf")) {stop("Please provide a `bv_irf` object.")}
 
-  cat("Object with settings for computing impulse responses in `bvar()`.\n")
+  cat("Object with settings for computing impulse responses.\n")
 
   print_irf(x, ...)
 

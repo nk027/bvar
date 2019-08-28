@@ -123,6 +123,8 @@ fevd.bvar_irf <- function(x, conf_bands = 0.5) {
 
 #' @rdname irf.bvar
 #' @export
+#'
+#' @importFrom stats quantile
 fevd.bv_fevd <- function(x, conf_bands = 0.5) {
 
   if(!inherits(x, "bv_fevd")) {stop("Please provide a `bv_fevd` object.")}
