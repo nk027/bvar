@@ -30,17 +30,16 @@ predict(run1, bv_fcast(8L), n_thin = 4L)
 run2$fcast <- predict(run2, horizon = 14L)
 
 bv_plot_fcast(run1, vars = c(1, 2))
-bv_plot_fcast(run2, vars = c("a", "c"), variables = c("a", "b", "c", "d", "e"))
-bv_plot_fcast(run2, vars = c(1, 3))
+bv_plot_fcast(run2, vars = c("a"), variables = c("a", "b"))
+bv_plot_fcast(run2, vars = c(1))
 
 plot(run1$fcast)
 plot(run2$fcast)
 
-run1$fcast$variables <- run2$fcast$variables <- c("a", "b", "c", "d", "e")
+run1$fcast$variables <- run2$fcast$variables <- c("a", "b")
 
 plot(predict(run1), vars = c("b"))
 plot(predict(run2, conf_bands = 0.5), vars = 2)
-
 plot(predict(run2, conf_bands = c(0.5)))
 plot(predict(run2, conf_bands = c(0.49)))
 plot(predict(run2, n_thin = 10))
@@ -66,3 +65,11 @@ plot(irf(run2, conf_bands = 0.5))
 
 summary(irf(run2, conf_bands = 0.01))
 summary(run2$irf)
+
+coef(run1)
+vcov(run1)
+fevd(run1)
+
+coef(run1, 0.1)
+vcov(run1, 0.2)
+fevd(run1, conf_bands = c(0.1, 0.2))
