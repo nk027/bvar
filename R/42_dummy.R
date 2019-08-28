@@ -1,10 +1,3 @@
-#' Dummy prior settings
-#'
-#' @param mode Numeric scalar. Mode (or the like) of the parameter.
-#' @param min Numeric scalar. Minimum allowed value.
-#' @param max Numeric scalar. Maximum allowed value.
-#' @param ... Other possible parameters such as \emph{sd} or \emph{fun}.
-#'
 #' @return Returns a list of class \code{bv_dummy.}
 #'
 #' @noRd
@@ -16,7 +9,7 @@ dummy <- function(
   if(0 >= min || min >= max) {stop("Boundaries misspecified.")}
   if(mode < 0) {stop("Parameter misspecified.")}
 
-  out <- list(mode = mode, min = min, max = max, ...)
+  out <- list("mode" = mode, "min" = min, "max" = max, ...)
   class(out) <- "bv_dummy"
 
   return(out)
@@ -42,19 +35,18 @@ dummy <- function(
 #' dummy-observations on top of the data matrix. They are readily available
 #' via the shorthand functions \code{\link{bv_soc}} and \code{\link{bv_sur}}.
 #'
-#' @param mode Numeric scalar. Mode (or the like) of the parameter.
-#' @param sd Numeric scalar. Standard deviation (or the like) of the parameter.
-#' @param min Numeric scalar. Minimum allowed value.
-#' @param max Numeric scalar. Maximum allowed value.
 #' @param fun Function taking \emph{Y}, \emph{lags} and the prior's parameter
 #' \emph{par} to generate and return a named list with elements \emph{X} and
 #' \emph{Y} (numeric matrices).
+#' @inheritParams BVAR::bv_mn
 #'
 #' @return Returns a named list of class \code{bv_dummy} for
 #' \code{\link{bv_priors}}.
 #'
 #' @references
 #'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
+#'
+#' @seealso \code{\link{bv_priors}}; \code{\link{bv_mn}}
 #'
 #' @export
 #'
@@ -69,7 +61,6 @@ dummy <- function(
 #'
 #'   return(list("Y" = Y_soc, "X" = X_soc))
 #' }
-#'
 #' soc <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_soc)
 #'
 #' # Create a single-unit-root prior
@@ -85,7 +76,7 @@ dummy <- function(
 #'
 #' sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
 #'
-#' # Adding them to the prior list with `bv_prior()`
+#' # Adding them to the prior list with `bv_priors()`
 #' priors_dum <- bv_priors(hyper = "auto", soc = soc, sur = sur)
 bv_dummy <- function(
   mode = 1, sd = 1,

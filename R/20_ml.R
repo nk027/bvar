@@ -12,21 +12,18 @@
 #' allowed for hyperparameters. If these are breached a value of -1e18 is
 #' returned.
 #' @param pars Named numeric vector with prior parameters. Values also found
-#' in \emph{hyper} are overwritten with their hierarchical counterpart.
-#' @param priors List created via \code{\link{bv_priors}}. Contains information
-#' on the Minnesota prior and optional dummy priors (that are named in
-#' \code{priors$dummy}).
+#' in \emph{hyper} are overwritten with their hierarchical counterparts.
 #' @param Y Numeric \eqn{N * M} matrix.
 #' @param X Numeric \eqn{N * K} matrix.
 #' @param K Integer scalar. Columns of \emph{X}, i.e. \eqn{M * lags + 1}.
 #' @param M Integer scalar. Columns of \emph{Y}, i.e. number of variables.
 #' @param N Integer scalar. Rows of \emph{Y}, alternatively \emph{X}.
-#' @param lags Integer scalar. Number of lags in the model.
 #' @param opt Optional logical scalar. Determines whether the return value is
 #' a numeric scalar or a list. Used to call \code{\link{bv_ml}} in
 #' \code{\link[stats]{optim}}.
+#' @inheritParams BVAR::bvar
 #'
-#' @return Returns a list with the following objects by default:
+#' @return Returns a list by default, containing the following objects:
 #' \itemize{
 #'   \item \code{log_ml} - A numeric scalar with the log-posterior.
 #'   \item \code{X}, \code{N} - The lagged data matrix with possible dummy
@@ -35,7 +32,7 @@
 #'   \item \code{psi}, \code{sse}, \code{beta_hat}, \code{omega_inv} - Further
 #'   values necessary for drawing from posterior distributions.
 #' }
-#' If opt is \code{TRUE} only the value of \code{log_ml} is returned.
+#' If opt is \code{TRUE} only a numeric scalar with \code{log_ml} is returned.
 #'
 #' @importFrom stats dgamma
 #'
@@ -77,13 +74,11 @@ bv_ml <- function(
                          x, ". Make sure the function works properly.")
                  stop(e)})
     })
-    Y_dummy <- do.call(rbind,
-                       lapply(dmy, function(x) matrix(x[["Y"]], ncol = M)))
-    X_dummy <- do.call(rbind,
-                       lapply(dmy, function(x) matrix(x[["X"]], ncol = K)))
-    N_dummy <- nrow(Y_dummy)
-    Y <- rbind(Y_dummy, Y)
-    X <- rbind(X_dummy, X)
+    Y_dmy <- do.call(rbind, lapply(dmy, function(x) matrix(x[["Y"]], ncol = M)))
+    X_dmy <- do.call(rbind, lapply(dmy, function(x) matrix(x[["X"]], ncol = K)))
+    N_dummy <- nrow(Y_dmy)
+    Y <- rbind(Y_dmy, Y)
+    X <- rbind(X_dmy, X)
     N <- nrow(Y)
   }
 
@@ -101,30 +96,28 @@ bv_ml <- function(
 
   if(length(priors[["dummy"]]) > 0) {
     ev_dummy <- get_ev(omega_inv, omega_sqrt, psi_inv,
-                       X_dummy, Y_dummy, b, beta_hat = FALSE)
+                       X_dmy, Y_dmy, b, beta_hat = FALSE)
     log_ml <- log_ml -
       get_logml(M, N_dummy, psi, ev_dummy[["omega"]], ev_dummy[["psi"]])
   }
 
   # Add prior-pdfs
-  log_ml <- log_ml + sum(sapply(priors[["hyper"]][which(!priors$hyper == "psi")],
-                                function(x) {
-                                  log(dgamma(
-                                    pars[[x]],
-                                    shape = priors[[x]][["coef"]][["k"]],
-                                    scale = priors[[x]][["coef"]][["theta"]]))
-                                })
-                         )
+  log_ml <- log_ml +
+    sum(sapply(priors[["hyper"]][which(!priors$hyper == "psi")],
+               function(x) {log(dgamma(pars[[x]],
+                                       shape = priors[[x]][["coef"]][["k"]],
+                                       scale = priors[[x]][["coef"]][["theta"]]
+               ))}
+    ))
 
   if(any(priors[["hyper"]] == "psi")) {
-    log_ml <- log_ml + sum(sapply(names(pars)[grep("^psi[0-9]*", names(pars))],
-                                  function(x) {
-                                    log_igamma_pdf(
-                                      pars[[x]],
-                                      scale = priors[["psi"]][["scale"]],
-                                      shape = priors[["psi"]][["shape"]])
-                                    })
-                           )
+    log_ml <- log_ml +
+      sum(sapply(names(pars)[grep("^psi[0-9]*", names(pars))],
+                 function(x) {log_igamma_pdf(pars[[x]],
+                                             scale = priors[["psi"]][["scale"]],
+                                             shape = priors[["psi"]][["shape"]]
+                 )}
+      ))
   }
 
 

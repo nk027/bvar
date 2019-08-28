@@ -1,5 +1,7 @@
 #' Calculate the log marginal likelihood
 #'
+#' @seealso bv_ml
+#'
 #' @noRd
 get_logml <- function(M, N, psi, omega_ml_ev, psi_ml_ev) {
 
@@ -12,6 +14,8 @@ get_logml <- function(M, N, psi, omega_ml_ev, psi_ml_ev) {
 
 
 #' Calculate eigenvalues to bypass determinant computation
+#'
+#' @seealso bv_ml
 #'
 #' @noRd
 get_ev <- function(
@@ -28,7 +32,6 @@ get_ev <- function(
     t(beta_hat - b) %*% omega_inv %*% (beta_hat - b) %*% psi_inv
   }
   psi_ml <- psi_inv %*% (sse + mostly_harmless)
-
 
   # Eigenvalues + 1 as another way of computing the determinants
   omega_ml_ev <- Re(eigen(omega_ml, only.values = TRUE)[["values"]])

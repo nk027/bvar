@@ -1,12 +1,12 @@
 #' BVAR posterior draws
 #'
-#' Draw beta and sigma from the posterior of a Bayesian VAR.
+#' Draw \eqn{\beta} and \eqn{\sigma} from the posterior of a Bayesian VAR.
 #'
 #' @param X Numeric matrix. Possibly extended with dummy priors.
 #' @param N Integer scalar. Rows of \emph{X}.
 #' @param M Integer scalar. Columns of \emph{X}.
 #' @param lags Integer scalar. Number of lags in the model.
-#' @param b Numeric marix. Minnesota prior mean.
+#' @param b Numeric marix. Minnesota prior's mean.
 #' @param psi Numeric matrix. Scale of the IW prior on the residual covariance.
 #' @param sse Numeric matrix. Squared VAR residuals.
 #' @param beta_hat Numeric matrix.
@@ -19,13 +19,14 @@
 #'   of sigma_draw. Calculated as \code{t(chol(sigma_draw))}.
 #' }
 #'
+#' @seealso bv_ml
+#'
 #' @importFrom MASS mvrnorm
 #'
 #' @noRd
 draw_post <- function(
-  X,
-  N = nrow(X), M = ncol(X), lags, b,
-  psi, sse, beta_hat, omega_inv) {
+  X, N = nrow(X), M = ncol(X), lags,
+  b, psi, sse, beta_hat, omega_inv) {
 
   S_post <- psi + sse + t(beta_hat - b) %*% omega_inv %*% (beta_hat - b)
   S_eig <- eigen(S_post)

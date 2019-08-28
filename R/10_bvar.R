@@ -57,7 +57,8 @@
 #' @references
 #'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
 #'
-#' @seealso bv_priors bv_metropolis bv_fcast bv_irf predict.bvar irf.bvar
+#' @seealso \code{\link{bv_priors}}; \code{\link{bv_mh}} \code{\link{bv_fcast}}
+#' \code{\link{bv_irf}} \code{\link{predict.bvar}} \code{\link{irf.bvar}}
 #'
 #' @keywords VAR BVAR macroeconomics hierarchical prior vector autoregression
 #'

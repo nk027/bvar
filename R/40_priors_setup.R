@@ -2,7 +2,9 @@
 #'
 #' Function to provide priors and their parameters to \code{\link{bvar}}. Used
 #' for adjusting the parameters treated as hyperparameters, the Minnesota prior
-#' and adding various dummy priors through the ellipsis.
+#' and adding various dummy priors through the ellipsis parameter.
+#' Note that treating \eqn{\psi} as a hyperparameter in a model with many
+#' variables may lead to very low acceptance rates and thus hinder convergence.
 #'
 #' @param hyper Character vector. Used to specify the parameters to be treated
 #' as hyperparameters. May also be set to \code{"auto"} or \code{"full"} for
@@ -12,21 +14,25 @@
 #' @param mn List of class \code{"bv_minnesota"}. Options for the Minnesota
 #' prior, set via \code{\link{bv_mn}}.
 #' @param ... Optional lists of class \code{"bv_dummy"} with options for
-#' dummy priors. \emph{Must be assigned a name in the function call}. Created
+#' dummy priors. \strong{Must be assigned a name in the function call}. Created
 #' with \code{\link{bv_dummy}}.
 #'
 #' @return Returns a named list of class \code{bv_priors} with options for
 #' \code{\link{bvar}}.
-#' @export
 #'
 #' @seealso \code{\link{bv_mn}}; \code{\link{bv_dummy}}
+#'
+#' @export
 #'
 #' @examples
 #' # Extending hyperparameters to the full Minnesota prior
 #' bv_priors(c("lambda", "alpha", "psi"))
+#' # Alternatively
+#' bv_priors("full")
 #'
-#' # Add a dummy prior via `bv_dummy()`
-#' # Create a single-unit-root prior
+#' # Adding a dummy prior via `bv_dummy()`
+#'
+#' # First create a single-unit-root prior
 #' add_sur <- function(Y, lags, par) {
 #'   sur <- if(lags == 1) {Y[1, ] / par} else {
 #'     colMeans(Y[1:lags, ]) / par
@@ -36,10 +42,9 @@
 #'
 #'   return(list("Y" = Y_sur, "X" = X_sur))
 #' }
-#'
 #' sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
 #'
-#' # Adding the prior with `bv_prior()`
+#' # Then add the prior to `bv_priors()`
 #' priors_dum <- bv_priors(hyper = "auto", sur = sur)
 bv_priors <- function(
   hyper = "auto",

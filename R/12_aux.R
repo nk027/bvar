@@ -6,7 +6,7 @@
 #' @param x Matrix (\eqn{N * M}) to lag.
 #' @param lags Numeric scalar. Number of lags to create.
 #'
-#' @return Returns an \eqn{N * (M * lags)} matrix with consecutive lags at the
+#' @return Returns an \eqn{N * (M * lags)} matrix with consecutive lags on the
 #' right.
 #'
 #' @noRd
@@ -27,13 +27,13 @@ lag_var <- function(x, lags) {
 
 #' Compute gamma coefficients
 #'
-#' Compute the shape \emph{k} and scale \emph{theta} of a gamma
+#' Compute the shape \emph{k} and scale \eqn{\theta} of a Gamma
 #' distribution via mode and standard deviation.
 #'
 #' @param mode Numeric scalar.
 #' @param sd Numeric scalar.
 #'
-#' @return Returns a list with shape \emph{k} and scale parameter \emph{theta}.
+#' @return Returns a list with shape \emph{k} and scale parameter \eqn{\theta}.
 #'
 #' @noRd
 gamma_coef <- function(mode, sd) {
@@ -75,7 +75,8 @@ name_pars <- function(x, M) {
 #' Credible interval colour vector
 #'
 #' Create a character vector of colours for time series with credible
-#' intervals, e.g. \code{\link{bv_plot_irf}} and \code{\link{bv_plot_fcast}}.
+#' intervals, e.g. for \code{\link{plot.bvar_irf}} and
+#' \code{\link{plot.bvar_fcast}}.
 #' The central element is coloured \code{"black"}, the rest \code{"darkgray"}.
 #'
 #' @param P Integer scalar. Number of bands to plot.
@@ -96,8 +97,8 @@ set_gray <- function(P) {
 
 #' Get a subset of variables
 #'
-#' Helper functions to aid with variable selection in \code{\link{bv_plot_irf}}
-#' and \code{\link{bv_plot_fcast}}.
+#' Helper functions to aid with variable selection in
+#' \code{\link{plot.bvar_irf}} and \code{\link{plot.bvar_fcast}}.
 #'
 #' @param vars Vector of variables to subset to. Numeric or character.
 #' @param variables Character vector of all variable names. Required if
@@ -135,7 +136,7 @@ get_var_set <- function(vars, variables, M) {
 }
 
 
-#' Compute log pdf of inverse Gamma distribution
+#' Compute log pdf of an inverse Gamma distribution
 #'
 #' Compute the logged pdf of a draw of a variable assumed to be inverse-Gamma
 #' (IG) distributed with parameters \emph{scale} and \emph{shape}.
@@ -152,9 +153,8 @@ get_var_set <- function(vars, variables, M) {
 #'
 #' @noRd
 log_igamma_pdf <- function(x, scale, shape){
-  out <- scale * log(shape) - (scale + 1) * log(x) - shape / x - lgamma(scale)
 
-  return(out)
+  return(scale * log(shape) - (scale + 1) * log(x) - shape / x - lgamma(scale))
 }
 
 
@@ -162,12 +162,12 @@ log_igamma_pdf <- function(x, scale, shape){
 #'
 #' Compute the companion form of the VAR coefficients.
 #'
-#' @param beta Numeric matrix. Non-companion form of beta.
+#' @param beta Numeric matrix. Non-companion form of the VAR coefficients.
 #' @param K Integer scalar. Number of columns in the data.
 #' @param M Integer scalar. Number of columns in the lagged data.
 #' @param lags Integer scalar. Number of lags applied.
 #'
-#' @return Returns a numeric matrix, i.e. \emph{beta} in companion form.
+#' @return Returns a numeric matrix with \emph{beta} in companion form.
 #'
 #' @noRd
 get_beta_comp <- function(beta, K, M, lags) {
