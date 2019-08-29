@@ -3,6 +3,7 @@
 \name{fitted.bvar}
 \alias{fitted.bvar}
 \alias{residuals.bvar}
+\alias{plot.bvar_resid}
 \alias{print.bvar_fitted}
 \alias{print.bvar_resid}
 \title{Fitted and residual methods for Bayesian VARs}
@@ -10,6 +11,8 @@
 \method{fitted}{bvar}(object, conf_bands = 0.5, n_thin = 100L, ...)
 
 \method{residuals}{bvar}(object, conf_bands = 0.5, n_thin = 100L, ...)
+
+\method{plot}{bvar_resid}(x, vars = NULL, mar = c(2, 2, 2, 0.5), ...)
 
 \method{print}{bvar_fitted}(x, digits = 2L, ...)
 
@@ -26,9 +29,14 @@ Note that the median, i.e. 0.5 is always included.}
 is used for forecasting, others are dropped. Defaults to \code{100L}, to
 prevent memory overflow.}
 
-\item{...}{Not used.}
+\item{...}{Other graphical parameters for \code{\link[graphics]{par}}.}
 
 \item{x}{Object of class \code{bvar_fitted} / \code{bvar_resid}.}
+
+\item{vars}{Optional numeric vector. Used to subset the plot to certain
+variables by position. Defaults to \code{NULL}, i.e. all variables.}
+
+\item{mar}{Numeric vector. Margins for \code{\link[graphics]{par}}.}
 
 \item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied to
 numeric outputs (i.e. the quantiles).}

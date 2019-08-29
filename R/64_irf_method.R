@@ -38,8 +38,6 @@
 #' @keywords VAR BVAR irf impulse responses fevd
 #' forecast error variance decomposition
 #'
-#' @export
-#'
 #' @examples
 #' \donttest{
 #' data <- matrix(rnorm(400), ncol = 4)
@@ -190,13 +188,32 @@ fevd.bvar_irf <- function(x, conf_bands = 0.5, ...) {
 
 #' @rdname irf.bvar
 #' @export
-irf <- function(x, ...) {
-  UseMethod("irf", x)
-}
+irf <- function(x, ...) {UseMethod("irf", x)}
 
 
 #' @rdname irf.bvar
 #' @export
-fevd <- function(x, ...) {
-  UseMethod("fevd", x)
+fevd <- function(x, ...) {UseMethod("fevd", x)}
+
+
+# vars compatibility ------------------------------------------------------
+
+#' @noRd
+irf.varest <- irf.svarest <- irf.svecest <- irf.vec2var <- function(x, ...) {
+  has_vars()
+  vars::irf(x, ...)
+}
+
+#' @noRd
+fevd.varest <- fevd.svarest <-
+  fevd.svecest <- fevd.vec2var <- function(x, ...) {
+  has_vars()
+  vars::fevd(x, ...)
+}
+
+#' @noRd
+has_vars <- function() {
+  if(!requireNamespace("vars", quietly = TRUE)) {
+    stop("Package \'vars\' required for this method.", call. = FALSE)
+  }
 }

@@ -15,6 +15,7 @@
     - The preferred way of calling is now: `plot(x$irf)` or `plot(irf(x))`
     - The previous `bv_plot_irf(x)` is still supported, however
     - Confidence bands are now set in `predict()` / `irf()` instead
+  - Added plot methods for `bvar_resid` and `bvar_density`
 - Added option to set maximum number of draws for sign restrictions
 - Prior construction has been standardised further
   - `alpha`, `lambda` and dummy-priors are quite alike, `psi` has been aligned
@@ -26,6 +27,9 @@
   - `bv_metropolis()` and `bv_minnesota()`
 - Fixed bugs related to single confidence bands at 0.5
 - Saved `fred_qd` with format version 2, lowering R dependency to (>= 3.3.0)
+- Added *vars* and *coda* to suggests
+  - Shared methods with *vars*, import is bypassed
+  - Upcoming use of *coda* methods **To-Do**
 
 
 # v0.1.5, CRAN Update 1
