@@ -19,8 +19,6 @@
 #'   of sigma_draw. Calculated as \code{t(chol(sigma_draw))}.
 #' }
 #'
-#' @seealso bv_ml
-#'
 #' @importFrom MASS mvrnorm
 #'
 #' @noRd

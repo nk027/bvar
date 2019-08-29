@@ -100,7 +100,8 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
         sigma = sigma[j, , ], sigma_chol = t(chol(sigma[j, , ])),
         M = M, lags = lags,
         horizon = irf[["horizon"]], identification = irf[["identification"]],
-        sign_restr = irf[["sign_restr"]], fevd = irf[["fevd"]])
+        sign_restr = irf[["sign_restr"]], sign_lim = irf[["sign_lim"]],
+        fevd = irf[["fevd"]])
       irf_store[["irf"]][i, , , ] <- irf_comp[["irf"]]
       if(irf[["fevd"]]) {irf_store[["fevd"]][i, , ] <- irf_comp[["fevd"]]}
       j <- j + n_thin

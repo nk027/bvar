@@ -1,7 +1,5 @@
 #' Calculate the log marginal likelihood
 #'
-#' @seealso bv_ml
-#'
 #' @noRd
 get_logml <- function(M, N, psi, omega_ml_ev, psi_ml_ev) {
 
@@ -14,8 +12,6 @@ get_logml <- function(M, N, psi, omega_ml_ev, psi_ml_ev) {
 
 
 #' Calculate eigenvalues to bypass determinant computation
-#'
-#' @seealso bv_ml
 #'
 #' @noRd
 get_ev <- function(

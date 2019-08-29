@@ -1,7 +1,7 @@
 #' Impulse response settings
 #'
 #' Provide settings for the computation of impulse responses to
-#' \code{\link{bvar}}, \code{\link{irf.bvar}} or\code{\link{fevd.bvar}}. Allows
+#' \code{\link{bvar}}, \code{\link{irf.bvar}} or \code{\link{fevd.bvar}}. Allows
 #' setting the horizon for which impulse responses should be computed, whether
 #' or not forecast error variance decompositions (FEVDs) should be computed
 #' and if and what kind of identification should be used.
@@ -9,6 +9,7 @@
 #' Identification can be performed via Cholesky decomposition and sign
 #' restrictions. The algorithm for generating suitable sign restrictions
 #' follows Rubio-Ramirez et al. (2010).
+#' Note the possiblity of not finding suitable sign restrictions.
 #'
 #' @param horizon Integer scalar. The horizon for which impulse responses
 #' (and FEVDs) should be computed.
@@ -24,13 +25,19 @@
 #' corresponding elements can be set to \eqn{0}. The default value is
 #' \code{NULL}, meaning identification would be performed via Cholesky
 #' decomposition.
+#' @param sign_lim Integer scalar. Maximum number of rotational matrices to
+#' draw and check for fitting sign restrictions.
 #'
 #' @return Returns a named list of class \code{bv_irf} with options for
-#' \code{\link{bvar}}.
+#' \code{\link{bvar}}, \code{\link{irf.bvar}} or \code{\link{fevd.bvar}}.
 #'
 #' @references
 #'     Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696. \url{https://doi.org/10.1111/j.1467-937X.2009.00578.x}
 #'
+#' @seealso \code{\link{bvar}}; \code{\link{irf.bvar_irf}};
+#' \code{\link{plot.bvar_irf}};
+#'
+#' @keywords VAR BVAR irf impulse responses fevd settings
 #'
 #' @export
 #'
@@ -56,10 +63,14 @@ bv_irf <- function(
   horizon = 12,
   fevd = FALSE,
   identification = TRUE,
-  sign_restr = NULL) {
+  sign_restr = NULL,
+  sign_lim = 1000) {
 
+  # Input checks
   horizon <- int_check(horizon, min = 1, max = 1e6,
-                       msg = "Invalid value for horizon.")
+                       msg = "Invalid value for horizon (outside of [1, 1e6]).")
+  sign_lim <- int_check(sign_lim, min = 1, max = 1e6,
+                        msg = "Invalid value for sign_lim (outside of [1, 1e6]).")
 
   if(!is.logical(c(identification, fevd))){
     stop("Please provide fevd and identification as logical scalars.")
@@ -74,8 +85,10 @@ bv_irf <- function(
     sign_restr <- matrix(sign_restr, nrow = sqrt(length(sign_restr)))
   }
 
+  # Outputs
   out <- list("horizon" = horizon, "fevd" = fevd,
-              "identification" = identification, "sign_restr" = sign_restr)
+              "identification" = identification,
+              "sign_restr" = sign_restr, "sign_lim" = sign_lim)
   class(out) <- "bv_irf"
 
   return(out)

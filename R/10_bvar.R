@@ -343,7 +343,8 @@ bvar <- function(
           sigma = draws[["sigma_draw"]], sigma_chol = draws[["sigma_chol"]],
           M = M, lags = lags,
           horizon = irf[["horizon"]], identification = irf[["identification"]],
-          sign_restr = irf[["sign_restr"]], fevd = irf[["fevd"]])
+          sign_restr = irf[["sign_restr"]], sign_lim = irf[["sign_lim"]],
+          fevd = irf[["fevd"]])
         irf_store[["irf"]][(i / n_thin), , , ] <- irf_comp[["irf"]]
         if(irf[["fevd"]]) {
           irf_store[["fevd"]][(i / n_thin), , ] <- irf_comp[["fevd"]]
