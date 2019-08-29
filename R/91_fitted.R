@@ -14,7 +14,10 @@
 #' @param x Object of class \code{bvar_fitted} / \code{bvar_resid}.
 #' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
 #' numeric outputs (i.e. the quantiles).
-#' @param ... Not used.
+#' @param vars Optional numeric vector. Used to subset the plot to certain
+#' variables by position. Defaults to \code{NULL}, i.e. all variables.
+#' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
+#' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
 #' @return Returns a numeric array of class \code{bvar_fitted} /
 #' \code{bvar_resid} with desired values at the specified confidence bands.
@@ -90,6 +93,28 @@ residuals.bvar <- function(object, conf_bands = 0.5, n_thin = 100L, ...) {
   class(resids) <- "bvar_resid"
 
   return(resids)
+}
+
+
+#' @rdname fitted.bvar
+#' @export
+plot.bvar_resid <- function(x, vars = NULL, mar = c(2, 2, 2, 0.5), ...) {
+
+  if(!inherits(x, "bvar_resid")) {stop("Please provide a `bvar_resid` object.")}
+
+  has_quants <- length(dim(x)) == 3
+  if(has_quants) {x <- x["50%", , ]}
+  M <- dim(x)[2]
+  pos <- get_var_set(vars, 1:M, M)
+
+  op <- par(mfrow = c(length(pos), 1), mar = mar, ...)
+  for(i in pos) {
+    plot(x[, i], main = paste0("Residuals Variable #", i))
+    abline(h = 0, lty = "dashed", col = "gray")
+  }
+  par(op)
+
+  return(invisible(x))
 }
 
 

@@ -25,6 +25,7 @@
 - Added less concise aliases for `bv_mh()` and `bv_mn()`
   - `bv_metropolis()` and `bv_minnesota()`
 - Fixed bugs related to single confidence bands at 0.5
+- Saved `fred_qd` with format version 2, lowering R dependency to (>= 3.3.0)
 
 
 # v0.1.5, CRAN Update 1
