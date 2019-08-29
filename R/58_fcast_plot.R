@@ -1,11 +1,11 @@
-#' Forecast plot
+#' Plotting method for Bayesian VAR forecasts
 #'
 #' Plotting method for forecasts obtained from \code{\link{bvar}} or
 #' \code{\link{predict.bvar}}. Forecasts of all or a subset of the available
 #' variables can be plotted.
 #'
 #' @param x A \code{bvar} / \code{bvar_fcast} object, obtained from
-#' \code{\link{bvar}}.
+#' \code{\link{bvar}} / \code{\link{predict.bvar}}.
 #' @param conf_bands Deprecated. Use \code{\link{predict.bvar}}. Numeric vector
 #' of desired confidence bands.
 #' @param vars Optional numeric or character vector. Used to subset the plot to
@@ -18,6 +18,12 @@
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
+#' @return Returns \emph{x} invisibly.
+#'
+#' @seealso \code{\link{bvar}}; \code{\link{predict.bvar_fcast}}
+#'
+#' @keywords VAR BVAR forecasts prediction plot
+#'
 #' @export
 #'
 #' @examples
@@ -26,11 +32,13 @@
 #' x <- bvar(data, lags = 2)
 #'
 #' # Plot forecasts for all available variables
-#' bv_plot_fcast(x)
+#' plot(predict(x))
+#' # Alternatively
+#' plot(x$fcast)
 #'
 #' # Subset to variables in positions 1, 2 and 4 via position and name
-#' bv_plot_fcast(x, vars = c(1, 2, 4))
-#' bv_plot_fcast(x,
+#' plot(x$fcast, vars = c(1, 2, 4))
+#' plot(x$fcast,
 #'   variables = c("gdp", "flux", "cpi", "capacitor"),
 #'   vars = c("gdp", "flux", "capacitor")
 #' )
@@ -79,13 +87,13 @@ bv_plot_fcast <- function(
 
   has_quants <- length(dim(x[["quants"]])) == 3L
   if(has_quants) {
-    M <- dim(x[["quants"]])[3]
-    P <- dim(x[["quants"]])[1]
     quants <- x[["quants"]]
+    M <- dim(quants)[3]
+    P <- dim(quants)[1]
   } else {
     M <- dim(x[["quants"]])[2]
     P <- 1
-    # Cheat day
+    # Cheat day - quants must be 3-dimensional, so we fill one with NAs
     quants <- array(NA, c(2, dim(x[["quants"]])))
     quants[1, , ] <- x[["quants"]]
   }

@@ -83,7 +83,7 @@ bv_plot_irf <- function(
   } else {
     M <- dim(x[["quants"]])[1]
     P <- 1
-    # Cheat day
+    # Cheat day - quants must be 4-dimensional, so we fill one with NAs
     quants <- array(NA, c(2, dim(x[["quants"]])))
     quants[1, , , ] <- x[["quants"]]
   }

@@ -38,30 +38,27 @@ print_fcast <- function(x, ...) {
 }
 
 
-#' Forecast summary method
-#'
-#' Print and return quantiles of forecasts from \code{\link{bvar}}.
-#'
-#' @return Returns an array with the desired forecast quantiles invisibly.
-#'
-#' @export
-#'
 #' @rdname predict.bvar
+#' @export
 summary.bvar_fcast <- function(object, vars = NULL, digits = 2L, ...) {
 
   print.bvar_fcast(object)
 
   quants <- object[["quants"]]
-  variables <- if(is.null(object[["variables"]])) {
-    1L:dim(quants)[3]
-  } else {object[["variables"]]}
-  pos <- get_var_set(vars, variables, dim(quants)[3])
+  has_quants <- length(dim(quants)) == 3
+  M <- if(has_quants) {dim(quants)[3]} else {M <- dim(quants)[2]}
 
-  cat("Forecast:\n")
+  variables <- if(is.null(object[["variables"]])) {
+    1L:M
+  } else {object[["variables"]]}
+  pos <- get_var_set(vars, variables, M)
+
+  cat(if(!has_quants) {"Median forecast:\n"} else {"Forecast:\n"})
   for(i in pos) {
     cat("\tVariable ", variables[i], ":\n", sep = "")
-    print(round(quants[, , i], digits = digits))
+    print(round(if(has_quants) {quants[, , i]} else {quants[, i]},
+                digits = digits))
   }
 
-  return(invisible(quants[, , pos]))
+  return(invisible(if(has_quants) {quants[, , pos]} else {quants[, pos]}))
 }
