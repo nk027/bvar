@@ -1,18 +1,23 @@
-#' Coefficient and variance-covariance methods for Bayesian VARs
+#' Coefficient and VCOV methods for Bayesian VARs
 #'
-#' Retrieves coefficient / variance-covariance values for Bayesian VARs
-#' generated via \code{\link{bvar}}.
+#' Retrieves coefficient / VCOV values for Bayesian VARs generated via
+#' \code{\link{bvar}}.
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' @param digits Integer scalar. Fed to \code{\link[base]{round}} to format
-#' printed outputs.
+#' Note that the median, i.e. 0.5 is always included.
+#'
 #' @param x Object of class \code{bvar_coefs} / \code{bvar_vcovs}.
+#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
+#' numeric outputs (i.e. the quantiles).
 #' @param ... Not used.
 #'
 #' @return Returns a numeric array of class \code{bvar_coefs} /
-#' \code{bvar_vcovs} with desired values and confidence bands.
+#' \code{bvar_vcovs} with desired values at the specified confidence bands.
+#'
+#' @seealso \code{\link{bvar}}
+#'
 #' @export
 #'
 #' @examples
@@ -80,8 +85,10 @@ print.bvar_vcovs <- function(x, digits = 3L, ...) {
 #'
 #' @param x Numeric array with coefficient or variance-covariance values of a
 #' \code{bvar} object.
-#' @param type String indiciating whether \emph{x} contains coefficient or
-#' variance-covariance values.
+#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
+#' numeric outputs (i.e. the quantiles).
+#' @param type String indicating whether \emph{x} contains coefficient,
+#' variance-covariance or forecast-error-variance decomposition values.
 #'
 #' @noRd
 print_coefs <- function(

@@ -20,7 +20,8 @@
 #' # Plot various output generated
 #' plot(x)
 #' }
-plot.bvar <- function(x, mar = c(2, 2, 2, 0.5), ...) {
+plot.bvar <- function(x, #type = c("full", "trace", "density"),
+                      mar = c(2, 2, 2, 0.5), ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 

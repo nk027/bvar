@@ -12,6 +12,7 @@
 #' \code{\link{bv_fcast}}. Contains settings for the forecast.
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
+#' Note that the median, i.e. 0.5 is always included.
 #' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{object}
 #' is used for forecasting, others are dropped. Defaults to the maximum number
 #' - i.e. the number of saved draws in \emph{object}.

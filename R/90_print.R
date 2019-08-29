@@ -1,23 +1,5 @@
-#' BVAR print methods
-#'
-#' Print methods for \code{bvar} objects providing a quick overview of results.
-#' The method for impulse response functions provides information on
-#' identification, horizon, et cetera; The forecast method on the horizon.
-#'
-#' @param x A \code{bvar} / \code{bvar_...} object, obtained from
-#' \code{\link{bvar}} or related functions.
-#' @param ... Not used.
-#'
+#' @rdname bvar
 #' @export
-#'
-#' @examples
-#' \donttest{
-#' data <- matrix(rnorm(200), ncol = 2)
-#' x <- bvar(data, lags = 2)
-#'
-#' # Print various output generated
-#' print(x)
-#' }
 print.bvar <- function(x, ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}

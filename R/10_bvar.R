@@ -27,6 +27,8 @@
 #' using \code{\link{irf.bvar}}.
 #' @param verbose Logical scalar. Whether to print intermediate results and
 #' progress.
+#'
+#' @param x A \code{bvar} object.
 #' @param ... Not used.
 #'
 #' @return Returns a \code{bvar} object with the following elements:
@@ -48,10 +50,10 @@
 #'   accepted draws, number of iterations, et cetera.
 #'   \item \code{variables} - Character vector with column names of \emph{data}.
 #'   \item \code{fcast} - \code{bvar_fcast} object with posterior forecast
-#'   draws as well as the forecast's setup from \emph{fcast}.
+#'   draws, quantiles as well as the forecast's setup from \emph{fcast}.
 #'   \item \code{irf} - \code{bvar_irf} object with posterior impulse response
-#'   and forecast error variance decomposition draws, as well as the setup
-#'   obtained from \emph{irf}.
+#'   and their quantiles, forecast error variance decomposition draws, as well
+#'   as the setup obtained from \emph{irf}.
 #' }
 #'
 #' @references
@@ -59,7 +61,7 @@
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_mh}};
 #' \code{\link{bv_fcast}}; \code{\link{bv_irf}}; \code{\link{predict.bvar}};
-#' \code{\link{irf.bvar}}
+#' \code{\link{irf.bvar}}; \code{\link{plot.bvar}}
 #'
 #' @keywords VAR BVAR macroeconomics hierarchical prior vector autoregression
 #'

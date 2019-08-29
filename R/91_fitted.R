@@ -6,14 +6,21 @@
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
+#' Note that the median, i.e. 0.5 is always included.
 #' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{object}
 #' is used for forecasting, others are dropped. Defaults to \code{100L}, to
 #' prevent memory overflow.
+#'
 #' @param x Object of class \code{bvar_fitted} / \code{bvar_resid}.
+#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
+#' numeric outputs (i.e. the quantiles).
 #' @param ... Not used.
 #'
 #' @return Returns a numeric array of class \code{bvar_fitted} /
-#' \code{bvar_resid} with desired values and confidence bands.
+#' \code{bvar_resid} with desired values at the specified confidence bands.
+#'
+#' @seealso \code{\link{bvar}}
+#'
 #' @export
 #'
 #' @examples
@@ -21,10 +28,10 @@
 #' data <- matrix(rnorm(200), ncol = 2)
 #' x <- bvar(data, lags = 2)
 #'
-#' # Get fitted values and adjust confidence bands
+#' # Get fitted values and adjust confidence bands to 10%, 50% and 90%
 #' fitted(x, conf_bands = 0.10)
 #'
-#' # Only get the median and up the iterations
+#' # Only get the median and increase the iterations
 #' fitted(x, conf_bands = 0.5, n_thin = 10L)
 #'
 #' # Get residuals
@@ -88,11 +95,11 @@ residuals.bvar <- function(object, conf_bands = 0.5, n_thin = 100L, ...) {
 
 #' @rdname fitted.bvar
 #' @export
-print.bvar_fitted <- function(x, ...) {
+print.bvar_fitted <- function(x, digits = 2L, ...) {
 
   if(!inherits(x, "bvar_fitted")) {stop("Please provide a `bvar_fitted` object.")}
 
-  print_fitted(x, type = "fitted", ...)
+  print_fitted(x, digits, type = "fitted", ...)
 
   return(invisible(x))
 }
@@ -100,11 +107,11 @@ print.bvar_fitted <- function(x, ...) {
 
 #' @rdname fitted.bvar
 #' @export
-print.bvar_resid <- function(x, ...) {
+print.bvar_resid <- function(x, digits = 2L, ...) {
 
   if(!inherits(x, "bvar_resid")) {stop("Please provide a `bvar_resid` object.")}
 
-  print_fitted(x, type = "residual", ...)
+  print_fitted(x, digits, type = "residual", ...)
 
   return(invisible(x))
 }
@@ -114,11 +121,15 @@ print.bvar_resid <- function(x, ...) {
 #'
 #' @param x Numeric array with residual or fitted values of a \code{bvar}
 #' object.
-#' @param type String indiciating whether \emph{x} contains fitted or resiudal
+#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
+#' numeric outputs (i.e. the quantiles).
+#' @param type String indicating whether \emph{x} contains fitted or resiudal
 #' values.
 #'
 #' @noRd
-print_fitted <- function(x, digits = 2L, type = c("fitted", "residual"), ...) {
+print_fitted <- function(
+  x, digits = 2L,
+  type = c("fitted", "residual"), ...) {
 
   type <- match.arg(type)
 
