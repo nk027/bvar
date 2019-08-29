@@ -34,8 +34,8 @@
 #' }
 bv_plot_trace <- function(x, name, ...) {
 
+  .Deprecated("plot.bvar")
   plot_hyper(x, name, fun = plot_trace, ...)
-
 }
 
 
@@ -43,8 +43,8 @@ bv_plot_trace <- function(x, name, ...) {
 #' @export
 bv_plot_density <- function(x, name, ...) {
 
+  .Deprecated("plot.bvar")
   plot_hyper(x, name, fun = plot_dens, ...)
-
 }
 
 
@@ -92,49 +92,4 @@ plot_hyper <- function(x, name, fun = c(plot_trace, plot_dens), ...) {
   fun(y, name, bounds, dots)
 
   return(invisible(x))
-}
-
-
-#' Trace & density plot
-#'
-#' @param x Numeric vector to plot.
-#' @param name Optional string with the plotted parameter's name.
-#' @param bounds Optional numeric vector plotted horizontally via
-#' \code{\link[graphics]{abline}}.
-#' @param dots Optional list of numeric vectors to add to the plot.
-#'
-#' @importFrom graphics plot polygon lines abline
-#' @importFrom stats density
-#'
-#' @noRd
-plot_trace <- function(x, name = NULL, bounds = NULL, dots = list()) {
-
-  ylim <- c(min(vapply(dots, min, double(1)), x),
-            max(vapply(dots, max, double(1)), x))
-
-  plot(x, type = "l", xlab = "Index", ylab = "Value", ylim = ylim,
-       main = paste("Trace", if(!is.null(name)) {paste("of", name)} else {""}))
-  for(dot in dots) {lines(dot, col = "lightgray")}
-  abline(h = bounds, lty = "dashed", col = "darkgray")
-}
-
-
-#' @rdname plot_trace
-#'
-#' @noRd
-plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
-
-  xlim <- c(min(vapply(dots, min, double(1)), x),
-            max(vapply(dots, max, double(1)), x))
-
-  plot(density(x), xlim = xlim,
-       main = paste("Density", if(!is.null(name)) {paste("of", name)} else {""}))
-  polygon(density(x), col = "#CCCCCC33", border = NA)
-  for(dot in dots) {
-    dens <- density(dot)
-    polygon(dens, col = "#CCCCCC33", border = NA)
-    lines(dens)
-  }
-  lines(density(x))
-  abline(v = bounds, lty = "dashed", col = "darkgray")
 }
