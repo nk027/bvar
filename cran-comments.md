@@ -42,7 +42,7 @@
   - Add normalising constant
 - Add lines to all density plots (when supplied via ellipsis)
 - Add documentation on using `scale_hess` as a vector
-- Add two pre-constructed dummy priors `soc` and `sur`
+- Add two pre-constructed dummy priors `bv_soc()` and `bv_sur()`
 - Further split up calculation of marginal likelihood
 
 

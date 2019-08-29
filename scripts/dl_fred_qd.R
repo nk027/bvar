@@ -27,7 +27,7 @@ all(vapply(fred_qd, is.numeric, logical(1)))
 vapply(fred_qd, function(x) sum(is.na(x)), numeric(1))
 
 # Save fred_qd
-save(fred_qd, file = "data/fred_qd.rda")
+save(fred_qd, file = "data/fred_qd.rda", version = 2)
 
 
 # Get copyright info ------------------------------------------------------
@@ -65,4 +65,4 @@ for(i in seq_along(fred_qd)) {
 # Here we keep the ones explicitly in public domain.
 fred_qd <- fred_qd[, which(rights[, "public_domain"])]
 
-save(fred_qd, file = "data/fred_qd.rda")
+save(fred_qd, file = "data/fred_qd.rda", version = 2)
