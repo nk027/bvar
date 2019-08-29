@@ -11,15 +11,16 @@
 
 \method{residuals}{bvar}(object, conf_bands = 0.5, n_thin = 100L, ...)
 
-\method{print}{bvar_fitted}(x, ...)
+\method{print}{bvar_fitted}(x, digits = 2L, ...)
 
-\method{print}{bvar_resid}(x, ...)
+\method{print}{bvar_resid}(x, digits = 2L, ...)
 }
 \arguments{
 \item{object}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
 
 \item{conf_bands}{Numeric vector of desired confidence bands to apply.
-E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.}
+E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
+Note that the median, i.e. 0.5 is always included.}
 
 \item{n_thin}{Integer scalar. Every \emph{n_thin}'th draw in \emph{object}
 is used for forecasting, others are dropped. Defaults to \code{100L}, to
@@ -28,10 +29,13 @@ prevent memory overflow.}
 \item{...}{Not used.}
 
 \item{x}{Object of class \code{bvar_fitted} / \code{bvar_resid}.}
+
+\item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied to
+numeric outputs (i.e. the quantiles).}
 }
 \value{
 Returns a numeric array of class \code{bvar_fitted} /
-\code{bvar_resid} with desired values and confidence bands.
+\code{bvar_resid} with desired values at the specified confidence bands.
 }
 \description{
 Calculates fitted values / resiudals for Bayesian VARs generated via
@@ -42,13 +46,16 @@ Calculates fitted values / resiudals for Bayesian VARs generated via
 data <- matrix(rnorm(200), ncol = 2)
 x <- bvar(data, lags = 2)
 
-# Get fitted values and adjust confidence bands
+# Get fitted values and adjust confidence bands to 10\%, 50\% and 90\%
 fitted(x, conf_bands = 0.10)
 
-# Only get the median and up the iterations
+# Only get the median and increase the iterations
 fitted(x, conf_bands = 0.5, n_thin = 10L)
 
 # Get residuals
 residuals(x)
 }
+}
+\seealso{
+\code{\link{bvar}}
 }

@@ -35,69 +35,76 @@ fevd(x, ...)
   vars_response = NULL, digits = 2L, ...)
 }
 \arguments{
-\item{x}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
+\item{x, object}{A \code{bvar} object, obtained from \code{\link{bvar}}.
+Summary and print methods take in a \code{bvar_irf} object.}
 
 \item{...}{A \code{bv_fcast} object or parameters to be fed into
 \code{\link{bv_fcast}}. Contains settings for the forecast.}
 
 \item{conf_bands}{Numeric vector of desired confidence bands to apply.
-E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.}
+E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
+Note that the median, i.e. 0.5 is always included.}
 
 \item{n_thin}{Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
-for forecasting, others are dropped. Defaults to the maximum number - i.e.
+for calculations, others are dropped. Defaults to the maximum number - i.e.
 the number of saved draws in \emph{x}.}
 
 \item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied to
 numeric outputs (i.e. the quantiles).}
 
-\item{object}{Object of class \code{bvar_irf}.}
-
-\item{vars_impulse}{Optional numeric or character vector. Used to subset the
-plot's impulses to certain variables by position or name (must be available).
-Defaults to \code{NULL}, i.e. all variables.}
-
-\item{vars_response}{Optional numeric or character vector. Used to subset the
-plot's responses to certain variables by position or name (must be
-available). Defaults to \code{NULL}, i.e. all variables.}
+\item{vars_impulse, vars_response}{Optional numeric or character vector. Used
+to subset the summary's impulses / responses to certain variables by position
+or name (must be available). Defaults to \code{NULL}, i.e. all variables.}
 }
 \value{
 Returns a list of class \code{bvar_irf} including IRFs, optionally
 FEVDs, and desired confidence bands. See \code{\link{bvar}}.
-Note that \code{fevd} only returns a numeric array of FEVDs and desired
+The \code{fevd} methods only returns a numeric array of FEVDs and desired
 confidence bands.
-
-Returns an array with the desired impulse response quantiles
-invisibly.
+The summary method returns a numeric array of forecast paths at the
+specified confidence bands.
 }
 \description{
-Retrieves / calculates impulse response functions (IRFs) / forecast error
-variance decompositions (FEVDs) for Bayesian VARs generated via
+Retrieves / calculates impulse response functions (IRFs) and/or forecast
+error variance decompositions (FEVDs) for Bayesian VARs generated via
 \code{\link{bvar}}. If the object is already present and no settings are
-supplied it is simply retrieved. Otherwise it will be calculated ex-post.
-Note that FEVDs require the presence / calculation of IRFs. May also be used
-to update confidence bands.
-
-Print and return quantiles of impulse response functions from
-\code{\link{bvar}}.
+supplied it is simply retrieved, otherwise it will be calculated ex-post.
+Note that FEVDs require the presence / calculation of IRFs.
+To store IRFs you may want to assign them to \code{x[["irf"]]}.
+May also be used to update confidence bands.
 }
 \examples{
 \donttest{
-data <- matrix(rnorm(200), ncol = 2)
+data <- matrix(rnorm(400), ncol = 4)
 x <- bvar(data, lags = 2)
 
-# Access forecast and update new confidence bands
-predict(x, conf_bands = 0.01)
+# Access IRFs and update confidence bands
+irf(x, conf_bands = 0.01)
 
-# Compute and store a longer forecast
-x$fcast <- predict(x, horizon = 24L)
+# Compute and store IRFs with a longer horizon
+x$irf <- irf(x, horizon = 24L)
 
-# Speed up by lowering draws and use bv_fcast() to set options
-predict(x, bv_fcast(24L), n_thin = 10L)
+# Lower draws, use `bv_irf()` to set options and add confidence bands
+irf(x, bv_irf(24L), n_thin = 10L, conf_bands = c(0.05, 0.16))
 
-# Update the confidence bands
-x$fcast <- predict(x$fcast, conf_bands = c(0.05, 0.16))
+# Get a summary of the last saved IRFs
+summary(x)
 
-# Use new data to calculate a prediction
-predict(x, newdata = matrix(rnorm(200), ncol = 2))
+# Limit the summary to responses of variable #2
+summary(x, vars_response = 2L)
 }
 }
+\seealso{
+\code{\link{bvar}}; \code{\link{plot.bvar_irf}};
+\code{\link{bv_irf}}
+}
+\keyword{BVAR}
+\keyword{VAR}
+\keyword{decomposition}
+\keyword{error}
+\keyword{fevd}
+\keyword{forecast}
+\keyword{impulse}
+\keyword{irf}
+\keyword{responses}
+\keyword{variance}

@@ -5,7 +5,7 @@
 \title{Impulse response settings}
 \usage{
 bv_irf(horizon = 12, fevd = FALSE, identification = TRUE,
-  sign_restr = NULL)
+  sign_restr = NULL, sign_lim = 1000)
 }
 \arguments{
 \item{horizon}{Integer scalar. The horizon for which impulse responses
@@ -25,14 +25,17 @@ Elements should be set to \eqn{1} (\eqn{-1}) to restrict for positive
 corresponding elements can be set to \eqn{0}. The default value is
 \code{NULL}, meaning identification would be performed via Cholesky
 decomposition.}
+
+\item{sign_lim}{Integer scalar. Maximum number of rotational matrices to
+draw and check for fitting sign restrictions.}
 }
 \value{
 Returns a named list of class \code{bv_irf} with options for
-\code{\link{bvar}}.
+\code{\link{bvar}}, \code{\link{irf.bvar}} or \code{\link{fevd.bvar}}.
 }
 \description{
 Provide settings for the computation of impulse responses to
-\code{\link{bvar}}, \code{\link{irf.bvar}} or\code{\link{fevd.bvar}}. Allows
+\code{\link{bvar}}, \code{\link{irf.bvar}} or \code{\link{fevd.bvar}}. Allows
 setting the horizon for which impulse responses should be computed, whether
 or not forecast error variance decompositions (FEVDs) should be computed
 and if and what kind of identification should be used.
@@ -41,6 +44,7 @@ and if and what kind of identification should be used.
 Identification can be performed via Cholesky decomposition and sign
 restrictions. The algorithm for generating suitable sign restrictions
 follows Rubio-Ramirez et al. (2010).
+Note the possiblity of not finding suitable sign restrictions.
 }
 \examples{
 # Set impulse responses to a horizon of 20 time periods and enable FEVD
@@ -64,3 +68,14 @@ bvar(data, lags = 5, irf = irf_signs)
 \references{
 Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696. \url{https://doi.org/10.1111/j.1467-937X.2009.00578.x}
 }
+\seealso{
+\code{\link{bvar}}; \code{\link{irf.bvar_irf}};
+\code{\link{plot.bvar_irf}}
+}
+\keyword{BVAR}
+\keyword{VAR}
+\keyword{fevd}
+\keyword{impulse}
+\keyword{irf}
+\keyword{responses}
+\keyword{settings}

@@ -56,3 +56,9 @@ bv_mh(adjust_acc = TRUE, acc_lower = 0.2, acc_upper = 0.4)
 # Increase the rate of automatic scaling
 bv_mh(adjust_acc = TRUE, acc_lower = 0.2, acc_upper = 0.4, acc_change = 0.1)
 }
+\keyword{BVAR}
+\keyword{VAR}
+\keyword{acceptance}
+\keyword{hastings}
+\keyword{mcmc}
+\keyword{metropolis}

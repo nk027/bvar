@@ -21,7 +21,7 @@ computed.}
 }
 \value{
 Returns a named list of class \code{bv_fcast} with options for
-\code{\link{bvar}}.
+\code{\link{bvar}} or \code{\link{predict.bvar}}.
 }
 \description{
 Provide forecast settings to \code{\link{bvar}} or
@@ -36,3 +36,12 @@ such as variable paths.
 # Set the forecast-horizon to 20 time periods instead of 12
 bv_fcast(horizon = 20)
 }
+\seealso{
+\code{\link{bvar}}; \code{\link{predict.bvar_fcast}};
+\code{\link{plot.bvar_fcast}};
+}
+\keyword{BVAR}
+\keyword{VAR}
+\keyword{forecasts}
+\keyword{prediction}
+\keyword{settings}

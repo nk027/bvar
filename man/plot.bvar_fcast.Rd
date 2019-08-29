@@ -3,7 +3,7 @@
 \name{plot.bvar_fcast}
 \alias{plot.bvar_fcast}
 \alias{bv_plot_fcast}
-\title{Forecast plot}
+\title{Plotting method for Bayesian VAR forecasts}
 \usage{
 \method{plot}{bvar_fcast}(x, conf_bands, vars = NULL, variables = NULL,
   orientation = c("vertical", "horizontal"), mar = c(2, 2, 2, 0.5),
@@ -15,7 +15,7 @@ bv_plot_fcast(x, conf_bands, vars = NULL, variables = NULL,
 }
 \arguments{
 \item{x}{A \code{bvar} / \code{bvar_fcast} object, obtained from
-\code{\link{bvar}}.}
+\code{\link{bvar}} / \code{\link{predict.bvar}}.}
 
 \item{conf_bands}{Deprecated. Use \code{\link{predict.bvar}}. Numeric vector
 of desired confidence bands.}
@@ -34,6 +34,9 @@ to \code{"v"} (i.e. vertical); may be set to \code{"h"} (i.e. horizontal).}
 
 \item{...}{Other graphical parameters for \code{\link[graphics]{par}}.}
 }
+\value{
+Returns \emph{x} invisibly.
+}
 \description{
 Plotting method for forecasts obtained from \code{\link{bvar}} or
 \code{\link{predict.bvar}}. Forecasts of all or a subset of the available
@@ -45,11 +48,13 @@ data <- matrix(rnorm(400), ncol = 4)
 x <- bvar(data, lags = 2)
 
 # Plot forecasts for all available variables
-bv_plot_fcast(x)
+plot(predict(x))
+# Alternatively
+plot(x$fcast)
 
 # Subset to variables in positions 1, 2 and 4 via position and name
-bv_plot_fcast(x, vars = c(1, 2, 4))
-bv_plot_fcast(x,
+plot(x$fcast, vars = c(1, 2, 4))
+plot(x$fcast,
   variables = c("gdp", "flux", "cpi", "capacitor"),
   vars = c("gdp", "flux", "capacitor")
 )
@@ -61,3 +66,11 @@ plot(x$fcast, orientation = "h")
 plot(predict(x, conf_bands = c(0.01, 0.05)))
 }
 }
+\seealso{
+\code{\link{bvar}}; \code{\link{predict.bvar_fcast}}
+}
+\keyword{BVAR}
+\keyword{VAR}
+\keyword{forecasts}
+\keyword{plot}
+\keyword{prediction}

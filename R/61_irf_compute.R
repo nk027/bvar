@@ -44,7 +44,7 @@ compute_irf <- function(
   shock <- if(identification) {
     if(is.null(sign_restr)) {
       sigma_chol
-    } else {sign_restr(sigma_chol, sign_restr, M)}
+    } else {sign_restr(sigma_chol, sign_restr, M, sign_lim)}
   } else {sigma}
 
   # IRF
@@ -57,7 +57,7 @@ compute_irf <- function(
 
   # Outputs
   out <- list("irf" = irf_comp)
-  if(fevd) {out[["fevd"]] <- compute_fevd(irf_comp, M, horizon, sign_lim)}
+  if(fevd) {out[["fevd"]] <- compute_fevd(irf_comp, M, horizon)}
 
   return(out)
 }

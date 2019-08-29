@@ -3,7 +3,7 @@
 \name{plot.bvar_irf}
 \alias{plot.bvar_irf}
 \alias{bv_plot_irf}
-\title{Impulse response plot}
+\title{Plotting method for Bayesian VAR impulse responses}
 \usage{
 \method{plot}{bvar_irf}(x, conf_bands, vars_impulse = NULL,
   vars_response = NULL, variables = NULL, mar = c(2, 2, 2, 0.5), ...)
@@ -13,18 +13,14 @@ bv_plot_irf(x, conf_bands, vars_impulse = NULL, vars_response = NULL,
 }
 \arguments{
 \item{x}{A \code{bvar} / \code{bvar_irf} object, obtained from
-\code{\link{bvar}} or \code{\link{irf.bvar}}.}
+\code{\link{bvar}} / \code{\link{irf.bvar}}.}
 
 \item{conf_bands}{Deprecated. Use \code{\link{irf.bvar}}. Numeric vector
 of desired confidence bands.}
 
-\item{vars_impulse}{Optional numeric or character vector. Used to subset the
-plot's impulses to certain variables by position or name (must be available).
-Defaults to \code{NULL}, i.e. all variables.}
-
-\item{vars_response}{Optional numeric or character vector. Used to subset the
-plot's responses to certain variables by position or name (must be
-available). Defaults to \code{NULL}, i.e. all variables.}
+\item{vars_impulse, vars_response}{Optional numeric or character vector. Used
+to subset the plot's impulses / responses to certain variables by position
+or name (must be available). Defaults to \code{NULL}, i.e. all variables.}
 
 \item{variables}{Optional character vector. Names of all variables in the
 object. Used to subset and title. Taken from \code{x$variables} if available.}
@@ -33,10 +29,13 @@ object. Used to subset and title. Taken from \code{x$variables} if available.}
 
 \item{...}{Other graphical parameters for \code{\link[graphics]{par}}.}
 }
+\value{
+Returns \emph{x} invisibly.
+}
 \description{
 Plotting method for impulse responses obtained from \code{\link{bvar}} or
- \code{\link{irf.bvar}}. Impulse responses of all or a subset of the
- available variables can be plotted.
+\code{\link{irf.bvar}}. Impulse responses of all or a subset of the
+available variables can be plotted.
 }
 \examples{
 \donttest{
@@ -44,12 +43,26 @@ data <- matrix(rnorm(400), ncol = 4)
 x <- bvar(data, lags = 2)
 
 # Plot impulse responses for all available variables
-bv_plot_irf(x)
+plot(irf(x))
+# Alternatively
+plot(x$irf)
 
 # Subset to impulse variables in positions 2 and 4 via position and name
-bv_plot_irf(x, vars_impulse = c(2, 4))
+plot(x$irf, vars_impulse = c(2, 4))
+plot(x$irf,
+  variables = c("solved", "for", "many", "decades"),
+  vars_impulse = c("for", "decades")
+)
 
-# Use the method to plot and adjust confidence bands
-plot(x$irf, conf_bands = c(0.01, 0.05))
+# Adjust confidence bands via irf
+plot(irf(x, conf_bands = c(0.01, 0.05)))
 }
 }
+\seealso{
+\code{\link{bvar}}; \code{\link{irf.bvar_irf}}
+}
+\keyword{BVAR}
+\keyword{VAR}
+\keyword{fevd}
+\keyword{irf}
+\keyword{plot}

@@ -5,7 +5,7 @@
 \alias{vcov.bvar}
 \alias{print.bvar_coefs}
 \alias{print.bvar_vcovs}
-\title{Coefficient and variance-covariance methods for Bayesian VARs}
+\title{Coefficient and VCOV methods for Bayesian VARs}
 \usage{
 \method{coef}{bvar}(object, conf_bands = 0.5, ...)
 
@@ -19,22 +19,23 @@
 \item{object}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
 
 \item{conf_bands}{Numeric vector of desired confidence bands to apply.
-E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.}
+E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
+Note that the median, i.e. 0.5 is always included.}
 
 \item{...}{Not used.}
 
 \item{x}{Object of class \code{bvar_coefs} / \code{bvar_vcovs}.}
 
-\item{digits}{Integer scalar. Fed to \code{\link[base]{round}} to format
-printed outputs.}
+\item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied to
+numeric outputs (i.e. the quantiles).}
 }
 \value{
 Returns a numeric array of class \code{bvar_coefs} /
-\code{bvar_vcovs} with desired values and confidence bands.
+\code{bvar_vcovs} with desired values at the specified confidence bands.
 }
 \description{
-Retrieves coefficient / variance-covariance values for Bayesian VARs
-generated via \code{\link{bvar}}.
+Retrieves coefficient / VCOV values for Bayesian VARs generated via
+\code{\link{bvar}}.
 }
 \examples{
 \dontrun{
@@ -47,4 +48,7 @@ coef(x, conf_bands = 0.10)
 # Only get the median of the variance-covariance matrix
 vcov(x, conf_bands = 0.5)
 }
+}
+\seealso{
+\code{\link{bvar}}
 }
