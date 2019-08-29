@@ -53,11 +53,9 @@ density.bvar <- function(x, vars = NULL, ...) {
 
 #' @rdname density.bvar
 #' @export
-#'
-#' @importFrom stats print.denstiy
 print.bvar_density <- function(x, ...) {
 
-  lapply(x, stats:::print.density, ...)
+  lapply(x, print, ...)
 
   return(invisible(x))
 }
@@ -66,7 +64,6 @@ print.bvar_density <- function(x, ...) {
 #' @rdname density.bvar
 #' @export
 #'
-#' @importFrom stats plot.density
 #' @importFrom graphics par
 plot.bvar_density <- function(x, mar = c(2, 2, 2, 0.5), ...) {
 

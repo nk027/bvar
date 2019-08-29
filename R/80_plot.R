@@ -51,7 +51,7 @@ plot.bvar <- function(
     type,
     full = bv_plot(x, type, vars, chains, mar, ...),
     trace = bv_plot(x, type, vars, chains, mar, ...),
-    density = bv_plot(x, type, vars, chains, mar, ..)
+    density = bv_plot(x, type, vars, chains, mar, ...)
   )
 
   return(invisible(x))

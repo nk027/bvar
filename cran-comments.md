@@ -7,10 +7,13 @@
   - `predict()` for ex-post forecasts and generating quantiles
   - `irf()` / `fevd()` for ex-post irfs and fevds and generating quantiles
   - `fitted()`, `residuals()`, `coef()` and `vcov()`
-  - `density()` to summarise and plot hyperparameters **To-Do**
+  - `density()` to summarise and plot hyperparameters
 - Added `print()` methods for intermediate objects
 - Reworked plotting
   - `plot.bvar()` now supports several types
+  - `bv_plot_trace()` and `bv_plot_density()` are now deprecated
+    - `density()` offers a plot method
+    - Both can be replaced by `plot.bvar()`, incl. plotting of multiple chains
   - Plots of fcasts and irfs have been changed
     - The preferred way of calling is now: `plot(x$irf)` or `plot(irf(x))`
     - The previous `bv_plot_irf(x)` is still supported, however

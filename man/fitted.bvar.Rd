@@ -50,7 +50,7 @@ Calculates fitted values / resiudals for Bayesian VARs generated via
 \code{\link{bvar}}.
 }
 \examples{
-\dontrun{
+\donttest{
 data <- matrix(rnorm(200), ncol = 2)
 x <- bvar(data, lags = 2)
 

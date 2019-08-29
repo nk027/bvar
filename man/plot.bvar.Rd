@@ -3,33 +3,57 @@
 \name{plot.bvar}
 \alias{plot.bvar}
 \alias{bv_plot}
-\title{Hyperparameter plot}
+\title{Plotting method for Bayesian VARs}
 \usage{
-\method{plot}{bvar}(x, mar = c(2, 2, 2, 0.5), ...)
+\method{plot}{bvar}(x, type = c("full", "trace", "density"),
+  vars = NULL, chains = list(), mar = c(2, 2, 2, 0.5), ...)
 
-bv_plot(x, mar = c(2, 2, 2, 0.5), ...)
+bv_plot(x, type = c("full", "trace", "density"), vars = NULL,
+  chains = list(), mar = c(2, 2, 2, 0.5), ...)
 }
 \arguments{
-\item{x}{A \code{bvar}, obtained from \code{\link{bvar}}.}
+\item{x}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
+
+\item{type}{A string with the type of plot desired. The standard method
+\code{"full"} includes both density and trace plots.}
+
+\item{vars}{Optional character vector used to subset the plot. The elements
+need to match the names of hyperparameters (including \code{"ml"}). Defaults
+to \code{NULL}, i.e. all variables.}
+
+\item{chains}{List with additional \code{bvar} objects. Contents are then
+added to trace and density plots.}
 
 \item{mar}{Numeric vector. Margins for \code{\link[graphics]{par}}.}
 
 \item{...}{Other graphical parameters for \code{\link[graphics]{par}}.}
 }
 \description{
-A collection of diagnostic plots with traces and densities of the marginal
-posterior likelihood and available hyperparameters. Minimum and maximum
-values of the hyperparameters are plotted as dashed lines in "darkgray".
+Method to plot trace and densities of hyperparameters and marginal likelihood
+obtained from \code{\link{bvar}}. Plots may be subset to certain types using
+\emph{type} and to hyperparamters using \emph{vars}.
+Multiple chains, i.e. comparable \code{bvar} objects may be plotted together
+using the \emph{chains} argument.
 }
 \examples{
 \donttest{
 data <- matrix(rnorm(200), ncol = 2)
 x <- bvar(data, lags = 2)
+y <- bvar(data, lags = 2)
 
-# Plot various output generated
+# Plot full traces and densities
 plot(x)
+
+# Compare with second chain
+plot(x, chains = y)
 }
 }
 \seealso{
-\code{\link{bv_plot_trace}}; \code{\link{bv_plot_irf}}
+\code{\link{plot.bvar_fcast}}; \code{\link{plot.bvar_irf}}.
 }
+\keyword{BVAR}
+\keyword{VAR}
+\keyword{convergence}
+\keyword{density}
+\keyword{plot}
+\keyword{trace}
