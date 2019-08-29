@@ -1,7 +1,7 @@
 #' Forecast error variance decompostions draws
 #'
 #' Computes Forecast error variance decompostions (FEVDs) using the impulse
-#' response draws obtained via \code{\link{compute_irf}}.
+#' response draws obtained from \code{\link{compute_irf}}.
 #'
 #' @param irf_comp Numeric matrix. Contains a draw of impulse responses
 #' obtained from \code{\link{compute_irf}}.

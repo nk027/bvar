@@ -81,7 +81,7 @@ bv_plot_fcast <- function(
   if(inherits(x, "bvar")) {x <- predict(x)}
 
   if(!missing(conf_bands)) {
-    message("Parameter `conf_bands` is deprecated. Please use `predict()`.")
+    message("Parameter conf_bands is deprecated. Please use `predict()`.")
     x <- predict(x, conf_bands = conf_bands)
   }
 
@@ -100,7 +100,7 @@ bv_plot_fcast <- function(
 
   if(is.null(variables)) {
     variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
-  } else if(length(variables) != M) {stop("Vector `variables` is incomplete.")}
+  } else if(length(variables) != M) {stop("Vector variables is incomplete.")}
 
   orientation <- match.arg(orientation)
 

@@ -78,17 +78,9 @@ print_irf <- function(x, ...) {
 }
 
 
-#' Impulse response functions summary method
-#'
-#' Print and return quantiles of impulse response functions from
-#' \code{\link{bvar}}.
-#'
-#' @return Returns an array with the desired impulse response quantiles
-#' invisibly.
-#'
-#' @export
-#'
+
 #' @rdname irf.bvar
+#' @export
 summary.bvar_irf <- function(
   object,
   vars_impulse = NULL, vars_response = NULL,
@@ -97,20 +89,25 @@ summary.bvar_irf <- function(
   print.bvar_irf(object)
 
   quants <- object[["quants"]]
+  has_quants <- length(dim(quants)) == 4
+  M <- if(has_quants) {dim(quants)[2]} else {M <- dim(quants)[1]}
+
   variables <- if(is.null(object[["variables"]])) {
-    1L:dim(quants)[2]
+    1L:M
   } else {object[["variables"]]}
-  pos_imp <- get_var_set(vars_impulse, variables, dim(quants)[2])
-  pos_res <- get_var_set(vars_response, variables, dim(quants)[2])
+  pos_imp <- get_var_set(vars_impulse, variables, M)
+  pos_res <- get_var_set(vars_response, variables, M)
 
-
-  cat("Impulse Responses:\n")
+  cat(if(!has_quants) {"Median impulse responses:\n"} else {"Impulse responses:\n"})
   for(i in pos_res) {
     for(j in pos_imp) {
       cat("\tShock ", variables[j], " on ", variables[i], ":\n", sep = "")
-      print(round(quants[, i, , j], digits = digits))
+      print(round(if(has_quants) {quants[, i, , j]} else {quants[i, , j]},
+                  digits = digits))
     }
   }
 
-  return(invisible(quants[, pos_res, , pos_imp]))
+  return(invisible(
+    if(has_quants) {quants[, pos_res, , pos_imp]} else {quants[pos_res, , pos_imp]}
+  ))
 }

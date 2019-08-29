@@ -1,23 +1,26 @@
-#' Impulse response plot
+#' Plotting method for Bayesian VAR impulse responses
 #'
 #' Plotting method for impulse responses obtained from \code{\link{bvar}} or
-#'  \code{\link{irf.bvar}}. Impulse responses of all or a subset of the
-#'  available variables can be plotted.
+#' \code{\link{irf.bvar}}. Impulse responses of all or a subset of the
+#' available variables can be plotted.
 #'
 #' @param x A \code{bvar} / \code{bvar_irf} object, obtained from
-#' \code{\link{bvar}} or \code{\link{irf.bvar}}.
+#' \code{\link{bvar}} / \code{\link{irf.bvar}}.
 #' @param conf_bands Deprecated. Use \code{\link{irf.bvar}}. Numeric vector
 #' of desired confidence bands.
-#' @param vars_impulse Optional numeric or character vector. Used to subset the
-#' plot's impulses to certain variables by position or name (must be available).
-#' Defaults to \code{NULL}, i.e. all variables.
-#' @param vars_response Optional numeric or character vector. Used to subset the
-#' plot's responses to certain variables by position or name (must be
-#' available). Defaults to \code{NULL}, i.e. all variables.
+#' @param vars_impulse,vars_response Optional numeric or character vector. Used
+#' to subset the plot's impulses / responses to certain variables by position
+#' or name (must be available). Defaults to \code{NULL}, i.e. all variables.
 #' @param variables Optional character vector. Names of all variables in the
 #' object. Used to subset and title. Taken from \code{x$variables} if available.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
+#'
+#' @return Returns \emph{x} invisibly.
+#'
+#' @seealso \code{\link{bvar}}; \code{\link{irf.bvar_irf}}
+#'
+#' @keywords VAR BVAR irf fevd plot
 #'
 #' @export
 #'
@@ -27,17 +30,19 @@
 #' x <- bvar(data, lags = 2)
 #'
 #' # Plot impulse responses for all available variables
-#' bv_plot_irf(x)
+#' plot(irf(x))
+#' # Alternatively
+#' plot(x$irf)
 #'
 #' # Subset to impulse variables in positions 2 and 4 via position and name
-#' bv_plot_irf(x, vars_impulse = c(2, 4))
-# bv_plot_irf(x,
-#   variables = c("solved", "for", "many", "decades"),
-#   vars_impulse = c("for", "decades")
-# )
+#' plot(x$irf, vars_impulse = c(2, 4))
+#' plot(x$irf,
+#'   variables = c("solved", "for", "many", "decades"),
+#'   vars_impulse = c("for", "decades")
+#' )
 #'
-#' # Use the method to plot and adjust confidence bands
-#' plot(x$irf, conf_bands = c(0.01, 0.05))
+#' # Adjust confidence bands via irf
+#' plot(irf(x, conf_bands = c(0.01, 0.05)))
 #' }
 plot.bvar_irf <- function(
   x,
@@ -71,7 +76,7 @@ bv_plot_irf <- function(
   if(inherits(x, "bvar")) {x <- irf(x)}
 
   if(!missing(conf_bands)) {
-    message("Parameter `conf_bands` is deprecated. Please use `irf()`.")
+    message("Parameter conf_bands is deprecated. Please use `irf()`.")
     x <- irf(x, conf_bands = conf_bands)
   }
 
@@ -90,7 +95,7 @@ bv_plot_irf <- function(
 
   if(is.null(variables)) {
     variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
-  } else if(length(variables) != M) {stop("Vector `variables` is incomplete.")}
+  } else if(length(variables) != M) {stop("Vector variables is incomplete.")}
 
   col <- set_gray(P)
   pos_imp <- get_var_set(vars_impulse, variables, M)

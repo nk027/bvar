@@ -18,7 +18,7 @@
 #' @param newdata Optional numeric matrix or dataframe. Used to base the
 #' prediction on. Fitted values are used by default.
 #'
-#' @param vars Optional numeric or character vector. Used to subset the output
+#' @param vars Optional numeric or character vector. Used to subset the summary
 #' to certain variables by position or name (must be available). Defaults to
 #' \code{NULL}, i.e. all variables.
 #' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
@@ -83,7 +83,7 @@ predict.bvar <- function(
 
     n_pres <- object[["meta"]][["n_save"]]
     n_thin <- int_check(n_thin, min = 1, max = (n_pres / 10),
-                        "Problematic value for parameter `n_thin`.")
+                        "Problematic value for parameter n_thin.")
     n_save <- int_check((n_pres / n_thin), min = 1)
 
     K <- object[["meta"]][["K"]]
@@ -97,15 +97,14 @@ predict.bvar <- function(
       N <- object[["meta"]][["N"]]
     } else {
       if(!all(vapply(newdata, is.numeric, logical(1))) || any(is.na(newdata)) ||
-         ncol(newdata) != M) {stop("Problem with `newdata`.")}
+         ncol(newdata) != M) {stop("Problem with newdata.")}
       Y <- as.matrix(newdata)
       N <- nrow(Y)
     }
 
     fcast_store <- list(
       "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
-      "setup" = fcast,
-      "variables" = object[["variables"]]
+      "setup" = fcast, "variables" = object[["variables"]]
     )
     class(fcast_store) <- "bvar_fcast"
 

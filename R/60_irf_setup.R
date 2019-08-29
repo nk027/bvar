@@ -35,7 +35,7 @@
 #'     Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696. \url{https://doi.org/10.1111/j.1467-937X.2009.00578.x}
 #'
 #' @seealso \code{\link{bvar}}; \code{\link{irf.bvar_irf}};
-#' \code{\link{plot.bvar_irf}};
+#' \code{\link{plot.bvar_irf}}
 #'
 #' @keywords VAR BVAR irf impulse responses fevd settings
 #'
