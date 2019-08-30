@@ -113,9 +113,9 @@ bv_psi <- function(scale = 0.004, shape = 0.004, mode = "auto",
                    min = "auto", max = "auto") {
 
   if(any(scale <= 0, shape <= 0)) {stop("Parameters of psi misspecified.")}
-  if(mode != "auto") {
-    if(min == "auto") {min <- mode / 100}
-    if(max == "auto") {max <- mode * 100}
+  if(any(mode != "auto")) {
+    if(any(min == "auto")) {min <- mode / 100}
+    if(any(max == "auto")) {max <- mode * 100}
     if(any(0 >= min, min >= max)) {stop("Boundaries misspecified.")}
   }
 
