@@ -48,6 +48,76 @@ bv_plot_density <- function(x, name, ...) {
 }
 
 
+#' @export
+#' @rdname plot.bvar
+#'
+#' @importFrom graphics par
+bv_plot <- function(x, mar = c(2, 2, 2, 0.5), ...) {
+
+  .Deprecated("plot.bvar")
+  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
+
+  y <- x[["hyper"]]
+  K <- ncol(y)
+  name <- colnames(y)
+  bounds <- vapply(name, function(z) {
+    c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])
+  }, double(2))
+
+  op <- par(mfrow = c(K + 1, 2), mar = mar, ...)
+
+  plot_trace(x[["ml"]], name = "marginal likelihood")
+  plot_dens(x[["ml"]], name = "marginal likelihood")
+  for(i in 1:K) {
+    plot_trace(y[, i], name[i], bounds[, i])
+    plot_dens(y[, i], name[i], bounds[, i])
+  }
+
+  par(op)
+
+  return(invisible(x))
+}
+
+
+#' @rdname plot.bvar_fcast
+bv_plot_fcast <- function(
+  x,
+  conf_bands = 0.16,
+  variables = NULL,
+  vars = NULL,
+  orientation = c("vertical", "horizontal"),
+  mar = c(2, 2, 2, 0.5),
+  ...) {
+
+  .Deprecated("plot.bvar_fcast")
+  plot_fcast(
+    x, conf_bands,
+    variables = variables, vars = vars, orientation = orientation,
+    mar = mar, ... = ...)
+}
+
+
+#' @rdname plot.bvar_irf
+bv_plot_irf <- function(
+  x,
+  conf_bands = 0.16,
+  variables = NULL,
+  vars_impulse = NULL,
+  vars_response = NULL,
+  orientation = c("vertical", "horizontal"),
+  mar = c(2, 2, 2, 0.5),
+  ...) {
+
+  .Deprecated("plot.bvar_irf")
+  plot_fcast(
+    x, conf_bands,
+    variables = variables,
+    vars_impulse = vars_impulse, vars_response = vars_response,
+    orientation = orientation,
+    mar = mar, ... = ...)
+}
+
+
 #' Hyperparameter plot helper
 #'
 #' Helper function to provide input checks, prepare data et cetera for

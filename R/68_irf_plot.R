@@ -54,14 +54,13 @@ plot.bvar_irf <- function(
   ...) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
-  bv_plot_irf(x, conf_bands, vars_impulse, vars_response, variables, mar, ...)
+  plot_irf(x, conf_bands, vars_impulse, vars_response, variables, mar, ...)
 
 }
 
 
 #' @rdname plot.bvar_irf
-#' @export
-bv_plot_irf <- function(
+plot_irf <- function(
   x,
   conf_bands, # deprecated, see irf.bvar
   vars_impulse = NULL,
@@ -103,7 +102,7 @@ bv_plot_irf <- function(
 
   mfrow <- c(length(pos_res), length(pos_imp))
 
-  plot_irf(quants, variables, pos_imp, pos_res, col, mar, mfrow, ...)
+  .plot_irf(quants, variables, pos_imp, pos_res, col, mar, mfrow, ...)
 
   return(invisible(x))
 }
@@ -126,7 +125,7 @@ bv_plot_irf <- function(
 #' @importFrom stats ts.plot
 #'
 #' @noRd
-plot_irf <- function(
+.plot_irf <- function(
   x,
   variables,
   pos_imp,

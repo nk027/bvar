@@ -49,9 +49,9 @@ plot.bvar <- function(
 
   switch(
     type,
-    full = bv_plot(x, type, vars, chains, mar, ...),
-    trace = bv_plot(x, type, vars, chains, mar, ...),
-    density = bv_plot(x, type, vars, chains, mar, ...)
+    full = plot_bvar(x, type, vars, chains, mar, ...),
+    trace = plot_bvar(x, type, vars, chains, mar, ...),
+    density = plot_bvar(x, type, vars, chains, mar, ...)
   )
 
   return(invisible(x))
@@ -61,7 +61,7 @@ plot.bvar <- function(
 #' @rdname plot.bvar
 #'
 #' @importFrom graphics par
-bv_plot <- function(
+plot_bvar <- function(
   x,
   type = c("full", "trace", "density"),
   vars = NULL,

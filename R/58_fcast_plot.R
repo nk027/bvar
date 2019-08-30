@@ -59,14 +59,13 @@ plot.bvar_fcast <- function(
   ...) {
 
   if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
-  bv_plot_fcast(x, conf_bands, vars, variables, orientation, mar, ...)
+  plot_fcast(x, conf_bands, vars, variables, orientation, mar, ...)
 
 }
 
 
 #' @rdname plot.bvar_fcast
-#' @export
-bv_plot_fcast <- function(
+plot_fcast <- function(
   x,
   conf_bands, # deprecated, see predict.bvar
   vars = NULL,
@@ -111,7 +110,7 @@ bv_plot_fcast <- function(
     c(length(pos), 1)
   } else {c(1, length(pos))}
 
-  plot_fcast(quants, variables, pos, col, mar, mfrow, ...)
+  .plot_fcast(quants, variables, pos, col, mar, mfrow, ...)
 
   return(invisible(x))
 }
@@ -132,7 +131,7 @@ bv_plot_fcast <- function(
 #' @importFrom stats ts.plot
 #'
 #' @noRd
-plot_fcast <- function(
+.plot_fcast <- function(
   x,
   variables,
   pos,
