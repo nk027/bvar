@@ -26,8 +26,8 @@ Note that the median, i.e. 0.5 is always included.}
 
 \item{x}{Object of class \code{bvar_coefs} / \code{bvar_vcovs}.}
 
-\item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied to
-numeric outputs (i.e. the quantiles).}
+\item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied
+to numeric outputs (i.e. the quantiles).}
 }
 \value{
 Returns a numeric array of class \code{bvar_coefs} /

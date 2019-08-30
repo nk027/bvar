@@ -20,6 +20,8 @@
 #'
 #' @export
 #'
+#' @importFrom stats coef vcov
+#'
 #' @examples
 #' \donttest{
 #' data <- matrix(rnorm(200), ncol = 2)

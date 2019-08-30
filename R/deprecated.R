@@ -105,16 +105,14 @@ bv_plot_irf <- function(
   variables = NULL,
   vars_impulse = NULL,
   vars_response = NULL,
-  orientation = c("vertical", "horizontal"),
   mar = c(2, 2, 2, 0.5),
   ...) {
 
   .Deprecated("plot.bvar_irf")
-  plot_fcast(
+  plot_irf(
     x, conf_bands,
     variables = variables,
     vars_impulse = vars_impulse, vars_response = vars_response,
-    orientation = orientation,
     mar = mar, ... = ...)
 }
 
