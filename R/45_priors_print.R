@@ -48,11 +48,16 @@ print.bv_psi <- function(x, indent = FALSE, ...) {
   if(!inherits(x, "bv_psi")) {stop("Please provide a `bv_psi` object.")}
 
   print_priors(x, ...)
-  for(i in seq_along(x[["mode"]])) {
-    cat(if(indent) {"\t"}, "#", i, " Mode / Bounds: ",
-        x[["mode"]][i], " / [", x[["min"]][i], ", ", x[["max"]][i], "]\n",
-        sep = "")
+  if(any(x[["mode"]] == "auto")) {
+    cat(if(indent) {"\t"}, "Mode / Bounds: retrieved automatically\n")
+  } else {
+    for(i in seq_along(x[["mode"]])) {
+      cat(if(indent) {"\t"}, "#", i, " Mode / Bounds: ",
+          x[["mode"]][i], " / [", x[["min"]][i], ", ", x[["max"]][i], "]\n",
+          sep = "")
+    }
   }
+
 
   return(invisible(x))
 }
