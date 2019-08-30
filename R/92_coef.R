@@ -114,16 +114,14 @@ print_coefs <- function(
         paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")
     for(j in dimnames(x)[[1]]) {
       if(j == "50%") {
-        cat("Median values:\n")
-        print(round(coefs[j, , ], digits = digits))
+        cat("Median values\n")
       } else {
-        cat(j, ":\n")
-        print(round(coefs[j, , ], digits = digits))
+        cat(j, "\n")
       }
+      print(round(coefs[j, , ], digits = digits))
     }
-
   } else {
-    cat("Median values:\n")
+    cat("Median values\n")
     print(round(coefs, digits = digits))
   }
 

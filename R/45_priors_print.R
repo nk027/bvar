@@ -7,16 +7,16 @@ print.bv_priors <- function(x, ...) {
   cat("Object with prior settings for `bvar()`.\n",
       "Hyperparameters: ",
       paste0(x[["hyper"]], collapse = ", "),
-      "\n", sep = "")
+      "\n\n", sep = "")
   if(!is.null(x[["lambda"]])) {
     cat("Minnesota prior:\nlambda:\n"); print(x[["lambda"]], indent = TRUE)
     cat("alpha:\n"); print(x[["alpha"]], indent = TRUE)
     cat("psi:\n"); print(x[["psi"]], indent = TRUE)
-    cat("variance:", x[["var"]], "\n")
+    cat("\nvariance of constant term:", x[["var"]], "\n")
   }
   dummy_pos <- !names(x) %in% c("lambda", "alpha", "psi", "hyper", "var", "b")
   if(any(dummy_pos)) {
-    cat("Dummy prior(s):\n")
+    cat("\nDummy prior(s):\n")
     dummies <- names(x)[dummy_pos]
     for(dummy in dummies) {
       cat(dummy, ":\n", sep = ""); print(x[[dummy]], indent = TRUE)
