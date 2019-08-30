@@ -46,7 +46,7 @@
 #' }
 plot.bvar_irf <- function(
   x,
-  conf_bands, # deprecated, see irf.bvar
+  conf_bands, # deprecated, see `irf.bvar()`
   vars_impulse = NULL,
   vars_response = NULL,
   variables = NULL,
@@ -55,14 +55,13 @@ plot.bvar_irf <- function(
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
   plot_irf(x, conf_bands, vars_impulse, vars_response, variables, mar, ...)
-
 }
 
 
 #' @rdname plot.bvar_irf
 plot_irf <- function(
   x,
-  conf_bands, # deprecated, see irf.bvar
+  conf_bands, # deprecated, see `irf.bvar()`
   vars_impulse = NULL,
   vars_response = NULL,
   variables = NULL,

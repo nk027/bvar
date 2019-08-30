@@ -9,8 +9,8 @@
 #' Note that the median, i.e. 0.5 is always included.
 #'
 #' @param x Object of class \code{bvar_coefs} / \code{bvar_vcovs}.
-#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
-#' numeric outputs (i.e. the quantiles).
+#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied
+#' to numeric outputs (i.e. the quantiles).
 #' @param ... Not used.
 #'
 #' @return Returns a numeric array of class \code{bvar_coefs} /

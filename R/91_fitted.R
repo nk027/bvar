@@ -34,39 +34,27 @@
 #' # Get fitted values and adjust confidence bands to 10%, 50% and 90%
 #' fitted(x, conf_bands = 0.10)
 #'
-#' # Only get the median and increase the iterations
-#' fitted(x, conf_bands = 0.5, n_thin = 10L)
-#'
 #' # Get residuals
 #' residuals(x)
 #' }
-fitted.bvar <- function(object, conf_bands = 0.5, n_thin = 100L, ...) {
+fitted.bvar <- function(object, conf_bands = 0.5, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  n_pres <- object[["meta"]][["n_save"]]
-  n_thin <- int_check(n_thin, min = 1, max = (n_pres / 10),
-                      "Problematic value for parameter `n_thin`.")
-  n_save <- int_check((n_pres / n_thin), min = 1)
-
   X <- object[["meta"]][["X"]]
   N <- object[["meta"]][["N"]]
-  K <- object[["meta"]][["K"]]
   M <- object[["meta"]][["M"]]
-  beta <- object[["beta"]]
+  betas <- coef(object, conf_bands)
 
-  fit <- tryCatch(array(NA, c(n_save, N, M)), error = function(e) {
-    stop(e, "Use `n_thin` to limit memory usage.")
-  })
-
-  j <- 1
-  for(i in seq_len(n_save)) {
-    fit[i, , ] <- X %*% beta[j, , ]
-    j <- j + n_thin
+  has_quants <- length(dim(betas)) == 3
+  if(has_quants) {
+    fit <- array(NA, c(dim(betas)[1], N, M), dimnames = dimnames(betas))
+    for(i in seq_len(dim(betas)[1])) {
+      fit[i, , ] <- X %*% betas[i, , ]
+    }
+  } else {
+    fit <- X %*% betas
   }
-
-  quantiles <- quantile_check(conf_bands)
-  fit <- apply(fit, c(2, 3), quantile, quantiles)
   class(fit) <- "bvar_fitted"
 
   return(fit)
@@ -75,20 +63,22 @@ fitted.bvar <- function(object, conf_bands = 0.5, n_thin = 100L, ...) {
 
 #' @rdname fitted.bvar
 #' @export
-residuals.bvar <- function(object, conf_bands = 0.5, n_thin = 100L, ...) {
+residuals.bvar <- function(object, conf_bands = 0.5, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  fit <- fitted.bvar(object, conf_bands = conf_bands, n_thin = n_thin)
+  fit <- fitted.bvar(object, conf_bands = conf_bands)
+
+  Y <- object[["meta"]][["Y"]]
 
   has_quants <- length(dim(fit)) == 3
   if(has_quants) {
     resids <- array(NA, dim(fit), dimnames(fit))
     for(i in seq_len(dim(fit)[1])) {
-      resids[i, , ] <- object[["meta"]][["Y"]] - fit[i, , ]
+      resids[i, , ] <- Y - fit[i, , ]
     }
   } else {
-    resids <- object[["meta"]][["Y"]] - fit
+    resids <- Y - fit
   }
   class(resids) <- "bvar_resid"
 

@@ -51,7 +51,7 @@
 #' }
 plot.bvar_fcast <- function(
   x,
-  conf_bands, # deprecated, see predict.bvar
+  conf_bands, # deprecated, see `predict.bvar()`
   vars = NULL,
   variables = NULL,
   orientation = c("vertical", "horizontal"),
@@ -60,14 +60,13 @@ plot.bvar_fcast <- function(
 
   if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
   plot_fcast(x, conf_bands, vars, variables, orientation, mar, ...)
-
 }
 
 
 #' @rdname plot.bvar_fcast
 plot_fcast <- function(
   x,
-  conf_bands, # deprecated, see predict.bvar
+  conf_bands, # deprecated, see `predict.bvar()`
   vars = NULL,
   variables = NULL,
   orientation = c("vertical", "horizontal"),
