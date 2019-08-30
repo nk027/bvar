@@ -2,24 +2,28 @@
 
 *Under Construction*
 
+
+# v0.1.6, Internal Release 1
+
+- Prepare for first minor release
 - Provide several standard methods for objects generated with *BVAR*
-  - `summary()` **To-Do**
   - `predict()` for ex-post forecasts and generating quantiles
-  - `irf()` / `fevd()` for ex-post irfs and fevds and generating quantiles
+  - `irf()` / `fevd()` for ex-post irfs, fevds and generating quantiles
   - `fitted()`, `residuals()`, `coef()` and `vcov()`
-  - `density()` to summarise and plot hyperparameters
+  - `density()` as shorthand for calling `density()` on hyperparameters
 - Added `print()` methods for intermediate objects
+  - Includes `bv_minnesota`, `bv_metropolis` and method outputs
 - Reworked plotting
-  - `plot.bvar()` now supports several types
+  - `plot.bvar()` now supports types, subsets and multiple chains
   - `bv_plot_trace()` and `bv_plot_density()` are now deprecated
     - `density()` offers a plot method
     - Both can be replaced by `plot.bvar()`, incl. plotting of multiple chains
-  - Plots of fcasts and irfs have been changed
+  - Plots of `bvar_fcast` and `bvar_irf` have been changed
     - The preferred way of calling is now: `plot(x$irf)` or `plot(irf(x))`
-    - The previous `bv_plot_irf(x)` is still supported, however
+    - The previous `bv_plot_irf(x)` is now deprecated
     - Confidence bands are now set in `predict()` / `irf()` instead
   - Added plot methods for `bvar_resid` and `bvar_density`
-- Added option to set maximum number of draws for sign restrictions
+- Added `sign_lim` to set maximum number of sign restriction draws
 - Prior construction has been standardised further
   - `alpha`, `lambda` and dummy-priors are quite alike, `psi` has been aligned
   - `bv_mn()` may be called with a numeric vector for `alpha` and/or `lambda`
@@ -30,9 +34,7 @@
   - `bv_metropolis()` and `bv_minnesota()`
 - Fixed bugs related to single confidence bands at 0.5
 - Saved `fred_qd` with format version 2, lowering R dependency to (>= 3.3.0)
-- Added *vars* and *coda* to suggests
-  - Shared methods with *vars*, import is bypassed
-  - Upcoming use of *coda* methods **To-Do**
+- Added *vars* to suggests for shared methods, import is bypassed
 
 
 # v0.1.5, CRAN Update 1

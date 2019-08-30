@@ -20,6 +20,7 @@ marginal likelihood.}
 hyperparameter must be available and priors of the objects should match.}
 }
 \description{
+\strong{Deprecated. Use \code{\link{plot.bvar}} instead.}
 Diagnostic plots of the trace / density of a single hyperparameter.
 A parameter may be plotted across multiple iterations of \code{\link{bvar}}
 via the ellipsis parameter. Given that the settings for \code{\link{bvar}}

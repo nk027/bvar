@@ -7,9 +7,6 @@
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
 #' Note that the median, i.e. 0.5 is always included.
-#' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{object}
-#' is used for forecasting, others are dropped. Defaults to \code{100L}, to
-#' prevent memory overflow.
 #'
 #' @param x Object of class \code{bvar_fitted} / \code{bvar_resid}.
 #' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
@@ -25,6 +22,8 @@
 #' @seealso \code{\link{bvar}}
 #'
 #' @export
+#'
+#' @importFrom stats fitted residuals
 #'
 #' @examples
 #' \donttest{

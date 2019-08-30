@@ -8,9 +8,9 @@
 \alias{print.bvar_resid}
 \title{Fitted and residual methods for Bayesian VARs}
 \usage{
-\method{fitted}{bvar}(object, conf_bands = 0.5, n_thin = 100L, ...)
+\method{fitted}{bvar}(object, conf_bands = 0.5, ...)
 
-\method{residuals}{bvar}(object, conf_bands = 0.5, n_thin = 100L, ...)
+\method{residuals}{bvar}(object, conf_bands = 0.5, ...)
 
 \method{plot}{bvar_resid}(x, vars = NULL, mar = c(2, 2, 2, 0.5), ...)
 
@@ -24,10 +24,6 @@
 \item{conf_bands}{Numeric vector of desired confidence bands to apply.
 E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
 Note that the median, i.e. 0.5 is always included.}
-
-\item{n_thin}{Integer scalar. Every \emph{n_thin}'th draw in \emph{object}
-is used for forecasting, others are dropped. Defaults to \code{100L}, to
-prevent memory overflow.}
 
 \item{...}{Other graphical parameters for \code{\link[graphics]{par}}.}
 
@@ -56,9 +52,6 @@ x <- bvar(data, lags = 2)
 
 # Get fitted values and adjust confidence bands to 10\%, 50\% and 90\%
 fitted(x, conf_bands = 0.10)
-
-# Only get the median and increase the iterations
-fitted(x, conf_bands = 0.5, n_thin = 10L)
 
 # Get residuals
 residuals(x)

@@ -34,6 +34,9 @@
 #'
 #' # Compare with second chain
 #' plot(x, chains = y)
+#'
+#' # Only plot the marginal likelihood's density
+#' plot(x, "dens", "ml")
 #' }
 plot.bvar <- function(
   x,
