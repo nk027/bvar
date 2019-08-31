@@ -12,7 +12,9 @@
 #' coefficient values to retrieve densities of. \emph{var_dep} corresponds to
 #' a specific dependent variable, \emph{var_ind} to an independent one. Note
 #' that the constant is found at position one.
-#' @param ... Not used.
+#' @param ... Not used. Fed to \code{\link[stats]{density}}.
+#'
+#' @param var,n_vars,lag Integer scalars.
 #'
 #' @return Returns a list with outputs of \code{\link[stats]{density}}.
 #'
@@ -33,6 +35,14 @@
 #'
 #' # Only get the density of the marginal likelihood
 #' density(x, hyper = "ml")
+#'
+#' # Check out the constant's density on both dependents
+#' plot(density(x, var_ind = 1))
+#'
+#' # Get the density of the 1st lag of variable 2's coefficients with
+#' respect to variable 1
+#' idx <- independent_index(var = 2, n_vars = 2, lag = 1)
+#' density(x, var_dep = 1, var_ind = idx)
 #' }
 density.bvar <- function(
   x, hyper = NULL,
@@ -41,7 +51,7 @@ density.bvar <- function(
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  # Create the matrix data to apply quantiles over
+  # Create the matrix 'data' to apply quantiles over
   if(!is.null(var_dep) || !is.null(var_ind)) {
     var_dep <- get_var_set(var_dep, M = x[["meta"]][["M"]])
     var_ind <- get_var_set(var_ind, M = x[["meta"]][["K"]])
@@ -56,8 +66,8 @@ density.bvar <- function(
         k <- k + 1
     }}
     hyper <- paste0("dep", var_dep, "-ind", var_ind) # Used to name output
-  } else { # If we want to return hyperparameters
-    data <- cbind("ml" = x[["ml"]], x[["hyper"]]) # Subset later
+  } else { # We want to return hyperparameter densities
+    data <- cbind("ml" = x[["ml"]], x[["hyper"]]) # Here we subset later
     if(is.null(hyper)) {
       hyper <- colnames(data)
     } else if(!all(hyper %in% colnames(data))) {
@@ -100,4 +110,12 @@ plot.bvar_density <- function(x, mar = c(2, 2, 2, 0.5), ...) {
   par(op)
 
   return(invisible(x))
+}
+
+
+#' @rdname density.bvar
+#' @export
+independent_index <- function(var, n_vars, lag) {
+  x <- vapply(c(var, n_vars, lag), int_check, integer(1L))
+  return(1 + x[2] * (x[3] - 1) + x[1])
 }
