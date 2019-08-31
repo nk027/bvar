@@ -11,6 +11,8 @@
 #' @param x Object of class \code{bvar_coefs} / \code{bvar_vcovs}.
 #' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied
 #' to numeric outputs (i.e. the quantiles).
+#' @param complete Logical scalar. Whether to print only medians or all
+#' available confidence bands.
 #' @param ... Not used.
 #'
 #' @return Returns a numeric array of class \code{bvar_coefs} /
@@ -61,11 +63,11 @@ vcov.bvar <- function(object, conf_bands = 0.5, ...) {
 
 #' @rdname coef.bvar
 #' @export
-print.bvar_coefs <- function(x, digits = 3L, ...) {
+print.bvar_coefs <- function(x, digits = 3L, complete = FALSE, ...) {
 
   if(!inherits(x, "bvar_coefs")) {stop("Please provide a `bvar_coefs` object.")}
 
-  print_coefs(x, digits, type = "coefficient", ...)
+  print_coefs(x, digits, type = "coefficient", complete = complete, ...)
 
   return(invisible(x))
 }
@@ -73,11 +75,11 @@ print.bvar_coefs <- function(x, digits = 3L, ...) {
 
 #' @rdname coef.bvar
 #' @export
-print.bvar_vcovs <- function(x, digits = 3L, ...) {
+print.bvar_vcovs <- function(x, digits = 3L, complete = FALSE, ...) {
 
   if(!inherits(x, "bvar_vcovs")) {stop("Please provide a `bvar_vcovs` object.")}
 
-  print_coefs(x, digits, type = "variance-covariance", ...)
+  print_coefs(x, digits, type = "variance-covariance", complete = complete, ...)
 
   return(invisible(x))
 }
@@ -95,8 +97,8 @@ print.bvar_vcovs <- function(x, digits = 3L, ...) {
 #' @noRd
 print_coefs <- function(
   x, digits = 3L,
-  type = c("coefficient", "variance-covariance",
-           "FEVD"),
+  type = c("coefficient", "variance-covariance", "FEVD"),
+  complete = FALSE,
   ...) {
 
   type <- match.arg(type)
@@ -105,16 +107,25 @@ print_coefs <- function(
   if(has_quants) {
     P <- dim(x)[1]
     coefs <- x["50%", , ]
-  } else {coefs <- x[]} # Remove class, avoid recursion
+    bands <- dimnames(x)[[1]]
+  } else {coefs <- x[]} # Remove class to avoid recursion
 
   cat("Numeric array (dimensions ", paste0(dim(x), collapse = ", "),  ")",
       " of ", type, " values of a BVAR.\n", sep = "")
   if(has_quants) {
     cat("Computed confidence bands: ",
-        paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")
+        paste(bands, collapse = ", "), "\n", sep = "")
   }
-  cat("Median values:\n")
-  print(round(coefs, digits = digits))
+  if(complete && has_quants) {
+    cat("Values:\n")
+    for(band in bands) {
+      cat("    ", band, ":\n", sep = "")
+      print(round(x[band, , ], digits = digits))
+    }
+  } else {
+    cat("Median values:\n")
+    print(round(coefs, digits = digits))
+  }
 
   return(invisible(x))
 }

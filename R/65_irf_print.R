@@ -31,11 +31,11 @@ print.bvar_irf <- function(x, ...) {
 
 #' @rdname irf.bvar
 #' @export
-print.bvar_fevd <- function(x, digits = 4L, ...) {
+print.bvar_fevd <- function(x, digits = 4L, complete = FALSE, ...) {
 
   if(!inherits(x, "bvar_fevd")) {stop("Please provide a `bvar_fevd` object.")}
 
-  print_coefs(x, digits, type = "FEVD", ...)
+  print_coefs(x, digits, type = "FEVD", complete = complete, ...)
 
   return(invisible(x))
 }
@@ -101,7 +101,7 @@ summary.bvar_irf <- function(
   cat(if(!has_quants) {"Median impulse responses:\n"} else {"Impulse responses:\n"})
   for(i in pos_res) {
     for(j in pos_imp) {
-      cat("\tShock ", variables[j], " on ", variables[i], ":\n", sep = "")
+      cat("    Shock ", variables[j], " on ", variables[i], ":\n", sep = "")
       print(round(if(has_quants) {quants[, i, , j]} else {quants[i, , j]},
                   digits = digits))
     }
