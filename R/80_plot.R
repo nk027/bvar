@@ -88,7 +88,8 @@ plot_bvar <- function(
   if(is.null(vars)) {
     vars <- c("ml", colnames(y))
   } else if(!all(vars %in% c("ml", colnames(y)))) {
-    stop("Parameter named '", vars, "' not found.")
+    stop("Parameter named '", vars[which(!vars %in% c("ml", colnames(y)))],
+         "' not found.")
   }
   bounds <- vapply(vars[vars != "ml"], function(z) {
     c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])
