@@ -4,14 +4,15 @@
 #' generated via \code{\link{bvar}}.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param hyper Character vector used to specify hyperparemeters to
+#' @param vars Character vector used to specify hyperparemeters to
 #' retrieve the density of. The elements need to match the names in
 #' \code{x$hyper} (plus \code{"ml"}). Defaults to \code{NULL}, i.e. all
 #' hyperparameters.
-#' @param var_dep,var_ind Optional integer vectors with the positions of
-#' coefficient values to retrieve densities of. \emph{var_dep} corresponds to
-#' a specific dependent variable, \emph{var_ind} to an independent one. Note
-#' that the constant is found at position one.
+#' @param vars_response,vars_impulse Optional integer vectors with the
+#' positions of coefficient values to retrieve densities of.
+#' \emph{vars_response} corresponds to a specific dependent variable,
+#' \emph{vars_impulse} to an independent one. Note that the constant is found
+#' at position one.
 #' @param ... Not used. Fed to \code{\link[stats]{density}}.
 #'
 #' @param var,n_vars,lag Integer scalars.
@@ -34,51 +35,51 @@
 #' plot(density(x))
 #'
 #' # Only get the density of the marginal likelihood
-#' density(x, hyper = "ml")
+#' density(x, vars = "ml")
 #'
 #' # Check out the constant's density on both dependents
-#' plot(density(x, var_ind = 1))
+#' plot(density(x, vars_impulse = 1))
 #'
 #' # Get the density of the 1st lag of variable 2's coefficients with
 #' respect to variable 1
 #' idx <- independent_index(var = 2, n_vars = 2, lag = 1)
-#' density(x, var_dep = 1, var_ind = idx)
+#' density(x, vars_response = 1, vars_impulse = idx)
 #' }
 density.bvar <- function(
-  x, hyper = NULL,
-  var_dep = NULL, var_ind = NULL,
+  x, vars = NULL,
+  vars_response = NULL, vars_impulse = NULL,
   ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
   # Create the matrix 'data' to apply quantiles over
-  if(!is.null(var_dep) || !is.null(var_ind)) {
-    var_dep <- get_var_set(var_dep, M = x[["meta"]][["M"]])
-    var_ind <- get_var_set(var_ind, M = x[["meta"]][["K"]])
+  if(!is.null(vars_response) || !is.null(vars_impulse)) {
+    vars_response <- get_var_set(vars_response, M = x[["meta"]][["M"]])
+    vars_impulse <- get_var_set(vars_impulse, M = x[["meta"]][["K"]])
 
-    n_col <- length(var_dep) * length(var_ind)
+    n_col <- length(vars_response) * length(vars_impulse)
     beta <- x[["beta"]]
 
     data <- matrix(NA, nrow = x[["meta"]][["n_save"]], ncol = n_col)
     k <- 1
-    for(i in seq_along(var_dep)) {for(j in seq_along(var_ind)) {
+    for(i in seq_along(vars_response)) {for(j in seq_along(vars_impulse)) {
         data[, k] <- beta[, j, i]
         k <- k + 1
     }}
-    hyper <- paste0("dep", var_dep, "-ind", var_ind) # Used to name output
+    vars <- paste0("dep", vars_response, "-ind", vars_impulse) # Names output
   } else { # We want to return hyperparameter densities
     data <- cbind("ml" = x[["ml"]], x[["hyper"]]) # Here we subset later
-    if(is.null(hyper)) {
-      hyper <- colnames(data)
-    } else if(!all(hyper %in% colnames(data))) {
-      stop("Parameter named '", hyper, "' not found.")
+    if(is.null(vars)) {
+      vars <- colnames(data)
+    } else if(!all(vars %in% colnames(data))) {
+      stop("Parameter named '", vars, "' not found.")
     }
-    data <- data[, hyper]
+    data <- data[, vars]
   }
 
-  out <- if(length(hyper) == 1) {
-    structure(list(density(data, ...)), names = hyper)
-  } else {structure(apply(data, 2, density, ...), names = hyper)}
+  out <- if(length(vars) == 1) {
+    structure(list(density(data, ...)), names = vars)
+  } else {structure(apply(data, 2, density, ...), names = vars)}
   class(out) <- "bvar_density"
 
   return(out)
