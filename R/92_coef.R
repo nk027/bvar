@@ -104,7 +104,7 @@ print_coefs <- function(
   has_quants <- length(dim(x)) == 3
   if(has_quants) {
     P <- dim(x)[1]
-    coefs <- x[, , ]
+    coefs <- x["50%", , ]
   } else {coefs <- x[]} # Remove class, avoid recursion
 
   cat(gsub("^(.)(.*)", "\\U\\1\\L\\2", type, perl = TRUE),
@@ -112,18 +112,9 @@ print_coefs <- function(
   if(has_quants) {
     cat("Computed confidence bands: ",
         paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")
-    for(j in dimnames(x)[[1]]) {
-      if(j == "50%") {
-        cat("Median values\n")
-      } else {
-        cat(j, "\n")
-      }
-      print(round(coefs[j, , ], digits = digits))
-    }
-  } else {
-    cat("Median values\n")
-    print(round(coefs, digits = digits))
   }
+  cat("Median values:\n")
+  print(round(coefs, digits = digits))
 
   return(invisible(x))
 }
