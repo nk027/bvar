@@ -69,7 +69,7 @@
 #'
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom stats optim runif quantile
-#' @importFrom MASS mvrnorm
+#' @importFrom mvtnorm rmvnorm
 #'
 #' @examples
 #' # Access a subset of the fred_qd dataset and transform it to be stationary
@@ -244,7 +244,8 @@ bvar <- function(
   # Initial draw ------------------------------------------------------------
 
   while(TRUE) {
-    hyper_draw <- mvrnorm(mu = opt[["par"]], Sigma = HH)
+    # hyper_draw <- MASS::mvrnorm(mu = opt[["par"]], Sigma = HH)
+    hyper_draw <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
     ml_draw <- bv_ml(hyper = hyper_draw, hyper_min, hyper_max,
                      pars = pars_full, priors, Y, X, K, M, N, lags)
     if(ml_draw[["log_ml"]] > -1e16) {break}
@@ -285,7 +286,8 @@ bvar <- function(
   for(i in (1 - n_burn):(n_draw - n_burn)) { # Start loop
 
     # Metropolis-Hastings
-    hyper_temp <- mvrnorm(mu = hyper_draw, Sigma = HH)
+    # hyper_temp <- MASS::mvrnorm(mu = hyper_draw, Sigma = HH)
+    hyper_temp <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
     ml_temp <- bv_ml(hyper = hyper_temp, hyper_min, hyper_max,
                      pars = pars_full, priors, Y, X, K, M, N, lags)
 

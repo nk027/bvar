@@ -114,9 +114,12 @@ bv_psi <- function(scale = 0.004, shape = 0.004, mode = "auto",
 
   if(any(scale <= 0, shape <= 0)) {stop("Parameters of psi misspecified.")}
   if(any(mode != "auto")) {
-    if(any(min == "auto")) {min <- mode / 100}
-    if(any(max == "auto")) {max <- mode * 100}
+    if(length(min) == 1 && min == "auto") {min <- mode / 100}
+    if(length(max) == 1 && max == "auto") {max <- mode * 100}
     if(any(0 >= min, min >= max)) {stop("Boundaries misspecified.")}
+  }
+  if(length(mode) != length(min) || length(mode) != length(max)) {
+    stop("Issue with mode and/or boundaries.")
   }
 
   out <- list("mode" = mode, "min" = min, "max" = max,
@@ -131,7 +134,8 @@ bv_psi <- function(scale = 0.004, shape = 0.004, mode = "auto",
 lazy_priors <- function(x) {
 
   if(!inherits(x, "bv_dummy")) {
-    if(length(x) == 4 && inherits(x, "numeric")) {return(x = bv_lambda(x))}
+    # Allow receiving length 4 numeric vectors
+    if(length(x) == 4 && is.numeric(x)) {return(x = bv_lambda(x))}
     stop("Please use `bv_lambda()` / `bv_alpha()` to set lambda / alpha.")
   }
 

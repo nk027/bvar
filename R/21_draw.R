@@ -19,7 +19,7 @@
 #'   of sigma_draw. Calculated as \code{t(chol(sigma_draw))}.
 #' }
 #'
-#' @importFrom MASS mvrnorm
+#' @importFrom mvtnorm rmvnorm
 #'
 #' @noRd
 draw_post <- function(
@@ -35,8 +35,10 @@ draw_post <- function(
   sigma_draw <- solve(crossprod(eta)) %*% diag(M)
   sigma_chol <- t(chol(sigma_draw))
   beta_draw <- beta_hat +
-    t(mvrnorm(n = M, mu = rep(0, (1 + M * lags)),
-      Sigma = solve(crossprod(X) + omega_inv) %*% diag(1 + M * lags))) %*%
+    # t(mvrnorm(n = M, mu = rep(0, (1 + M * lags)),
+    #           Sigma = solve(crossprod(X) + omega_inv) %*% diag(1 + M * lags))) %*%
+    t(rmvnorm(n = M, mean = rep(0, (1 + M * lags)),
+              sigma = solve(crossprod(X) + omega_inv) %*% diag(1 + M * lags))) %*%
     sigma_chol
 
   return(list("beta_draw" = beta_draw,

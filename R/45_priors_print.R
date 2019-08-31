@@ -12,7 +12,7 @@ print.bv_priors <- function(x, ...) {
     cat("Minnesota prior:\nlambda:\n"); print(x[["lambda"]], indent = TRUE)
     cat("alpha:\n"); print(x[["alpha"]], indent = TRUE)
     cat("psi:\n"); print(x[["psi"]], indent = TRUE)
-    cat("\nvariance of constant term:", x[["var"]], "\n")
+    cat("\nVariance of the constant term:", x[["var"]], "\n")
   }
   dummy_pos <- !names(x) %in% c("lambda", "alpha", "psi", "hyper", "var", "b")
   if(any(dummy_pos)) {
