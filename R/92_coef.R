@@ -96,7 +96,7 @@ print.bvar_vcovs <- function(x, digits = 3L, ...) {
 print_coefs <- function(
   x, digits = 3L,
   type = c("coefficient", "variance-covariance",
-           "forecast error variance decomposition"),
+           "FEVD"),
   ...) {
 
   type <- match.arg(type)
@@ -107,8 +107,8 @@ print_coefs <- function(
     coefs <- x["50%", , ]
   } else {coefs <- x[]} # Remove class, avoid recursion
 
-  cat(gsub("^(.)(.*)", "\\U\\1\\L\\2", type, perl = TRUE),
-      "values of a Bayesian VAR.\n")
+  cat("Numeric array (dimensions ", paste0(dim(x), collapse = ", "),  ")",
+      " of ", type, " values of a BVAR.\n", sep = "")
   if(has_quants) {
     cat("Computed confidence bands: ",
         paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")

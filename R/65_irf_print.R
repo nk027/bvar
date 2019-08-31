@@ -35,7 +35,7 @@ print.bvar_fevd <- function(x, digits = 4L, ...) {
 
   if(!inherits(x, "bvar_fevd")) {stop("Please provide a `bvar_fevd` object.")}
 
-  print_coefs(x, digits, type = "forecast error variance decomposition", ...)
+  print_coefs(x, digits, type = "FEVD", ...)
 
   return(invisible(x))
 }

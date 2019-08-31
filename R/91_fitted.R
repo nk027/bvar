@@ -161,9 +161,8 @@ print_fitted <- function(
     tail <- x[(N - 2):N, ]
   }
 
-  cat(gsub("^(.)(.*)", "\\U\\1\\L\\2", type, perl = TRUE),
-      " values of a Bayesian VAR with ", N, " observations and ",
-      M, " variables.\n", sep = "")
+  cat("Numeric array (dimensions ", paste0(dim(x), collapse = ", "),  ")",
+      " with ", type, " values of a BVAR.\n", sep = "")
   if(has_quants) {
     cat("Computed confidence bands: ",
         paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")
