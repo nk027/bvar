@@ -88,7 +88,8 @@ plot_bvar <- function(
   if(is.null(vars)) {
     vars <- c("ml", colnames(y))
   } else if(!all(vars %in% c("ml", colnames(y)))) {
-    stop("Parameter named '", vars[which(!vars %in% c("ml", colnames(y)))],
+    stop("Parameter named '",
+         paste0(vars[which(!vars %in% c("ml", colnames(y)))], collapse = ", "),
          "' not found.")
   }
   bounds <- vapply(vars[vars != "ml"], function(z) {
