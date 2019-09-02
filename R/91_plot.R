@@ -65,7 +65,7 @@ plot.bvar <- function(
   # Get data and plot -------------------------------------------------------
 
   prep <- prep_data(x, vars, vars_response, vars_impulse,
-                    chains, check_chains = TRUE, n_saves = TRUE)
+                    chains, check_chains = FALSE)
   data <- prep[["data"]]
   vars <- prep[["vars"]]
   chains <- prep[["chains"]]
