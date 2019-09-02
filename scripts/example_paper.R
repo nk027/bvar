@@ -14,14 +14,14 @@ set.seed(123)
 
 data("fred_qd")
 df <- fred_qd[, c("GDPC1", "INDPRO", "PAYEMS",
-                  "CPIAUCSL", "FEDFUNDS", "SP500")]
+                  "CPIAUCSL", "FEDFUNDS")]
 
 ## year-on-year changes
 for(i in c("GDPC1", "CPIAUCSL"))
   df[5:nrow(df), i] <- diff(log(df[, i]), lag = 4) * 100
 
 ## quarter-on-quarter changes
-for(i in c("INDPRO", "PAYEMS", "SP500"))
+for(i in c("INDPRO", "PAYEMS"))
   df[2:nrow(df), i] <- diff(log(df[, i]), lag = 1) * 100
 
 df <- df[5:nrow(df), ]
@@ -39,8 +39,8 @@ plot(as.Date(rownames(df)), df[ , "CPIAUCSL"], type = "l",
      xlab = "Time", ylab = "CPI inlation")
 plot(as.Date(rownames(df)), df[ , "FEDFUNDS"], type = "l",
      xlab = "Time", ylab = "Federal funds rate")
-plot(as.Date(rownames(df)), df[ , "SP500"], type = "l",
-     xlab = "Time", ylab = "S&P 500 returns")
+# plot(as.Date(rownames(df)), df[ , "SP500"], type = "l",
+#      xlab = "Time", ylab = "S&P 500 returns")
 dev.off()
 
 
@@ -111,7 +111,7 @@ dev.off()
 
 pdf("../plots_irf.pdf", width = 10, height = 8)
 bv_plot_irf(run, conf_bands = 0.16, vars_impulse = c("GDPC1", "FEDFUNDS"),
-            vars_response = c(1:4, 6))
+            vars_response = c(1:4))
 dev.off()
 
 
