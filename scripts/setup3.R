@@ -1,4 +1,4 @@
-library("MASS")
+library(mvtnorm)
 
 to_source <- c(0:99)
 sapply(list.files("R"), function(x) {
@@ -22,6 +22,8 @@ mh <- bv_mh()
 run1 <- bvar(data, lags, n_draw, n_burn, 1L,
              priors, mh, fcast, bv_irf(), verbose = TRUE)
 run2 <- bvar(data, lags, n_draw, n_burn, n_thin,
+             fcast = NULL, irf = NULL, verbose = TRUE)
+run3 <- bvar(data, lags, 1000, n_burn, n_thin,
              fcast = NULL, irf = NULL, verbose = TRUE)
 
 predict(run1)

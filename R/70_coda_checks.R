@@ -55,12 +55,18 @@ as.mcmc.bvar <- function(x, vars = NULL, chains = list(), ...) {
 
   if(length(chains) != 0){
     chains <- lapply(chains, function(z) {cbind(ml = z[["ml"]], z[["hyper"]])})
+    for(ch in 1:length(chains)) {
+      if(!identical(dim(y), dim(chains[[ch]]))) {
+        stop("Provided 'bvar' objects are not comparable.")
+      }
+    }
+    chains[[deparse(substitute(x))]] <- y
     apply(sapply(chains, colnames), 2, function(z) if(!all(vars %in% z)) {
       stop("Parameter(s) named '",
            paste0(vars[which(!vars %in% z)], collapse = ", "),
            "' not found in all provided chains.")
     })
-    chains[[deparse(substitute(x))]] <- y
+
     chains <- lapply(chains, function(z) {z[ , which(colnames(z) %in% vars)]})
     out <- coda::as.mcmc.list(lapply(chains, coda::as.mcmc))
   } else {
