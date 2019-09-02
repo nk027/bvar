@@ -31,7 +31,8 @@ draw_post <- function(
   S_inv <- S_eig[["vectors"]] %*%
     diag(1 / abs(S_eig[["values"]])) %*% t(S_eig[["vectors"]])
 
-  eta <- mvrnorm(n = (N + M + 2), mu = rep(0, M), Sigma = S_inv)
+  # eta <- mvrnorm(n = (N + M + 2), mu = rep(0, M), Sigma = S_inv)
+  eta <- rmvnorm(n = (N + M + 2), mean = rep(0, M), sigma = S_inv)
   sigma_draw <- solve(crossprod(eta)) %*% diag(M)
   sigma_chol <- t(chol(sigma_draw))
   beta_draw <- beta_hat +
