@@ -62,14 +62,14 @@ as.mcmc.bvar <- function(x, vars = NULL, chains = list(), ...) {
     })
     chains[[deparse(substitute(x))]] <- y
     chains <- lapply(chains, function(z) {z[ , which(colnames(z) %in% vars)]})
-    out <- as.mcmc.list(lapply(chains, as.mcmc))
+    out <- coda::as.mcmc.list(lapply(chains, coda::as.mcmc))
   } else {
     if(!all(vars %in% c("ml", colnames(y)))) {
       stop("Parameter(s) named '",
            paste0(vars[which(!vars %in% c("ml", colnames(y)))], collapse = ", "),
            "' not found.")
     }
-    out <- as.mcmc(y[ , which(colnames(y) %in% vars)], ...)
+    out <- coda::as.mcmc(y[ , which(colnames(y) %in% vars)], ...)
   }
 
   return(out)
