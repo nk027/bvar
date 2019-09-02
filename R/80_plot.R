@@ -2,7 +2,7 @@
 #'
 #' Method to plot trace and densities of hyperparameters and marginal likelihood
 #' obtained from \code{\link{bvar}}. Plots may be subset to certain types using
-#' \emph{type} and to hyperparamters using \emph{vars}.
+#' \emph{type} and to hyperparameters using \emph{vars}.
 #' Multiple chains, i.e. comparable \code{bvar} objects may be plotted together
 #' using the \emph{chains} argument.
 #'
@@ -43,6 +43,8 @@ plot.bvar <- function(
   type = c("full", "trace", "density"),
   vars = NULL,
   chains = list(),
+  vars_response = NULL,
+  vars_impulse = NULL,
   mar = c(2, 2, 2, 0.5),
   ...) {
 
@@ -50,12 +52,25 @@ plot.bvar <- function(
 
   type <- match.arg(type)
 
-  switch(
-    type,
-    full = plot_bvar(x, type, vars, chains, mar, ...),
-    trace = plot_bvar(x, type, vars, chains, mar, ...),
-    density = plot_bvar(x, type, vars, chains, mar, ...)
-  )
+  if(!is.null(vars_response) || !is.null(vars_impulse)) {
+    if(inherits(chains, "bvar")) {chains <- list(chains)}
+    lapply(chains, function(x) {if(!inherits(x, "bvar")) {
+      stop("Please provide `bvar` objects to the chains.")
+    }})
+    vars_response <- get_var_set(vars_response, M = x[["meta"]][["M"]])
+    vars_impulse <- get_var_set(vars_impulse, M = x[["meta"]][["K"]])
+    plot.bvar_density(density.bvar(x, vars, vars_response, vars_impulse),
+                      chains = lapply(chains, density.bvar, vars,
+                                      vars_response, vars_impulse),
+                      mar = mar, ...)
+  } else {
+    switch(
+      type,
+      full = plot_bvar(x, type, vars, chains, mar, ...),
+      trace = plot_bvar(x, type, vars, chains, mar, ...),
+      density = plot_bvar(x, type, vars, chains, mar, ...)
+    )
+  }
 
   return(invisible(x))
 }

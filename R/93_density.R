@@ -72,7 +72,9 @@ density.bvar <- function(
     if(is.null(vars)) {
       vars <- colnames(data)
     } else if(!all(vars %in% colnames(data))) {
-      stop("Parameter named '", vars, "' not found.")
+      stop("Parameter named '",
+           paste0(vars[which(!vars %in% colnames(data))], collapse = ", "),
+           "' not found.")
     }
     data <- data[, vars]
   }
@@ -100,12 +102,20 @@ print.bvar_density <- function(x, ...) {
 #' @export
 #'
 #' @importFrom graphics par
-plot.bvar_density <- function(x, mar = c(2, 2, 2, 0.5), ...) {
+plot.bvar_density <- function(x, chains = list(), mar = c(2, 2, 2, 0.5), ...) {
 
   op <- par(mfrow = c(length(x), 1), mar = mar)
 
   for(i in seq_along(x)) {
     plot(x[[i]], main = paste("Density of", names(x)[i]), ...)
+    polygon(x[[i]], col = "#CCCCCC33", border = NA)
+    if(length(chains) != 0){
+      for(j in 1:length(chains)) {
+        polygon(chains[[j]][[i]], col = "#CCCCCC33", border = NA)
+        lines(chains[[j]][[i]])
+      }
+      lines(x[[i]])
+    }
   }
 
   par(op)
