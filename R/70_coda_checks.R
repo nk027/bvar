@@ -65,9 +65,9 @@ as.mcmc.bvar <- function(
   vars <- prep[["vars"]]
   chains <- prep[["chains"]]
 
-  if(!is.null(chains)) {
-    out <- coda::mcmc.list(... = list(coda::as.mcmc(data, ...),
-                                      lapply(chains, coda::as.mcmc, ...)))
+  if(!is.null(chains) && length(chains) > 0) {
+    chains[["x"]] <- x
+    out <- coda::mcmc.list(... = lapply(chains, coda::as.mcmc, ...))
   } else {
     out <- coda::as.mcmc(data, ...)
   }
