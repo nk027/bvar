@@ -1,8 +1,8 @@
 #' Plotting method for Bayesian VARs
 #'
 #' Method to plot trace and densities of hyperparameters and marginal likelihood
-#' obtained from \code{\link{bvar}}. Plots may be subset to certain types using
-#' \emph{type} and to hyperparameters using \emph{vars}.
+#' or coefficient values obtained from \code{\link{bvar}}. Plots may be subset
+#' to certain types using \emph{type} and to hyperparameters using \emph{vars}.
 #' Multiple chains, i.e. comparable \code{bvar} objects may be plotted together
 #' using the \emph{chains} argument.
 #'
@@ -12,6 +12,11 @@
 #' @param vars Optional character vector used to subset the plot. The elements
 #' need to match the names of hyperparameters (including \code{"ml"}). Defaults
 #' to \code{NULL}, i.e. all variables.
+#' @param vars_response,vars_impulse Optional integer vectors with the
+#' positions of coefficient values to retrieve densities of.
+#' \emph{vars_response} corresponds to a specific dependent variable,
+#' \emph{vars_impulse} to an independent one. Note that the constant is found
+#' at position one.
 #' @param chains List with additional \code{bvar} objects. Contents are then
 #' added to trace and density plots.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
@@ -42,35 +47,31 @@ plot.bvar <- function(
   x,
   type = c("full", "trace", "density"),
   vars = NULL,
+  vars_response = NULL, vars_impulse = NULL,
   chains = list(),
-  vars_response = NULL,
-  vars_impulse = NULL,
   mar = c(2, 2, 2, 0.5),
   ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
+  if(inherits(chains, "bvar")) {chains <- list(chains)}
+  lapply(chains, function(x) {if(!inherits(x, "bvar")) {
+    stop("Please provide `bvar` objects to the chains parameter.")
+  }})
+
   type <- match.arg(type)
 
-  if(!is.null(vars_response) || !is.null(vars_impulse)) {
-    if(inherits(chains, "bvar")) {chains <- list(chains)}
-    lapply(chains, function(x) {if(!inherits(x, "bvar")) {
-      stop("Please provide `bvar` objects to the chains.")
-    }})
-    vars_response <- get_var_set(vars_response, M = x[["meta"]][["M"]])
-    vars_impulse <- get_var_set(vars_impulse, M = x[["meta"]][["K"]])
-    plot.bvar_density(density.bvar(x, vars, vars_response, vars_impulse),
-                      chains = lapply(chains, density.bvar, vars,
-                                      vars_response, vars_impulse),
-                      mar = mar, ...)
-  } else {
-    switch(
-      type,
-      full = plot_bvar(x, type, vars, chains, mar, ...),
-      trace = plot_bvar(x, type, vars, chains, mar, ...),
-      density = plot_bvar(x, type, vars, chains, mar, ...)
-    )
-  }
+
+  # Get data and plot -------------------------------------------------------
+
+  prep <- prep_data(x, vars, vars_response, vars_impulse,
+                    chains, check_chains = TRUE, n_saves = TRUE)
+  data <- prep[["data"]]
+  vars <- prep[["vars"]]
+  chains <- prep[["chains"]]
+  bounds <- prep[["bounds"]]
+
+  plot_bvar(data, type, vars, chains, bounds, mar, ...)
 
   return(invisible(x))
 }
@@ -84,59 +85,24 @@ plot_bvar <- function(
   type = c("full", "trace", "density"),
   vars = NULL,
   chains = list(),
+  bounds = NULL,
   mar = c(2, 2, 2, 0.5),
   ...) {
 
-  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
-
-  if(inherits(chains, "bvar")) {chains <- list(chains)}
-  lapply(chains, function(x) {if(!inherits(x, "bvar")) {
-    stop("Please provide `bvar` objects to the chains.")
-  }})
-
-  type <- match.arg(type)
-
-
-  # Prepare -----------------------------------------------------------------
-
-  y <- x[["hyper"]]
-  if(is.null(vars)) {
-    vars <- c("ml", colnames(y))
-  } else if(!all(vars %in% c("ml", colnames(y)))) {
-    stop("Parameter named '",
-         paste0(vars[which(!vars %in% c("ml", colnames(y)))], collapse = ", "),
-         "' not found.")
-  }
-  bounds <- vapply(vars[vars != "ml"], function(z) {
-    c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])
-  }, double(2))
-
-  # Allow graphing draws from alternative chains
-  chains_ml <- lapply(chains, function(x) {x[["ml"]]})
-  chains_hy <- lapply(chains, function(x) {x[["hyper"]]})
-
-
   # Plot --------------------------------------------------------------------
 
-  op <- par(mfrow = c(length(vars),
-                      if(type == "full") {2} else {1}), mar = mar, ...)
+  op <- par(mfrow = c(length(vars), if(type == "full") {2} else {1}),
+            mar = mar, ...)
 
-  if("ml" %in% vars) { # Plot ml
+  for(i in seq_len(ncol(x))) {
+
     if(type != "density") { # i.e. full or trace
-      plot_trace(x[["ml"]], name = "marginal likelihood", dots = chains_ml)
+      plot_trace(x[, i], name = vars[i], bounds = bounds[, i],
+                 dots = lapply(chains, function(x) {x[, i]}))
     }
     if(type != "trace") { # i.e. full or density
-      plot_dens(x[["ml"]], name = "marginal likelihood", dots = chains_ml)
-    }
-  }
-  for(name in colnames(bounds)) { # Plot hyperparameters
-    if(type != "density") {
-      plot_trace(y[, name], name, bounds[, name],
-                 dots = lapply(chains_hy, function(x, name) {x[, name]}, name))
-    }
-    if(type != "trace") {
-      plot_dens(y[, name], name, bounds[, name],
-                dots = lapply(chains_hy, function(x, name) {x[, name]}, name))
+      plot_dens(x[, i], name = vars[i], bounds = bounds[, i],
+                dots = lapply(chains, function(x) {x[, i]}))
     }
   }
 

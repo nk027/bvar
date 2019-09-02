@@ -1,10 +1,9 @@
-#' Method for converting hyperparameter chains to coda-compatible objects
+#' Method for coda Markov chain Monte Carlo objects
 #'
-#' Method to convert chains of hyperparameters and marginal likelihood obtained
-#' from \code{\link{bvar}} to objects compatible for further processing by
-#' \code{\link{coda}} i.e., objects of class \code{\link[coda]{mcmc}} or
-#' \code{\link[coda]{mcmc.list}}.
-#' Resulting objects may be subset of all hyperparameters using \emph{vars}.
+#' Method to convert chains of hyperparameters and marginal likelihoods obtained
+#' from \code{\link{bvar}} or coefficent values to objects compatible for
+#' further processing by \code{\link{coda}} i.e., objects of class
+#' \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
 #' Multiple chains, i.e. comparable \code{bvar} objects may be converted using
 #' the \emph{chains} argument.
 #'
@@ -12,14 +11,19 @@
 #' @param vars Optional character vector used to subset the the converted
 #' hyperparameters. The elements need to match the names of hyperparameters
 #' (including \code{"ml"}). Defaults to \code{NULL}, i.e. all variables.
-#' @param chains List with additional \code{bvar} objects. Contents are then
-#' converted to an object of class \code{\link[coda]{mcmc.list}}.
+#' @param vars_response,vars_impulse Optional integer vectors with the
+#' positions of coefficient values to retrieve densities of.
+#' \emph{vars_response} corresponds to a specific dependent variable,
+#' \emph{vars_impulse} to an independent one. Note that the constant is found
+#' at position one.
+#' @param chains List with additional \code{bvar} objects. If provided contents
+#' are converted to an object of class \code{\link[coda]{mcmc.list}}.
 #' @param ... Other parameters for \code{\link[coda]{as.mcmc}} and
 #' \code{\link[coda]{as.mcmc.list}}.
 #'
-#' @seealso
+#' @seealso \code{\link{bvar}} \code{\link[coda]{mcmc}}
 #'
-#' @keywords VAR BVAR coda mcmc object convergence
+#' @keywords VAR BVAR coda mcmc convergence
 #'
 #' @export
 #'
@@ -28,15 +32,20 @@
 #' data <- matrix(rnorm(200), ncol = 2)
 #' x <- bvar(data, lags = 2)
 #' y <- bvar(data, lags = 2)
-#' z <- bvar(data, lags = 2)
 #'
 #' # Plot full traces and densities
 #' as.mcmc(x, vars = c("ml", "lambda"))
 #'
 #' # Add second chain for further processing
-#' as.mcmc(x, vars = c("ml", "lambda"), chains = list(y = y, z = z))
+#' as.mcmc(x, vars = c("ml", "lambda"), chains = list(y = y))
 #' }
-as.mcmc.bvar <- function(x, vars = NULL, chains = list(), ...) {
+as.mcmc.bvar <- function(
+  x,
+  vars = NULL,
+  vars_response = NULL, vars_impulse = NULL,
+  chains = list(), ...) {
+
+  # Checks ------------------------------------------------------------------
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
@@ -47,35 +56,20 @@ as.mcmc.bvar <- function(x, vars = NULL, chains = list(), ...) {
 
   has_coda()
 
-  y <- cbind(ml = x[["ml"]], x[["hyper"]])
 
-  if(is.null(vars)) {
-    vars <- c("ml", colnames(y))
-  }
+  # Get data and transform --------------------------------------------------
 
-  if(length(chains) != 0){
-    chains <- lapply(chains, function(z) {cbind(ml = z[["ml"]], z[["hyper"]])})
-    for(ch in 1:length(chains)) {
-      if(!identical(dim(y), dim(chains[[ch]]))) {
-        stop("Provided 'bvar' objects are not comparable.")
-      }
-    }
-    chains[[deparse(substitute(x))]] <- y
-    apply(sapply(chains, colnames), 2, function(z) if(!all(vars %in% z)) {
-      stop("Parameter(s) named '",
-           paste0(vars[which(!vars %in% z)], collapse = ", "),
-           "' not found in all provided chains.")
-    })
+  prep <- prep_data(x, vars, vars_response, vars_impulse,
+                    chains, check_chains = TRUE, n_saves = TRUE)
+  data <- prep[["data"]]
+  vars <- prep[["vars"]]
+  chains <- prep[["chains"]]
 
-    chains <- lapply(chains, function(z) {z[ , which(colnames(z) %in% vars)]})
-    out <- coda::as.mcmc.list(lapply(chains, coda::as.mcmc))
+  if(!is.null(chains)) {
+    out <- coda::mcmc.list(... = list(coda::as.mcmc(data, ...),
+                                      lapply(chains, coda::as.mcmc, ...)))
   } else {
-    if(!all(vars %in% c("ml", colnames(y)))) {
-      stop("Parameter(s) named '",
-           paste0(vars[which(!vars %in% c("ml", colnames(y)))], collapse = ", "),
-           "' not found.")
-    }
-    out <- coda::as.mcmc(y[ , which(colnames(y) %in% vars)], ...)
+    out <- coda::as.mcmc(data, ...)
   }
 
   return(out)
