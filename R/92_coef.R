@@ -41,22 +41,19 @@ coef.bvar <- function(object, conf_bands = 0.5, ...) {
 
   quantiles <- quantile_check(conf_bands)
   coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
+
   M <- object[["meta"]][["M"]]
   lags <- object[["meta"]][["lags"]]
   vars <- object[["variables"]]
+  if(is.null(vars)) {vars <- paste0("var", 1:M)}
 
-  if(is.null(vars)) {
-    vars <- paste0("Var", 1:M)
-  }
-
+  vars_row <- c("const", paste0(rep(vars, lags), "-lag", rep(1:lags, each = M)))
   if(length(quantiles) == 1) {
     dimnames(coefs)[[2]] <- vars
-    dimnames(coefs)[[1]] <- c("const", paste0(rep(vars, lags),
-                                              ".l", rep(1:lags, each = M)))
+    dimnames(coefs)[[1]] <- vars_row
   } else {
     dimnames(coefs)[[3]] <- vars
-    dimnames(coefs)[[2]] <- c("const", paste0(rep(vars, lags),
-                                              ".l", rep(1:lags, each = M)))
+    dimnames(coefs)[[2]] <- vars_row
   }
 
   class(coefs) <- "bvar_coefs"
@@ -75,13 +72,12 @@ vcov.bvar <- function(object, conf_bands = 0.5, ...) {
   vcovs <- apply(object[["sigma"]], c(2, 3), quantile, quantiles)
 
   vars <- object[["variables"]]
-
   if(is.null(vars)) {
     M <- object[["meta"]][["M"]]
-    vars <- paste0("Var", 1:M)
+    vars <- paste0("var", 1:M)
   }
 
-  if(length(quantiles) == 1){
+  if(length(quantiles) == 1) {
     dimnames(vcovs)[[1]] <- dimnames(vcovs)[[2]] <- vars
   } else {
     dimnames(vcovs)[[2]] <- dimnames(vcovs)[[3]] <- vars
