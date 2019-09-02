@@ -13,7 +13,7 @@
 #' \emph{vars_response} corresponds to a specific dependent variable,
 #' \emph{vars_impulse} to an independent one. Note that the constant is found
 #' at position one.
-#' @param ... Not used. Fed to \code{\link[stats]{density}}.
+#' @param ... Fed to \code{\link[stats]{density}} or similar.
 #'
 #' @param var,n_vars,lag Integer scalars.
 #'
@@ -52,36 +52,17 @@ density.bvar <- function(
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  # Create the matrix 'data' to apply quantiles over
-  if(!is.null(vars_response) || !is.null(vars_impulse)) {
-    vars_response <- get_var_set(vars_response, M = x[["meta"]][["M"]])
-    vars_impulse <- get_var_set(vars_impulse, M = x[["meta"]][["K"]])
 
-    n_col <- length(vars_response) * length(vars_impulse)
-    beta <- x[["beta"]]
+  # Get data and apply density --------------------------------------------
 
-    data <- matrix(NA, nrow = x[["meta"]][["n_save"]], ncol = n_col)
-    k <- 1
-    for(i in seq_along(vars_response)) {for(j in seq_along(vars_impulse)) {
-        data[, k] <- beta[, j, i]
-        k <- k + 1
-    }}
-    vars <- paste0("dep", vars_response, "-ind", vars_impulse) # Names output
-  } else { # We want to return hyperparameter densities
-    data <- cbind("ml" = x[["ml"]], x[["hyper"]]) # Here we subset later
-    if(is.null(vars)) {
-      vars <- colnames(data)
-    } else if(!all(vars %in% colnames(data))) {
-      stop("Parameter named '",
-           paste0(vars[which(!vars %in% colnames(data))], collapse = ", "),
-           "' not found.")
-    }
-    data <- data[, vars]
-  }
+  prep <- prep_data(x, vars, vars_response, vars_impulse)
+  data <- prep[["data"]]
+  vars <- prep[["vars"]]
 
   out <- if(length(vars) == 1) {
     structure(list(density(data, ...)), names = vars)
   } else {structure(apply(data, 2, density, ...), names = vars)}
+
   class(out) <- "bvar_density"
 
   return(out)
@@ -91,6 +72,10 @@ density.bvar <- function(
 #' @rdname density.bvar
 #' @export
 print.bvar_density <- function(x, ...) {
+
+  if(!inherits(x, "bvar_density")) {
+    stop("Please provide a `bvar_density` object.")
+  }
 
   lapply(x, print, ...)
 
@@ -102,20 +87,20 @@ print.bvar_density <- function(x, ...) {
 #' @export
 #'
 #' @importFrom graphics par
-plot.bvar_density <- function(x, chains = list(), mar = c(2, 2, 2, 0.5), ...) {
+plot.bvar_density <- function(
+  x,
+  mar = c(2, 2, 2, 0.5),
+  mfrow = c(length(x), 1),
+  ...) {
 
-  op <- par(mfrow = c(length(x), 1), mar = mar)
+  if(!inherits(x, "bvar_density")) {
+    stop("Please provide a `bvar_density` object.")
+  }
+
+  op <- par(mfrow = mfrow, mar = mar, ...)
 
   for(i in seq_along(x)) {
-    plot(x[[i]], main = paste("Density of", names(x)[i]), ...)
-    polygon(x[[i]], col = "#CCCCCC33", border = NA)
-    if(length(chains) != 0){
-      for(j in 1:length(chains)) {
-        polygon(chains[[j]][[i]], col = "#CCCCCC33", border = NA)
-        lines(chains[[j]][[i]])
-      }
-      lines(x[[i]])
-    }
+    plot(x[[i]], main = paste("Density of", names(x)[i]))
   }
 
   par(op)
