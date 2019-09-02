@@ -1,3 +1,32 @@
+#' Prepare BVAR data for plotting etc.
+#'
+#' Helper function to retrieve hyperparameters or coefficient values based on
+#' name / position. Also supports multiple \code{bvar} objects and may be used
+#' to check them for similarity.
+#'
+#' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
+#' @param vars Optional character vector used to subset the plot. The elements
+#' need to match the names of hyperparameters (including \code{"ml"}). Defaults
+#' to \code{NULL}, i.e. all variables.
+#' @param vars_response,vars_impulse Optional integer vectors with the
+#' positions of coefficient values to retrieve densities of.
+#' \emph{vars_response} corresponds to a specific dependent variable,
+#' \emph{vars_impulse} to an independent one. Note that the constant is found
+#' at position one.
+#' @param chains List with additional \code{bvar} objects. Contents are then
+#' added to trace and density plots.
+#' @param check_chains Logical scalar. Whether to check \emph{x} and
+#' \emph{chains} for similarity.
+#' @param ... Fed to \code{\link{chains_fit}}.
+#'
+#' @return Returns a named list with:
+#' \itemize{
+#'   \item \code{data} - Numeric matrix with desired data.
+#'   \item \code{vars} - Character vector with names for the desired data.
+#'   \item \code{chains} - List of numeric matrices with desired data.
+#'   \item \code{bounds} - Numeric matrix with optional boundaries.
+#'
+#' @noRd
 prep_data <- function(
   x,
   vars = NULL,
@@ -83,6 +112,21 @@ prep_data <- function(
 }
 
 
+#' Check equalities across chains
+#'
+#' Function to help check whether \code{bvar} objects are close enough to
+#' compare. Accessed via \code{\link{prep_data}}.
+#'
+#' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
+#' @param chains List with additional \code{bvar} objects.
+#' @param Ms Logical scalar. Whether to check equality of
+#' \code{x[["meta"]][["M"]]}.
+#' @param n_saves Logical scalar. Whether to check equality of
+#' \code{x[["meta"]][["n_save"]]}.
+#' @param hypers Logical scalar. Whether to check equality of
+#' \code{x[["priors"]][["hyper"]]}.
+#'
+#' @noRd
 chains_fit <- function(
   x, chains,
   Ms = TRUE,
