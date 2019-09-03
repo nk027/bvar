@@ -1,5 +1,36 @@
-#' @rdname bvar
+#' Summary method for Bayesian VARs
+#'
+#' Retrieves several outputs of interest, including paths of forecasts and
+#' impulse responses, the coefficient matrix, the variance-covariance matrix,
+#' and the Log-Likelihood.
+#'
+#' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
+#' @param ... Not used.
+#'
+#' @param x A \code{bvar_summary} object.
+#'
+#' @return Returns a list of class \code{bvar_summary} with elements that can 
+#' can be accessed individually:
+#' \itemize{
+#'   \item \code{bvar} - \emph{object}, the \code{bvar} object provided.
+#'   \item \code{coef} - Coefficient values from \code{\link{coef.bvar}}.
+#'   \item \code{vcov} - VCOV values from \code{\link{vcov.bvar}}.
+#'   \item \code{logLik} - The Log-Likelihood from \code{\link{logLik.bvar}}.
+#'   \item \code{fcast} - A summary of forecasts, see \code{\link{predict.bvar}}.
+#'   \item \code{irf} - A summary of the IRFs, see \code{\link{irf.bvar}}.
+#' }
+#'
+#' @seealso \code{\link{bvar}}; \code{\link{predict.bvar}}; 
+#' \code{\link{irf.bvar}}; \code{\link{coef.bvar}}; \code{\link{logLik.bvar}}
+#'
 #' @export
+#'
+#' @examples
+#' \donttest{
+#' data <- matrix(rnorm(200), ncol = 2)
+#' x <- bvar(data, lags = 2)
+#' summary(x)
+#' }
 summary.bvar <- function(object, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
