@@ -8,10 +8,26 @@ summary.bvar <- function(x, ...) {
   vcov_x <- vcov(x)
   logLik_x <- logLik(x)
 
-  print(x)
-  cat("\n"); print(coef_x)
-  cat("\n"); print(vcov_x)
-  cat("\n"); cat("Log-Likelihood: ", logLik_x)
+  out <- list(
+    "bvar" = x,
+    "coef" = coef_x,
+    "vcov" = vcov_x,
+    "logLik" = logLik_x
+  )
+  class(out) <- "bvar_summary"
+
+  return(x)
+}
+
+
+#' @rdname summary.bvar
+#' @export
+print.bvar_summary <- function(x, ...) {
+  
+  print(x[["bvar"]])
+  cat("\n"); print(x[["coef"]])
+  cat("\n"); print(x[["vcov"]])
+  cat("\n"); cat("Log-Likelihood: ", x[["logLik"]])
 
   return(invisible(x))
 }
