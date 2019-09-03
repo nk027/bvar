@@ -4,11 +4,11 @@
 #' generated via \code{\link{bvar}}.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param vars Character vector used to specify hyperparemeters to
-#' retrieve the density of. The elements need to match the names in
-#' \code{x$hyper} (plus \code{"ml"}). Defaults to \code{NULL}, i.e. all
-#' hyperparameters.
-#' @param vars_response,vars_impulse Optional integer vectors with the
+#' @param vars Optional character vector used to specify hyperparemeters to
+#' retrieve the density of. The elements need to match the names of 
+#' hyperparameters (including \code{"ml"}). Defaults
+#' to \code{NULL}, i.e. all hyperparameters.
+#' @param vars_response,vars_impulse Optional integer vector with the
 #' positions of coefficient values to retrieve densities of.
 #' \emph{vars_response} corresponds to a specific dependent variable,
 #' \emph{vars_impulse} to an independent one. Note that the constant is found
