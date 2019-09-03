@@ -143,8 +143,9 @@ plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
   xlim <- c(min(vapply(dots, min, double(1)), x),
             max(vapply(dots, max, double(1)), x))
-
-  plot(density(x), xlim = xlim,
+  ylim <- c(0, max(vapply(lapply(dots, function(x) density(x)[["y"]]),
+                          max, double(1)), density(x)[["y"]]))
+  plot(density(x), xlim = xlim, ylim = ylim,
        main = paste0("Density", if(!is.null(name)) {paste(" of", name)}))
   polygon(density(x), col = "#CCCCCC33", border = NA)
   for(dot in dots) {
