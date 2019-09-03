@@ -148,6 +148,11 @@ fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
 
   dots <- list(...)
   irf_store <- x[["irf"]]
+  vars <- x[["variables"]]
+  if(is.null(vars)) {
+    M <- x[["meta"]][["M"]]
+    vars <- paste0("var", 1:M)
+  }
 
   if(is.null(irf_store[["fevd"]]) || length(dots) != 0L) {
     irf <- if(length(dots) > 0 && inherits(dots[[1]], "bv_irf")) {
@@ -161,6 +166,12 @@ fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
   # Apply confidence bands ------------------------------------------------
 
   fevd_store <- fevd.bvar_irf(irf_store, conf_bands = conf_bands)
+
+  if(length(dim(fevd_store)) == 2) {
+    dimnames(fevd_store)[[1]] <- dimnames(fevd_store)[[2]] <- vars
+  } else {
+    dimnames(fevd_store)[[2]] <- dimnames(fevd_store)[[3]] <- vars
+  }
 
   return(fevd_store)
 }
