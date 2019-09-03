@@ -51,7 +51,6 @@ mn <- bv_mn(lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
             var = 1e07)
 
 
-
 # Setting up dummy priors -------------------------------------------------
 
 soc <- bv_soc(mode = 1, sd = 1, min = 1e-04, max = 50)
@@ -90,7 +89,8 @@ run <- bvar(df, lags = 5, n_draw = 25000, n_burn = 10000, n_thin = 1,
 
 summary(run)
 
-# Various plots ------------------------------------------------------------
+
+# Hyperparameter plots ----------------------------------------------------
 
 pdf("../plots_all.pdf", width = 10, height = 12)
 plot(run)
@@ -100,36 +100,44 @@ pdf("../plots_lambda.pdf", width = 10, height = 5)
 plot(run, type = "full", vars = "lambda", mfrow = c(2, 1))
 dev.off()
 
-pdf("../plots_fcast.pdf", width = 10, height = 3)
-plot(run$fcast, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
-     orientation = "h")
-dev.off()
+
+# IRF plots ---------------------------------------------------------------
 
 pdf("../plots_irf.pdf", width = 10, height = 8)
 plot(run$irf, vars_impulse = c("GDPC1", "FEDFUNDS"),
             vars_response = c(1:5))
 dev.off()
 
-# using predict() for ex-post computation of different confidence bands
 
-fcast_005 <- predict(run, conf_bands = 0.05)
+# Compute FEVDs -----------------------------------------------------------
 
-pdf("../plots_fcast_005.pdf", width = 10, height = 3)
+fevd(run)
+
+
+# Forecast plots ----------------------------------------------------------
+
+pdf("../plots_fcast.pdf", width = 10, height = 3)
+plot(run$fcast, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
+     orientation = "h")
+dev.off()
+
+
+# using predict() and irf() for ex-post computations, include in paper?
+
+fcast_005 <- predict(run, conf_bands = 0.05, horizon = 20)
+
+pdf("../plots_fcast005.pdf", width = 10, height = 3)
 plot(fcast_005, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
      orientation = "h")
 dev.off()
 
-irf_005 <- irf(run, conf_bands = 0.05)
+irf_005 <- irf(run, conf_bands = 0.05, horizon = 20, fevd = TRUE)
 
 pdf("../plots_irf005.pdf", width = 10, height = 8)
 plot(irf_005, vars_impulse = c("GDPC1", "FEDFUNDS"),
      vars_response = c(1:4, 5))
 dev.off()
 
-# Calculate FEVDs ---------------------------------------------------------
-
-fevd(run)
-print(fevd(run, conf_bands = 0.16), complete = TRUE)
 
 # Appendices --------------------------------------------------------------
 
@@ -166,6 +174,7 @@ irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
 run_signs <- bvar(df_small, lags = 5, n_draw = 25000, n_burn = 10000,
                   priors = priors, mh = mh, fcast = fcast, irf = irf_signs)
 print(run_signs)
+print(run_signs$irf)
 plot(run_signs$irf)
 
 pdf("../irf_signs.pdf", width = 10, height = 10)
@@ -194,11 +203,11 @@ bvars <- parLapply(cl, list(df, df, df),
                    })
 stopCluster(cl)
 
+runs_mcmc <- as.mcmc(run, chains = bvars)
+gelman.diag(runs_mcmc, autoburnin = FALSE)
+
 plot(run, type = "density", vars = "lambda", chains = bvars)
 
 pdf("../lambda_multiple.pdf", width = 10, height = 4)
 plot(run, type = "density", vars = "lambda", chains = bvars)
 dev.off()
-
-runs_mcmc <- as.mcmc(run, chains = bvars)
-gelman.diag(runs_mcmc, autoburnin = FALSE)
