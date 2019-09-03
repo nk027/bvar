@@ -17,8 +17,8 @@ print.bvar <- function(x, ...) {
       round(x$meta$accepted / (x$meta$n_draw - x$meta$n_burn), 3),
       ")\n", sep = "")
 
-  if(!is.null(x$irf)) {cat("\n"); print(x$irf)}
-  if(!is.null(x$fcast)) {cat("\n"); print(x$fcast)}
+  # if(!is.null(x$irf)) {cat("\n"); print(x$irf)}
+  # if(!is.null(x$fcast)) {cat("\n"); print(x$fcast)}
 
   return(invisible(x))
 }

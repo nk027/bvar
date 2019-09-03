@@ -150,8 +150,7 @@ fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
   irf_store <- x[["irf"]]
   vars <- x[["variables"]]
   if(is.null(vars)) {
-    M <- x[["meta"]][["M"]]
-    vars <- paste0("var", 1:M)
+    vars <- paste0("var", 1:x[["meta"]][["M"]])
   }
 
   if(is.null(irf_store[["fevd"]]) || length(dots) != 0L) {

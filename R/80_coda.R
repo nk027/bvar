@@ -8,15 +8,14 @@
 #' the \emph{chains} argument.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param vars Optional character vector used to subset the the converted
+#' @param vars Optional character vector used to subset the converted
 #' hyperparameters. The elements need to match the names of hyperparameters
 #' (including \code{"ml"}). Defaults to \code{NULL}, i.e. all variables.
-#' @param vars_response,vars_impulse Optional integer vectors with the
-#' positions of coefficient values to retrieve densities of.
-#' \emph{vars_response} corresponds to a specific dependent variable,
-#' \emph{vars_impulse} to an independent one. Note that the constant is found
-#' at position one.
-#' @param chains List with additional \code{bvar} objects. If provided contents
+#' @param vars_response,vars_impulse Optional integer vector with the
+#' positions of coefficient values to convert. \emph{vars_response} corresponds 
+#' to a specific dependent variable, \emph{vars_impulse} to an independent one. 
+#' Note that the constant is found at position one.
+#' @param chains List with additional \code{bvar} objects. If provided, contents
 #' are converted to an object of class \code{\link[coda]{mcmc.list}}.
 #' @param ... Other parameters for \code{\link[coda]{as.mcmc}} and
 #' \code{\link[coda]{as.mcmc.list}}.

@@ -11,9 +11,9 @@
 #' \code{"full"} includes both density and trace plots.
 #' @param vars Optional character vector used to subset the plot. The elements
 #' need to match the names of hyperparameters (including \code{"ml"}). Defaults
-#' to \code{NULL}, i.e. all variables.
-#' @param vars_response,vars_impulse Optional integer vectors with the
-#' positions of coefficient values to retrieve densities of.
+#' to \code{NULL}, i.e. all hyperparameters.
+#' @param vars_response,vars_impulse Optional integer vector with the
+#' positions of coefficient values used to subset the plot.
 #' \emph{vars_response} corresponds to a specific dependent variable,
 #' \emph{vars_impulse} to an independent one. Note that the constant is found
 #' at position one.
