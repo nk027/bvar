@@ -14,14 +14,14 @@ set.seed(123)
 
 data("fred_qd")
 df <- fred_qd[, c("GDPC1", "INDPRO", "PAYEMS",
-                  "CPIAUCSL", "FEDFUNDS")]
+                  "CES0600000007", "CPIAUCSL", "FEDFUNDS")]
 
 ## year-on-year changes
 for(i in c("GDPC1", "CPIAUCSL"))
   df[5:nrow(df), i] <- diff(log(df[, i]), lag = 4) * 100
 
 ## quarter-on-quarter changes
-for(i in c("INDPRO", "PAYEMS"))
+for(i in c("INDPRO", "PAYEMS", "CES0600000007"))
   df[2:nrow(df), i] <- diff(log(df[, i]), lag = 1) * 100
 
 df <- df[5:nrow(df), ]
@@ -35,12 +35,12 @@ plot(as.Date(rownames(df)), df[ , "INDPRO"], type = "l",
      xlab = "Time", ylab = "Ind. production growth")
 plot(as.Date(rownames(df)), df[ , "PAYEMS"], type = "l",
      xlab = "Time", ylab = "Non-farm empl. changes")
+plot(as.Date(rownames(df)), df[ , "CES0600000007"], type = "l",
+     xlab = "Time", ylab = "Avg. weekly hours changes")
 plot(as.Date(rownames(df)), df[ , "CPIAUCSL"], type = "l",
      xlab = "Time", ylab = "CPI inlation")
 plot(as.Date(rownames(df)), df[ , "FEDFUNDS"], type = "l",
      xlab = "Time", ylab = "Federal funds rate")
-# plot(as.Date(rownames(df)), df[ , "SP500"], type = "l",
-#      xlab = "Time", ylab = "S&P 500 returns")
 dev.off()
 
 
@@ -98,22 +98,34 @@ plot(run)
 dev.off()
 
 pdf("../plots_lambda.pdf", width = 10, height = 5)
-op <- par(mfrow = c(2, 1), mar = c(2, 2, 2, 2))
-bv_plot_density(run, name = "lambda")
-bv_plot_trace(run, name = "lambda")
+plot(run, type = "full", vars = "lambda", mfrow = c(2, 1))
 dev.off()
 
 pdf("../plots_fcast.pdf", width = 10, height = 3)
-bv_plot_fcast(run, conf_bands = 0.16,
-              vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
-              orientation = "horizontal")
+plot(run$fcast, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
+     orientation = "h")
 dev.off()
 
 pdf("../plots_irf.pdf", width = 10, height = 8)
-bv_plot_irf(run, conf_bands = 0.16, vars_impulse = c("GDPC1", "FEDFUNDS"),
-            vars_response = c(1:4))
+plot(run$irf, vars_impulse = c("GDPC1", "FEDFUNDS"),
+            vars_response = c(1:4, 5))
 dev.off()
 
+# using predict() for ex-post computation of different confidence bands
+
+fcast_005 <- predict(run, conf_bands = 0.05)
+
+pdf("../plots_fcast_005.pdf", width = 10, height = 3)
+plot(fcast_005, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
+     orientation = "h")
+dev.off()
+
+irf_005 <- irf(run, conf_bands = 0.05)
+
+pdf("../plots_irf005.pdf", width = 10, height = 8)
+plot(irf_005, vars_impulse = c("GDPC1", "FEDFUNDS"),
+     vars_response = c(1:4, 5))
+dev.off()
 
 # Calculate FEVDs ---------------------------------------------------------
 
@@ -155,17 +167,17 @@ irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
 run_signs <- bvar(df_small, lags = 5, n_draw = 25000, n_burn = 10000,
                   priors = priors, mh = mh, fcast = fcast, irf = irf_signs)
 print(run_signs)
-bv_plot_irf(run_signs)
+plot(run_signs$irf)
 
 pdf("../irf_signs.pdf", width = 10, height = 10)
-bv_plot_irf(run_signs)
+plot(run_signs$irf)
 dev.off()
 
 
 # C - Convergence assessment and parallelization --------------------------
 
 library("coda")
-run_mcmc <- as.mcmc(run[["hyper"]])
+run_mcmc <- as.mcmc(run)
 geweke.diag(run_mcmc)
 
 library("parallel")
@@ -180,13 +192,11 @@ bvars <- parLapply(cl, list(df, df, df),
                    })
 stopCluster(cl)
 
-bv_plot_density(bvars[[1]], name = "lambda", bvars[[2]], bvars[[3]])
+plot(run, type = "density", vars = "lambda", chains = bvars)
 
 pdf("../lambda_multiple.pdf", width = 10, height = 4)
-bv_plot_density(bvars[[1]], name = "lambda", bvars[[2]], bvars[[3]])
+plot(run, type = "density", vars = "lambda", chains = bvars)
 dev.off()
 
-runs_mcmc <- as.mcmc.list(list(as.mcmc(bvars[[1]][["hyper"]]),
-                               as.mcmc(bvars[[2]][["hyper"]]),
-                               as.mcmc(bvars[[3]][["hyper"]])))
+runs_mcmc <- as.mcmc(run, chains = bvars)
 gelman.diag(runs_mcmc, autoburnin = FALSE)
