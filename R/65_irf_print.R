@@ -84,9 +84,11 @@ print_irf <- function(x, ...) {
 summary.bvar_irf <- function(
   object,
   vars_impulse = NULL, vars_response = NULL,
-  digits = 2L, ...) {
+  ...) {
 
-  print.bvar_irf(object)
+  if(!inherits(object, "bvar_irf")) {
+    stop("Please provide a `bvar_irf` object.")
+  }
 
   quants <- object[["quants"]]
   has_quants <- length(dim(quants)) == 4
@@ -98,16 +100,41 @@ summary.bvar_irf <- function(
   pos_imp <- get_var_set(vars_impulse, variables, M)
   pos_res <- get_var_set(vars_response, variables, M)
 
-  cat(if(!has_quants) {"Median impulse responses:\n"} else {"Impulse responses:\n"})
-  for(i in pos_res) {
-    for(j in pos_imp) {
-      cat("    Shock ", variables[j], " on ", variables[i], ":\n", sep = "")
-      print(round(if(has_quants) {quants[, i, , j]} else {quants[i, , j]},
+  out <- list(
+    "irf" = object,
+    "quants" = quants,
+    "variables" = variables,
+    "pos_imp" = pos_imp,
+    "pos_res" = pos_res,
+    "has_quants" = has_quants
+  )
+  class(out) <- "bvar_irf_summary"
+
+  return(out)
+}
+
+
+#' @rdname irf.bvar
+#' @export
+print.bvar_irf_summary <- function(x, digits = 2L, ...) {
+  
+  if(!inherits(x, "bvar_irf_summary")) {
+    stop("Please provide a `bvar_irf_summary` object.")
+  }
+
+  print.bvar_irf(x$irf)
+
+  cat(if(!x$has_quants) {
+    "Median impulse responses:\n"
+  } else {"Impulse responses:\n"})
+  
+  for(i in x$pos_res) {
+    for(j in x$pos_imp) {
+      cat("    Shock ", x$variables[j], " on ", x$variables[i], ":\n", sep = "")
+      print(round(if(x$has_quants) {x$quants[, i, , j]} else {x$quants[i, , j]},
                   digits = digits))
     }
   }
 
-  return(invisible(
-    if(has_quants) {quants[, pos_res, , pos_imp]} else {quants[pos_res, , pos_imp]}
-  ))
+  return(invisible(x))
 }
