@@ -5,7 +5,7 @@
 
 # Preliminaries -----------------------------------------------------------
 
-install.packages("BVAR") # Version 0.1.4
+install.packages("BVAR") # Version 0.1.5
 library("BVAR")
 set.seed(123)
 
@@ -88,8 +88,7 @@ run <- bvar(df, lags = 5, n_draw = 25000, n_burn = 10000, n_thin = 1,
 
 # Assessing results --------------------------------------------------------
 
-print(run)
-
+summary(run)
 
 # Various plots ------------------------------------------------------------
 
@@ -108,7 +107,7 @@ dev.off()
 
 pdf("../plots_irf.pdf", width = 10, height = 8)
 plot(run$irf, vars_impulse = c("GDPC1", "FEDFUNDS"),
-            vars_response = c(1:4, 5))
+            vars_response = c(1:5))
 dev.off()
 
 # using predict() for ex-post computation of different confidence bands
@@ -129,8 +128,8 @@ dev.off()
 
 # Calculate FEVDs ---------------------------------------------------------
 
-round(apply(run[["irf"]][["fevd"]], c(2, 3), mean) * 100, 2)
-
+fevd(run)
+print(fevd(run, conf_bands = 0.16), complete = TRUE)
 
 # Appendices --------------------------------------------------------------
 
@@ -188,7 +187,10 @@ bvars <- parLapply(cl, list(df, df, df),
                      library("BVAR")
                      bvar(x, lags = 5,
                           n_draw = 25000, n_burn = 10000, n_thin = 1,
-                          verbose = FALSE)
+                          priors = bv_priors(soc = bv_soc(), sur = bv_sur()),
+                          mh = bv_mh(scale_hess = 0.005, adjust_acc = TRUE,
+                                     acc_change = 0.02),
+                          irf = bv_irf(), fcast = bv_fcast(), verbose = FALSE)
                    })
 stopCluster(cl)
 
