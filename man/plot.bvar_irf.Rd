@@ -2,15 +2,11 @@
 % Please edit documentation in R/68_irf_plot.R, R/deprecated.R
 \name{plot.bvar_irf}
 \alias{plot.bvar_irf}
-\alias{plot_irf}
 \alias{bv_plot_irf}
 \title{Plotting method for Bayesian VAR impulse responses}
 \usage{
 \method{plot}{bvar_irf}(x, conf_bands, vars_response = NULL,
   vars_impulse = NULL, variables = NULL, mar = c(2, 2, 2, 0.5), ...)
-
-plot_irf(x, conf_bands, vars_response = NULL, vars_impulse = NULL,
-  variables = NULL, mar = c(2, 2, 2, 0.5), ...)
 
 bv_plot_irf(x, conf_bands = 0.16, variables = NULL,
   vars_impulse = NULL, vars_response = NULL, mar = c(2, 2, 2, 0.5),
@@ -45,7 +41,7 @@ available variables can be plotted.
 \examples{
 \donttest{
 data <- matrix(rnorm(400), ncol = 4)
-x <- bvar(data, lags = 2)
+x <- bvar(data, lags = 2, irf = bv_irf())
 
 # Plot impulse responses for all available variables
 plot(irf(x))

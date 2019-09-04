@@ -2,15 +2,10 @@
 % Please edit documentation in R/58_fcast_plot.R, R/deprecated.R
 \name{plot.bvar_fcast}
 \alias{plot.bvar_fcast}
-\alias{plot_fcast}
 \alias{bv_plot_fcast}
 \title{Plotting method for Bayesian VAR forecasts}
 \usage{
 \method{plot}{bvar_fcast}(x, conf_bands, vars = NULL, variables = NULL,
-  orientation = c("vertical", "horizontal"), mar = c(2, 2, 2, 0.5),
-  ...)
-
-plot_fcast(x, conf_bands, vars = NULL, variables = NULL,
   orientation = c("vertical", "horizontal"), mar = c(2, 2, 2, 0.5),
   ...)
 

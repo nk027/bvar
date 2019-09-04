@@ -5,8 +5,8 @@
 \alias{bv_plot}
 \title{Plotting method for Bayesian VARs}
 \usage{
-\method{plot}{bvar}(x, type = c("full", "trace", "density"),
-  vars = NULL, vars_response = NULL, vars_impulse = NULL,
+\method{plot}{bvar}(x, type = c("full", "trace", "density", "irf",
+  "fcast"), vars = NULL, vars_response = NULL, vars_impulse = NULL,
   chains = list(), mar = c(2, 2, 2, 0.5), ...)
 
 bv_plot(x, mar = c(2, 2, 2, 0.5), ...)
@@ -55,6 +55,10 @@ plot(x, chains = y)
 
 # Only plot the marginal likelihood's density
 plot(x, "dens", "ml")
+
+# Use plot as an alternative to plot(irf(x)) and plot(predict(x))
+plot(x, "irf")
+plot(x, "fcast", vars = 2)
 }
 }
 \seealso{

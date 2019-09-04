@@ -7,7 +7,7 @@
 \alias{print.bvar_vcovs}
 \title{Coefficient and VCOV methods for Bayesian VARs}
 \usage{
-\method{coef}{bvar}(object, conf_bands = 0.5, comp, ...)
+\method{coef}{bvar}(object, conf_bands = 0.5, comp = FALSE, ...)
 
 \method{vcov}{bvar}(object, conf_bands = 0.5, ...)
 

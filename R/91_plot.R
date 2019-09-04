@@ -31,7 +31,7 @@
 #' @examples
 #' \donttest{
 #' data <- matrix(rnorm(200), ncol = 2)
-#' x <- bvar(data, lags = 2)
+#' x <- bvar(data, lags = 2, irf = bv_irf(), fcast = bv_fcast())
 #' y <- bvar(data, lags = 2)
 #'
 #' # Plot full traces and densities
@@ -42,10 +42,14 @@
 #'
 #' # Only plot the marginal likelihood's density
 #' plot(x, "dens", "ml")
+#'
+#' # Use plot as an alternative to plot(irf(x)) and plot(predict(x))
+#' plot(x, "irf")
+#' plot(x, "fcast", vars = 2)
 #' }
 plot.bvar <- function(
   x,
-  type = c("full", "trace", "density"),
+  type = c("full", "trace", "density", "irf", "fcast"),
   vars = NULL,
   vars_response = NULL, vars_impulse = NULL,
   chains = list(),
@@ -54,12 +58,28 @@ plot.bvar <- function(
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
+  type <- match.arg(type)
+
+  # Forward and return if "irf" or "fcast"
+  if(type == "irf") {
+    if(is.null(x[["fcast"]])) {warning("No `bvar_irf` found, calculating...")}
+    return(plot.bvar_irf(
+      irf(x), vars_response = vars_response, vars_impulse = vars_impulse,
+      variables = x[["variables"]], mar = mar, ...
+    ))
+  }
+  if(type == "fcast") {
+    if(is.null(x[["fcast"]])) {warning("No `bvar_fcast` found, calculating...")}
+    return(plot.bvar_fcast(
+      predict(x), vars = vars, variables = x[["variables"]], mar = mar, ...
+    ))
+  }
+
+
   if(inherits(chains, "bvar")) {chains <- list(chains)}
   lapply(chains, function(x) {if(!inherits(x, "bvar")) {
     stop("Please provide `bvar` objects to the chains parameter.")
   }})
-
-  type <- match.arg(type)
 
 
   # Get data and plot -------------------------------------------------------

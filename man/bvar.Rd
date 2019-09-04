@@ -6,8 +6,8 @@
 \title{Hierarchical Bayesian Vector Autoregression}
 \usage{
 bvar(data, lags, n_draw = 10000, n_burn = 5000, n_thin = 1,
-  priors = bv_priors(), mh = bv_mh(), fcast = bv_fcast(),
-  irf = bv_irf(), verbose = TRUE, ...)
+  priors = bv_priors(), mh = bv_mh(), fcast = NULL, irf = NULL,
+  verbose = TRUE, ...)
 
 \method{print}{bvar}(x, ...)
 }

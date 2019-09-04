@@ -84,6 +84,9 @@ May also be used to update confidence bands.
 data <- matrix(rnorm(400), ncol = 4)
 x <- bvar(data, lags = 2)
 
+# Add IRFs
+x$irf <- irf(x)
+
 # Access IRFs and update confidence bands
 irf(x, conf_bands = 0.01)
 
