@@ -44,7 +44,7 @@ using the \emph{chains} argument.
 \examples{
 \donttest{
 data <- matrix(rnorm(200), ncol = 2)
-x <- bvar(data, lags = 2)
+x <- bvar(data, lags = 2, irf = bv_irf(), fcast = bv_fcast())
 y <- bvar(data, lags = 2)
 
 # Plot full traces and densities
@@ -62,7 +62,8 @@ plot(x, "fcast", vars = 2)
 }
 }
 \seealso{
-\code{\link{plot.bvar_fcast}}; \code{\link{plot.bvar_irf}}.
+\code{\link{bvar}}; \code{\link{plot.bvar_fcast}};
+\code{\link{plot.bvar_irf}}.
 }
 \keyword{BVAR}
 \keyword{VAR}

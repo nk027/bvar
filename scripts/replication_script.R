@@ -72,11 +72,6 @@ priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
 irfs  <- bv_irf(horizon = 12, fevd = TRUE, identification = TRUE)
 
 
-# Turning off forecasts
-
-fcasts <- NULL
-
-
 # Adjust the MH-step
 
 mh <- bv_metropolis(scale_hess = 0.005, adjust_acc = TRUE,
@@ -86,7 +81,7 @@ mh <- bv_metropolis(scale_hess = 0.005, adjust_acc = TRUE,
 # Execute the model -------------------------------------------------------
 
 run <- bvar(df, lags = 5, n_draw = 25000, n_burn = 10000, n_thin = 1,
-  priors = priors, mh = mh, fcast = fcasts, irf = irfs, verbose = TRUE)
+  priors = priors, mh = mh, fcast = NULL, irf = irfs, verbose = TRUE)
 
 
 # Assessing results
@@ -108,7 +103,7 @@ dev.off()
 # IRF plots
 
 pdf("../plots_irf.pdf", width = 10, height = 8)
-plot(run$irf, vars_impulse = c("GDPC1", "FEDFUNDS"),
+plot(irf(run), vars_impulse = c("GDPC1", "FEDFUNDS"),
   vars_response = c(1:5))
 dev.off()
 
@@ -173,10 +168,10 @@ run_signs <- bvar(df_small, lags = 5, n_draw = 25000, n_burn = 10000,
   priors = priors, mh = mh, fcast = fcasts, irf = irf_signs)
 
 print(run_signs)
-print(run_signs$irf)
+print(irf(run_signs))
 
 pdf("../irf_signs.pdf", width = 10, height = 10)
-plot(run_signs$irf)
+plot(irf(run_signs))
 dev.off()
 
 
@@ -198,10 +193,8 @@ runs <- parLapply(cl, list(df, df, df),
 
 stopCluster(cl)
 
-plot(run, type = "full", vars = "lambda", chains = runs)
 
-
-pdf("../lambda_multiple.pdf", width = 10, height = 4)
+pdf("../plots_lambda_multiple.pdf", width = 10, height = 4)
 plot(run, type = "full", vars = "lambda", chains = runs)
 dev.off()
 

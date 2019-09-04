@@ -45,7 +45,7 @@ variables can be plotted.
 \examples{
 \donttest{
 data <- matrix(rnorm(400), ncol = 4)
-x <- bvar(data, lags = 2)
+x <- bvar(data, lags = 2, fcast = bv_fcast())
 
 # Plot forecasts for all available variables
 plot(predict(x))

@@ -8,3 +8,4 @@
 ^setup\.R$
 
 ^cran-comments\.md$
+^README\.md$

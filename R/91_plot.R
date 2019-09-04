@@ -22,7 +22,8 @@
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
-#' @seealso \code{\link{plot.bvar_fcast}}; \code{\link{plot.bvar_irf}}.
+#' @seealso \code{\link{bvar}}; \code{\link{plot.bvar_fcast}};
+#' \code{\link{plot.bvar_irf}}.
 #'
 #' @keywords VAR BVAR trace density convergence plot
 #'

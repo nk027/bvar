@@ -99,7 +99,7 @@ plot.bvar_resid <- function(x, vars = NULL, mar = c(2, 2, 2, 0.5), ...) {
 
   op <- par(mfrow = c(length(pos), 1), mar = mar, ...)
   for(i in pos) {
-    plot(x[, i], main = paste0("Residuals Variable #", i))
+    plot(x[, i], main = paste0("Variable #", i, "Residuals"))
     abline(h = 0, lty = "dashed", col = "gray")
   }
   par(op)
