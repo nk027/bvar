@@ -7,7 +7,7 @@
 \alias{print.bvar_vcovs}
 \title{Coefficient and VCOV methods for Bayesian VARs}
 \usage{
-\method{coef}{bvar}(object, conf_bands = 0.5, ...)
+\method{coef}{bvar}(object, conf_bands = 0.5, comp, ...)
 
 \method{vcov}{bvar}(object, conf_bands = 0.5, ...)
 
@@ -21,6 +21,9 @@
 \item{conf_bands}{Numeric vector of desired confidence bands to apply.
 E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
 Note that the median, i.e. 0.5 is always included.}
+
+\item{comp}{Logical scalar. Whether to retrieve the companion matrix of
+coefficients. See \code{\link{companion.bvar}}.}
 
 \item{...}{Not used.}
 

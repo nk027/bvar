@@ -51,7 +51,6 @@ companion.bvar <- function(
       comp[i, , ] <- get_beta_comp(object[["beta"]][i, , ], K, M, lags)
     }
   } else { # !complete
-
     quantiles <- quantile_check(conf_bands)
     coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
 

@@ -7,6 +7,8 @@
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
 #' Note that the median, i.e. 0.5 is always included.
+#' @param comp Logical scalar. Whether to retrieve the companion matrix of
+#' coefficients. See \code{\link{companion.bvar}}.
 #'
 #' @param x Object of class \code{bvar_coefs} / \code{bvar_vcovs}.
 #' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied
@@ -35,9 +37,13 @@
 #' # Only get the median of the variance-covariance matrix
 #' vcov(x, conf_bands = 0.5)
 #' }
-coef.bvar <- function(object, conf_bands = 0.5, ...) {
+coef.bvar <- function(
+  object, conf_bands = 0.5,
+  comp, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
+
+  if(comp) {companion.bvar(object, conf_bands, ...)}
 
   quantiles <- quantile_check(conf_bands)
   coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
