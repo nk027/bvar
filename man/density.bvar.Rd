@@ -4,31 +4,47 @@
 \alias{density.bvar}
 \alias{print.bvar_density}
 \alias{plot.bvar_density}
+\alias{independent_index}
 \title{Density methods for Bayesian VARs}
 \usage{
-\method{density}{bvar}(x, vars = NULL, ...)
+\method{density}{bvar}(x, vars = NULL, vars_response = NULL,
+  vars_impulse = NULL, ...)
 
 \method{print}{bvar_density}(x, ...)
 
-\method{plot}{bvar_density}(x, mar = c(2, 2, 2, 0.5), ...)
+\method{plot}{bvar_density}(x, mar = c(2, 2, 2, 0.5),
+  mfrow = c(length(x), 1), ...)
+
+independent_index(var, n_vars, lag)
 }
 \arguments{
 \item{x}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
 
-\item{vars}{Optional character vector used to subset the plot. The elements
-need to match the names of hyperparameters (including \code{"ml"}). Defaults
-to \code{NULL}, i.e. all variables.}
+\item{vars}{Optional character vector used to specify hyperparemeters to
+retrieve the density of. The elements need to match the names of
+hyperparameters (including \code{"ml"}). Defaults
+to \code{NULL}, i.e. all hyperparameters.}
 
-\item{...}{Not used.}
+\item{vars_response, vars_impulse}{Optional integer vector with the
+positions of coefficient values to retrieve densities of.
+\emph{vars_response} corresponds to a specific dependent variable,
+\emph{vars_impulse} to an independent one. Note that the constant is found
+at position one.}
+
+\item{...}{Fed to \code{\link[stats]{density}} / \code{\link[graphics]{par}}.}
 
 \item{mar}{Numeric vector. Margins for \code{\link[graphics]{par}}.}
+
+\item{mfrow}{Numeric vector. Rows for \code{\link[graphics]{par}}.}
+
+\item{var, n_vars, lag}{Integer scalars.}
 }
 \value{
 Returns a list with outputs of \code{\link[stats]{density}}.
 }
 \description{
-Calculates densities of hyperparameters of Bayesian VARs generated via
-\code{\link{bvar}}.
+Calculates densities of hyperparameters or coefficient values of BVARs
+generated via \code{\link{bvar}}.
 }
 \examples{
 \donttest{
@@ -43,6 +59,14 @@ plot(density(x))
 
 # Only get the density of the marginal likelihood
 density(x, vars = "ml")
+
+# Check out the constant's density on both dependents
+plot(density(x, vars_impulse = 1))
+
+# Get the density of the 1st lag of variable 2's coefficients with
+# respect to variable 1
+idx <- independent_index(var = 2, n_vars = 2, lag = 1)
+density(x, vars_response = 1, vars_impulse = idx)
 }
 }
 \seealso{

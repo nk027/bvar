@@ -14,8 +14,8 @@ Description: Toolkit for the estimation of hierarchical Bayesian vector autoregr
 URL: https://github.com/nk027/bvar
 BugReports: https://github.com/nk027/bvar/issues
 Depends: R (>= 3.3.0)
-Imports: MASS, stats, graphics, utils
-Suggests: vars
+Imports: mvtnorm, stats, graphics, utils
+Suggests: vars, coda
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

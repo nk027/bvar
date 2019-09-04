@@ -25,6 +25,7 @@
 #'   \item \code{vars} - Character vector with names for the desired data.
 #'   \item \code{chains} - List of numeric matrices with desired data.
 #'   \item \code{bounds} - Numeric matrix with optional boundaries.
+#' }
 #'
 #' @noRd
 prep_data <- function(

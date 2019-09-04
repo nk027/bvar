@@ -5,7 +5,7 @@
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param vars Optional character vector used to specify hyperparemeters to
-#' retrieve the density of. The elements need to match the names of 
+#' retrieve the density of. The elements need to match the names of
 #' hyperparameters (including \code{"ml"}). Defaults
 #' to \code{NULL}, i.e. all hyperparameters.
 #' @param vars_response,vars_impulse Optional integer vector with the
@@ -13,8 +13,10 @@
 #' \emph{vars_response} corresponds to a specific dependent variable,
 #' \emph{vars_impulse} to an independent one. Note that the constant is found
 #' at position one.
-#' @param ... Fed to \code{\link[stats]{density}} or similar.
+#' @param ... Fed to \code{\link[stats]{density}} / \code{\link[graphics]{par}}.
 #'
+#' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
+#' @param mfrow Numeric vector. Rows for \code{\link[graphics]{par}}.
 #' @param var,n_vars,lag Integer scalars.
 #'
 #' @return Returns a list with outputs of \code{\link[stats]{density}}.
@@ -41,7 +43,7 @@
 #' plot(density(x, vars_impulse = 1))
 #'
 #' # Get the density of the 1st lag of variable 2's coefficients with
-#' respect to variable 1
+#' # respect to variable 1
 #' idx <- independent_index(var = 2, n_vars = 2, lag = 1)
 #' density(x, vars_response = 1, vars_impulse = idx)
 #' }

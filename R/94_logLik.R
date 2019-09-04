@@ -1,48 +1,35 @@
-#' Fitted and residual methods for Bayesian VARs
+#' Log-Likelihood method for Bayesian VARs
 #'
-#' Calculates fitted values / resiudals for Bayesian VARs generated via
+#' Calculates the log-likelihood for Bayesian VARs generated with
 #' \code{\link{bvar}}.
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param conf_bands Numeric vector of desired confidence bands to apply.
-#' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' Note that the median, i.e. 0.5 is always included.
-#'
-#' @param x Object of class \code{bvar_fitted} / \code{bvar_resid}.
-#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
-#' numeric outputs (i.e. the quantiles).
-#' @param vars Optional numeric vector. Used to subset the plot to certain
-#' variables by position. Defaults to \code{NULL}, i.e. all variables.
-#' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
-#' @return Returns a numeric array of class \code{bvar_fitted} /
-#' \code{bvar_resid} with desired values at the specified confidence bands.
+#' @return Returns an object of class \code{logLik}.
 #'
 #' @seealso \code{\link{bvar}}
 #'
 #' @export
 #'
 #' @importFrom mvtnorm dmvnorm
+#' @importFrom stats logLik
 #'
 #' @examples
 #' \donttest{
 #' data <- matrix(rnorm(200), ncol = 2)
 #' x <- bvar(data, lags = 2)
 #'
-#' # Get fitted values and adjust confidence bands to 10%, 50% and 90%
-#' fitted(x, conf_bands = 0.10)
-#'
-#' # Get residuals
-#' residuals(x)
+#' # Get log-likelihood
+#' logLik(x)
 #' }
-logLik.bvar <- function(x, ...) {
+logLik.bvar <- function(object, ...) {
 
-  Y <- x[["meta"]][["Y"]]
-  N <- x[["meta"]][["N"]]
-  K <- x[["meta"]][["K"]]
-  mean <- fitted(x)
-  sigma <- vcov(x, 0.5)[]
+  Y <- object[["meta"]][["Y"]]
+  N <- object[["meta"]][["N"]]
+  K <- object[["meta"]][["K"]]
+  mean <- fitted(object)
+  sigma <- vcov(object, 0.5)[]
 
   ll <- sum(vapply(seq_len(N), function(i) {
     dmvnorm(Y[i, ], mean[i, ], sigma, log = TRUE)

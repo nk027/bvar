@@ -6,10 +6,10 @@
 \alias{bv_plot_irf}
 \title{Plotting method for Bayesian VAR impulse responses}
 \usage{
-\method{plot}{bvar_irf}(x, conf_bands, vars_impulse = NULL,
-  vars_response = NULL, variables = NULL, mar = c(2, 2, 2, 0.5), ...)
+\method{plot}{bvar_irf}(x, conf_bands, vars_response = NULL,
+  vars_impulse = NULL, variables = NULL, mar = c(2, 2, 2, 0.5), ...)
 
-plot_irf(x, conf_bands, vars_impulse = NULL, vars_response = NULL,
+plot_irf(x, conf_bands, vars_response = NULL, vars_impulse = NULL,
   variables = NULL, mar = c(2, 2, 2, 0.5), ...)
 
 bv_plot_irf(x, conf_bands = 0.16, variables = NULL,

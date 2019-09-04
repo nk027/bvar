@@ -78,6 +78,7 @@ plot.bvar <- function(
 
 
 #' @rdname plot.bvar
+#' @noRd
 #'
 #' @importFrom graphics par
 plot_bvar <- function(

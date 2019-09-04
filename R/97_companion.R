@@ -10,6 +10,7 @@
 #' @param complete Logical value. Whether to retrieve the companion matrix for
 #' all saved draws of the VAR coefficients. Overrides \code{conf_bands} if set
 #' \code{TRUE}.
+#' @param ... Not used.
 #'
 #' @return Returns a numeric array/matrix of class \code{bvar_comp} containing
 #' the companion matrix of the VAR's coefficients with desired values at the
@@ -34,7 +35,8 @@
 #' }
 companion.bvar <- function(
   object,
-  conf_bands = 0.5, complete = FALSE) {
+  conf_bands = 0.5, complete = FALSE,
+  ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
@@ -57,10 +59,10 @@ companion.bvar <- function(
     if(has_quants) {
       comp <- array(NA, c(length(quantiles), K - 1, K - 1))
       for(i in 1:length(quantiles)) {
-        comp[i, , ] <- get_beta_comp(beta_quants[i, , ], K, M, lags)
+        comp[i, , ] <- get_beta_comp(coefs[i, , ], K, M, lags)
       }
     } else {
-      comp <- get_beta_comp(beta_quants, K, M, lags)
+      comp <- get_beta_comp(coefs, K, M, lags)
     }
   }
   class(comp) <- "bvar_comp"
@@ -71,4 +73,4 @@ companion.bvar <- function(
 
 #' @rdname companion.bvar
 #' @export
-companion <- function(x, ...) {UseMethod("companion", x)}
+companion <- function(object, ...) {UseMethod("companion", object)}

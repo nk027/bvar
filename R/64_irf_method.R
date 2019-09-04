@@ -24,6 +24,8 @@
 #' or name (must be available). Defaults to \code{NULL}, i.e. all variables.
 #' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
 #' numeric outputs (i.e. the quantiles).
+#' @param complete Logical scalar. Whether to print only medians or all
+#' available confidence bands of a a \code{bvar_fevd} object.
 #'
 #' @return Returns a list of class \code{bvar_irf} including IRFs, optionally
 #' FEVDs, and desired confidence bands. See \code{\link{bvar}}.

@@ -2,7 +2,7 @@
 #'
 #' Method to convert chains of hyperparameters and marginal likelihoods obtained
 #' from \code{\link{bvar}} or coefficent values to objects compatible for
-#' further processing by \code{\link{coda}} i.e., objects of class
+#' further processing by \pkg{coda} i.e., objects of class
 #' \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
 #' Multiple chains, i.e. comparable \code{bvar} objects may be converted using
 #' the \emph{chains} argument.
@@ -12,8 +12,8 @@
 #' hyperparameters. The elements need to match the names of hyperparameters
 #' (including \code{"ml"}). Defaults to \code{NULL}, i.e. all variables.
 #' @param vars_response,vars_impulse Optional integer vector with the
-#' positions of coefficient values to convert. \emph{vars_response} corresponds 
-#' to a specific dependent variable, \emph{vars_impulse} to an independent one. 
+#' positions of coefficient values to convert. \emph{vars_response} corresponds
+#' to a specific dependent variable, \emph{vars_impulse} to an independent one.
 #' Note that the constant is found at position one.
 #' @param chains List with additional \code{bvar} objects. If provided, contents
 #' are converted to an object of class \code{\link[coda]{mcmc.list}}.
