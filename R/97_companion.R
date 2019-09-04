@@ -12,27 +12,29 @@
 #' \code{TRUE}.
 #'
 #' @return Returns a numeric array/matrix of class \code{bvar_comp} containing
-#' the companion matrix of the VARs' coefficients with desired values at the
+#' the companion matrix of the VAR's coefficients with desired values at the
 #' specified confidence bands.
 #'
-#' @seealso \code{\link{bvar}}, \code{\link{get_beta_comp}}
+#' @seealso \code{\link{bvar}}
 #'
 #' @export
 #'
-#' @importFrom stats
+#' @importFrom stats quantile
 #'
 #' @examples
 #' \donttest{
 #' data <- matrix(rnorm(200), ncol = 2)
-#' object <- bvar(data, lags = 2)
+#' x <- bvar(data, lags = 2)
 #'
-#' # Get companion matrices for confidence bands set to 10%, 50% and 90%
-#' companion(object, conf_bands = 0.10, complete = FALSE)
+#' # Get companion matrices for confidence bands at to 10%, 50% and 90%
+#' companion(x, conf_bands = 0.10, complete = FALSE)
 #'
 #' # Get companion matrices for all draws of the VAR coefficients
-#' companion(object, complete = TRUE)
+#' companion(x, complete = TRUE)
 #' }
-companion <- function(object, conf_bands = 0.5, complete = FALSE) {
+companion.bvar <- function(
+  object,
+  conf_bands = 0.5, complete = FALSE) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
@@ -46,9 +48,11 @@ companion <- function(object, conf_bands = 0.5, complete = FALSE) {
     for(i in 1:n_save) {
       comp[i, , ] <- get_beta_comp(object[["beta"]][i, , ], K, M, lags)
     }
-  } else {
+  } else { # !complete
+
     quantiles <- quantile_check(conf_bands)
-    beta_quants <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
+    coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
+
     has_quants <- length(quantiles) != 1
     if(has_quants) {
       comp <- array(NA, c(length(quantiles), K - 1, K - 1))
@@ -63,3 +67,8 @@ companion <- function(object, conf_bands = 0.5, complete = FALSE) {
 
   return(comp)
 }
+
+
+#' @rdname companion.bvar
+#' @export
+companion <- function(x, ...) {UseMethod("companion", x)}
