@@ -97,8 +97,8 @@ bvar <- function(
   n_draw = 10000, n_burn = 5000, n_thin = 1,
   priors = bv_priors(),
   mh = bv_mh(),
-  fcast = bv_fcast(),
-  irf = bv_irf(),
+  fcast = NULL,
+  irf = NULL,
   verbose = TRUE, ...) {
 
   cl <- match.call()
@@ -118,8 +118,10 @@ bvar <- function(
   # Integers
   lags <- int_check(lags, min = 1, max = nrow(Y))
   n_draw <- int_check(n_draw, min = 1)
-  n_burn <- int_check(n_burn, min = 0, max = n_draw)
-  n_thin <- int_check(n_thin, min = 1, max = ((n_draw - n_burn) / 10))
+  n_burn <- int_check(n_burn, min = 0, max = n_draw,
+                      msg = "Issue with n_burn. Is n_burn < n_draw?")
+  n_thin <- int_check(n_thin, min = 1, max = ((n_draw - n_burn) / 10),
+                      msg = "Issue with n_thin.")
   n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1)
 
   # Constructors, required

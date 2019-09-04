@@ -47,6 +47,9 @@
 #' data <- matrix(rnorm(400), ncol = 4)
 #' x <- bvar(data, lags = 2)
 #'
+#' # Add IRFs
+#' x$irf <- irf(x)
+#'
 #' # Access IRFs and update confidence bands
 #' irf(x, conf_bands = 0.01)
 #'
@@ -194,7 +197,8 @@ fevd.bvar_irf <- function(x, conf_bands = 0.5, ...) {
 
   quantiles <- quantile_check(conf_bands)
   fevd_store <- apply(x[["fevd"]], c(2, 3), quantile, quantiles)
-  class(fevd_store) <- "bvar_fevd"
+
+  class(fevd_store) <- append("bvar_fevd", class(fevd_store))
 
   return(fevd_store)
 }

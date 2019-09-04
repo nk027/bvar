@@ -64,7 +64,7 @@ companion.bvar <- function(
       comp <- get_beta_comp(coefs, K, M, lags)
     }
   }
-  class(comp) <- "bvar_comp"
+  class(comp) <- append("bvar_comp", class(comp))
 
   return(comp)
 }

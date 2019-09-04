@@ -43,6 +43,8 @@ sign_restr <- function(sigma_chol, sign_restr, M, sign_lim = 10000) {
     shock_vec[which(shock_vec > 0)] <- 1
 
     if(identical(shock_vec[restricted], sign_vec[restricted])) {return(shock)}
-    if(counter > sign_lim) {stop("No matrix fitting the sign-restrictions found.")}
+    if(counter > sign_lim) {
+      stop("No matrix fitting the sign-restrictions found.")
+    }
   }
 }

@@ -39,11 +39,11 @@
 #' }
 coef.bvar <- function(
   object, conf_bands = 0.5,
-  comp, ...) {
+  comp = FALSE, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  if(comp) {companion.bvar(object, conf_bands, ...)}
+  if(comp) {return(companion.bvar(object, conf_bands, ...))}
 
   quantiles <- quantile_check(conf_bands)
   coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
@@ -62,7 +62,7 @@ coef.bvar <- function(
     dimnames(coefs)[[2]] <- vars_row
   }
 
-  class(coefs) <- "bvar_coefs"
+  class(coefs) <- append("bvar_coefs", class(coefs))
 
   return(coefs)
 }
@@ -89,7 +89,7 @@ vcov.bvar <- function(object, conf_bands = 0.5, ...) {
     dimnames(vcovs)[[2]] <- dimnames(vcovs)[[3]] <- vars
   }
 
-  class(vcovs) <- "bvar_vcovs"
+  class(vcovs) <- append("bvar_vcovs", class(vcovs))
 
   return(vcovs)
 }

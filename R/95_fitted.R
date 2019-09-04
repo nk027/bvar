@@ -55,7 +55,7 @@ fitted.bvar <- function(object, conf_bands = 0.5, ...) {
   } else {
     fit <- X %*% betas
   }
-  class(fit) <- "bvar_fitted"
+  class(fit) <- append("bvar_fitted", class(fit))
 
   return(fit)
 }
@@ -80,7 +80,7 @@ residuals.bvar <- function(object, conf_bands = 0.5, ...) {
   } else {
     resids <- Y - fit
   }
-  class(resids) <- "bvar_resid"
+  class(resids) <- append("bvar_resid", class(resids))
 
   return(resids)
 }

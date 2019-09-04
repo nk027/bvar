@@ -83,7 +83,7 @@ bv_dummy <- function(
   min = 0.0001, max = 5,
   fun) {
 
-  if(sd <= 0) {stop("Parameter `sd` misspecified.")}
+  if(sd <= 0) {stop("Parameter sd misspecified.")}
   fun <- match.fun(fun)
 
   return(dummy(mode, min, max, sd = sd, fun = fun,

@@ -84,7 +84,7 @@ predict.bvar <- function(
 
     n_pres <- object[["meta"]][["n_save"]]
     n_thin <- int_check(n_thin, min = 1, max = (n_pres / 10),
-                        "Problematic value for parameter n_thin.")
+                        "Issue with n_thin.")
     n_save <- int_check((n_pres / n_thin), min = 1)
 
     K <- object[["meta"]][["K"]]
@@ -140,7 +140,9 @@ predict.bvar <- function(
 #' @importFrom stats predict quantile
 predict.bvar_fcast <- function(object, conf_bands, ...) {
 
-  if(!inherits(object, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
+  if(!inherits(object, "bvar_fcast")) {
+    stop("Please provide a `bvar_fcast` object.")
+  }
 
   if(!missing(conf_bands)) {
     quantiles <- quantile_check(conf_bands)
