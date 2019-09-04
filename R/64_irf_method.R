@@ -40,6 +40,8 @@
 #' @keywords VAR BVAR irf impulse responses fevd
 #' forecast error variance decomposition
 #'
+#' @export
+#'
 #' @examples
 #' \donttest{
 #' data <- matrix(rnorm(400), ncol = 4)

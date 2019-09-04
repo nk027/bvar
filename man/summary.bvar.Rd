@@ -17,21 +17,19 @@
 \item{x}{A \code{bvar_summary} object.}
 }
 \value{
-Returns a list of class \code{bvar_summary} with elements that can 
+Returns a list of class \code{bvar_summary} with elements that can
 can be accessed individually:
 \itemize{
   \item \code{bvar} - \emph{object}, the \code{bvar} object provided.
   \item \code{coef} - Coefficient values from \code{\link{coef.bvar}}.
   \item \code{vcov} - VCOV values from \code{\link{vcov.bvar}}.
   \item \code{logLik} - The Log-Likelihood from \code{\link{logLik.bvar}}.
-  \item \code{fcast} - A summary of forecasts, see \code{\link{predict.bvar}}.
-  \item \code{irf} - A summary of the IRFs, see \code{\link{irf.bvar}}.
 }
 }
 \description{
-Retrieves several outputs of interest, including paths of forecasts and
-impulse responses, the coefficient matrix, the variance-covariance matrix,
-and the Log-Likelihood.
+Retrieves several outputs of interest, including the median coefficient
+matrix, the median variance-covariance matrix, and the Log-Likelihood. For
+IRFs and forecasts separate methods for summarizing exist.
 }
 \examples{
 \donttest{
@@ -41,6 +39,6 @@ summary(x)
 }
 }
 \seealso{
-\code{\link{bvar}}; \code{\link{predict.bvar}}; 
-\code{\link{irf.bvar}}; \code{\link{coef.bvar}}; \code{\link{logLik.bvar}}
+\code{\link{bvar}}; \code{\link{coef.bvar}};
+\code{\link{logLik.bvar}}
 }

@@ -3,6 +3,7 @@
 \name{bv_priors}
 \alias{bv_priors}
 \alias{print.bv_priors}
+\alias{print.bv_minnesota}
 \alias{print.bv_dummy}
 \alias{print.bv_psi}
 \title{Prior settings}
@@ -12,6 +13,8 @@ bv_priors(hyper = "auto", mn = bv_mn(bv_lambda(0.2, 0.4, 0.0001, 5),
   ...)
 
 \method{print}{bv_priors}(x, ...)
+
+\method{print}{bv_minnesota}(x, indent = FALSE, ...)
 
 \method{print}{bv_dummy}(x, indent = FALSE, ...)
 

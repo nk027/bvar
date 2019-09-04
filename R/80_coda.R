@@ -28,6 +28,8 @@
 #'
 #' @examples
 #' \donttest{
+#' library("coda")
+#'
 #' data <- matrix(rnorm(200), ncol = 2)
 #' x <- bvar(data, lags = 2)
 #' y <- bvar(data, lags = 2)

@@ -8,12 +8,7 @@ print.bv_priors <- function(x, ...) {
       "Hyperparameters: ",
       paste0(x[["hyper"]], collapse = ", "),
       "\n\n", sep = "")
-  if(!is.null(x[["lambda"]])) {
-    cat("Minnesota prior:\nlambda:\n"); print(x[["lambda"]], indent = TRUE)
-    cat("alpha:\n"); print(x[["alpha"]], indent = TRUE)
-    cat("psi:\n"); print(x[["psi"]], indent = TRUE)
-    cat("\nVariance of the constant term:", x[["var"]], "\n")
-  }
+  if(!is.null(x[["lambda"]])) {print.bv_minnesota(x, indent = TRUE)}
   dummy_pos <- !names(x) %in% c("lambda", "alpha", "psi", "hyper", "var", "b")
   if(any(dummy_pos)) {
     cat("\nDummy prior(s):\n")
@@ -22,6 +17,23 @@ print.bv_priors <- function(x, ...) {
       cat(dummy, ":\n", sep = ""); print(x[[dummy]], indent = TRUE)
     }
   }
+
+  return(invisible(x))
+}
+
+
+#' @rdname bv_priors
+#' @export
+print.bv_minnesota <- function(x, indent = FALSE, ...) {
+
+  if(!inherits(x, "bv_minnesota") && !inherits(x, "bv_priors")) {
+    stop("Please provide a `bv_minnesota` or `bv_priors` object.")
+  }
+
+  cat("Minnesota prior:\nlambda:\n"); print(x[["lambda"]], indent)
+  cat("alpha:\n"); print(x[["alpha"]], indent)
+  cat("psi:\n"); print(x[["psi"]], indent)
+  cat("\nVariance of the constant term:", x[["var"]], "\n")
 
   return(invisible(x))
 }

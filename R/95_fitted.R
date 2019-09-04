@@ -47,7 +47,8 @@ fitted.bvar <- function(object, conf_bands = 0.5, ...) {
 
   has_quants <- length(dim(betas)) == 3
   if(has_quants) {
-    fit <- array(NA, c(dim(betas)[1], N, M), dimnames = dimnames(betas))
+    fit <- array(NA, c(dim(betas)[1], N, M),
+                 list(dimnames = dimnames(betas)[[1]], NULL, NULL))
     for(i in seq_len(dim(betas)[1])) {
       fit[i, , ] <- X %*% betas[i, , ]
     }
