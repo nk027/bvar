@@ -1,0 +1,13 @@
+citHeader("To cite BVAR use:")
+
+date <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(
+  bibtype = "Manual",
+  title = "{BVAR}: Hierarchical Bayesian Vector Autoregression",
+  author = c(person("Nikolas",  "Kuschnig"), person("Lukas", "Vashold"),
+  year = year,
+  note = note,
+  url = "https://CRAN.R-project.org/package=BVAR"
+)
