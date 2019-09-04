@@ -63,7 +63,7 @@ plot.bvar_fcast <- function(
 }
 
 
-#' @rdname plot.bvar_fcast
+#' @noRd
 plot_fcast <- function(
   x,
   conf_bands, # deprecated, see `predict.bvar()`

@@ -1,5 +1,5 @@
 #####
-# Working example for
+# Replication script for:
 # "BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R"
 
 
@@ -10,23 +10,25 @@ install.packages("BVAR") # Version 0.2.0
 set.seed(42)
 library("BVAR")
 
+
 # Loading and preparing data ----------------------------------------------
 
 data("fred_qd")
 df <- fred_qd[, c("GDPC1", "INDPRO", "PAYEMS",
   "CES0600000007", "CPIAUCSL", "FEDFUNDS")]
 
-## year-on-year changes
+# year-to-year changes
 for(i in c("GDPC1", "CPIAUCSL"))
   df[5:nrow(df), i] <- diff(log(df[, i]), lag = 4) * 100
 
-## quarter-on-quarter changes
+# quarter-to-quarter changes
 for(i in c("INDPRO", "PAYEMS", "CES0600000007"))
   df[2:nrow(df), i] <- diff(log(df[, i]), lag = 1) * 100
 
 df <- df[5:nrow(df), ]
 
-## Plotting the series
+
+# Plotting the time series
 pdf("../time_series_ovw.pdf", width = 10, height = 6)
 op <- par(mfrow = c(2, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
 plot(as.Date(rownames(df)), df[ , "GDPC1"], type = "l",
@@ -44,7 +46,9 @@ plot(as.Date(rownames(df)), df[ , "FEDFUNDS"], type = "l",
 dev.off()
 
 
-# Setting up Minnesota prior ----------------------------------------------
+# `bvar()` setup ----------------------------------------------------------
+
+# Setting up the Minnesota prior
 
 mn <- bv_minnesota(
   lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
@@ -52,57 +56,56 @@ mn <- bv_minnesota(
   var = 1e07)
 
 
-# Setting up dummy priors -------------------------------------------------
+# Setting up dummy priors
 
 soc <- bv_soc(mode = 1, sd = 1, min = 1e-04, max = 50)
 sur <- bv_sur(mode = 1, sd = 1, min = 1e-04, max = 50)
 
 
-# Putting priors together -------------------------------------------------
+# Putting the priors together
 
 priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
 
 
-# Setting up impulse reponses ---------------------------------------------
+# Setting up impulse reponses
 
 irfs  <- bv_irf(horizon = 12, fevd = TRUE, identification = TRUE)
 
 
-# Setting up unconditional forecasts --------------------------------------
+# Turning off forecasts
 
-fcasts <- bv_fcast(horizon = 12, conditional = FALSE)
+fcasts <- NULL
 
 
-# Setting up MH-step ------------------------------------------------------
+# Adjust the MH-step
 
 mh <- bv_metropolis(scale_hess = 0.005, adjust_acc = TRUE,
   acc_lower = 0.25, acc_upper = 0.35, acc_change = 0.02)
 
 
-# Running the model -------------------------------------------------------
+# Execute the model -------------------------------------------------------
 
 run <- bvar(df, lags = 5, n_draw = 25000, n_burn = 10000, n_thin = 1,
   priors = priors, mh = mh, fcast = fcasts, irf = irfs, verbose = TRUE)
 
 
-# Assessing results --------------------------------------------------------
+# Assessing results
 
 summary(run)
 
 
-# Hyperparameter plots ----------------------------------------------------
+# Hyperparameter plots
 
 pdf("../plots_all.pdf", width = 10, height = 12)
 plot(run)
 dev.off()
-
 
 pdf("../plots_lambda.pdf", width = 10, height = 5)
 plot(run, type = "full", vars = "lambda", mfrow = c(2, 1))
 dev.off()
 
 
-# IRF plots ---------------------------------------------------------------
+# IRF plots
 
 pdf("../plots_irf.pdf", width = 10, height = 8)
 plot(run$irf, vars_impulse = c("GDPC1", "FEDFUNDS"),
@@ -110,39 +113,32 @@ plot(run$irf, vars_impulse = c("GDPC1", "FEDFUNDS"),
 dev.off()
 
 
-# Compute FEVDs -----------------------------------------------------------
+# Get FEVD values
 
 fevd(run)
 
 
-# Forecast plots ----------------------------------------------------------
+# Ex-post calculations ----------------------------------------------------
 
-pdf("../plots_fcast.pdf", width = 10, height = 3)
-plot(run$fcast, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
-  orientation = "h")
+# Add fcast ex-post
+run$fcast <- predict(run, horizon = 8)
+
+pdf("../plots_fcast_post.pdf", width = 10, height = 4)
+plot(predict(run), vars = c("GDPC1", "FEDFUNDS"),
+  orientation = "vertical")
 dev.off()
 
 
-# using predict() and irf() for ex-post computations, include in paper?
-
-fcast_005 <- predict(run, conf_bands = 0.05, horizon = 20)
-
-pdf("../plots_fcast005.pdf", width = 10, height = 3)
-plot(fcast_005, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
-  orientation = "h")
-dev.off()
-
-irf_005 <- irf(run, conf_bands = 0.05, horizon = 20, fevd = TRUE)
-
-pdf("../plots_irf005.pdf", width = 10, height = 8)
-plot(irf_005, vars_impulse = c("GDPC1", "FEDFUNDS"),
-  vars_response = c(1:4, 5))
+# Plot adjusted IRFs ex-post
+pdf("../plots_irf_post.pdf", width = 10, height = 8)
+plot(irf(run, conf_bands = 0.05, horizon = 20, fevd = TRUE),
+  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1:4, 5))
 dev.off()
 
 
 # Appendices --------------------------------------------------------------
 
-# A - Construction of custom dummy priors ---------------------------------
+# A - Construction of custom dummy priors
 
 add_soc <- function(Y, lags, par) {
   soc <- if(lags == 1) {diag(Y[1, ]) / par} else {
@@ -159,7 +155,7 @@ soc <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_soc)
 priors_dum <- bv_priors(hyper = "auto", soc = soc)
 
 
-# B - Identification via sign restrictions --------------------------------
+# B - Identification via sign restrictions
 
 data("fred_qd")
 df_small <- fred_qd[, c("GDPC1", "CPIAUCSL", "FEDFUNDS")]
@@ -172,24 +168,24 @@ df_small <- df_small[5:nrow(df_small), ]
 signs <- matrix(c(1, 1, 1, 0, 1, 1, -1, -1, 1), ncol = 3)
 irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
   identification = TRUE, sign_restr = signs)
+
 run_signs <- bvar(df_small, lags = 5, n_draw = 25000, n_burn = 10000,
   priors = priors, mh = mh, fcast = fcasts, irf = irf_signs)
 
 print(run_signs)
 print(run_signs$irf)
-plot(run_signs$irf)
-
 
 pdf("../irf_signs.pdf", width = 10, height = 10)
 plot(run_signs$irf)
 dev.off()
 
 
-# C - Convergence assessment and parallelization --------------------------
+# C - Convergence assessment and parallelization
 
 library("parallel")
 n_cores <- detectCores() - 1
 cl <- makeCluster(n_cores)
+
 runs <- parLapply(cl, list(df, df, df),
   function(x) {
     library("BVAR")
@@ -199,7 +195,9 @@ runs <- parLapply(cl, list(df, df, df),
       mh = bv_mh(scale_hess = 0.005, adjust_acc = TRUE, acc_change = 0.02),
       irf = bv_irf(), fcast = bv_fcast(), verbose = FALSE)
   })
+
 stopCluster(cl)
+
 plot(run, type = "full", vars = "lambda", chains = runs)
 
 
@@ -215,3 +213,6 @@ geweke.diag(run_mcmc)
 
 runs_mcmc <- as.mcmc(run, chains = runs)
 gelman.diag(runs_mcmc, autoburnin = FALSE)
+
+
+# Fin ---------------------------------------------------------------------

@@ -145,7 +145,7 @@ print_coefs <- function(
   } else {coefs <- x[]} # Remove class to avoid recursion
 
   cat("Numeric array (dimensions ", paste0(dim(x), collapse = ", "),  ")",
-      " of ", type, " values of a BVAR.\n", sep = "")
+      " of ", type, " values from a BVAR.\n", sep = "")
   if(has_quants) {
     cat("Computed confidence bands: ",
         paste(bands, collapse = ", "), "\n", sep = "")

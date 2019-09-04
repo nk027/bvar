@@ -58,7 +58,7 @@ plot.bvar_irf <- function(
 }
 
 
-#' @rdname plot.bvar_irf
+#' @noRd
 plot_irf <- function(
   x,
   conf_bands, # deprecated, see `irf.bvar()`

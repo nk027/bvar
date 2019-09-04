@@ -163,7 +163,7 @@ print_fitted <- function(
   }
 
   cat("Numeric array (dimensions ", paste0(dim(x), collapse = ", "),  ")",
-      " with ", type, " values of a BVAR.\n", sep = "")
+      " with ", type, " values from a BVAR.\n", sep = "")
   if(has_quants) {
     cat("Computed confidence bands: ",
         paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")
