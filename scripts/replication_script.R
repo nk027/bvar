@@ -5,16 +5,16 @@
 
 # Preliminaries -----------------------------------------------------------
 
-install.packages("BVAR") # Version 0.1.5
-library("BVAR")
-set.seed(123)
+install.packages("BVAR") # Version 0.2.0
 
+set.seed(42)
+library("BVAR")
 
 # Loading and preparing data ----------------------------------------------
 
 data("fred_qd")
 df <- fred_qd[, c("GDPC1", "INDPRO", "PAYEMS",
-                  "CES0600000007", "CPIAUCSL", "FEDFUNDS")]
+  "CES0600000007", "CPIAUCSL", "FEDFUNDS")]
 
 ## year-on-year changes
 for(i in c("GDPC1", "CPIAUCSL"))
@@ -46,9 +46,10 @@ dev.off()
 
 # Setting up Minnesota prior ----------------------------------------------
 
-mn <- bv_mn(lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
-            alpha = bv_alpha(mode = 2, sd = 0.25, min = 1, max = 3),
-            var = 1e07)
+mn <- bv_minnesota(
+  lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
+  alpha = bv_alpha(mode = 2, sd = 0.25, min = 1, max = 3),
+  var = 1e07)
 
 
 # Setting up dummy priors -------------------------------------------------
@@ -64,25 +65,24 @@ priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
 
 # Setting up impulse reponses ---------------------------------------------
 
-irf  <- bv_irf(horizon = 12, fevd = TRUE, identification = TRUE)
+irfs  <- bv_irf(horizon = 12, fevd = TRUE, identification = TRUE)
 
 
 # Setting up unconditional forecasts --------------------------------------
 
-fcast <- bv_fcast(horizon = 12, conditional = FALSE)
+fcasts <- bv_fcast(horizon = 12, conditional = FALSE)
 
 
 # Setting up MH-step ------------------------------------------------------
 
-mh <- bv_mh(scale_hess = 0.005, adjust_acc = TRUE,
-            acc_lower = 0.25, acc_upper = 0.35, acc_change = 0.02)
+mh <- bv_metropolis(scale_hess = 0.005, adjust_acc = TRUE,
+  acc_lower = 0.25, acc_upper = 0.35, acc_change = 0.02)
 
 
 # Running the model -------------------------------------------------------
 
 run <- bvar(df, lags = 5, n_draw = 25000, n_burn = 10000, n_thin = 1,
-            priors = priors, mh = mh, fcast = fcast, irf = irf,
-            verbose = TRUE)
+  priors = priors, mh = mh, fcast = fcasts, irf = irfs, verbose = TRUE)
 
 
 # Assessing results --------------------------------------------------------
@@ -96,6 +96,7 @@ pdf("../plots_all.pdf", width = 10, height = 12)
 plot(run)
 dev.off()
 
+
 pdf("../plots_lambda.pdf", width = 10, height = 5)
 plot(run, type = "full", vars = "lambda", mfrow = c(2, 1))
 dev.off()
@@ -105,7 +106,7 @@ dev.off()
 
 pdf("../plots_irf.pdf", width = 10, height = 8)
 plot(run$irf, vars_impulse = c("GDPC1", "FEDFUNDS"),
-            vars_response = c(1:5))
+  vars_response = c(1:5))
 dev.off()
 
 
@@ -118,7 +119,7 @@ fevd(run)
 
 pdf("../plots_fcast.pdf", width = 10, height = 3)
 plot(run$fcast, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
-     orientation = "h")
+  orientation = "h")
 dev.off()
 
 
@@ -128,20 +129,20 @@ fcast_005 <- predict(run, conf_bands = 0.05, horizon = 20)
 
 pdf("../plots_fcast005.pdf", width = 10, height = 3)
 plot(fcast_005, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
-     orientation = "h")
+  orientation = "h")
 dev.off()
 
 irf_005 <- irf(run, conf_bands = 0.05, horizon = 20, fevd = TRUE)
 
 pdf("../plots_irf005.pdf", width = 10, height = 8)
 plot(irf_005, vars_impulse = c("GDPC1", "FEDFUNDS"),
-     vars_response = c(1:4, 5))
+  vars_response = c(1:4, 5))
 dev.off()
 
 
 # Appendices --------------------------------------------------------------
 
-# A - Constructing a dummy prior ------------------------------------------
+# A - Construction of custom dummy priors ---------------------------------
 
 add_soc <- function(Y, lags, par) {
   soc <- if(lags == 1) {diag(Y[1, ]) / par} else {
@@ -149,7 +150,7 @@ add_soc <- function(Y, lags, par) {
   }
   Y_soc <- soc
   X_soc <- cbind(rep(0, ncol(Y)),
-                 matrix(rep(soc, lags), nrow = ncol(Y)))
+    matrix(rep(soc, lags), nrow = ncol(Y)))
   return(list("Y" = Y_soc, "X" = X_soc))
 }
 
@@ -158,7 +159,7 @@ soc <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_soc)
 priors_dum <- bv_priors(hyper = "auto", soc = soc)
 
 
-# B - Signs restrictions as a means of identification ---------------------
+# B - Identification via sign restrictions --------------------------------
 
 data("fred_qd")
 df_small <- fred_qd[, c("GDPC1", "CPIAUCSL", "FEDFUNDS")]
@@ -170,12 +171,14 @@ df_small <- df_small[5:nrow(df_small), ]
 
 signs <- matrix(c(1, 1, 1, 0, 1, 1, -1, -1, 1), ncol = 3)
 irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
-                    identification = TRUE, sign_restr = signs)
+  identification = TRUE, sign_restr = signs)
 run_signs <- bvar(df_small, lags = 5, n_draw = 25000, n_burn = 10000,
-                  priors = priors, mh = mh, fcast = fcast, irf = irf_signs)
+  priors = priors, mh = mh, fcast = fcasts, irf = irf_signs)
+
 print(run_signs)
 print(run_signs$irf)
 plot(run_signs$irf)
+
 
 pdf("../irf_signs.pdf", width = 10, height = 10)
 plot(run_signs$irf)
@@ -184,30 +187,31 @@ dev.off()
 
 # C - Convergence assessment and parallelization --------------------------
 
+library("parallel")
+n_cores <- detectCores() - 1
+cl <- makeCluster(n_cores)
+runs <- parLapply(cl, list(df, df, df),
+  function(x) {
+    library("BVAR")
+    bvar(x, lags = 5,
+      n_draw = 25000, n_burn = 10000, n_thin = 1,
+      priors = bv_priors(soc = bv_soc(), sur = bv_sur()),
+      mh = bv_mh(scale_hess = 0.005, adjust_acc = TRUE, acc_change = 0.02),
+      irf = bv_irf(), fcast = bv_fcast(), verbose = FALSE)
+  })
+stopCluster(cl)
+plot(run, type = "full", vars = "lambda", chains = runs)
+
+
+pdf("../lambda_multiple.pdf", width = 10, height = 4)
+plot(run, type = "full", vars = "lambda", chains = runs)
+dev.off()
+
+
 library("coda")
 run_mcmc <- as.mcmc(run)
 geweke.diag(run_mcmc)
 
-library("parallel")
-n_cores <- detectCores() - 1
-cl <- makeCluster(n_cores)
-bvars <- parLapply(cl, list(df, df, df),
-                   function(x) {
-                     library("BVAR")
-                     bvar(x, lags = 5,
-                          n_draw = 25000, n_burn = 10000, n_thin = 1,
-                          priors = bv_priors(soc = bv_soc(), sur = bv_sur()),
-                          mh = bv_mh(scale_hess = 0.005, adjust_acc = TRUE,
-                                     acc_change = 0.02),
-                          irf = bv_irf(), fcast = bv_fcast(), verbose = FALSE)
-                   })
-stopCluster(cl)
 
-runs_mcmc <- as.mcmc(run, chains = bvars)
+runs_mcmc <- as.mcmc(run, chains = runs)
 gelman.diag(runs_mcmc, autoburnin = FALSE)
-
-plot(run, type = "density", vars = "lambda", chains = bvars)
-
-pdf("../lambda_multiple.pdf", width = 10, height = 4)
-plot(run, type = "density", vars = "lambda", chains = bvars)
-dev.off()
