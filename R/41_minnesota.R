@@ -135,7 +135,9 @@ lazy_priors <- function(x) {
 
   if(!inherits(x, "bv_dummy")) {
     # Allow receiving length 4 numeric vectors
-    if(length(x) == 4 && is.numeric(x)) {return(x = bv_lambda(x))}
+    if(length(x) == 4 && is.numeric(x)) {
+      return(x = bv_lambda(x[1], x[2], x[3], x[4]))
+    }
     stop("Please use `bv_lambda()` / `bv_alpha()` to set lambda / alpha.")
   }
 
