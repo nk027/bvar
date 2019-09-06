@@ -1,11 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 
-^details\....$
-
 ^scripts/
-^dl_fred_qd\.R$
-^setup\.R$
+^data/fred_qd_full\.rda$
 
 ^cran-comments\.md$
 ^README\.md$
