@@ -15,7 +15,7 @@
 Returns an object of class \code{logLik}.
 }
 \description{
-Calculates the log-likelihood for Bayesian VARs generated with
+Calculates the log-likelihood of Bayesian VARs generated with
 \code{\link{bvar}}.
 }
 \examples{

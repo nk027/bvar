@@ -16,8 +16,8 @@
 #' @return Returns a named list of class \code{bv_fcast} with options for
 #' \code{\link{bvar}} or \code{\link{predict.bvar}}.
 #'
-#' @seealso \code{\link{bvar}}; \code{\link{predict.bvar_fcast}};
-#' \code{\link{plot.bvar_fcast}};
+#' @seealso \code{\link{bvar}}; \code{\link{predict.bvar}};
+#' \code{\link{plot.bvar_fcast}}
 #'
 #' @keywords VAR BVAR forecasts prediction settings
 #'

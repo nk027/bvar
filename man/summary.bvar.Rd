@@ -28,8 +28,8 @@ can be accessed individually:
 }
 \description{
 Retrieves several outputs of interest, including the median coefficient
-matrix, the median variance-covariance matrix, and the Log-Likelihood. For
-IRFs and forecasts separate methods for summarizing exist.
+matrix, the median variance-covariance matrix, and the Log-Likelihood.
+Separate summary methods exist for impulse responses and forecasts.
 }
 \examples{
 \donttest{

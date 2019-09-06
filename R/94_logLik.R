@@ -1,6 +1,6 @@
 #' Log-Likelihood method for Bayesian VARs
 #'
-#' Calculates the log-likelihood for Bayesian VARs generated with
+#' Calculates the log-likelihood of Bayesian VARs generated with
 #' \code{\link{bvar}}.
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.

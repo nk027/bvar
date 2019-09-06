@@ -12,7 +12,7 @@ as.mcmc.bvar(x, vars = NULL, vars_response = NULL,
 
 \item{vars}{Optional character vector used to subset the converted
 hyperparameters. The elements need to match the names of hyperparameters
-(including \code{"ml"}). Defaults to \code{NULL}, i.e. all variables.}
+(plus \code{"ml"}). Defaults to \code{NULL}, i.e. all variables.}
 
 \item{vars_response, vars_impulse}{Optional integer vector with the
 positions of coefficient values to convert. \emph{vars_response} corresponds
@@ -28,10 +28,10 @@ are converted to an object of class \code{\link[coda]{mcmc.list}}.}
 \description{
 Method to convert chains of hyperparameters and marginal likelihoods obtained
 from \code{\link{bvar}} or coefficent values to objects compatible for
-further processing by \pkg{coda} i.e., objects of class
+further processing with \pkg{coda}, i.e., objects of class
 \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
-Multiple chains, i.e. comparable \code{bvar} objects may be converted using
-the \emph{chains} argument.
+Multiple chains, that is comparable \code{bvar} objects may be converted
+using the \emph{chains} argument.
 }
 \examples{
 \donttest{
@@ -41,7 +41,7 @@ data <- matrix(rnorm(200), ncol = 2)
 x <- bvar(data, lags = 2)
 y <- bvar(data, lags = 2)
 
-# Plot full traces and densities
+# Convert hyperparameter lambda and the marginal likelihood
 as.mcmc(x, vars = c("ml", "lambda"))
 
 # Add second chain for further processing
@@ -49,7 +49,7 @@ as.mcmc(x, vars = c("ml", "lambda"), chains = list(y = y))
 }
 }
 \seealso{
-\code{\link{bvar}} \code{\link[coda]{mcmc}}
+\code{\link{bvar}}; \code{\link[coda]{mcmc}}
 }
 \keyword{BVAR}
 \keyword{VAR}

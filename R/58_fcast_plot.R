@@ -20,7 +20,7 @@
 #'
 #' @return Returns \emph{x} invisibly.
 #'
-#' @seealso \code{\link{bvar}}; \code{\link{predict.bvar_fcast}}
+#' @seealso \code{\link{bvar}}; \code{\link{predict.bvar}}
 #'
 #' @keywords VAR BVAR forecasts prediction plot
 #'

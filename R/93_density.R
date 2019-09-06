@@ -1,19 +1,20 @@
 #' Density methods for Bayesian VARs
 #'
-#' Calculates densities of hyperparameters or coefficient values of BVARs
-#' generated via \code{\link{bvar}}.
+#' Calculates densities of hyperparameters or coefficient values of Bayesian
+#' VARs generated via \code{\link{bvar}}. Wraps standard
+#' \code{\link[stats]{density}} functionality into a \code{list}.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param vars Optional character vector used to specify hyperparemeters to
 #' retrieve the density of. The elements need to match the names of
-#' hyperparameters (including \code{"ml"}). Defaults
-#' to \code{NULL}, i.e. all hyperparameters.
+#' hyperparameters (plus \code{"ml"}). Defaults to \code{NULL}, i.e. all
+#' hyperparameters.
 #' @param vars_response,vars_impulse Optional integer vector with the
 #' positions of coefficient values to retrieve densities of.
 #' \emph{vars_response} corresponds to a specific dependent variable,
 #' \emph{vars_impulse} to an independent one. Note that the constant is found
 #' at position one.
-#' @param ... Fed to \code{\link[stats]{density}} / \code{\link[graphics]{par}}.
+#' @param ... Fed to \code{\link[stats]{density}} or \code{\link[graphics]{par}}.
 #'
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param mfrow Numeric vector. Rows for \code{\link[graphics]{par}}.
@@ -24,6 +25,8 @@
 #' @seealso \code{\link{bvar}}
 #'
 #' @export
+#'
+#' @importFrom stats density
 #'
 #' @examples
 #' \donttest{

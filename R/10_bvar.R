@@ -2,6 +2,11 @@
 #'
 #' Hierarchical Bayesian estimation of Vector Autoregression (VAR) models in
 #' the fashion of Giannone et al. (2015).
+#' Options for the \emph{priors} and \emph{mh} arguments are provided via the
+#' functions \code{\link{bv_priors}} and \code{\link{bv_metropolis}}.
+#' Several methods facilitate analysis, including \code{\link{summary.bvar}},
+#' \code{\link{plot.bvar}}, \code{\link{predict.bvar}} and
+#' \code{\link{irf.bvar}}.
 #'
 #' @author Nikolas Kuschnig, Lukas Vashold
 #'
@@ -13,7 +18,7 @@
 #' @param n_burn Integer scalar. Number of iterations to discard.
 #' @param n_thin Integer scalar. Provides the option of reducing the number of
 #' stored iterations to every \emph{n_thin}'th one. The number of saved
-#' iterations thus equals \code{(n_draw - n_burn) / n_thin}.
+#' iterations thus equals \eqn{(n_draw - n_burn) / n_thin}.
 #' @param priors \code{bv_priors} object containing priors and their settings.
 #' See \code{\link{bv_priors}}.
 #' @param mh \code{bv_metropolis} object with settings regarding the acceptance
@@ -22,9 +27,9 @@
 #' \code{\link{bv_fcast}}. May be set to \code{NULL} to skip forecasting.
 #' Forecasts may also be calculated ex-post using \code{\link{predict.bvar}}.
 #' @param irf \code{bv_irf} object with options regarding impulse responses and
-#' forecast error variance decompositions. Set via\code{\link{bv_irf}}. May be
-#' set to \code{NULL} to skip the calculation. May also be computed ex-post
-#' using \code{\link{irf.bvar}}.
+#' forecast error variance decompositions. Set via \code{\link{bv_irf}} or
+#' skipped when set to \code{NULL}. May also be computed ex-post using
+#' \code{\link{irf.bvar}}.
 #' @param verbose Logical scalar. Whether to print intermediate results and
 #' progress.
 #'
@@ -48,22 +53,24 @@
 #'   \item \code{call} - Call to the function. See \code{\link{match.call}}.
 #'   \item \code{meta} - List with meta information such as number of variables,
 #'   accepted draws, number of iterations, et cetera.
-#'   \item \code{variables} - Character vector with column names of \emph{data}.
+#'   \item \code{variables} - Character vector with the column names of
+#'   \emph{data}.
 #'   \item \code{fcast} - \code{bvar_fcast} object with posterior forecast
-#'   draws, quantiles as well as the forecast's setup from \emph{fcast}.
+#'   draws, quantiles as well as the forecast's setup from the \emph{fcast}
+#'   argument.
 #'   \item \code{irf} - \code{bvar_irf} object with posterior impulse response
 #'   and their quantiles, forecast error variance decomposition draws, as well
-#'   as the setup obtained from \emph{irf}.
+#'   as the setup from the \emph{irf} argument.
 #' }
 #'
 #' @references
 #'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_mh}};
-#' \code{\link{bv_fcast}}; \code{\link{bv_irf}}; \code{\link{predict.bvar}};
-#' \code{\link{irf.bvar}}; \code{\link{plot.bvar}}
+#' \code{\link{bv_fcast}}; \code{\link{bv_irf}};
+#' \code{\link{predict.bvar}}; \code{\link{irf.bvar}}; \code{\link{plot.bvar}};
 #'
-#' @keywords VAR BVAR macroeconomics hierarchical prior vector autoregression
+#' @keywords VAR BVAR macroeconomics hierarchical priors vector-autoregression
 #'
 #' @export
 #'
@@ -79,10 +86,8 @@
 #' data <- data[5:nrow(data), ]
 #'
 #' # Compute VAR using 2 lags and a ridiculously low number of draws
-#' x <- bvar(
-#'   data = data, lags = 1,
-#'   n_draw = 500, n_burn = 400, n_thin = 2, verbose = FALSE
-#' )
+#' x <- bvar(data = data, lags = 1,
+#'           n_draw = 500, n_burn = 400, n_thin = 2, verbose = FALSE)
 #'
 #' \donttest{
 #' # Check out some of the outputs generated

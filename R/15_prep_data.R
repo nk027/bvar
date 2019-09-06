@@ -6,7 +6,7 @@
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param vars Optional character vector used to subset the plot. The elements
-#' need to match the names of hyperparameters (including \code{"ml"}). Defaults
+#' need to match the names of hyperparameters (plus \code{"ml"}). Defaults
 #' to \code{NULL}, i.e. all variables.
 #' @param vars_response,vars_impulse Optional integer vectors with the
 #' positions of coefficient values to retrieve densities of.

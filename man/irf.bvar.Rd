@@ -2,31 +2,21 @@
 % Please edit documentation in R/64_irf_method.R, R/65_irf_print.R
 \name{irf.bvar}
 \alias{irf.bvar}
-\alias{irf.bvar_irf}
 \alias{fevd.bvar}
-\alias{fevd.bvar_irf}
 \alias{irf}
 \alias{fevd}
-\alias{print.bv_irf}
 \alias{print.bvar_irf}
 \alias{print.bvar_fevd}
 \alias{summary.bvar_irf}
-\alias{print.bvar_irf_summary}
 \title{Impulse response and forecast error methods for Bayesian VARs}
 \usage{
 \method{irf}{bvar}(x, ..., conf_bands, n_thin = 1L)
 
-\method{irf}{bvar_irf}(x, conf_bands, ...)
-
 \method{fevd}{bvar}(x, ..., conf_bands = 0.5, n_thin = 1L)
-
-\method{fevd}{bvar_irf}(x, conf_bands = 0.5, ...)
 
 irf(x, ...)
 
 fevd(x, ...)
-
-\method{print}{bv_irf}(x, ...)
 
 \method{print}{bvar_irf}(x, ...)
 
@@ -34,23 +24,21 @@ fevd(x, ...)
 
 \method{summary}{bvar_irf}(object, vars_impulse = NULL,
   vars_response = NULL, ...)
-
-\method{print}{bvar_irf_summary}(x, digits = 2L, ...)
 }
 \arguments{
 \item{x, object}{A \code{bvar} object, obtained from \code{\link{bvar}}.
-Summary and print methods take in a \code{bvar_irf} object.}
+Summary and print methods take in a \code{bvar_irf} / \code{bvar_fevd}
+object.}
 
-\item{...}{A \code{bv_fcast} object or parameters to be fed into
-\code{\link{bv_fcast}}. Contains settings for the forecast.}
+\item{...}{A \code{bv_irf} object or arguments to be fed into
+\code{\link{bv_irf}}. Contains settings for the IRFs / FEVDs.}
 
 \item{conf_bands}{Numeric vector of desired confidence bands to apply.
 E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-Note that the median, i.e. 0.5 is always included.}
+Note that the median, i.e. \code{0.5} is always included.}
 
 \item{n_thin}{Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
-for calculations, others are dropped. Defaults to the maximum number - i.e.
-the number of saved draws in \emph{x}.}
+for calculations, others are dropped.}
 
 \item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied to
 numeric outputs (i.e. the quantiles).}
@@ -63,11 +51,11 @@ to subset the summary's impulses / responses to certain variables by position
 or name (must be available). Defaults to \code{NULL}, i.e. all variables.}
 }
 \value{
-Returns a list of class \code{bvar_irf} including IRFs, optionally
-FEVDs, and desired confidence bands. See \code{\link{bvar}}.
-The \code{fevd} methods only returns a numeric array of FEVDs and desired
-confidence bands.
-The summary method returns a numeric array of forecast paths at the
+Returns a list of class \code{bvar_irf} including IRFs and optionally
+FEVDs at desired confidence bands. Also see \code{\link{bvar}}.
+Note that the \code{fevd} method only returns a numeric array of FEVDs at
+desired confidence bands.
+The summary method returns a numeric array of impulse responses at the
 specified confidence bands.
 }
 \description{
@@ -76,8 +64,9 @@ error variance decompositions (FEVDs) for Bayesian VARs generated via
 \code{\link{bvar}}. If the object is already present and no settings are
 supplied it is simply retrieved, otherwise it will be calculated ex-post.
 Note that FEVDs require the presence / calculation of IRFs.
-To store IRFs you may want to assign them to \code{x[["irf"]]}.
-May also be used to update confidence bands.
+To store IRFs you may want to assign the output of \code{irf.bvar} to
+\code{x$irf}. May also be used to update confidence bands, i.e.
+credible intervals.
 }
 \examples{
 \donttest{
@@ -109,11 +98,7 @@ summary(x, vars_response = 2L)
 }
 \keyword{BVAR}
 \keyword{VAR}
-\keyword{decomposition}
-\keyword{error}
 \keyword{fevd}
-\keyword{forecast}
-\keyword{impulse}
+\keyword{forecast-error-variance-decomposition}
+\keyword{impulse-responses}
 \keyword{irf}
-\keyword{responses}
-\keyword{variance}

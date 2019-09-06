@@ -1,4 +1,4 @@
-#' @rdname irf.bvar
+#' @noRd
 #' @export
 print.bv_irf <- function(x, ...) {
 
@@ -114,10 +114,10 @@ summary.bvar_irf <- function(
 }
 
 
-#' @rdname irf.bvar
+#' @noRd
 #' @export
 print.bvar_irf_summary <- function(x, digits = 2L, ...) {
-  
+
   if(!inherits(x, "bvar_irf_summary")) {
     stop("Please provide a `bvar_irf_summary` object.")
   }
@@ -127,7 +127,7 @@ print.bvar_irf_summary <- function(x, digits = 2L, ...) {
   cat(if(!x$has_quants) {
     "Median impulse responses:\n"
   } else {"Impulse responses:\n"})
-  
+
   for(i in x$pos_res) {
     for(j in x$pos_imp) {
       cat("    Shock ", x$variables[j], " on ", x$variables[i], ":\n", sep = "")

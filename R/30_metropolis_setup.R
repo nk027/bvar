@@ -11,19 +11,18 @@
 #' must equal the number of hyperparameters (one per variable for \code{psi}).
 #' @param adjust_acc Logical scalar. Whether or not to further scale the
 #' variability of parameter draws during the burn-in phase.
-#' @param acc_lower Numeric scalar. Lower bound of the target acceptance rate.
-#' Required if \emph{adjust_acc} is set to \code{TRUE}.
-#' @param acc_upper Numeric scalar. Upper bound of the target acceptance rate.
-#' Required if \emph{adjust_acc} is set to \code{TRUE}.
+#' @param acc_lower,acc_upper Numeric scalar. Lower (upper) bound of the target
+#' acceptance rate. Required if \emph{adjust_acc} is set to \code{TRUE}.
 #' @param acc_change Numeric scalar. Percent change applied to the Hessian
 #' matrix. Required if \emph{adjust_acc} is set to \code{TRUE}.
+#'
 #' @param x An object of class \code{bv_metropolis}.
 #' @param ... Not used
 #'
 #' @return Returns a named list of class \code{bv_metropolis} with options for
 #' \code{\link{bvar}}.
 #'
-#' @keywords VAR BVAR metropolis hastings acceptance mcmc
+#' @keywords VAR BVAR MH metropolis-hastings acceptance mcmc
 #'
 #' @export
 #'
@@ -36,7 +35,7 @@
 #'
 #' # Increase the rate of automatic scaling
 #' bv_mh(adjust_acc = TRUE, acc_lower = 0.2, acc_upper = 0.4, acc_change = 0.1)
-bv_mh <- function(
+bv_metropolis <- function(
   scale_hess = 0.01,
   adjust_acc = FALSE,
   acc_lower = 0.25, acc_upper = 0.35,
@@ -60,6 +59,6 @@ bv_mh <- function(
 }
 
 
-#' @rdname bv_mh
+#' @rdname bv_metropolis
 #' @export
-bv_metropolis <- bv_mh
+bv_mh <- bv_metropolis

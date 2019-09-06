@@ -3,14 +3,16 @@
 #' Method to plot trace and densities of hyperparameters and marginal likelihood
 #' or coefficient values obtained from \code{\link{bvar}}. Plots may be subset
 #' to certain types using \emph{type} and to hyperparameters using \emph{vars}.
-#' Multiple chains, i.e. comparable \code{bvar} objects may be plotted together
-#' using the \emph{chains} argument.
+#' Multiple chains, that is comparable \code{bvar} objects, may be plotted
+#' together using the \emph{chains} argument.
+#' The \emph{type} argument may be used to access \code{\link{plot.bvar_irf}}
+#' and \code{\link{plot.bvar_fcast}}.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param type A string with the type of plot desired. The standard method
 #' \code{"full"} includes both density and trace plots.
 #' @param vars Optional character vector used to subset the plot. The elements
-#' need to match the names of hyperparameters (including \code{"ml"}). Defaults
+#' need to match the names of hyperparameters (plus \code{"ml"}). Defaults
 #' to \code{NULL}, i.e. all hyperparameters.
 #' @param vars_response,vars_impulse Optional integer vector with the
 #' positions of coefficient values used to subset the plot.
@@ -21,6 +23,8 @@
 #' added to trace and density plots.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
+#'
+#' @return Returns \emph{x} invisibly.
 #'
 #' @seealso \code{\link{bvar}}; \code{\link{plot.bvar_fcast}};
 #' \code{\link{plot.bvar_irf}}.

@@ -15,7 +15,7 @@ companion(object, ...)
 
 \item{conf_bands}{Numeric vector of desired confidence bands to apply.
 E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-Note that the median, i.e. 0.5 is included as a default.}
+Note that the median, i.e. \code{0.5} is always included.}
 
 \item{complete}{Logical value. Whether to retrieve the companion matrix for
 all saved draws of the VAR coefficients. Overrides \code{conf_bands} if set
@@ -24,9 +24,8 @@ all saved draws of the VAR coefficients. Overrides \code{conf_bands} if set
 \item{...}{Not used.}
 }
 \value{
-Returns a numeric array/matrix of class \code{bvar_comp} containing
-the companion matrix of the VAR's coefficients with desired values at the
-specified confidence bands.
+Returns a numeric array/matrix of class \code{bvar_comp} with the
+VAR's coefficents in companion form, at the specified confidence bands.
 }
 \description{
 Calculates the companion matrix for Bayesian VARs generated via
@@ -45,5 +44,5 @@ companion(x, complete = TRUE)
 }
 }
 \seealso{
-\code{\link{bvar}}
+\code{\link{bvar}}; \code{\link{coef}}
 }

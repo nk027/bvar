@@ -1,16 +1,18 @@
 #' Coefficient and VCOV methods for Bayesian VARs
 #'
-#' Retrieves coefficient / VCOV values for Bayesian VARs generated via
-#' \code{\link{bvar}}.
+#' Retrieves coefficient / variance-covariance values for Bayesian VARs
+#' generated with \code{\link{bvar}}. Note that coefficients are available for
+#' every stored draw and credible intervals may be set via the
+#' \emph{conf_bands} argument.
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' Note that the median, i.e. 0.5 is always included.
-#' @param comp Logical scalar. Whether to retrieve the companion matrix of
+#' Note that the median, i.e. \code{0.5} is always included.
+#' @param companion Logical scalar. Whether to retrieve the companion matrix of
 #' coefficients. See \code{\link{companion.bvar}}.
 #'
-#' @param x Object of class \code{bvar_coefs} / \code{bvar_vcovs}.
+#' @param x Object of class \code{bvar_coefs} or \code{bvar_vcovs}.
 #' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied
 #' to numeric outputs (i.e. the quantiles).
 #' @param complete Logical scalar. Whether to print only medians or all
@@ -20,7 +22,7 @@
 #' @return Returns a numeric array of class \code{bvar_coefs} /
 #' \code{bvar_vcovs} with desired values at the specified confidence bands.
 #'
-#' @seealso \code{\link{bvar}}
+#' @seealso \code{\link{bvar}}; \code{\link{companion.bvar}}
 #'
 #' @export
 #'
@@ -39,11 +41,11 @@
 #' }
 coef.bvar <- function(
   object, conf_bands = 0.5,
-  comp = FALSE, ...) {
+  companion = FALSE, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  if(comp) {return(companion.bvar(object, conf_bands, ...))}
+  if(companion) {return(companion.bvar(object, conf_bands, ...))}
 
   quantiles <- quantile_check(conf_bands)
   coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)

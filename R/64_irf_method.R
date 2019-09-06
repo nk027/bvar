@@ -5,19 +5,20 @@
 #' \code{\link{bvar}}. If the object is already present and no settings are
 #' supplied it is simply retrieved, otherwise it will be calculated ex-post.
 #' Note that FEVDs require the presence / calculation of IRFs.
-#' To store IRFs you may want to assign them to \code{x[["irf"]]}.
-#' May also be used to update confidence bands.
+#' To store IRFs you may want to assign the output of \code{irf.bvar} to
+#' \code{x$irf}. May also be used to update confidence bands, i.e.
+#' credible intervals.
 #'
 #' @param x,object A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' Summary and print methods take in a \code{bvar_irf} object.
-#' @param ... A \code{bv_fcast} object or parameters to be fed into
-#' \code{\link{bv_fcast}}. Contains settings for the forecast.
+#' Summary and print methods take in a \code{bvar_irf} / \code{bvar_fevd}
+#' object.
+#' @param ... A \code{bv_irf} object or arguments to be fed into
+#' \code{\link{bv_irf}}. Contains settings for the IRFs / FEVDs.
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' Note that the median, i.e. 0.5 is always included.
+#' Note that the median, i.e. \code{0.5} is always included.
 #' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
-#' for calculations, others are dropped. Defaults to the maximum number - i.e.
-#' the number of saved draws in \emph{x}.
+#' for calculations, others are dropped.
 #'
 #' @param vars_impulse,vars_response Optional numeric or character vector. Used
 #' to subset the summary's impulses / responses to certain variables by position
@@ -27,18 +28,18 @@
 #' @param complete Logical scalar. Whether to print only medians or all
 #' available confidence bands of a a \code{bvar_fevd} object.
 #'
-#' @return Returns a list of class \code{bvar_irf} including IRFs, optionally
-#' FEVDs, and desired confidence bands. See \code{\link{bvar}}.
-#' The \code{fevd} methods only returns a numeric array of FEVDs and desired
-#' confidence bands.
-#' The summary method returns a numeric array of forecast paths at the
+#' @return Returns a list of class \code{bvar_irf} including IRFs and optionally
+#' FEVDs at desired confidence bands. Also see \code{\link{bvar}}.
+#' Note that the \code{fevd} method only returns a numeric array of FEVDs at
+#' desired confidence bands.
+#' The summary method returns a numeric array of impulse responses at the
 #' specified confidence bands.
 #'
 #' @seealso \code{\link{bvar}}; \code{\link{plot.bvar_irf}};
 #' \code{\link{bv_irf}}
 #'
-#' @keywords VAR BVAR irf impulse responses fevd
-#' forecast error variance decomposition
+#' @keywords VAR BVAR irf impulse-responses fevd
+#' forecast-error-variance-decomposition
 #'
 #' @export
 #'
@@ -130,7 +131,7 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 }
 
 
-#' @rdname irf.bvar
+#' @noRd
 #' @export
 #'
 #' @importFrom stats quantile
@@ -183,7 +184,7 @@ fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
 }
 
 
-#' @rdname irf.bvar
+#' @noRd
 #' @export
 #'
 #' @importFrom stats quantile

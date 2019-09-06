@@ -3,8 +3,9 @@
 #' Function to provide priors and their parameters to \code{\link{bvar}}. Used
 #' for adjusting the parameters treated as hyperparameters, the Minnesota prior
 #' and adding various dummy priors through the ellipsis parameter.
-#' Note that treating \eqn{\psi} as a hyperparameter in a model with many
-#' variables may lead to very low acceptance rates and thus hinder convergence.
+#' Note that treating \eqn{\psi} (\emph{psi}) as a hyperparameter in a model
+#' with many variables may lead to very low acceptance rates and thus hinder
+#' convergence.
 #'
 #' @param hyper Character vector. Used to specify the parameters to be treated
 #' as hyperparameters. May also be set to \code{"auto"} or \code{"full"} for
@@ -52,10 +53,7 @@
 #' priors_dum <- bv_priors(hyper = "auto", sur = sur)
 bv_priors <- function(
   hyper = "auto",
-  mn = bv_mn(bv_lambda(0.2, 0.4, 0.0001, 5),
-             bv_alpha(2, 0.25, 1, 3),
-             bv_psi(0.004, 0.004, "auto"),
-             var = 1e07),
+  mn = bv_mn(),
   ...) {
 
   # Check inputs ------------------------------------------------------------

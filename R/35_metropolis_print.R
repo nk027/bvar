@@ -1,4 +1,4 @@
-#' @rdname bv_mh
+#' @rdname bv_metropolis
 #' @export
 print.bv_metropolis <- function(x, ...) {
 

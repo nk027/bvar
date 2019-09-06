@@ -31,7 +31,7 @@ Returns a named list of class \code{bv_dummy} for
 }
 \description{
 Allows the creation of dummy observation priors for \code{\link{bv_priors}}.
-See the Details section for information on some common dummy priors.
+See the Details section for information on common dummy priors.
 }
 \details{
 Dummy priors are often used to "reduce the importance of the deterministic
@@ -81,5 +81,5 @@ priors_dum <- bv_priors(hyper = "auto", soc = soc, sur = sur)
 Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
 }
 \seealso{
-\code{\link{bv_priors}}; \code{\link{bv_mn}}
+\code{\link{bv_priors}}; \code{\link{bv_minnesota}}
 }

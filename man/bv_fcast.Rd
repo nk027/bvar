@@ -37,8 +37,8 @@ such as variable paths.
 bv_fcast(horizon = 20)
 }
 \seealso{
-\code{\link{bvar}}; \code{\link{predict.bvar_fcast}};
-\code{\link{plot.bvar_fcast}};
+\code{\link{bvar}}; \code{\link{predict.bvar}};
+\code{\link{plot.bvar_fcast}}
 }
 \keyword{BVAR}
 \keyword{VAR}

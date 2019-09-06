@@ -3,7 +3,8 @@
 #' Toolkit for the estimation of hierarchical Bayesian vector autoregressions.
 #' Implements hierarchical prior selection for conjugate priors in the fashion
 #' of Giannone, Lenza & Primiceri (2015). Allows for the computation of impulse
-#' responses and forecasts and provides functionality for assessing results.
+#' responses and forecasts and provides a range of functionalities for
+#' assessing results.
 #'
 #' @docType package
 #'

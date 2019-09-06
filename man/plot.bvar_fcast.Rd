@@ -67,7 +67,7 @@ plot(predict(x, conf_bands = c(0.01, 0.05)))
 }
 }
 \seealso{
-\code{\link{bvar}}; \code{\link{predict.bvar_fcast}}
+\code{\link{bvar}}; \code{\link{predict.bvar}}
 }
 \keyword{BVAR}
 \keyword{VAR}

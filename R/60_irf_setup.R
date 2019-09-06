@@ -3,13 +3,13 @@
 #' Provide settings for the computation of impulse responses to
 #' \code{\link{bvar}}, \code{\link{irf.bvar}} or \code{\link{fevd.bvar}}. Allows
 #' setting the horizon for which impulse responses should be computed, whether
-#' or not forecast error variance decompositions (FEVDs) should be computed
+#' or not forecast error variance decompositions (FEVDs) should be included
 #' and if and what kind of identification should be used.
 #'
 #' Identification can be performed via Cholesky decomposition and sign
 #' restrictions. The algorithm for generating suitable sign restrictions
 #' follows Rubio-Ramirez et al. (2010).
-#' Note the possiblity of not finding suitable sign restrictions.
+#' Note the possiblity of finding no suitable sign restrictions.
 #'
 #' @param horizon Integer scalar. The horizon for which impulse responses
 #' (and FEVDs) should be computed.
@@ -34,7 +34,7 @@
 #' @references
 #'     Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696. \url{https://doi.org/10.1111/j.1467-937X.2009.00578.x}
 #'
-#' @seealso \code{\link{bvar}}; \code{\link{irf.bvar_irf}};
+#' @seealso \code{\link{bvar}}; \code{\link{irf.bvar}};
 #' \code{\link{plot.bvar_irf}}
 #'
 #' @keywords VAR BVAR irf impulse responses fevd settings

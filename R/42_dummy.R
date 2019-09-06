@@ -19,7 +19,7 @@ dummy <- function(
 #' Dummy prior settings
 #'
 #' Allows the creation of dummy observation priors for \code{\link{bv_priors}}.
-#' See the Details section for information on some common dummy priors.
+#' See the Details section for information on common dummy priors.
 #'
 #' Dummy priors are often used to "reduce the importance of the deterministic
 #' component implied by VARs estimated conditioning on the initial
@@ -46,7 +46,7 @@ dummy <- function(
 #' @references
 #'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
 #'
-#' @seealso \code{\link{bv_priors}}; \code{\link{bv_mn}}
+#' @seealso \code{\link{bv_priors}}; \code{\link{bv_minnesota}}
 #'
 #' @export
 #'

@@ -60,7 +60,7 @@ plot(irf(x, conf_bands = c(0.01, 0.05)))
 }
 }
 \seealso{
-\code{\link{bvar}}; \code{\link{irf.bvar_irf}}
+\code{\link{bvar}}; \code{\link{irf.bvar}}
 }
 \keyword{BVAR}
 \keyword{VAR}

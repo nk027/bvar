@@ -18,7 +18,7 @@
 #'
 #' @return Returns \emph{x} invisibly.
 #'
-#' @seealso \code{\link{bvar}}; \code{\link{irf.bvar_irf}}
+#' @seealso \code{\link{bvar}}; \code{\link{irf.bvar}}
 #'
 #' @keywords VAR BVAR irf fevd plot
 #'

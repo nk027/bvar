@@ -18,7 +18,7 @@ bv_plot(x, mar = c(2, 2, 2, 0.5), ...)
 \code{"full"} includes both density and trace plots.}
 
 \item{vars}{Optional character vector used to subset the plot. The elements
-need to match the names of hyperparameters (including \code{"ml"}). Defaults
+need to match the names of hyperparameters (plus \code{"ml"}). Defaults
 to \code{NULL}, i.e. all hyperparameters.}
 
 \item{vars_response, vars_impulse}{Optional integer vector with the
@@ -34,12 +34,17 @@ added to trace and density plots.}
 
 \item{...}{Other graphical parameters for \code{\link[graphics]{par}}.}
 }
+\value{
+Returns \emph{x} invisibly.
+}
 \description{
 Method to plot trace and densities of hyperparameters and marginal likelihood
 or coefficient values obtained from \code{\link{bvar}}. Plots may be subset
 to certain types using \emph{type} and to hyperparameters using \emph{vars}.
-Multiple chains, i.e. comparable \code{bvar} objects may be plotted together
-using the \emph{chains} argument.
+Multiple chains, that is comparable \code{bvar} objects, may be plotted
+together using the \emph{chains} argument.
+The \emph{type} argument may be used to access \code{\link{plot.bvar_irf}}
+and \code{\link{plot.bvar_fcast}}.
 }
 \examples{
 \donttest{
