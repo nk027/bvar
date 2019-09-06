@@ -72,6 +72,11 @@ priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
 irfs  <- bv_irf(horizon = 12, fevd = TRUE, identification = TRUE)
 
 
+# Turning off forecasts
+
+fcasts <- NULL
+
+
 # Adjust the MH-step
 
 mh <- bv_metropolis(scale_hess = 0.005, adjust_acc = TRUE,
@@ -81,7 +86,7 @@ mh <- bv_metropolis(scale_hess = 0.005, adjust_acc = TRUE,
 # Execute the model -------------------------------------------------------
 
 run <- bvar(df, lags = 5, n_draw = 25000, n_burn = 10000, n_thin = 1,
-  priors = priors, mh = mh, fcast = NULL, irf = irfs, verbose = TRUE)
+  priors = priors, mh = mh, fcast = fcasts, irf = irfs, verbose = TRUE)
 
 
 # Assessing results
@@ -188,7 +193,8 @@ runs <- parLapply(cl, list(df, df, df),
       n_draw = 25000, n_burn = 10000, n_thin = 1,
       priors = bv_priors(soc = bv_soc(), sur = bv_sur()),
       mh = bv_mh(scale_hess = 0.005, adjust_acc = TRUE, acc_change = 0.02),
-      irf = bv_irf(), fcast = bv_fcast(), verbose = FALSE)
+      irf = bv_irf(horizon = 12, fevd = TRUE, identification = TRUE),
+      fcast = NULL, verbose = FALSE)
   })
 
 stopCluster(cl)
