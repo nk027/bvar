@@ -10,8 +10,9 @@
 #'
 #' For further details see McCracken and Ng (2016) or the dataset's appendix at
 #' \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
-#' The FRED-QD database is made available under a modified ODC-BY 1.0 licence,
-#' which can be found in the provided \emph{LICENSE} file.
+#' Thanks to Michael McCracken, Adrienne Brennecke and the Federal Reserve
+#' Bank of St. Louis the FRED-QD database is made available under a modified
+#' ODC-BY 1.0 licence, which can be found in the provided \emph{LICENSE} file.
 #'
 #' @docType data
 #'
