@@ -5,7 +5,7 @@
 
 # Preliminaries -----------------------------------------------------------
 
-install.packages("BVAR") # Version 0.2.0
+install.packages("BVAR") # Version 0.2.1
 
 set.seed(42)
 library("BVAR")

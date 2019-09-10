@@ -5,18 +5,20 @@
 #' Channels of the 2007-2009 Recession" by Stock and Watson (2012),
 #' but also contains several additional series.
 #' The currently included dataset is from April 2019, contains observations
-#' from 1959Q1 until 2018Q4, and has been subset to series that are
-#' in public domain.
+#' from 1959Q1 until 2018Q4, and has been subset to series that either are
+#' in public domain, or we were given permission to use.
 #'
 #' For further details see McCracken and Ng (2016) or the dataset's appendix at
 #' \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
+#' The FRED-QD database is made available under a modified ODC-BY 1.0 license,
+#' which can be found in the provided \emph{LICENSE} file.
 #' Thanks to Michael McCracken, Adrienne Brennecke and the Federal Reserve
-#' Bank of St. Louis the FRED-QD database is made available under a modified
-#' ODC-BY 1.0 licence, which can be found in the provided \emph{LICENSE} file.
+#' Bank of St. Louis for making this database available and their
+#' responsiveness and help regarding licensing issues.
 #'
 #' @docType data
 #'
-#' @format A \code{data.frame} with 240 observations of 203 (248) variables.
+#' @format A \code{data.frame} with 240 observations of 234 (248) variables.
 #'
 #' @keywords dataset FRED macroeconomics
 #'

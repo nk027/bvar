@@ -4,7 +4,7 @@
 \name{fred_qd}
 \alias{fred_qd}
 \title{FRED-QD: Quarterly Database for Macroeconomic Research}
-\format{A \code{data.frame} with 240 observations of 203 (248) variables.}
+\format{A \code{data.frame} with 240 observations of 234 (248) variables.}
 \source{
 \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}
 }
@@ -14,22 +14,26 @@ fred_qd
 \description{
 FRED-QD is a quarterly frequency companion to FRED-MD, a large macroeconomic
 database. It is designed to emulate the dataset used in "Disentangling the
-Channels of the 2007-2009 Recession" by Stock and Watson (2012)
+Channels of the 2007-2009 Recession" by Stock and Watson (2012),
 but also contains several additional series.
-The included dataset is from April 2019 and contains observations from
-1959Q1 until 2018Q4.
+The currently included dataset is from April 2019, contains observations
+from 1959Q1 until 2018Q4, and has been subset to series that either are
+in public domain, or we were given permission to use.
 }
 \details{
 For further details see McCracken and Ng (2016) or the dataset's appendix at
-\url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}. The
-dataset included is a subset of the full FRED-QD with the 203 of 248
-variables that are in public domain.
+\url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
+The FRED-QD database is made available under a modified ODC-BY 1.0 license,
+which can be found in the provided \emph{LICENSE} file.
+Thanks to Michael McCracken, Adrienne Brennecke and the Federal Reserve
+Bank of St. Louis for making this database available and their
+responsiveness and help regarding licensing issues.
 }
 \references{
 McCracken, M. W., and Ng, S. (2016). FRED-MD: A Monthly Database for Macroeconomic Research. Journal of Business & Economic Statistics, 34, 574-589. \url{https://doi.org/10.1080/07350015.2015.1086655}
 
     Stock, J. H. and Watson, M. W. (2012). Disentangling the Channels of the 2007-2009 Recession. NBER Working Paper Series, 18094. \url{https://doi.org/10.3386/w18094}
 }
-\keyword{datasets}
-\keyword{fred}
+\keyword{FRED}
+\keyword{dataset}
 \keyword{macroeconomics}
