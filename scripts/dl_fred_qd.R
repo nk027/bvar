@@ -59,7 +59,8 @@ for(i in seq_along(fred_qd)) {
   }
 }
 
-# According to FRED (Adrienne Brennecke) the following series are under copyright:
+# According to FRED (Adrienne Brennecke) the following series are under
+# copyright:
 # VXOCLS, NIKKEI225, NASDAQCOM, SP500, UMCSENT, USEPUINDXM, AAA, BAA
 
 # We find:
@@ -67,9 +68,17 @@ for(i in seq_along(fred_qd)) {
 # M1REAL, M2REAL, MZMREAL, VXOCLS, SPCS10RSA, SPCS20RSA, TB3SMFFM, T5YFFM,
 # AAAFFM, NIKKEI225, NASDAQCOM, SP500
 
-# Apparently UMCSENT and USEPUINDXM are put in public domain by their owners
+# Update: The St. Louis Fed is the copyright owner and allows use for all but:
+# OILPRICE, MORTGAGE30US, SPCS10RSA, SPCS20RSA
+# (in addition to the original ones)
 
-# Not-founds in public domain (source series in brackets):
+# Apparently UMCSENT and USEPUINDXM appear as public domain on FRED
+
+# Update: UMCSENT is not in public domain (error on FRED), we got permission
+# for USEPUINDXM from the copyright owner (Scott Baker)
+
+# Not-founds:
+#   in public domain (source series in brackets):
 # UNRATEST, UNRATELT (UNRATE)
 # HWI (JTSJOL)
 # AMDMNO (DGORDER)
@@ -89,8 +98,7 @@ for(i in seq_along(fred_qd)) {
 # TNWMVBSNNCBBDI (TNWMVBSNNCB)
 # TLBSNNBBDI (NCBDBIQ027S)
 # TNWBSNNBBDI (NNBENBA027N)
-
-# Not-founds under copyright:
+#   under copyright:
 # SPINDUST, SPDIVYIELD, SPPERATIO
 
 copyrighted <- names_url[rights[, "copyright"]]
@@ -99,11 +107,24 @@ public_domain <- names_url[rights[, "public_domain"]]
 (public_domain <- public_domain[!is.na(public_domain)])
 not_found <- names_url[is.na(rights[, 1])]
 
-public_domain <- c(public_domain,
-                   not_found[!not_found %in%
-                               c("SPINDUST", "SPDIVYIELD", "SPPERATIO")])
+# Wrap up copyright:
+# We get to keep all but:
+remove <- c(
+  # Original mail (minus "USEPUINDXM", which we got permission for)
+  "VXOCLS", "NIKKEI225", "NASDAQCOM", "SP500", "UMCSENT", "AAA", "BAA",
+  # Cross-check mail
+  "OILPRICE", "MORTGAGE30US", "SPCS10RSA", "SPCS20RSA",
+  # Not-founds under copyright
+  "SPINDUST", "SPDIVYIELD", "SPPERATIO"
+)
 
-# We keep the series that are in public domain:
-fred_qd <- fred_qd[, which(rights[, "public_domain"])]
+keep <- which(!names_url %in% remove)
+
+# # We keep the series that are explicitly in public domain:
+# fred_qd <- fred_qd[, which(rights[, "public_domain"])]
+
+# We keep the series that we have permission for (i.e. public domain or
+# copyrighted with given permission):
+fred_qd <- fred_qd[, keep]
 
 save(fred_qd, file = "data/fred_qd.rda", version = 2)
