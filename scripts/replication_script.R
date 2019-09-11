@@ -186,10 +186,12 @@ library("parallel")
 n_cores <- detectCores() - 1
 cl <- makeCluster(n_cores)
 
-runs <- parLapply(cl, list(df, df, df),
+runs <- parLapply(cl,
+  list(list(df, 0), list(df, 2), list(df, 7)),
   function(x) {
+    set.seed(x[[2]])
     library("BVAR")
-    bvar(x, lags = 5,
+    bvar(x[[1]], lags = 5,
       n_draw = 25000, n_burn = 10000, n_thin = 1,
       priors = bv_priors(soc = bv_soc(), sur = bv_sur()),
       mh = bv_mh(scale_hess = 0.005, adjust_acc = TRUE, acc_change = 0.02),

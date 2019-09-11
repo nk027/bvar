@@ -1,9 +1,9 @@
 # v0.2.1, CRAN Update 3 / FRED-QD ODC-BY 1.0
 
 - Clarify exact ToU of the FRED-QD dataset with St. Louis Fed
-- Comply with the new modified ODC-BY 1.0 for FRED-QD
-  - Mention and add license to LICENSE file (linked in DESCRIPTION)
-  - Add copyrighted series for which we have permission to use
+  - Comply with the new modified **ODC-BY 1.0** for FRED-QD
+  - Mention and add license to *LICENSE* file (linked in *DESCRIPTION*)
+  - Add the copyrighted series we are allowed to use
   - Mention updates and license in the data documentation
 - Fix and improve documentation
 
