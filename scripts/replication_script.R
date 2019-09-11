@@ -183,7 +183,7 @@ dev.off()
 # C - Convergence assessment and parallelization
 
 library("parallel")
-n_cores <- detectCores() - 1
+n_cores <- 3 # detectCores() - 1
 cl <- makeCluster(n_cores)
 
 runs <- parLapply(cl,
