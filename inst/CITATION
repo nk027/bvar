@@ -1,6 +1,19 @@
 citHeader("To cite BVAR in publications please use:")
 
 citEntry(
+  entry = "techreport",
+  title = "{BVAR}: Bayesian Vector Autoregressions with Hierarchical Prior Selection in {R}",
+  author = "Nikolas Kuschnig and Lukas Vashold",
+  year = "2019",
+  type = "Department of Economics Working Paper Series",
+  institution = "WU Vienna University of Economics and Business",
+  number = "296",
+  keywords = "Vector autoregression, VAR, Bayesian, multivariate, hierarchical, R, package",
+  url = "https://epub.wu.ac.at/7216/",
+  textVersion = "Nikolas Kuschnig and Lukas Vashold (2019). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in {R}. Department of Economics Working Paper Series, 296. WU Vienna University of Economics and Business, Vienna."
+)
+
+citEntry(
   entry = "manual",
   title = "{BVAR}: Hierarchical Bayesian Vector Autoregression",
   author = "Nikolas Kuschnig and Lukas Vashold",
