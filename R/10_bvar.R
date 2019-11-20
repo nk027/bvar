@@ -87,7 +87,7 @@
 #'
 #' # Compute VAR using 2 lags and a ridiculously low number of draws
 #' x <- bvar(data = data, lags = 1,
-#'           n_draw = 500, n_burn = 400, n_thin = 2, verbose = FALSE)
+#'           n_draw = 500L, n_burn = 400L, n_thin = 2L, verbose = FALSE)
 #'
 #' \donttest{
 #' # Check out some of the outputs generated
@@ -99,7 +99,7 @@
 #' }
 bvar <- function(
   data, lags,
-  n_draw = 10000, n_burn = 5000, n_thin = 1,
+  n_draw = 10000L, n_burn = 5000L, n_thin = 1L,
   priors = bv_priors(),
   mh = bv_mh(),
   fcast = NULL,
