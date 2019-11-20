@@ -144,6 +144,8 @@ bvar <- function(
     stop("Please use `bv_irf()` to configure impulse responses.")
   }
 
+  if(mh[["adjust_acc"]]) {n_adj <- as.integer(n_burn * adjust_burn)}
+
 
   # Preparation -------------------------------------------------------------
 
@@ -251,7 +253,6 @@ bvar <- function(
   # Initial draw ------------------------------------------------------------
 
   while(TRUE) {
-    # hyper_draw <- MASS::mvrnorm(mu = opt[["par"]], Sigma = HH)
     hyper_draw <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
     ml_draw <- bv_ml(hyper = hyper_draw, hyper_min, hyper_max,
                      pars = pars_full, priors, Y, X, K, M, N, lags)
@@ -293,7 +294,6 @@ bvar <- function(
   for(i in (1 - n_burn):(n_draw - n_burn)) { # Start loop
 
     # Metropolis-Hastings
-    # hyper_temp <- MASS::mvrnorm(mu = hyper_draw, Sigma = HH)
     hyper_temp <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
     ml_temp <- bv_ml(hyper = hyper_temp, hyper_min, hyper_max,
                      pars = pars_full, priors, Y, X, K, M, N, lags)
@@ -307,7 +307,7 @@ bvar <- function(
     }
 
     # Tune acceptance during burn-in phase
-    if(mh[["adjust_acc"]] && i <= 0 && (i + n_burn) %% 10 == 0) {
+    if(mh[["adjust_acc"]] && i <= -n_adj && (i + n_burn) %% 10 == 0) {
       acc_rate <- accepted_adj / (i + n_burn)
       if(acc_rate < mh[["acc_lower"]]) {
         HH <- HH * mh[["acc_tighten"]]
