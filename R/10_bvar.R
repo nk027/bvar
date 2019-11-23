@@ -144,7 +144,7 @@ bvar <- function(
     stop("Please use `bv_irf()` to configure impulse responses.")
   }
 
-  if(mh[["adjust_acc"]]) {n_adj <- as.integer(n_burn * adjust_burn)}
+  if(mh[["adjust_acc"]]) {n_adj <- as.integer(n_burn * mh[["adjust_burn"]])}
 
 
   # Preparation -------------------------------------------------------------
@@ -207,7 +207,7 @@ bvar <- function(
   names(hyper) <- name_pars(priors[["hyper"]], M)
 
   # Split up psi
-  for(i in 1:length(priors[["psi"]][["mode"]])) {
+  for(i in seq_len(priors[["psi"]][["mode"]])) {
     priors[[paste0("psi", i)]] <-
       lapply(priors[["psi"]], function(x) x[i])
   }
