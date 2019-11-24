@@ -51,13 +51,29 @@ int_check <- function(
 auto_psi <- function(x, lags) {
 
   out <- list()
-  out[["mode"]] <- tryCatch(apply(x, 2, function(x) {
-    sqrt(arima(x, order = c(lags, 0, 0))$sigma2)
-  }), error = function(e) {
-    stop("Some of the data appears to be integrated. ",
-         "Setting psi automatically via an AR(", lags, ") failed. ",
-         "Please provide modes for psi manually (see `?bv_psi`).")
-  })
+
+  # out[["mode"]] <- tryCatch(apply(x, 2, function(x) {
+  #   sqrt(arima(x, order = c(lags, 0, 0))$sigma2)
+  # }), error = function(e) {
+  #   stop("Some of the data appears to be integrated. ",
+  #        "Setting psi automatically via an AR(", lags, ") failed. ",
+  #        "Please provide modes for psi manually (see `?bv_psi`).")
+  # })
+
+  out[["mode"]] <- tryCatch(
+    apply(x, 2, function(x) {
+      tryCatch(sqrt(arima(x, order = c(lags, 0, 0))$sigma2), # Try AR(lags)
+        error = function(e) { # If this fails for a series increment integration
+          message("Some of the data appears to be integrated. Setting psi ",
+                  "automatically via an ARIMA(", lags, ", 1, 0).")
+          sqrt(arima(x, order = c(lags, 1, 0))$sigma2) # Try ARIMA(lags, 1, 0)
+    })}),
+    error = function(e) {
+      stop("Some of the data appears to be integrated of higher order than 1. ",
+           "Setting psi automatically failed. Please inspect the data again ",
+           "and/or provide modes for psi manually (see `?bv_psi`).")
+    }
+  )
 
   out[["min"]] <- out[["mode"]] / 100
   out[["max"]] <- out[["mode"]] * 100
