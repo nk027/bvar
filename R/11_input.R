@@ -37,7 +37,8 @@ int_check <- function(
 #' Set psi of the Minnesota prior
 #'
 #' Set the prior values of \emph{psi} by fitting an \eqn{AR(p)} model and using
-#' the squareroot of the innovations variance.
+#' the square-root of the innovations variance. If a series is found to be
+#' integrated an \eqn{ARIMA(p, 1, 0)} model is fit instead.
 #'
 #' @param x Numeric matrix with the data.
 #' @param lags Numeric scalar. Number of lags in the model.

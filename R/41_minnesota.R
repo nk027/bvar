@@ -28,10 +28,11 @@
 #' @param psi List with elements \emph{scale}, \emph{shape} of the prior
 #' as well as \emph{mode} and optionally \emph{min} and \emph{max}. The length
 #' of these needs to match the number of variables (i.e. columns) in the data.
-#' By default \emph{mode} is set automatically to the squareroot of the
-#' innovations variance after fitting an \eqn{AR(p)} model to the data. By
-#' default \emph{min} / \emph{max} are set to \emph{mode} divided / multiplied
-#' by \eqn{100}.
+#' By default \emph{mode} is set automatically to the square-root of the
+#' innovations variance after fitting an \eqn{AR(p)} model to the data. If
+#' \code{\link[stats]{arima}} fails due to a non-stationary time series the
+#' order of integration is incremented by 1. By default \emph{min} / \emph{max}
+#' are set to \emph{mode} divided / multiplied by 100.
 #' See the Details section for further information.
 #' @param var Numeric scalar with the prior variance on the model's constant.
 #' @param b Numeric matrix with the prior mean.
