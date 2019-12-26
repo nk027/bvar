@@ -80,7 +80,6 @@ plot.bvar <- function(
     ))
   }
 
-
   if(inherits(chains, "bvar")) {chains <- list(chains)}
   lapply(chains, function(x) {if(!inherits(x, "bvar")) {
     stop("Please provide `bvar` objects to the chains parameter.")
@@ -89,14 +88,11 @@ plot.bvar <- function(
 
   # Get data and plot -------------------------------------------------------
 
-  prep <- prep_data(x, vars, vars_response, vars_impulse,
-                    chains, check_chains = FALSE)
-  data <- prep[["data"]]
-  vars <- prep[["vars"]]
-  chains <- prep[["chains"]]
-  bounds <- prep[["bounds"]]
+  prep <- prep_data(x,
+    vars, vars_response, vars_impulse, chains, check_chains = FALSE)
 
-  plot_bvar(data, type, vars, chains, bounds, mar, ...)
+  plot_bvar(prep[["data"]], type,
+    prep[["vars"]], prep[["chains"], prep[["bounds"]], mar, ...)
 
   return(invisible(x))
 }

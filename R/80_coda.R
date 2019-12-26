@@ -60,8 +60,9 @@ as.mcmc.bvar <- function(
 
   # Get data and transform --------------------------------------------------
 
-  prep <- prep_data(x, vars, vars_response, vars_impulse,
-                    chains, check_chains = TRUE, n_saves = TRUE)
+  prep <- prep_data(x,
+    vars, vars_response, vars_impulse,
+    chains, check_chains = TRUE, Ms = TRUE, n_saves = TRUE)
   data <- prep[["data"]]
   vars <- prep[["vars"]]
   chains <- prep[["chains"]]

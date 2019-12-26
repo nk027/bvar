@@ -66,11 +66,11 @@ prep_data <- function(
     vars <- paste0("dep", vars_response, "-ind", vars_impulse)
     bounds <- matrix(0, ncol = length(vars))
 
-    chains <- lapply(chains, function(x) {
+    chains <- lapply(chains, function(z) {
       data <- matrix(NA, nrow = n_row, ncol = n_col)
       k <- 1
       for(i in seq_along(vars_response)) {for(j in seq_along(vars_impulse)) {
-        data[, k] <- beta[, j, i]
+        data[, k] <- z[["beta"]][, j, i]
         k <- k + 1
       }}
       data
@@ -97,8 +97,8 @@ prep_data <- function(
       }}, double(2))
     data <- data[, vars]
 
-    chains <- lapply(chains, function(x) {
-      cbind("ml" = x[["ml"]], x[["hyper"]])[, vars]
+    chains <- lapply(chains, function(z) {
+      cbind("ml" = z[["ml"]], z[["hyper"]])[, vars]
     })
 
   }
