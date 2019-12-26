@@ -8,7 +8,7 @@
 #' \code{\link{bvar}} / \code{\link{irf.bvar}}.
 #' @param conf_bands Deprecated. Use \code{\link{irf.bvar}}. Numeric vector
 #' of desired confidence bands.
-#' @param vars_impulse,vars_response Optional numeric or character vector. Used
+#' @param vars,vars_impulse,vars_response Optional numeric or character vector. Used
 #' to subset the plot's impulses / responses to certain variables by position
 #' or name (must be available). Defaults to \code{NULL}, i.e. all variables.
 #' @param variables Optional character vector. Names of all variables in the
@@ -47,6 +47,7 @@
 plot.bvar_irf <- function(
   x,
   conf_bands, # deprecated, see `irf.bvar()`
+  vars = NULL,
   vars_response = NULL,
   vars_impulse = NULL,
   variables = NULL,
@@ -86,7 +87,7 @@ plot_irf <- function(
   } else {
     M <- dim(x[["quants"]])[1]
     P <- 1
-    # Cheat day - quants must be 4-dimensional, so we fill one with NAs
+    # Cheat day - quants must be 4-dimensional, so we fill with NAs
     quants <- array(NA, c(2, dim(x[["quants"]])))
     quants[1, , , ] <- x[["quants"]]
   }

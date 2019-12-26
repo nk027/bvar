@@ -91,7 +91,7 @@ plot.bvar <- function(
   prep <- prep_data(x,
     vars, vars_response, vars_impulse, chains, check_chains = FALSE)
 
-  plot_bvar(prep[["data"]], type,
+  .plot_bvar(prep[["data"]], type,
     prep[["vars"]], prep[["chains"], prep[["bounds"]], mar, ...)
 
   return(invisible(x))
@@ -102,7 +102,7 @@ plot.bvar <- function(
 #' @noRd
 #'
 #' @importFrom graphics par
-plot_bvar <- function(
+.plot_bvar <- function(
   x,
   type = c("full", "trace", "density"),
   vars = NULL,
@@ -119,11 +119,11 @@ plot_bvar <- function(
   for(i in seq_len(ncol(x))) {
 
     if(type != "density") { # i.e. full or trace
-      plot_trace(x[, i], name = vars[i], bounds = bounds[, i],
+      .plot_trace(x[, i], name = vars[i], bounds = bounds[, i],
                  dots = lapply(chains, function(x) {x[, i]}))
     }
     if(type != "trace") { # i.e. full or density
-      plot_dens(x[, i], name = vars[i], bounds = bounds[, i],
+      .plot_dens(x[, i], name = vars[i], bounds = bounds[, i],
                 dots = lapply(chains, function(x) {x[, i]}))
     }
   }
@@ -146,7 +146,7 @@ plot_bvar <- function(
 #' @importFrom stats density
 #'
 #' @noRd
-plot_trace <- function(x, name = NULL, bounds = NULL, dots = list()) {
+.plot_trace <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
   ylim <- c(min(vapply(dots, min, double(1)), x),
             max(vapply(dots, max, double(1)), x))
@@ -161,7 +161,7 @@ plot_trace <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
 #' @rdname plot_trace
 #' @noRd
-plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
+.plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
   xlim <- c(min(vapply(dots, min, double(1)), x),
             max(vapply(dots, max, double(1)), x))

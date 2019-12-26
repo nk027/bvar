@@ -118,7 +118,6 @@ bvar <- function(
   }
 
   Y <- as.matrix(data)
-  variables <- colnames(data)
 
   # Integers
   lags <- int_check(lags, min = 1, max = nrow(Y))
@@ -158,6 +157,10 @@ bvar <- function(
   K <- ncol(X)
   M <- ncol(Y)
   N <- nrow(Y)
+
+  variables <- if(is.null(colnames(data))) {
+    paste0("var", seq(M))} else {colnames(data)}
+  explanatories <- get_explanatories(variables, lags)
 
   # Check sign restrictions
   if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {

@@ -91,7 +91,7 @@ plot_fcast <- function(
   } else {
     M <- dim(x[["quants"]])[2]
     P <- 1
-    # Cheat day - quants must be 3-dimensional, so we fill one with NAs
+    # Cheat day - quants must be 3-dimensional, so we fill with NAs
     quants <- array(NA, c(2, dim(x[["quants"]])))
     quants[1, , ] <- x[["quants"]]
   }

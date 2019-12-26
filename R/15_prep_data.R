@@ -45,36 +45,40 @@ prep_data <- function(
   # Check whether all of the chains fit together
   if(check_chains) {chains_fit(x, chains, ...)}
 
+  # Check whether to return betas or hyperparameters
+  # To-do: Allow for both, also make `vars` work for hypers & betas
+
 
   # Betas -----------------------------------------------------------------
 
   if(!is.null(vars_response) || !is.null(vars_impulse)) {
 
-    vars_response <- get_var_set(vars_response, M = x[["meta"]][["M"]])
-    vars_impulse <- get_var_set(vars_impulse, M = x[["meta"]][["K"]])
+    vars_response <- get_var_set(vars_response,
+      variables = get_explanatories(x[["variables"]], x[["meta"]][["lags"]]),
+      M = x[["meta"]][["K"]])
+    vars_impulse <- get_var_set(vars_impulse,
+      variables = x[["variables"]], M = x[["meta"]][["M"]])
 
-    n_col <- length(vars_response) * length(vars_impulse)
-    n_row <- x[["meta"]][["n_save"]]
-    beta <- x[["beta"]]
-
-    data <- matrix(NA, nrow = n_row, ncol = n_col)
-    k <- 1
-    for(i in seq_along(vars_response)) {for(j in seq_along(vars_impulse)) {
-      data[, k] <- beta[, j, i]
-      k <- k + 1
-    }}
-    vars <- paste0("dep", vars_response, "-ind", vars_impulse)
-    bounds <- matrix(0, ncol = length(vars))
-
-    chains <- lapply(chains, function(z) {
+    grab_data <- function(z, n_row, n_col, vars_response, vars_impulse) {
       data <- matrix(NA, nrow = n_row, ncol = n_col)
       k <- 1
       for(i in seq_along(vars_response)) {for(j in seq_along(vars_impulse)) {
-        data[, k] <- z[["beta"]][, j, i]
+        data[, k] <- z[["beta"]][seq(n_row), i, j] # seq() for longer chains
         k <- k + 1
       }}
-      data
-    })
+      return(data)
+    }
+
+    n_col <- length(vars_response) * length(vars_impulse)
+    n_row <- x[["meta"]][["n_save"]]
+
+    data <- grab_data(x, n_row, n_col, vars_response, vars_impulse)
+
+    vars <- paste0("dep", vars_response, "-ind", vars_impulse)
+    bounds <- matrix(0, ncol = length(vars))
+
+    chains <- lapply(chains, grab_data,
+      n_row, n_col, vars_response, vars_impulse)
 
 
   # Hyperparameters -------------------------------------------------------

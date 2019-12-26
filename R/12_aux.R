@@ -129,10 +129,34 @@ get_var_set <- function(vars, variables, M) {
                        integer(1))))
   }
   if(is.character(vars) && !is.null(variables)) {
-    return(which(variables %in% vars))
+    # return(which(variables %in% vars))
+    return(grep(vars, variables, fixed = TRUE))
   }
 
   stop("Variables not found.")
+}
+
+
+#' Get names for explanatory variables
+#'
+#' Helper function to quickly generate names for explanatory variables.
+#'
+#' @param variables Character vector of all variable names.
+#' @param lags Integer scalar. Number of lags applied in the model.
+#'
+#' @return Returns a character vector of names for explanatory variables.
+#'
+#' @examples
+#' # Get c("constant", "gdp-lag1", "cpi-lag1")
+#' get_explanatories(c("gdp", "cpi"), lags = 1)
+#'
+#' @noRd
+get_explanatories(variables, lags) {
+
+  if(is.null(variables)) {return(NULL)}
+
+  our <- c("constant",
+    paste0(rep(variables, lags), "-lag", rep(seq(lags), length(variables))))
 }
 
 
