@@ -148,15 +148,15 @@ get_var_set <- function(vars, variables, M) {
 #'
 #' @examples
 #' # Get c("constant", "gdp-lag1", "cpi-lag1")
-#' get_explanatories(c("gdp", "cpi"), lags = 1)
+#' get_expl(c("gdp", "cpi"), lags = 1)
 #'
 #' @noRd
-get_explanatories <- function(variables, lags) {
+get_expl <- function(variables, lags) {
 
   if(is.null(variables)) {return(NULL)}
 
-  return(c("constant",
-    paste0(rep(variables, lags), "-lag", rep(seq(lags), length(variables)))))
+  return(c("constant", paste0(rep(variables, lags), "-lag",
+    rep(seq(lags), each = length(variables)))))
 }
 
 

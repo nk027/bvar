@@ -54,7 +54,11 @@
 #'   \item \code{meta} - List with meta information such as number of variables,
 #'   accepted draws, number of iterations, et cetera.
 #'   \item \code{variables} - Character vector with the column names of
-#'   \emph{data}.
+#'   \emph{data}. If missing variables are named consecutively - e.g.:
+#'   \emph{var1}
+#'   \item \code{explanatories} - Character vector with the names of
+#'   explanatory variables, i.e. the constant and lags. Formatting is akin to:
+#'   \emph{FEDFUNDS-lag1}.
 #'   \item \code{fcast} - \code{bvar_fcast} object with posterior forecast
 #'   draws, quantiles as well as the forecast's setup from the \emph{fcast}
 #'   argument.
@@ -166,7 +170,7 @@ bvar <- function(
 
   variables <- if(is.null(colnames(data))) {
     paste0("var", seq(M))} else {colnames(data)}
-  explanatories <- get_explanatories(variables, lags)
+  explanatories <- get_expl(variables, lags)
 
   # Check sign restrictions
   if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {
@@ -395,6 +399,7 @@ bvar <- function(
     "meta" = list(
       "accepted" = accepted, "timer" = timer,
       "Y" = Y, "X" = X, "N" = N, "K" = K, "M" = M, "lags" = lags,
+      "explanatories" = explanatories,
       "n_draw" = n_draw, "n_burn" = n_burn, "n_save" = n_save, "n_thin" = n_thin
     )
   )

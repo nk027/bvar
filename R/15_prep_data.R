@@ -46,6 +46,15 @@ prep_data <- function(
   if(check_chains) {chains_fit(x, chains, ...)}
 
   # Check whether to return betas or hyperparameters
+  vars_hyp <- c("ml", colnames(x[["hyper"]]))
+  vars_dep <- x[["variables"]]
+  vars_ind <- x[["explanatories"]]
+
+  pos_hyp <- unique(do.call(c, lapply(vars, grep, vars_hyp)))
+  pos_dep <- unique(do.call(c, lapply(vars, grep, vars_dep)))
+  pos_ind <- unique(do.call(c, # Limit to ones with "-lag#" to separate
+    lapply(vars[grep("-lag[0-9]+$", vars)], grep, vars_ind)))
+
   # To-do: Allow for both, also make `vars` work for hypers & betas
 
 
@@ -54,7 +63,7 @@ prep_data <- function(
   if(!is.null(vars_response) || !is.null(vars_impulse)) {
 
     vars_response <- get_var_set(vars_response,
-      variables = get_explanatories(x[["variables"]], x[["meta"]][["lags"]]),
+      variables = get_expl(x[["variables"]], x[["meta"]][["lags"]]),
       M = x[["meta"]][["K"]])
     vars_impulse <- get_var_set(vars_impulse,
       variables = x[["variables"]], M = x[["meta"]][["M"]])
