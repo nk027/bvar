@@ -2,11 +2,12 @@
 #'
 #' Hierarchical Bayesian estimation of Vector Autoregression (VAR) models in
 #' the fashion of Giannone et al. (2015).
-#' Options for the \emph{priors} and \emph{mh} arguments are provided via the
-#' functions \code{\link{bv_priors}} and \code{\link{bv_metropolis}}.
-#' Several methods facilitate analysis, including \code{\link{summary.bvar}},
-#' \code{\link{plot.bvar}}, \code{\link{predict.bvar}} and
-#' \code{\link{irf.bvar}}.
+#' Options for the prior settings and Metropolis-Hastings step are provided to
+#' \emph{priors} and \emph{mh} arguments via the functions
+#' \code{\link{bv_priors}} and \code{\link{bv_mh}}.
+#' Several methods are available to analyse the resulting model, including
+#' \code{\link{summary.bvar}}, \code{\link{plot.bvar}},
+#' \code{\link{predict.bvar}} and \code{\link{irf.bvar}}.
 #'
 #' @author Nikolas Kuschnig, Lukas Vashold
 #'
@@ -18,7 +19,7 @@
 #' \emph{n_save} takes precedence over \emph{n_draw}.
 #' @param n_thin Integer scalar. Provides the option of reducing the number of
 #' stored iterations to every \emph{n_thin}'th one. The number of saved
-#' iterations thus equals \eqn{(n_draw - n_burn) / n_thin}.
+#' iterations thus equals \emph{(n_draw - n_burn) / n_thin}.
 #' @param priors \code{bv_priors} object containing priors and their settings.
 #' See \code{\link{bv_priors}}.
 #' @param mh \code{bv_metropolis} object with settings regarding the acceptance
@@ -44,9 +45,8 @@
 #'   distribution of the model's VCOV-matrix. See \code{\link{vcov.bvar}}.
 #'   \item \code{hyper} - Numeric matrix with saved draws from the posterior
 #'   distributions of the hierarchical priors' hyperparameters.
-#'   \item \code{ml} - Numeric vector with the values of the posterior marginal
-#'   likelihood corresponding to each draw of hyperparameters and associated
-#'   VAR coefficients.
+#'   \item \code{ml} - Numeric vector with the values of the posterior
+#'   marginalised likelihood (with respect to the hyperparameters).
 #'   \item \code{optim} - List with outputs from \code{\link[stats]{optim}},
 #'   which is used to find suitable starting values.
 #'   \item \code{prior} - \code{bv_priors} object. See \code{\link{bv_priors}}.
@@ -64,7 +64,7 @@
 #' }
 #'
 #' @references
-#'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
+#' Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_mh}};
 #' \code{\link{bv_fcast}}; \code{\link{bv_irf}};
