@@ -151,12 +151,12 @@ get_var_set <- function(vars, variables, M) {
 #' get_explanatories(c("gdp", "cpi"), lags = 1)
 #'
 #' @noRd
-get_explanatories(variables, lags) {
+get_explanatories <- function(variables, lags) {
 
   if(is.null(variables)) {return(NULL)}
 
-  our <- c("constant",
-    paste0(rep(variables, lags), "-lag", rep(seq(lags), length(variables))))
+  return(c("constant",
+    paste0(rep(variables, lags), "-lag", rep(seq(lags), length(variables)))))
 }
 
 
@@ -176,7 +176,7 @@ get_explanatories(variables, lags) {
 #' BVAR:::log_igamma_pdf(5, 0.004, 0.004)
 #'
 #' @noRd
-log_ig_pdf <- function(x, shape, scale){
+log_ig_pdf <- function(x, shape, scale) {
 
   return(scale * log(shape) - (scale + 1) * log(x) - shape / x - lgamma(scale))
 }

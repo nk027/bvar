@@ -13,9 +13,9 @@
 #' @param data Numeric matrix or dataframe. Note that observations need to be
 #' ordered from earliest to latest one.
 #' @param lags Integer scalar. Number of lags to apply to the data.
-#' @param n_draw Integer scalar. Number of total iterations for the model
-#' to cycle through.
-#' @param n_burn Integer scalar. Number of iterations to discard.
+#' @param n_draw,n_burn,n_save Integer scalar. Define the number of iterations
+#' to (a) cycle through, (b) burn at the start, (c) save. Note that if provided
+#' \emph{n_save} takes precedence over \emph{n_draw}.
 #' @param n_thin Integer scalar. Provides the option of reducing the number of
 #' stored iterations to every \emph{n_thin}'th one. The number of saved
 #' iterations thus equals \eqn{(n_draw - n_burn) / n_thin}.
@@ -99,7 +99,7 @@
 #' }
 bvar <- function(
   data, lags,
-  n_draw = 10000L, n_burn = 5000L, n_thin = 1L,
+  n_draw = 10000L, n_burn = 5000L, n_save, n_thin = 1L,
   priors = bv_priors(),
   mh = bv_mh(),
   fcast = NULL,
@@ -108,6 +108,7 @@ bvar <- function(
 
   cl <- match.call()
   start_time <- Sys.time()
+
 
   # Input Checking ----------------------------------------------------------
 
@@ -120,13 +121,18 @@ bvar <- function(
   Y <- as.matrix(data)
 
   # Integers
-  lags <- int_check(lags, min = 1, max = nrow(Y))
-  n_draw <- int_check(n_draw, min = 1)
-  n_burn <- int_check(n_burn, min = 0, max = n_draw,
-                      msg = "Issue with n_burn. Is n_burn < n_draw?")
-  n_thin <- int_check(n_thin, min = 1, max = ((n_draw - n_burn) / 10),
-                      msg = "Issue with n_thin.")
-  n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1)
+  lags <- int_check(lags, min = 1L, max = nrow(Y))
+  n_draw <- int_check(n_draw, min = 1L)
+  n_burn <- int_check(n_burn, min = 0L, max = n_draw - 1L,
+    msg = "Issue with n_burn. Is n_burn < n_draw?")
+  n_thin <- int_check(n_thin, min = 1L, max = ((n_draw - n_burn) / 10),
+    msg = "Issue with n_thin. Maximum allowed is (n_draw - n_burn) / 10.")
+  if(missing(n_save)) {
+    n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1)
+  } else {
+    n_save <- int_check(n_save, min = 1L)
+    n_draw <- int_check(n_save + n_burn, min = 1L)
+  }
 
   # Constructors, required
   if(!inherits(priors, "bv_priors")) {
