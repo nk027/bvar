@@ -120,7 +120,7 @@ set_gray <- function(P) {
 #' @noRd
 get_var_set <- function(vars, variables, M) {
 
-  if(is.null(vars)) {
+  if(is.null(vars) || length(vars) == 0L) {
     return(1:M)
   }
   if(is.numeric(vars)) {
@@ -129,8 +129,7 @@ get_var_set <- function(vars, variables, M) {
                        integer(1))))
   }
   if(is.character(vars) && !is.null(variables)) {
-    # return(which(variables %in% vars))
-    return(grep(vars, variables, fixed = TRUE))
+    return(do.call(c, lapply(vars, grep, variables, fixed = TRUE)))
   }
 
   stop("Variables not found.")

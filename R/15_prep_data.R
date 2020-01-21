@@ -45,84 +45,90 @@ prep_data <- function(
   # Check whether all of the chains fit together
   if(check_chains) {chains_fit(x, chains, ...)}
 
-  # Check whether to return betas or hyperparameters
+
+  # Allow returning betas and hyperpriors ---------------------------------
+
   vars_hyp <- c("ml", colnames(x[["hyper"]]))
+  if(is.null(vars)) {vars <- vars_hyp}
+  choice_hyp <- vars_hyp[unique(do.call(c, lapply(vars, grep, vars_hyp)))]
+
   vars_dep <- x[["variables"]]
+  # If there are number-elements interpret them as independent-positions
+  choice_dep <- vars_dep[unique(c(as.integer(vars[grep("^[0-9]+$", vars)]),
+    do.call(c, lapply(vars, grep, vars_dep))))]
+  choice_dep <- choice_dep[!is.na(choice_dep)]
+
   vars_ind <- x[["explanatories"]]
+  # Limit to ones with "-lag#" or "constant" to separate from dependents
+  choice_ind <- vars_ind[unique(do.call(c,
+    lapply(vars[grep("(constant|lag[0-9]+)$", vars)], grep, vars_ind)))]
 
-  pos_hyp <- unique(do.call(c, lapply(vars, grep, vars_hyp)))
-  pos_dep <- unique(do.call(c, lapply(vars, grep, vars_dep)))
-  pos_ind <- unique(do.call(c, # Limit to ones with "-lag#" to separate
-    lapply(vars[grep("-lag[0-9]+$", vars)], grep, vars_ind)))
+  # Build up required outputs ---------------------------------------------
 
-  # To-do: Allow for both, also make `vars` work for hypers & betas
+  out <- out_vars <- out_bounds <- out_chains <- list()
+  N <- x[["meta"]][["n_save"]]
 
+  if(length(choice_hyp) > 0) { # Hyperparameters
+    out[["hyper"]] <- cbind("ml" = x[["ml"]], x[["hyper"]])[seq(N), choice_hyp]
+    out_vars[["hyper"]] <- choice_hyp
 
-  # Betas -----------------------------------------------------------------
-
-  if(!is.null(vars_response) || !is.null(vars_impulse)) {
-
-    vars_response <- get_var_set(vars_response,
-      variables = get_expl(x[["variables"]], x[["meta"]][["lags"]]),
-      M = x[["meta"]][["K"]])
-    vars_impulse <- get_var_set(vars_impulse,
-      variables = x[["variables"]], M = x[["meta"]][["M"]])
-
-    grab_data <- function(z, n_row, n_col, vars_response, vars_impulse) {
-      data <- matrix(NA, nrow = n_row, ncol = n_col)
-      k <- 1
-      for(i in seq_along(vars_response)) {for(j in seq_along(vars_impulse)) {
-        data[, k] <- z[["beta"]][seq(n_row), i, j] # seq() for longer chains
-        k <- k + 1
-      }}
-      return(data)
-    }
-
-    n_col <- length(vars_response) * length(vars_impulse)
-    n_row <- x[["meta"]][["n_save"]]
-
-    data <- grab_data(x, n_row, n_col, vars_response, vars_impulse)
-
-    vars <- paste0("dep", vars_response, "-ind", vars_impulse)
-    bounds <- matrix(0, ncol = length(vars))
-
-    chains <- lapply(chains, grab_data,
-      n_row, n_col, vars_response, vars_impulse)
-
-
-  # Hyperparameters -------------------------------------------------------
-
-  } else {
-
-    data <- cbind("ml" = x[["ml"]], x[["hyper"]]) # Here we subset later
-
-    if(is.null(vars)) {
-      vars <- colnames(data)
-    } else if(!all(vars %in% colnames(data))) {
-      stop("Parameter named '",
-           paste0(vars[!vars %in% colnames(data)], collapse = ", "),
-           "' not found.")
-    }
-
-    bounds <- vapply(vars, function(z) {
+    out_bounds[["hyper"]] <- vapply(choice_hyp, function(z) {
       if(z == "ml") {c(NA, NA)} else {
         c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])
       }}, double(2))
-    data <- data[, vars]
 
-    chains <- lapply(chains, function(z) {
-      cbind("ml" = z[["ml"]], z[["hyper"]])[, vars]
+    out_chains[["hyper"]] <- lapply(chains, function(z) {
+      cbind("ml" = z[["ml"]], z[["hyper"]])[seq(N), choice_hyp]
     })
-
   }
 
+  if(length(choice_dep) > 0 || length(choice_ind) > 0) { # Betas
+    pos_dep <- get_var_set(choice_dep,
+      variables = x[["variables"]], M = x[["meta"]][["M"]])
+    pos_ind <- get_var_set(choice_ind,
+      variables = get_expl(x[["variables"]], x[["meta"]][["lags"]]),
+      M = x[["meta"]][["K"]])
+    K <- length(pos_dep) * length(pos_ind)
 
+    out[["betas"]] <- grab_betas(x, N, K, pos_dep, pos_ind)
+    out_vars[["betas"]] <- paste0(
+      rep(vars_dep[pos_dep], length(pos_ind)), "-",
+      rep(vars_ind[pos_ind], each = length(pos_dep)))
+
+    out_bounds[["betas"]] <- matrix(NA, ncol = K, nrow = 2)
+
+    out_chains[["betas"]] <- lapply(chains, grab_betas, N, K, pos_dep, pos_ind)
+  }
+
+  # Merge stuff and return
   return(list(
-    "data" = as.matrix(data),
-    "vars" = vars,
-    "chains" = lapply(chains, as.matrix),
-    "bounds" = bounds
-  ))
+    "data" = cbind(out[["hyper"]], out[["betas"]]),
+    "vars" = c(out_vars[["hyper"]], out_vars[["betas"]]),
+    "chains" = c(out_chains[["hyper"]], out_chains[["beta"]]),
+    "bounds" = cbind(out_bounds[["hyper"]], out_bounds[["betas"]])))
+}
+
+
+#' Grab draws of certain betas
+#'
+#' Helper function for \code{\link{prep_data}}.
+#'
+#' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
+#' @param N,K Integer scalars. Number of rows and columns to return.
+#' @param pos_dep,pos_ind Numeric vectors. Positions of desired variables.
+#'
+#' @return Returns a matrix with the requested data.
+#'
+#' @noRd
+grab_betas <- function(x, N, K, pos_dep, pos_ind) {
+  data <- matrix(NA, nrow = N, ncol = K)
+  k <- 1
+  for(i in pos_ind) {
+    for(j in pos_dep) {
+      data[, k] <- x[["beta"]][seq(N), i, j] # seq() for longer chains
+      k <- k + 1
+  }}
+  return(data)
 }
 
 
@@ -139,6 +145,8 @@ prep_data <- function(
 #' \code{x[["meta"]][["n_save"]]}.
 #' @param hypers Logical scalar. Whether to check equality of
 #' \code{x[["priors"]][["hyper"]]}.
+#'
+#' @return Returns \code{TRUE} or throws an error.
 #'
 #' @noRd
 chains_fit <- function(
