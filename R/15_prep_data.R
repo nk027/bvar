@@ -66,14 +66,14 @@ prep_data <- function(
       # Exclude ones matched for independents
       do.call(c, lapply(vars[!grepl("(^const|lag[0-9]+$)", vars)],
         grep, vars_dep))))]
-  } else {vars_dep[unique(do.call(c, lapply(vars_response, grep, vars_dep)))]}
+  } else {get_var_set(vars_response, vars_dep, M = x[["meta"]][["M"]])}
   choice_dep <- choice_dep[!is.na(choice_dep)]
 
   choice_ind <- if(is.null(vars_impulse)) {
     # Limit to ones with "-lag#" or "constant" to separate from dependents
     vars_ind[unique(do.call(c, lapply(vars[grep("(^const|lag[0-9]+$)", vars)],
       grep, vars_ind)))]
-  } else {vars_ind[unique(do.call(c, lapply(vars_impulse, grep, vars_ind)))]}
+  } else {get_var_set(vars_impulse, vars_ind, M = x[["meta"]][["K"]])}
 
   if(all(c(length(choice_hyp), length(choice_dep), length(choice_ind)) == 0)) {
     stop("No data fitting matching the provided vars argument found.")
@@ -101,10 +101,9 @@ prep_data <- function(
 
   if(length(choice_dep) > 0 || length(choice_ind) > 0) { # Betas
     pos_dep <- get_var_set(choice_dep,
-      variables = x[["variables"]], M = x[["meta"]][["M"]])
+      variables = vars_dep, M = x[["meta"]][["M"]])
     pos_ind <- get_var_set(choice_ind,
-      variables = get_expl(x[["variables"]], x[["meta"]][["lags"]]),
-      M = x[["meta"]][["K"]])
+      variables = vars_ind, M = x[["meta"]][["K"]])
     K <- length(pos_dep) * length(pos_ind)
 
     out[["betas"]] <- grab_betas(x, N, K, pos_dep, pos_ind)
