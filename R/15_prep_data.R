@@ -76,7 +76,7 @@ prep_data <- function(
   } else {get_var_set(vars_impulse, vars_ind, M = x[["meta"]][["K"]])}
 
   if(all(c(length(choice_hyp), length(choice_dep), length(choice_ind)) == 0)) {
-    stop("No data fitting matching the provided vars argument found.")
+    stop("No data matching the provided vars argument found.")
   }
 
 

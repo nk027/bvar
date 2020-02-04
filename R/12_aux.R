@@ -125,14 +125,14 @@ get_var_set <- function(vars, variables, M) {
   }
   if(is.numeric(vars)) {
     return(sort(vapply(vars, int_check,
-                       min = 1, max = M, msg = "Variable(s) not found.",
-                       integer(1))))
+      min = 1, max = M, msg = "Variable(s) not found.", integer(1))))
   }
   if(is.character(vars) && !is.null(variables)) {
-    return(do.call(c, lapply(vars, grep, variables, fixed = TRUE)))
+    out <- do.call(c, lapply(vars, grep, variables, fixed = TRUE))
+    if(length(out) > 0) {return(out)}
   }
 
-  stop("Variables not found.")
+  stop("Variable(s) not found.")
 }
 
 
