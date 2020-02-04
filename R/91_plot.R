@@ -160,7 +160,7 @@ plot.bvar <- function(
 }
 
 
-#' @rdname plot_trace
+#' @rdname .plot_trace
 #' @noRd
 .plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
