@@ -60,7 +60,8 @@ density.bvar <- function(
 
   # Get data and apply density --------------------------------------------
 
-  prep <- prep_data(x, vars, vars_response, vars_impulse)
+  prep <- prep_data(x,
+    vars = vars, vars_response = vars_response, vars_impulse = vars_impulse)
   data <- prep[["data"]]
   vars <- prep[["vars"]]
 

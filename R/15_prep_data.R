@@ -49,19 +49,36 @@ prep_data <- function(
   # Allow returning betas and hyperpriors ---------------------------------
 
   vars_hyp <- c("ml", colnames(x[["hyper"]]))
-  if(is.null(vars)) {vars <- vars_hyp}
+  vars_dep <- x[["variables"]]
+  vars_ind <- x[["explanatories"]]
+  # Compatibility to older versions (<= 0.2.1)
+  if(is.null(vars_ind)) {vars_ind <- get_expl(vars_dep, x[["meta"]][["lags"]])}
+
+  if(is.null(vars) && is.null(vars_impulse) && is.null(vars_response)) {
+    vars <- vars_hyp
+  }
+
   choice_hyp <- vars_hyp[unique(do.call(c, lapply(vars, grep, vars_hyp)))]
 
-  vars_dep <- x[["variables"]]
-  # If there are number-elements interpret them as independent-positions
-  choice_dep <- vars_dep[unique(c(as.integer(vars[grep("^[0-9]+$", vars)]),
-    do.call(c, lapply(vars, grep, vars_dep))))]
+  choice_dep <- if(is.null(vars_response)) {
+    # If there are number-elements interpret them as independent-positions
+    vars_dep[unique(c(as.integer(vars[grep("^[0-9]+$", vars)]),
+      # Exclude ones matched for independents
+      do.call(c, lapply(vars[!grepl("(^const|lag[0-9]+$)", vars)],
+        grep, vars_dep))))]
+  } else {vars_dep[unique(do.call(c, lapply(vars_response, grep, vars_dep)))]}
   choice_dep <- choice_dep[!is.na(choice_dep)]
 
-  vars_ind <- x[["explanatories"]]
-  # Limit to ones with "-lag#" or "constant" to separate from dependents
-  choice_ind <- vars_ind[unique(do.call(c,
-    lapply(vars[grep("(constant|lag[0-9]+)$", vars)], grep, vars_ind)))]
+  choice_ind <- if(is.null(vars_impulse)) {
+    # Limit to ones with "-lag#" or "constant" to separate from dependents
+    vars_ind[unique(do.call(c, lapply(vars[grep("(^const|lag[0-9]+$)", vars)],
+      grep, vars_ind)))]
+  } else {vars_ind[unique(do.call(c, lapply(vars_impulse, grep, vars_ind)))]}
+
+  if(all(c(length(choice_hyp), length(choice_dep), length(choice_ind)) == 0)) {
+    stop("No data fitting matching the provided vars argument found.")
+  }
+
 
   # Build up required outputs ---------------------------------------------
 
@@ -92,7 +109,7 @@ prep_data <- function(
 
     out[["betas"]] <- grab_betas(x, N, K, pos_dep, pos_ind)
     out_vars[["betas"]] <- paste0(
-      rep(vars_dep[pos_dep], length(pos_ind)), "-",
+      rep(vars_dep[pos_dep], length(pos_ind)), "_",
       rep(vars_ind[pos_ind], each = length(pos_dep)))
 
     out_bounds[["betas"]] <- matrix(NA, ncol = K, nrow = 2)
@@ -101,9 +118,12 @@ prep_data <- function(
   }
 
   # Merge stuff and return
+  out_data <- cbind(out[["hyper"]], out[["betas"]])
+  out_vars <- c(out_vars[["hyper"]], out_vars[["betas"]])
+  colnames(out_data) <- out_vars
+
   return(list(
-    "data" = cbind(out[["hyper"]], out[["betas"]]),
-    "vars" = c(out_vars[["hyper"]], out_vars[["betas"]]),
+    "data" = out_data, "vars" = out_vars,
     "chains" = c(out_chains[["hyper"]], out_chains[["beta"]]),
     "bounds" = cbind(out_bounds[["hyper"]], out_bounds[["betas"]])))
 }

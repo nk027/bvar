@@ -89,10 +89,11 @@ plot.bvar <- function(
   # Get data and plot -------------------------------------------------------
 
   prep <- prep_data(x,
-    vars, vars_response, vars_impulse, chains, check_chains = FALSE)
+    vars = vars, vars_response = vars_response, vars_impulse = vars_impulse,
+    chains, check_chains = FALSE)
 
   .plot_bvar(prep[["data"]], type,
-    prep[["vars"]], prep[["chains"], prep[["bounds"]], mar, ...)
+    prep[["vars"]], prep[["chains"]], prep[["bounds"]], mar, ...)
 
   return(invisible(x))
 }

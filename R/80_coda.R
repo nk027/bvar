@@ -61,17 +61,15 @@ as.mcmc.bvar <- function(
   # Get data and transform --------------------------------------------------
 
   prep <- prep_data(x,
-    vars, vars_response, vars_impulse,
+    vars = vars, vars_response = vars_response, vars_impulse = vars_impulse,
     chains, check_chains = TRUE, Ms = TRUE, n_saves = TRUE)
-  data <- prep[["data"]]
-  vars <- prep[["vars"]]
   chains <- prep[["chains"]]
 
   if(!is.null(chains) && length(chains) > 0) {
-    chains[["x"]] <- data
+    chains[["x"]] <- prep[["data"]]
     out <- coda::mcmc.list(... = lapply(chains, coda::as.mcmc, ...))
   } else {
-    out <- coda::as.mcmc(data, ...)
+    out <- coda::as.mcmc(prep[["data"]], ...)
   }
 
   return(out)
