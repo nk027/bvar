@@ -3,6 +3,7 @@
 
 ^scripts/
 ^data/fred_qd_full\.rda$
+^data/fred_transform\.rda$
 
 ^cran-comments\.md$
 ^README\.md$
