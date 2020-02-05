@@ -144,17 +144,22 @@ transform_fred <- function(x,
     # None
     function(x) {x},
     # First differences
-    function(x) {c(rep(NA, lag), diff(x, lag = lag))},
+    function(x) {c(rep(NA, lag),
+                   diff(x, lag = lag, differences = 1)) * 100},
     # Second differences
-    function(x) {c(rep(NA, lag * 2), diff(diff(x, lag = lag), lag = lag))},
+    function(x) {c(rep(NA, lag * 2),
+                   diff(x, lag = lag, differences = 2)) * 100},
     # Logs
     function(x) {log(x)},
     # Log first differences
-    function(x) {c(rep(NA, lag), diff(log(x), lag = lag))},
+    function(x) {c(rep(NA, lag),
+                   diff(log(x), lag = lag, differences = 1)) * 100},
     # Log second differences
-    function(x) {c(rep(NA, lag * 2), diff(diff(log(x), lag = lag), lag = lag))},
+    function(x) {c(rep(NA, lag * 2),
+                   diff(log(x), lag = lag, differences = 2)) * 100},
     # Percent-change differences
-    function(x) {c(rep(NA, lag), x[-seq(lag)] / head(x, length(x) - lag) - 1L)}
+    function(x) {c(rep(NA, lag),
+                   x[-seq(lag)] / head(x, length(x) - lag) - 1L) * 100}
   )
   fun(x)
 }
