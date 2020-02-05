@@ -50,6 +50,48 @@ par_bvar <- function(
   has_parallel()
 
 
+  # Move checks to here -----------------------------------------------------
+
+  # Data
+  if(!all(vapply(data, is.numeric, logical(1))) ||
+     any(is.na(data)) || ncol(data) < 2) {
+    stop("Problem with the data. Make sure it is numeric, without any NAs.")
+  }
+
+  Y <- as.matrix(data)
+
+  # Integers
+  lags <- int_check(lags, min = 1L, max = nrow(Y))
+  n_draw <- int_check(n_draw, min = 1L)
+  n_burn <- int_check(n_burn, min = 0L, max = n_draw - 1L,
+    msg = "Issue with n_burn. Is n_burn < n_draw?")
+  n_thin <- int_check(n_thin, min = 1L, max = ((n_draw - n_burn) / 10),
+    msg = "Issue with n_thin. Maximum allowed is (n_draw - n_burn) / 10.")
+  if(missing(n_save)) {
+    n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1)
+  } else {
+    n_save <- int_check(n_save, min = 1L)
+    n_draw <- int_check(n_save + n_burn, min = 1L)
+  }
+
+  # Constructors, required
+  if(!inherits(priors, "bv_priors")) {
+    stop("Please use `bv_priors()` to configure the priors.")
+  }
+  if(!inherits(mh, "bv_metropolis")) {
+    stop("Please use `bv_mh()` to configure the Metropolis-Hastings step.")
+  }
+  # Not required
+  if(!is.null(fcast) && !inherits(fcast, "bv_fcast")) {
+    stop("Please use `bv_fcast()` to configure forecasts.")
+  }
+  if(!is.null(irf) && !inherits(irf, "bv_irf")) {
+    stop("Please use `bv_irf()` to configure impulse responses.")
+  }
+
+  if(mh[["adjust_acc"]]) {n_adj <- as.integer(n_burn * mh[["adjust_burn"]])}
+
+
   # Get several BVARs -------------------------------------------------------
 
   out <- parallel::parLapply(cl, rep(list(data)),
