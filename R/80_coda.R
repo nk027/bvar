@@ -48,7 +48,13 @@ as.mcmc.bvar <- function(
 
   # Checks ------------------------------------------------------------------
 
-  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
+  if(!inherits(x, "bvar")) {
+    if(inherits(x[[1]], "bvar")) { # Allow chains to x
+      chains <- x
+      x <- x[[1]]
+      chains[[1]] <- NULL
+    } else {stop("Please provide a `bvar` object.")}
+  }
 
   if(inherits(chains, "bvar")) {chains <- list(chains)}
   lapply(chains, function(z) {if(!inherits(z, "bvar")) {
@@ -74,6 +80,11 @@ as.mcmc.bvar <- function(
 
   return(out)
 }
+
+
+#' @rdname as.mcmc.bvar
+#' @export
+as.mcmc.bvar_chains <- as.mcmc.bvar
 
 
 #' @noRd

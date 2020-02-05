@@ -61,7 +61,13 @@ plot.bvar <- function(
   mar = c(2, 2, 2, 0.5),
   ...) {
 
-  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
+  if(!inherits(x, "bvar")) {
+    if(inherits(x[[1]], "bvar")) { # Allow chains to x
+      chains <- x
+      x <- x[[1]]
+      chains[[1]] <- NULL
+    } else {stop("Please provide a `bvar` object.")}
+  }
 
   type <- match.arg(type)
 
@@ -97,6 +103,10 @@ plot.bvar <- function(
 
   return(invisible(x))
 }
+
+#' @rdname plot.bvar
+#' @export
+plot.bvar_chains <- plot.bvar
 
 
 #' @rdname plot.bvar

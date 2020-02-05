@@ -102,6 +102,8 @@ par_bvar <- function(
     n_draw = n_draw, n_burn = n_burn, n_save = n_save, n_thin = n_thin,
     priors = priors, mh = mh, fcast = fcast, irf = irf)
 
+  class(out) <- "bvar_chains"
+
   return(out)
 }
 
