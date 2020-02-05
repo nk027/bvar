@@ -5,13 +5,25 @@
 \alias{bv_plot_fcast}
 \title{Plotting method for Bayesian VAR forecasts}
 \usage{
-\method{plot}{bvar_fcast}(x, conf_bands, vars = NULL, variables = NULL,
-  orientation = c("vertical", "horizontal"), mar = c(2, 2, 2, 0.5),
-  ...)
+\method{plot}{bvar_fcast}(
+  x,
+  conf_bands,
+  vars = NULL,
+  variables = NULL,
+  orientation = c("vertical", "horizontal"),
+  mar = c(2, 2, 2, 0.5),
+  ...
+)
 
-bv_plot_fcast(x, conf_bands = 0.16, variables = NULL, vars = NULL,
-  orientation = c("vertical", "horizontal"), mar = c(2, 2, 2, 0.5),
-  ...)
+bv_plot_fcast(
+  x,
+  conf_bands = 0.16,
+  variables = NULL,
+  vars = NULL,
+  orientation = c("vertical", "horizontal"),
+  mar = c(2, 2, 2, 0.5),
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{bvar} / \code{bvar_fcast} object, obtained from

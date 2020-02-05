@@ -5,9 +5,20 @@
 \alias{print.bvar}
 \title{Hierarchical Bayesian Vector Autoregression}
 \usage{
-bvar(data, lags, n_draw = 10000, n_burn = 5000, n_thin = 1,
-  priors = bv_priors(), mh = bv_mh(), fcast = NULL, irf = NULL,
-  verbose = TRUE, ...)
+bvar(
+  data,
+  lags,
+  n_draw = 10000L,
+  n_burn = 5000L,
+  n_save,
+  n_thin = 1L,
+  priors = bv_priors(),
+  mh = bv_mh(),
+  fcast = NULL,
+  irf = NULL,
+  verbose = TRUE,
+  ...
+)
 
 \method{print}{bvar}(x, ...)
 }
@@ -17,14 +28,13 @@ ordered from earliest to latest one.}
 
 \item{lags}{Integer scalar. Number of lags to apply to the data.}
 
-\item{n_draw}{Integer scalar. Number of total iterations for the model
-to cycle through.}
-
-\item{n_burn}{Integer scalar. Number of iterations to discard.}
+\item{n_draw, n_burn, n_save}{Integer scalar. Define the number of iterations
+to (a) cycle through, (b) burn at the start, (c) save. Note that if provided
+\emph{n_save} takes precedence over \emph{n_draw}.}
 
 \item{n_thin}{Integer scalar. Provides the option of reducing the number of
 stored iterations to every \emph{n_thin}'th one. The number of saved
-iterations thus equals \eqn{(n_draw - n_burn) / n_thin}.}
+iterations thus equals \emph{(n_draw - n_burn) / n_thin}.}
 
 \item{priors}{\code{bv_priors} object containing priors and their settings.
 See \code{\link{bv_priors}}.}
@@ -57,9 +67,8 @@ Returns a \code{bvar} object with the following elements:
   distribution of the model's VCOV-matrix. See \code{\link{vcov.bvar}}.
   \item \code{hyper} - Numeric matrix with saved draws from the posterior
   distributions of the hierarchical priors' hyperparameters.
-  \item \code{ml} - Numeric vector with the values of the posterior marginal
-  likelihood corresponding to each draw of hyperparameters and associated
-  VAR coefficients.
+  \item \code{ml} - Numeric vector with the values of the posterior
+  marginalised likelihood (with respect to the hyperparameters).
   \item \code{optim} - List with outputs from \code{\link[stats]{optim}},
   which is used to find suitable starting values.
   \item \code{prior} - \code{bv_priors} object. See \code{\link{bv_priors}}.
@@ -67,7 +76,11 @@ Returns a \code{bvar} object with the following elements:
   \item \code{meta} - List with meta information such as number of variables,
   accepted draws, number of iterations, et cetera.
   \item \code{variables} - Character vector with the column names of
-  \emph{data}.
+  \emph{data}. If missing variables are named consecutively - e.g.:
+  \emph{var1}
+  \item \code{explanatories} - Character vector with the names of
+  explanatory variables, i.e. the constant and lags. Formatting is akin to:
+  \emph{FEDFUNDS-lag1}.
   \item \code{fcast} - \code{bvar_fcast} object with posterior forecast
   draws, quantiles as well as the forecast's setup from the \emph{fcast}
   argument.
@@ -79,11 +92,12 @@ Returns a \code{bvar} object with the following elements:
 \description{
 Hierarchical Bayesian estimation of Vector Autoregression (VAR) models in
 the fashion of Giannone et al. (2015).
-Options for the \emph{priors} and \emph{mh} arguments are provided via the
-functions \code{\link{bv_priors}} and \code{\link{bv_metropolis}}.
-Several methods facilitate analysis, including \code{\link{summary.bvar}},
-\code{\link{plot.bvar}}, \code{\link{predict.bvar}} and
-\code{\link{irf.bvar}}.
+Options for the prior settings and Metropolis-Hastings step are provided to
+\emph{priors} and \emph{mh} arguments via the functions
+\code{\link{bv_priors}} and \code{\link{bv_mh}}.
+Several methods are available to analyse the resulting model, including
+\code{\link{summary.bvar}}, \code{\link{plot.bvar}},
+\code{\link{predict.bvar}} and \code{\link{irf.bvar}}.
 }
 \examples{
 # Access a subset of the fred_qd dataset and transform it to be stationary
@@ -94,7 +108,7 @@ data <- data[5:nrow(data), ]
 
 # Compute VAR using 2 lags and a ridiculously low number of draws
 x <- bvar(data = data, lags = 1,
-          n_draw = 500, n_burn = 400, n_thin = 2, verbose = FALSE)
+          n_draw = 500L, n_burn = 400L, n_thin = 2L, verbose = FALSE)
 
 \donttest{
 # Check out some of the outputs generated

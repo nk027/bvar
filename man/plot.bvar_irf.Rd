@@ -5,12 +5,26 @@
 \alias{bv_plot_irf}
 \title{Plotting method for Bayesian VAR impulse responses}
 \usage{
-\method{plot}{bvar_irf}(x, conf_bands, vars_response = NULL,
-  vars_impulse = NULL, variables = NULL, mar = c(2, 2, 2, 0.5), ...)
+\method{plot}{bvar_irf}(
+  x,
+  conf_bands,
+  vars = NULL,
+  vars_response = NULL,
+  vars_impulse = NULL,
+  variables = NULL,
+  mar = c(2, 2, 2, 0.5),
+  ...
+)
 
-bv_plot_irf(x, conf_bands = 0.16, variables = NULL,
-  vars_impulse = NULL, vars_response = NULL, mar = c(2, 2, 2, 0.5),
-  ...)
+bv_plot_irf(
+  x,
+  conf_bands = 0.16,
+  variables = NULL,
+  vars_impulse = NULL,
+  vars_response = NULL,
+  mar = c(2, 2, 2, 0.5),
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{bvar} / \code{bvar_irf} object, obtained from
@@ -19,7 +33,7 @@ bv_plot_irf(x, conf_bands = 0.16, variables = NULL,
 \item{conf_bands}{Deprecated. Use \code{\link{irf.bvar}}. Numeric vector
 of desired confidence bands.}
 
-\item{vars_impulse, vars_response}{Optional numeric or character vector. Used
+\item{vars, vars_impulse, vars_response}{Optional numeric or character vector. Used
 to subset the plot's impulses / responses to certain variables by position
 or name (must be available). Defaults to \code{NULL}, i.e. all variables.}
 

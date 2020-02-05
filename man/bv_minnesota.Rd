@@ -8,20 +8,27 @@
 \alias{bv_psi}
 \title{Minnesota prior settings}
 \usage{
-bv_minnesota(lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max =
-  5), alpha = bv_alpha(2, 0.25, 1, 3), psi = bv_psi(0.004, 0.004,
-  "auto"), var = 10000000, b = "auto")
+bv_minnesota(
+  lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
+  alpha = bv_alpha(2, 0.25, 1, 3),
+  psi = bv_psi(0.004, 0.004, "auto"),
+  var = 10000000,
+  b = "auto"
+)
 
-bv_mn(lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
-  alpha = bv_alpha(2, 0.25, 1, 3), psi = bv_psi(0.004, 0.004, "auto"),
-  var = 10000000, b = "auto")
+bv_mn(
+  lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
+  alpha = bv_alpha(2, 0.25, 1, 3),
+  psi = bv_psi(0.004, 0.004, "auto"),
+  var = 10000000,
+  b = "auto"
+)
 
 bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5)
 
 bv_alpha(mode = 2, sd = 0.25, min = 1, max = 3)
 
-bv_psi(scale = 0.004, shape = 0.004, mode = "auto", min = "auto",
-  max = "auto")
+bv_psi(scale = 0.004, shape = 0.004, mode = "auto", min = "auto", max = "auto")
 }
 \arguments{
 \item{lambda}{List constructed via \code{\link{bv_lambda}}.
@@ -38,10 +45,11 @@ See the Details section for further information.}
 \item{psi}{List with elements \emph{scale}, \emph{shape} of the prior
 as well as \emph{mode} and optionally \emph{min} and \emph{max}. The length
 of these needs to match the number of variables (i.e. columns) in the data.
-By default \emph{mode} is set automatically to the squareroot of the
-innovations variance after fitting an \eqn{AR(p)} model to the data. By
-default \emph{min} / \emph{max} are set to \emph{mode} divided / multiplied
-by \eqn{100}.
+By default \emph{mode} is set automatically to the square-root of the
+innovations variance after fitting an \eqn{AR(p)} model to the data. If
+\code{\link[stats]{arima}} fails due to a non-stationary time series the
+order of integration is incremented by 1. By default \emph{min} / \emph{max}
+are set to \emph{mode} divided / multiplied by 100.
 See the Details section for further information.}
 
 \item{var}{Numeric scalar with the prior variance on the model's constant.}

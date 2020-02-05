@@ -30,7 +30,7 @@
 #'
 #' stopCluster(cl)
 #'
-#' Plot lambda for all of the runs
+#' # Plot lambda for all of the runs
 #' plot(x, type = "full", vars = "lambda", chains = y)
 #' }
 par_bvar <- function(
@@ -52,7 +52,7 @@ par_bvar <- function(
 
   # Get several BVARs -------------------------------------------------------
 
-  out <- parLapply(cl, rep(list(data)),
+  out <- parallel::parLapply(cl, rep(list(data)),
     function(data, lags, # This guy is spawned all alone, we need to load BVAR
       n_draw, n_burn, n_save, n_thin, priors, mh, fcast, irf) {
       library("BVAR")

@@ -7,13 +7,11 @@
 \alias{independent_index}
 \title{Density methods for Bayesian VARs}
 \usage{
-\method{density}{bvar}(x, vars = NULL, vars_response = NULL,
-  vars_impulse = NULL, ...)
+\method{density}{bvar}(x, vars = NULL, vars_response = NULL, vars_impulse = NULL, ...)
 
 \method{print}{bvar_density}(x, ...)
 
-\method{plot}{bvar_density}(x, mar = c(2, 2, 2, 0.5),
-  mfrow = c(length(x), 1), ...)
+\method{plot}{bvar_density}(x, mar = c(2, 2, 2, 0.5), mfrow = c(length(x), 1), ...)
 
 independent_index(var, n_vars, lag)
 }

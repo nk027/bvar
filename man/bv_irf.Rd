@@ -4,8 +4,13 @@
 \alias{bv_irf}
 \title{Impulse response settings}
 \usage{
-bv_irf(horizon = 12, fevd = FALSE, identification = TRUE,
-  sign_restr = NULL, sign_lim = 1000)
+bv_irf(
+  horizon = 12,
+  fevd = FALSE,
+  identification = TRUE,
+  sign_restr = NULL,
+  sign_lim = 1000
+)
 }
 \arguments{
 \item{horizon}{Integer scalar. The horizon for which impulse responses

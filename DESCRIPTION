@@ -8,7 +8,7 @@ Authors@R: c(person("Nikolas", "Kuschnig", role = c("aut", "cre"), email = "niko
     person("Michael", "McCracken", role = "dtc", comment = "author of the FRED-QD dataset"))
 Author: Nikolas Kuschnig [aut, cre],
   Lukas Vashold [aut],
-  Michael McCracken [dtc] (author of the FRED-QD dataset)
+  Michael McCracken [dtc]
 Maintainer: Nikolas Kuschnig <nikolas.kuschnig@wu.ac.at>
 Description: Toolkit for the estimation of hierarchical Bayesian vector
     autoregressions. Implements hierarchical prior selection for conjugate
@@ -20,7 +20,7 @@ BugReports: https://github.com/nk027/bvar/issues
 Depends: R (>= 3.3.0)
 Imports: mvtnorm, stats, graphics, utils
 Suggests: coda, vars
-License: GPL-3, file LICENSE
+License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

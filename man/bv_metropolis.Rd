@@ -6,11 +6,23 @@
 \alias{print.bv_metropolis}
 \title{Metropolis-Hastings settings}
 \usage{
-bv_metropolis(scale_hess = 0.01, adjust_acc = FALSE,
-  acc_lower = 0.25, acc_upper = 0.35, acc_change = 0.01)
+bv_metropolis(
+  scale_hess = 0.01,
+  adjust_acc = FALSE,
+  adjust_burn = 0.5,
+  acc_lower = 0.25,
+  acc_upper = 0.35,
+  acc_change = 0.01
+)
 
-bv_mh(scale_hess = 0.01, adjust_acc = FALSE, acc_lower = 0.25,
-  acc_upper = 0.35, acc_change = 0.01)
+bv_mh(
+  scale_hess = 0.01,
+  adjust_acc = FALSE,
+  adjust_burn = 0.5,
+  acc_lower = 0.25,
+  acc_upper = 0.35,
+  acc_change = 0.01
+)
 
 \method{print}{bv_metropolis}(x, ...)
 }
@@ -22,6 +34,9 @@ must equal the number of hyperparameters (one per variable for \code{psi}).}
 
 \item{adjust_acc}{Logical scalar. Whether or not to further scale the
 variability of parameter draws during the burn-in phase.}
+
+\item{adjust_burn}{Numeric scalar. How much of the burn-in phase should be
+used to scale parameter variability. See Details.}
 
 \item{acc_lower, acc_upper}{Numeric scalar. Lower (upper) bound of the target
 acceptance rate. Required if \emph{adjust_acc} is set to \code{TRUE}.}
@@ -42,6 +57,13 @@ Function to provide settings for the Metropolis-Hastings step in
 \code{\link{bvar}}. Options include scaling the inverse Hessian that
 is used to draw parameter proposals and automatic scaling to
 achieve a certain acceptance rate.
+}
+\details{
+Note that adjustment of the acceptance rate by scaling the parameter draw
+variability can only be done during the burn-in phase, as the resulting
+draws do not feature the desirable properties of a Markov chain.
+After the parameter draws have been scaled some additional draws should be
+burnt, to ensure the chain has reached a high-probability region.
 }
 \examples{
 # Only adjust the scale parameter

@@ -28,7 +28,7 @@
 #' bv_plot_density(x, "ml")
 #' par(op)
 #'
-#' # Assess parameter convergence of several chains via their trace
+#' # Assess parameter convergence of several chains via their traces
 #' y <- bvar(data, lags = 2)
 #' z <- bvar(data, lags = 2)
 #' bv_plot_trace(x, "lambda", y, z)
@@ -36,7 +36,7 @@
 bv_plot_trace <- function(x, name, ...) {
 
   .Deprecated("plot.bvar")
-  plot_hyper(x, name, fun = plot_trace, ...)
+  plot_hyper(x, name, fun = .plot_trace, ...)
 }
 
 
@@ -45,7 +45,7 @@ bv_plot_trace <- function(x, name, ...) {
 bv_plot_density <- function(x, name, ...) {
 
   .Deprecated("plot.bvar")
-  plot_hyper(x, name, fun = plot_dens, ...)
+  plot_hyper(x, name, fun = .plot_dens, ...)
 }
 
 
@@ -67,11 +67,11 @@ bv_plot <- function(x, mar = c(2, 2, 2, 0.5), ...) {
 
   op <- par(mfrow = c(K + 1, 2), mar = mar, ...)
 
-  plot_trace(x[["ml"]], name = "marginal likelihood")
-  plot_dens(x[["ml"]], name = "marginal likelihood")
+  .plot_trace(x[["ml"]], name = "marginal likelihood")
+  .plot_dens(x[["ml"]], name = "marginal likelihood")
   for(i in 1:K) {
-    plot_trace(y[, i], name[i], bounds[, i])
-    plot_dens(y[, i], name[i], bounds[, i])
+    .plot_trace(y[, i], name[i], bounds[, i])
+    .plot_dens(y[, i], name[i], bounds[, i])
   }
 
   par(op)
@@ -128,7 +128,7 @@ bv_plot_irf <- function(
 #' @param ... Further \code{bvar} objects to include in the plot.
 #'
 #' @noRd
-plot_hyper <- function(x, name, fun = c(plot_trace, plot_dens), ...) {
+plot_hyper <- function(x, name, fun = c(.plot_trace, .plot_dens), ...) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 

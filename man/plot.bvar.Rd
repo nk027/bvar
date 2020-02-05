@@ -5,9 +5,16 @@
 \alias{bv_plot}
 \title{Plotting method for Bayesian VARs}
 \usage{
-\method{plot}{bvar}(x, type = c("full", "trace", "density", "irf",
-  "fcast"), vars = NULL, vars_response = NULL, vars_impulse = NULL,
-  chains = list(), mar = c(2, 2, 2, 0.5), ...)
+\method{plot}{bvar}(
+  x,
+  type = c("full", "trace", "density", "irf", "fcast"),
+  vars = NULL,
+  vars_response = NULL,
+  vars_impulse = NULL,
+  chains = list(),
+  mar = c(2, 2, 2, 0.5),
+  ...
+)
 
 bv_plot(x, mar = c(2, 2, 2, 0.5), ...)
 }
