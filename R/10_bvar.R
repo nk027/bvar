@@ -220,7 +220,7 @@ bvar <- function(
   names(hyper) <- name_pars(priors[["hyper"]], M)
 
   # Split up psi
-  for(i in seq_len(priors[["psi"]][["mode"]])) {
+  for(i in seq_along(priors[["psi"]][["mode"]])) {
     priors[[paste0("psi", i)]] <-
       lapply(priors[["psi"]], function(x) x[i])
   }

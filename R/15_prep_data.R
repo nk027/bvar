@@ -94,10 +94,11 @@ prep_data <- function(
         c(x[["priors"]][[z]][["min"]], x[["priors"]][[z]][["max"]])
       }}, double(2))
 
+    # Alternatively have chains be a list of NULLs for mapply
     out_chains[["hyper"]] <- lapply(chains, function(z) {
       cbind("ml" = z[["ml"]], z[["hyper"]])[seq(N), choice_hyp]
     })
-  }
+  } else {out_chains[["hyper"]] <- rep(list(NULL), length(chains))}
 
   if(length(choice_dep) > 0 || length(choice_ind) > 0) { # Betas
     pos_dep <- get_var_set(choice_dep,
@@ -113,17 +114,20 @@ prep_data <- function(
 
     out_bounds[["betas"]] <- matrix(NA, ncol = K, nrow = 2)
 
+    # Alternatively have chains be a list of NULLs for mapply
     out_chains[["betas"]] <- lapply(chains, grab_betas, N, K, pos_dep, pos_ind)
-  }
+ } else {out_chains[["betas"]] <- rep(list(NULL), length(chains))}
 
   # Merge stuff and return
   out_data <- cbind(out[["hyper"]], out[["betas"]])
   out_vars <- c(out_vars[["hyper"]], out_vars[["betas"]])
+  # Whoever decided on all-caps SIMPLIFY deserves a spot in hell
+  out_chains <- mapply(cbind,
+    out_chains[["hyper"]], out_chains[["betas"]], SIMPLIFY = FALSE)
   colnames(out_data) <- out_vars
 
   return(list(
-    "data" = out_data, "vars" = out_vars,
-    "chains" = c(out_chains[["hyper"]], out_chains[["beta"]]),
+    "data" = out_data, "vars" = out_vars, "chains" = out_chains,
     "bounds" = cbind(out_bounds[["hyper"]], out_bounds[["betas"]])))
 }
 

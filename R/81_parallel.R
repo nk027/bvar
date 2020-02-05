@@ -94,13 +94,13 @@ par_bvar <- function(
 
   # Get several BVARs -------------------------------------------------------
 
-  out <- parallel::parLapply(cl, rep(list(data)),
-    function(data, lags, # This guy is spawned all alone, we need to load BVAR
-      n_draw, n_burn, n_save, n_thin, priors, mh, fcast, irf) {
+  out <- parallel::parLapply(cl, rep(list(data), n_runs),
+    function(data, ...) { # This guy is spawned all alone, we need to load BVAR
       library("BVAR")
-      bvar(data = data, lags, n_draw, n_burn, n_save, n_thin,
-        priors, mh, fcast, irf, verbose = FALSE)
-    }, lags, n_draw, n_burn, n_save, n_thin, priors, mh, fcast, irf)
+      bvar(data = data, ..., verbose = FALSE)
+    }, lags = lags,
+    n_draw = n_draw, n_burn = n_burn, n_save = n_save, n_thin = n_thin,
+    priors = priors, mh = mh, fcast = fcast, irf = irf)
 
   return(out)
 }

@@ -39,7 +39,7 @@ op <- par(mar = c(2, 2, 2, 0.5))
 bv_plot_density(x, "ml")
 par(op)
 
-# Assess parameter convergence of several chains via their trace
+# Assess parameter convergence of several chains via their traces
 y <- bvar(data, lags = 2)
 z <- bvar(data, lags = 2)
 bv_plot_trace(x, "lambda", y, z)
