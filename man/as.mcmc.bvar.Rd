@@ -2,9 +2,19 @@
 % Please edit documentation in R/80_coda.R
 \name{as.mcmc.bvar}
 \alias{as.mcmc.bvar}
+\alias{as.mcmc.bvar_chains}
 \title{Method for coda Markov chain Monte Carlo objects}
 \usage{
-as.mcmc.bvar(
+\method{as.mcmc}{bvar}(
+  x,
+  vars = NULL,
+  vars_response = NULL,
+  vars_impulse = NULL,
+  chains = list(),
+  ...
+)
+
+\method{as.mcmc}{bvar_chains}(
   x,
   vars = NULL,
   vars_response = NULL,

@@ -24,7 +24,7 @@
 #'
 #' @keywords VAR BVAR coda mcmc convergence
 #'
-#' @export
+#' @export as.mcmc.bvar
 #'
 #' @examples
 #' \donttest{
@@ -83,7 +83,7 @@ as.mcmc.bvar <- function(
 
 
 #' @rdname as.mcmc.bvar
-#' @export
+#' @export as.mcmc.bvar_chains
 as.mcmc.bvar_chains <- as.mcmc.bvar
 
 
