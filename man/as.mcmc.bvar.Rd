@@ -5,7 +5,7 @@
 \alias{as.mcmc.bvar_chains}
 \title{Method for coda Markov chain Monte Carlo objects}
 \usage{
-\method{as.mcmc}{bvar}(
+as.mcmc.bvar(
   x,
   vars = NULL,
   vars_response = NULL,
@@ -14,7 +14,7 @@
   ...
 )
 
-\method{as.mcmc}{bvar_chains}(
+as.mcmc.bvar_chains(
   x,
   vars = NULL,
   vars_response = NULL,

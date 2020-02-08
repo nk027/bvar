@@ -51,7 +51,7 @@ compute_irf <- function(
   irf_comp <- array(0, c(M * lags, horizon, M * lags))
   irf_comp[1:M, 1, 1:M] <- shock
   for(i in 2:horizon) {
-    irf_comp[, i, ] <- irf_comp[, i - 1, ] %*% t(beta_comp)
+    irf_comp[, i, ] <- irf_comp[, i - 1, ] %*% beta_comp
   }
   irf_comp <- irf_comp[1:M, , 1:M]
 
