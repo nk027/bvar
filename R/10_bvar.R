@@ -1,7 +1,7 @@
 #' Hierarchical Bayesian Vector Autoregression
 #'
 #' Hierarchical Bayesian estimation of Vector Autoregression (VAR) models in
-#' the fashion of Giannone et al. (2015).
+#' the fashion of \insertCite{giannone2015}{BVAR}.
 #' Options for the prior settings and Metropolis-Hastings step are provided to
 #' \emph{priors} and \emph{mh} arguments via the functions
 #' \code{\link{bv_priors}} and \code{\link{bv_mh}}.
@@ -68,7 +68,7 @@
 #' }
 #'
 #' @references
-#' Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
+#'  \insertAllCited{}
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_mh}};
 #' \code{\link{bv_fcast}}; \code{\link{bv_irf}};
@@ -89,7 +89,7 @@
 #' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
 #' data <- data[5:nrow(data), ]
 #'
-#' # Compute VAR using 2 lags and a ridiculously low number of draws
+#' # Compute VAR using one lag and a ridiculously low number of draws
 #' x <- bvar(data = data, lags = 1,
 #'           n_draw = 500L, n_burn = 400L, n_thin = 2L, verbose = FALSE)
 #'
@@ -287,7 +287,8 @@ bvar <- function(
     fcast_store <- list(
       "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
       "setup" = fcast,
-      "variables" = variables
+      "variables" = variables,
+      "data" = Y
     )
     class(fcast_store) <- "bvar_fcast"
   }
