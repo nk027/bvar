@@ -72,26 +72,120 @@ name_pars <- function(x, M) {
 }
 
 
-#' Credible interval colour vector
+#' Credible interval symmetric filling
 #'
-#' Create a character vector of colours for time series with credible
-#' intervals, e.g. for \code{\link{plot.bvar_irf}} and
+#' Helper function to fill data, colours or similar things around credible
+#' intervals. These are used in \code{\link{plot.bvar_irf}} and
 #' \code{\link{plot.bvar_fcast}}.
-#' The central element is coloured \code{"black"}, the rest \code{"darkgray"}.
 #'
-#' @param P Integer scalar. Number of bands to plot.
+#' Note that HEX colours that need recycling are dealt some transparency.
 #'
-#' @return Returns a character vector of colours.
+#' @param x Scalar or vector. The central element.
+#' @param y Scalar or vector. Value(s) to surround the central element with.
+#' The first value is closest and values may get recycled.
+#' @param P Integer scalar. Number of total bands.
+#'
+#' @return Returns a vector or matrix (if x is a vector) of x, surrounded by y.
 #'
 #' @examples
 #' bvar:::set_gray(3)
+#' bvar:::set_na(1:5, 5)
 #'
+#' @noRd
+set_symm <- function(x, y, P) {
+
+  n_y <- if(P %% 2 == 0) {
+    message("No central position for x found.")
+  } else {P %/% 2}
+
+  fill <- rep(y, length.out = n_y)
+
+  if(length(x) > 1) {
+    n_row <- length(x)
+    return(cbind(
+      t(rev(fill))[rep(1, n_row), ], x, t(fill)[rep(1, n_row), ]))
+  } else {
+    return(c(rev(fill), x, fill))
+  }
+}
+
+#' @noRd
+set_col <- function(x, y, P) {
+
+  if(length(y) == 1 && is_hex(y, alpha = FALSE)) {
+    y <- paste0(y, get_hex_trans(P))
+  }
+
+  set_symm(x = x, y = y, P = P)
+}
+
 #' @noRd
 set_gray <- function(P) {
 
-  n_gray <- if(P %% 2 == 0) {0} else {P %/% 2}
+  set_col(x = "black", y = "darkgray", P = P)
+}
 
-  return(c(rep("darkgray", n_gray), "black", rep("darkgray", n_gray)))
+#' @noRd
+set_na <- function(x, P) {
+
+  # Corner case for data when quantiles are missing
+  if(P == 2) {return(if(length(x > 1)) {cbind(x, NA)} else {c(x, NA)})}
+
+  set_symm(x = x, y = NA, P = P)
+}
+
+
+#' Get a transparency HEX code
+#'
+#' Helper function for colouring lines and polygons.
+#'
+#' @param P Integer scalar. Number of total bands.
+#'
+#' @return Returns a character vector of transparency codes. Note that there is
+#' no central element for polygons and colours should be repeated symmetrically.
+#'
+#' @examples
+#' bvar:::get_hex_trans(5)
+#' bvar:::get_hex_trans(50)
+#'
+#' @noRd
+get_hex_trans <- function(P) {
+
+  n_trans <- P %/% 2
+  # Handpicked with love
+  out <- switch(n_trans,
+    "FF",
+    c("FF", "CC"),
+    c("FF", "CC", "99"),
+    c("FF", "CC", "99", "66"),
+    c("FF", "CC", "99", "66", "33"))
+
+  # Let rgb() sort it out
+  if(is.null(out)) {
+    out <- substr(rgb(1, 1, 1, seq(1, 0, length.out = n_trans)), 8, 10)
+  }
+
+  return(out)
+}
+
+
+#' Check valid HEX colour
+#'
+#' Helper function for applying transparency.
+#'
+#' @param x Character scalar or vector. String(s) to check.
+#' @param alpha Logical scalar. Whether the string may contain alpha values.
+#'
+#' @return Returns a logical scalar or vector.
+#'
+#' @examples
+#' bvar:::is_hex("#008080")
+#'
+#' @noRd
+is_hex <- function(x, alpha = FALSE) {
+
+  if(alpha) return(grepl("^#[0-9a-fA-F]{3,8}$", x))
+  return(grepl("^#[0-9a-fA-F]{3,6}$", x))
 }
 
 

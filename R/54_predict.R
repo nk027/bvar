@@ -75,7 +75,7 @@ predict.bvar <- function(
   dots <- list(...)
   fcast_store <- object[["fcast"]]
 
-  # If a forecast exists and no settings are provided
+  # If no forecast exists or no settings are provided - calculate
   if(is.null(fcast_store) || length(dots) != 0L || !missing(newdata)) {
 
     fcast <- if(length(dots) > 0 && inherits(dots[[1]], "bv_fcast")) {
@@ -105,7 +105,8 @@ predict.bvar <- function(
 
     fcast_store <- list(
       "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
-      "setup" = fcast, "variables" = object[["variables"]]
+      "setup" = fcast, "variables" = object[["variables"]],
+      "data" = object[["meta"]][["Y"]]
     )
     class(fcast_store) <- "bvar_fcast"
 
@@ -122,8 +123,9 @@ predict.bvar <- function(
   }
 
 
-  # Apply confidence bands ------------------------------------------------
+  # Prepare outputs -------------------------------------------------------
 
+  # Apply confidence bands
   if(is.null(fcast_store[["quants"]]) || !missing(conf_bands)) {
     fcast_store <- if(!missing(conf_bands)) {
       predict.bvar_fcast(fcast_store, conf_bands)
