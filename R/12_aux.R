@@ -222,7 +222,7 @@ get_var_set <- function(vars, variables, M) {
       min = 1, max = M, msg = "Variable(s) not found.", integer(1))))
   }
   if(is.character(vars) && !is.null(variables)) {
-    out <- do.call(c, lapply(vars, grep, variables, fixed = TRUE))
+    out <- do.call(c, lapply(vars, grep, variables))
     if(length(out) > 0) {return(out)}
   }
 

@@ -98,9 +98,7 @@ plot_irf <- function(
     quants[1, , , ] <- x[["quants"]]
   }
 
-  if(is.null(variables)) {
-    variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
-  } else if(length(variables) != M) {stop("Vector variables is incomplete.")}
+  variables <- get_deps(variables = x[["variables"]], M = M)
 
   # Sort out colours - applies alpha if they're HEX and need recycling
   col <- set_col(x = "#000000", y = col, P = P)

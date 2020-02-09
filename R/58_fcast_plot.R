@@ -125,9 +125,7 @@ plot_fcast <- function(
     t(rbind(set_na(data[, i], P2), t(quants[, , i])))
   }, matrix(0, P2, t_back + t_forw), USE.NAMES = FALSE)
 
-  if(is.null(variables)) {
-    variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
-  } else if(length(variables) != M) {stop("Vector variables is incomplete.")}
+  variables <- get_deps(variables = x[["variables"]], M = M)
 
   orientation <- match.arg(orientation)
 
