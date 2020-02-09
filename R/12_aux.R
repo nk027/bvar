@@ -230,6 +230,34 @@ get_var_set <- function(vars, variables, M) {
 }
 
 
+#' Get names for dependent variables
+#'
+#' Helper function to quickly generate names for dependent variables.
+#'
+#' @param variables Character vector of all variable names.
+#' @param lags Integer scalar. Number of lags applied in the model.
+#'
+#' @return Returns a character vector of names for dependent variables.
+#'
+#' @examples
+#' # Get c("constant", "gdp-lag1", "cpi-lag1")
+#' get_expl(c("gdp", "cpi"), lags = 1)
+#'
+#' @noRd
+get_deps <- function(variables, M) {
+
+  if(is.null(variables)) {
+    variables <- if(is.null(x[["variables"]])) {
+      paste0("var", seq(M))
+    } else {x[["variables"]]}
+  } else if(length(variables) != M) {
+    stop("Vector variables is incomplete.")
+  }
+
+  return(variables)
+}
+
+
 #' Get names for explanatory variables
 #'
 #' Helper function to quickly generate names for explanatory variables.

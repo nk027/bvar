@@ -35,7 +35,7 @@ logLik.bvar <- function(object, ...) {
     dmvnorm(Y[i, ], mean[i, ], sigma, log = TRUE)
   }, numeric(1)))
 
-  attr(ll, "df") <- K
+  # attr(ll, "df") <- K
   attr(ll, "nall") <- N
   class(ll) <- "logLik"
 

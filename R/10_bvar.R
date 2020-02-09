@@ -168,9 +168,8 @@ bvar <- function(
   M <- ncol(Y)
   N <- nrow(Y)
 
-  variables <- if(is.null(colnames(data))) {
-    paste0("var", seq(M))} else {colnames(data)}
-  explanatories <- get_expl(variables, lags)
+  variables <- get_deps(variables = colnames(data), M = M)
+  explanatories <- get_expl(variables = variables, lags = lags)
 
   # Check sign restrictions
   if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {

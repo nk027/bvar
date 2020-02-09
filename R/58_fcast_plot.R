@@ -190,8 +190,8 @@ plot_fcast <- function(
         x = x_vals, col = fill[j], border = NA)
     }}
     grid()
-    abline(v = t_back + 1, lty = "dashed", col = "black")
-    abline(h = 0, lty = "dashed", col = "black")
+    abline(v = t_back + 1, lty = "dashed", col = "gray")
+    abline(h = 0, lty = "dashed", col = "gray")
     lines(x[mid, , i], col = col[mid])
   }
   par(op)

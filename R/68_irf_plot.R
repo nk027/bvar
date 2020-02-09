@@ -163,7 +163,7 @@ plot_irf <- function(
           x = x_vals, col = fill[k], border = NA)
       }}
       grid()
-      abline(h = 0, lty = "dashed", col = "black")
+      abline(h = 0, lty = "dashed", col = "gray")
       lines(x[mid, i, , j], col = col[mid])
     }
   }

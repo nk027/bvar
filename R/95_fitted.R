@@ -48,7 +48,7 @@ fitted.bvar <- function(object, conf_bands = 0.5, ...) {
   has_quants <- length(dim(betas)) == 3
   if(has_quants) {
     fit <- array(NA, c(dim(betas)[1], N, M),
-                 list(dimnames = dimnames(betas)[[1]], NULL, NULL))
+      dimnames = list(dimnames(betas)[[1]], NULL, dimnames(betas)[[3]]))
     for(i in seq_len(dim(betas)[1])) {
       fit[i, , ] <- X %*% betas[i, , ]
     }
@@ -95,11 +95,12 @@ plot.bvar_resid <- function(x, vars = NULL, mar = c(2, 2, 2, 0.5), ...) {
   has_quants <- length(dim(x)) == 3
   if(has_quants) {x <- x["50%", , ]}
   M <- dim(x)[2]
-  pos <- get_var_set(vars, 1:M, M)
+  variables <- get_deps(variables = dimnames(x)[[2]], M = M)
+  pos <- get_var_set(vars, variables, M)
 
   op <- par(mfrow = c(length(pos), 1), mar = mar, ...)
   for(i in pos) {
-    plot(x[, i], main = paste0("Variable #", i, "Residuals"))
+    plot(x[, i], main = paste("Residuals", variables[i]))
     abline(h = 0, lty = "dashed", col = "gray")
   }
   par(op)
@@ -153,11 +154,13 @@ print_fitted <- function(
     N <- dim(x)[2]
     M <- dim(x)[3]
     P <- dim(x)[1]
+    variables <- get_deps(variables = dimnames(x)[[3]], M = M)
     head <- x["50%", 1:3, ]
     tail <- x["50%", (N - 2):N, ]
   } else {
     N <- dim(x)[1]
     M <- dim(x)[2]
+    variables <- get_deps(variables = dimnames(x)[[2]], M = M)
     head <- x[1:3, ]
     tail <- x[(N - 2):N, ]
   }
@@ -170,7 +173,7 @@ print_fitted <- function(
   }
   cat("Median values:\n")
   for(var in seq_len(M)) {
-    cat("\tVariable ", var, ": ",
+    cat("\t", variables[var], ": ",
         paste0(round(head[, var], digits), collapse = ", "), ", [...], ",
         paste0(round(tail[, var], digits), collapse = ", "), "\n", sep = "")
   }
