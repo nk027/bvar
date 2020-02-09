@@ -48,8 +48,11 @@ plot.bvar_irf <- function(
   x,
   conf_bands, # deprecated, see `irf.bvar()`
   vars = NULL,
+  col = "#737373",
   vars_response = NULL,
   vars_impulse = NULL,
+  area = FALSE,
+  fill = "#808080",
   variables = NULL,
   mar = c(2, 2, 2, 0.5),
   ...) {
@@ -67,6 +70,9 @@ plot_irf <- function(
   vars_impulse = NULL,
   variables = NULL,
   mar = c(2, 2, 2, 0.5),
+  area = FALSE,
+  col = "#737373",
+  fill = "#808080",
   ...) {
 
   if(!inherits(x, "bvar") && !inherits(x, "bvar_irf")) {
@@ -81,9 +87,9 @@ plot_irf <- function(
 
   has_quants <- length(dim(x[["quants"]])) == 4L
   if(has_quants) {
-    M <- dim(x[["quants"]])[2]
-    P <- dim(x[["quants"]])[1]
     quants <- x[["quants"]]
+    M <- dim(quants)[2]
+    P <- dim(quants)[1]
   } else {
     M <- dim(x[["quants"]])[1]
     P <- 1
@@ -96,13 +102,19 @@ plot_irf <- function(
     variables <- if(is.null(x[["variables"]])) {1:M} else {x[["variables"]]}
   } else if(length(variables) != M) {stop("Vector variables is incomplete.")}
 
-  col <- set_gray(P)
+  # Sort out colours - applies alpha if they're HEX and need recycling
+  col <- set_col(x = "#000000", y = col, P = P)
+  if(area) {fill <- set_col(x = integer(), y = fill, P = P)}
+
   pos_imp <- get_var_set(vars_impulse, variables, M)
   pos_res <- get_var_set(vars_response, variables, M)
 
   mfrow <- c(length(pos_res), length(pos_imp))
 
-  .plot_irf(quants, variables, pos_imp, pos_res, col, mar, mfrow, ...)
+  .plot_irf(x = quants, variables = variables,
+    pos_imp = pos_imp, pos_res = pos_res,
+    col = col, mar = mar, mfrow = mfrow,
+    area = area, fill = fill, ...)
 
   return(invisible(x))
 }
@@ -131,16 +143,28 @@ plot_irf <- function(
   pos_imp,
   pos_res,
   col, mar, mfrow,
+  area = FALSE, fill,
   ...) {
+
+  if(area) {
+    P <- dim(x)[1]
+    x_vals <- c(seq(dim(x)[3]), rev(seq(dim(x)[3])))
+  }
+  mid <- length(col) %/% 2 + 1
 
   op <- par(mfrow = mfrow, mar = mar, ...)
   for(i in pos_res) {
     for(j in pos_imp) {
-      ts.plot(t(as.matrix(x[, i, , j])),
-              col = col, lty = 1,
-              main = paste("Shock", variables[j], "on", variables[i]))
-      abline(h = 0, lty = "dashed", col = "black")
+      ts.plot(t(as.matrix(x[, i, , j])), col = col, lty = 1,
+        main = paste("Shock", variables[j], "on", variables[i]))
+      # Fill areas
+      if(area) {for(k in seq(P - 1)) {
+        polygon(y = c(x[k, i, , j], rev(x[k + 1, i, , j])),
+          x = x_vals, col = fill[k], border = NA)
+      }}
       grid()
+      abline(h = 0, lty = "dashed", col = "black")
+      lines(x[mid, i, , j], col = col[mid])
     }
   }
   par(op)

@@ -182,7 +182,7 @@ plot_fcast <- function(
 
   op <- par(mfrow = mfrow, mar = mar, ...)
   for(i in pos) {
-    ts.plot(t(as.matrix(x[-mid, , i])),
+    ts.plot(t(as.matrix(x[, , i])),
       col = col, lty = 1, main = paste("Forecast", variables[i]))
     # Fill areas
     if(area) {for(j in seq(P - 1)) {
@@ -192,7 +192,7 @@ plot_fcast <- function(
     grid()
     abline(v = t_back + 1, lty = "dashed", col = "black")
     abline(h = 0, lty = "dashed", col = "black")
-    lines(x[mid, , i], col = "black")
+    lines(x[mid, , i], col = col[mid])
   }
   par(op)
 }
