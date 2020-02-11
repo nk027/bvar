@@ -18,7 +18,7 @@ get_ev <- function(
   omega_inv, omega_sqrt, psi_inv,
   X, XX, Y, b, beta_hat = TRUE) {
 
-  XX <- crossprod(X)
+  if(is.null(XX)) {XX <- crossprod(X)}
   beta_hat <- if(beta_hat) {
     solve(XX + omega_inv, (crossprod(X, Y) + omega_inv %*% b))
   } else {b}

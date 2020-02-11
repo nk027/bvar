@@ -95,12 +95,13 @@ bv_ml <- function(
   b <- priors[["b"]]
 
   # Likelihood
-  ev_full <- get_ev(omega_inv, omega_sqrt, psi_inv, X, Y, b, beta_hat = TRUE)
+  ev_full <- get_ev(omega_inv, omega_sqrt, psi_inv,
+    X, XX, Y, b, beta_hat = TRUE)
   log_ml <- get_logml(M, N, psi, ev_full[["omega"]], ev_full[["psi"]])
 
   if(length(priors[["dummy"]]) > 0) {
     ev_dummy <- get_ev(omega_inv, omega_sqrt, psi_inv,
-                       X_dmy, Y_dmy, b, beta_hat = FALSE)
+      X_dmy, XX = NULL, Y_dmy, b, beta_hat = FALSE)
     log_ml <- log_ml -
       get_logml(M, N_dummy, psi, ev_dummy[["omega"]], ev_dummy[["psi"]])
   }
