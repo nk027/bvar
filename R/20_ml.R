@@ -15,6 +15,8 @@
 #' in \emph{hyper} are overwritten with their hierarchical counterparts.
 #' @param Y Numeric \eqn{N * M} matrix.
 #' @param X Numeric \eqn{N * K} matrix.
+#' @param XX Numeric \eqn{K * K} matrix. Crossproduct of \emph{X}, used to save
+#' matrix calculations when no dummy priors are included.
 #' @param K Integer scalar. Columns of \emph{X}, i.e. \eqn{M * lags + 1}.
 #' @param M Integer scalar. Columns of \emph{Y}, i.e. number of variables.
 #' @param N Integer scalar. Rows of \emph{Y}, alternatively \emph{X}.
@@ -26,9 +28,10 @@
 #' @return Returns a list by default, containing the following objects:
 #' \itemize{
 #'   \item \code{log_ml} - A numeric scalar with the log-posterior.
-#'   \item \code{X}, \code{N} - The lagged data matrix with possible dummy
-#'   priors appended and its number of rows. Necessary for drawing from
-#'   posterior distributions with \code{\link{draw_post}}.
+#'   \item \code{XX}, \code{N} - The crossproduct of the lagged data matrix,
+#'   potentially with dummy priors and the number of rows including them.
+#'   Necessary for drawing from posterior distributions with
+#'   \code{\link{draw_post}}.
 #'   \item \code{psi}, \code{sse}, \code{beta_hat}, \code{omega_inv} - Further
 #'   values necessary for drawing from posterior distributions.
 #' }
@@ -56,13 +59,13 @@ bv_ml <- function(
     pars[names(pars) == name] <- hyper[names(hyper) == name]
   }
 
-  psi <- diag(pars[grep("^psi[0-9]*", names(pars))])
+  psi_vec <- pars[grep("^psi[0-9]*", names(pars))]
+  psi <- diag(psi_vec)
   omega <- vector("numeric", 1 + M * lags)
   omega[1] <- priors[["var"]]
   for(i in 1:lags) {
-    omega[seq(2 + M * (i - 1), 1 + i * M)] <-
-      pars[["lambda"]] ^ 2 / i ^ pars[["alpha"]] /
-      pars[grep("^psi[0-9]*", names(pars))]
+    omega[seq(2 + M * (i - 1), 1 + i * M)] <- pars[["lambda"]] ^ 2 /
+      i ^ pars[["alpha"]] / psi_vec
   }
 
   # Dummy priors
@@ -79,6 +82,7 @@ bv_ml <- function(
     N_dummy <- nrow(Y_dmy)
     Y <- rbind(Y_dmy, Y)
     X <- rbind(X_dmy, X)
+    XX <- crossprod(X)
     N <- nrow(Y)
   }
 
@@ -86,7 +90,7 @@ bv_ml <- function(
   # Calc --------------------------------------------------------------------
 
   omega_inv <- diag(1 / omega)
-  psi_inv <- solve(sqrt(psi))
+  psi_inv <- diag(1 / sqrt(psi_vec))
   omega_sqrt <- diag(sqrt(omega))
   b <- priors[["b"]]
 
@@ -127,7 +131,7 @@ bv_ml <- function(
   if(opt) {return(log_ml)}
 
   # Return log_ml and objects necessary for drawing
-  return(list("log_ml" = log_ml, "X" = X, "N" = N, "psi" = psi,
+  return(list("log_ml" = log_ml, "XX" = XX, "N" = N, "psi" = psi,
               "sse" = ev_full[["sse"]], "beta_hat" = ev_full[["beta_hat"]],
               "omega_inv" = omega_inv))
 }

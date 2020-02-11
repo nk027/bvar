@@ -16,11 +16,11 @@ get_logml <- function(M, N, psi, omega_ml_ev, psi_ml_ev) {
 #' @noRd
 get_ev <- function(
   omega_inv, omega_sqrt, psi_inv,
-  X, Y, b, beta_hat = TRUE) {
+  X, XX, Y, b, beta_hat = TRUE) {
 
   XX <- crossprod(X)
   beta_hat <- if(beta_hat) {
-    solve(XX + omega_inv) %*% (crossprod(X, Y) + omega_inv %*% b)
+    solve(XX + omega_inv, (crossprod(X, Y) + omega_inv %*% b))
   } else {b}
   sse <- crossprod(Y - X %*% beta_hat)
   omega_ml <- omega_sqrt %*% XX %*% omega_sqrt

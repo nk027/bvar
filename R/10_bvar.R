@@ -163,6 +163,7 @@ bvar <- function(
   Y <- Y[(lags + 1):nrow(Y), ]
   X <- X[(lags + 1):nrow(X), ]
   X <- cbind(1, X)
+  XX <- crossprod(X)
 
   K <- ncol(X)
   M <- ncol(Y)
@@ -230,8 +231,8 @@ bvar <- function(
   opt <- optim(
     par = hyper, bv_ml, gr = NULL,
     hyper_min = hyper_min, hyper_max = hyper_max, pars = pars_full,
-    priors = priors, Y = Y, X = X, K = K, M = M, N = N, lags = lags, opt = TRUE,
-    method = "L-BFGS-B", lower = hyper_min, upper = hyper_max,
+    priors = priors, Y = Y, X = X, XX = XX, K = K, M = M, N = N, lags = lags,
+    opt = TRUE, method = "L-BFGS-B", lower = hyper_min, upper = hyper_max,
     control = list("fnscale" = -1)
   )
   names(opt[["par"]]) <- names(hyper)
@@ -267,7 +268,7 @@ bvar <- function(
   while(TRUE) {
     hyper_draw <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
     ml_draw <- bv_ml(hyper = hyper_draw, hyper_min, hyper_max,
-                     pars = pars_full, priors, Y, X, K, M, N, lags)
+                     pars = pars_full, priors, Y, X, XX, K, M, N, lags)
     if(ml_draw[["log_ml"]] > -1e16) {break}
   }
 
@@ -309,7 +310,7 @@ bvar <- function(
     # Metropolis-Hastings
     hyper_temp <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
     ml_temp <- bv_ml(hyper = hyper_temp, hyper_min, hyper_max,
-                     pars = pars_full, priors, Y, X, K, M, N, lags)
+                     pars = pars_full, priors, Y, X, XX, K, M, N, lags)
 
     if(runif(1) < exp(ml_temp[["log_ml"]] - ml_draw[["log_ml"]])) {
       # Accept draw
@@ -337,7 +338,7 @@ bvar <- function(
 
       # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
       # These need X and N including the dummy observations from `ml_draw`
-      draws <- draw_post(X = ml_draw[["X"]], N = ml_draw[["N"]],
+      draws <- draw_post(XX = ml_draw[["XX"]], N = ml_draw[["N"]],
                          M = M, lags = lags, b = priors[["b"]],
                          psi = ml_draw[["psi"]], sse = ml_draw[["sse"]],
                          beta_hat = ml_draw[["beta_hat"]],
