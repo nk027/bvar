@@ -39,7 +39,8 @@
 #'
 #' Retrieve and apply transformations from FRED-MD or FRED-QD. See
 #' \code{\link{fred_md}} and \code{\link{fred_qd}} for information on data and
-#' the details section for information on available transformations.
+#' the details section for information on available transformations. Note that
+#' the transformation codes of FRED-MD and FRED-QD may differ.
 #'
 #' The following transformation codes are available:
 #' \enumerate{
@@ -53,6 +54,9 @@
 #' }
 #'
 #' @param vars Character vector.
+#' @param type Character scalar. Specify whether to return both FRED-QD and
+#' FRED-MD transformation codes (\code{"full"}) or subset to one (via
+#' \code{"qd"} / \code{"md"}).
 #' @param code Integer scalar.
 #' @param lag Integer scalar. Number of lags to apply in the returned function
 #' when taking differences. Defaults to 0.
@@ -67,10 +71,11 @@
 #'
 #' @export
 #'
+#' @importFrom utils head
+#'
 #' @examples
-#'
-#'
-fred_transform <- function(vars, code, lag = 1, scale = 100) {
+fred_transform <- function(vars, type = c("full", "qd", "md"),
+  code, lag = 1, scale = 100) {
 
   if(missing(vars) && !missing(code)) {
     return(get_transformation(code, lag, scale))
@@ -79,10 +84,11 @@ fred_transform <- function(vars, code, lag = 1, scale = 100) {
   if(!is.character(vars) || length(vars) == 0) {
     stop("Please provide a character vector to look up transformation codes.")
   }
-
+  type <- match.arg(type)
   system.file("fred_trans.rda", package = "BVAR")
-  code <- fred_trans[do.call(c, lapply(vars, grep, names(fred_trans)))]
-  if(length(code) == 0) {stop("Variable not found.")}
+  code <- fred_trans[do.call(c, lapply(vars, grep, fred_trans$variable)), ]
+  if(nrow(code) == 0) {stop("Variable not found.")}
+  if(type != "full") {code <- code[, type]}
 
   return(code)
 }

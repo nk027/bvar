@@ -77,7 +77,7 @@ Returns a \code{bvar} object with the following elements:
   accepted draws, number of iterations, et cetera.
   \item \code{variables} - Character vector with the column names of
   \emph{data}. If missing variables are named consecutively - e.g.:
-  \emph{var1}
+  \emph{var1}.
   \item \code{explanatories} - Character vector with the names of
   explanatory variables, i.e. the constant and lags. Formatting is akin to:
   \emph{FEDFUNDS-lag1}.
