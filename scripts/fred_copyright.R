@@ -10,7 +10,7 @@ load("data/fred_md_full.rda")
 
 # QD ---
 
-# Scrape copyrights
+# # Scrape copyrights
 
 # library("rvest")
 
@@ -38,33 +38,32 @@ load("data/fred_md_full.rda")
 # MD ---
 
 # Ignore the ones we know from QD
-# fred_md_check <- fred_md[, !colnames(fred_md) %in% colnames(fred_qd)]
-# fred_md_check <- fred_md_check[, !colnames(fred_md_check) %in% remove]
+fred_md_check <- fred_md[, !names(fred_md) %in% names(fred_qd)]
 
 # Scrape copyrights
 
-# library("rvest")
+library("rvest")
 
-# rights <- matrix(NA, nrow = ncol(fred_md_check), ncol = 2)
-# colnames(rights) <- c("copyright", "public_domain")
+rights <- matrix(NA, nrow = ncol(fred_md_check), ncol = 2)
+colnames(rights) <- c("copyright", "public_domain")
 
-# names_url <- gsub("(.*)x", "\\1", names(fred_md_check))
+names_url <- gsub("(.*)x", "\\1", names(fred_md_check))
 
-# for(i in seq_along(fred_md_check)) {
-# # for(i in which(is.na(rights[, 1] | rights[, 2]))) { # When it crashes
-#   site <- paste0("https://fred.stlouisfed.org/series/", names_url[i])
-#   if(RCurl::url.exists(site)) {
-#     site_txt <- site %>% read_html() %>% html_text()
-#     rights[i, ] <- c(grepl("copyrighted: [a-zA-Z]+ required", site_txt),
-#                      grepl("public domain: citation requested", site_txt))
-#   }
-# }
+for(i in seq_along(fred_md_check)) {
+# for(i in which(is.na(rights[, 1] | rights[, 2]))) { # When it crashes
+  site <- paste0("https://fred.stlouisfed.org/series/", names_url[i])
+  if(RCurl::url.exists(site)) {
+    site_txt <- site %>% read_html() %>% html_text()
+    rights[i, ] <- c(grepl("copyrighted: [a-zA-Z]+ required", site_txt),
+                     grepl("public domain: citation requested", site_txt))
+  }
+}
 
-# copyrighted <- names_url[rights[, "copyright"]]
-# (copyrighted <- copyrighted[!is.na(copyrighted)])
-# public_domain <- names_url[rights[, "public_domain"]]
-# (public_domain <- public_domain[!is.na(public_domain)])
-# not_found <- names_url[is.na(rights[, 1])]
+copyrighted <- names_url[rights[, "copyright"]]
+(copyrighted <- copyrighted[!is.na(copyrighted)])
+public_domain <- names_url[rights[, "public_domain"]]
+(public_domain <- public_domain[!is.na(public_domain)])
+not_found <- names_url[is.na(rights[, 1])]
 
 
 # Filter available series -----
@@ -111,14 +110,19 @@ load("data/fred_md_full.rda")
 #   under copyright:
 # SPINDUST, SPDIVYIELD, SPPERATIO
 
-# We get to keep all but:
+# FRED-MD Update:
+#
+
+# 2020-02-15 - We get to keep all but:
 remove <- c(
   # Original mail (minus "USEPUINDXM", which we got permission for)
   "VXOCLS", "NIKKEI225", "NASDAQCOM", "SP500", "UMCSENT", "AAA", "BAA",
   # Cross-check mail
   "OILPRICE", "MORTGAGE30US", "SPCS10RSA", "SPCS20RSA",
   # Not-founds, definitely under copyright
-  "SPINDUST", "SPDIVYIELD", "SPPERATIO"
+  "SPINDUST", "SPDIVYIELD", "SPPERATIO",
+  # Additions with FRED-MD
+  "BAAFFM"
 )
 names <- union(names(fred_qd), names(fred_md))
 keep <- names[which(!names %in% remove)]

@@ -68,7 +68,9 @@
 #' }
 #'
 #' @references
-#'  Todo
+#'   Domenico Giannone, Michele Lenza and Giorgio E. Primiceri (2015). Prior
+#'   Selection for Vector Autoregressions. The Review of Economics and
+#'   Statistics, 97:2, 436-451, DOI: 10.1162/REST_a_00483.
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_mh}};
 #' \code{\link{bv_fcast}}; \code{\link{bv_irf}};

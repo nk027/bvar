@@ -97,6 +97,7 @@ save(fred_trans, file = "inst/fred_trans.rda", version = 2)
 
 load("inst/fred_trans.rda")
 source("R/data.R")
+source("R/11_input.R")
 
 # QD ---
 

@@ -1,46 +1,55 @@
-#' FRED-QD: Quarterly Database for Macroeconomic Research
+#' FRED-MD and FRED-QD: Databases for Macroeconomic Research
 #'
-#' FRED-QD is a quarterly frequency companion to FRED-MD, a large macroeconomic
-#' database. It is designed to emulate the dataset used in "Disentangling the
-#' Channels of the 2007-2009 Recession" by Stock and Watson (2012),
-#' but also contains several additional series.
-#' The currently included dataset is from April 2019, contains observations
-#' from 1959Q1 until 2018Q4, and has been subset to series that either are
-#' in public domain, or we were given permission to use.
+#' FRED-MD and FRED-QD are large macroeconomic databases. They contain monthly
+#' and quarterly time series that are frequently used in the literature. The
+#' datasets are updated in real-time through the FRED database. They are
+#' intended to facilitate the reproduction of empirical work and simplify
+#' data related tasks.
+#' The included datasets are provided as is, and in a pre-transformed version.
+#' See \code{\link{fred_transform}} for the applied transformations and the
+#' details section for further information on FRED-MD and FRED-QD.
 #'
-#' For further details see McCracken and Ng (2016) or the dataset's
-#' appendix at
+#' The versions of FRED-MD and FRED-QD that are provided here are licensed
+#' under a modified ODC-BY 1.0 license that can be found in the provided
+#' \emph{LICENSE} file. The provided versions are subset to 121 (of 128) and
+#' 237 (of 248) variables that are either in public domain or for which we were
+#' given permission to use. For further details see McCracken and Ng (2016) or
 #' \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
-#' The FRED-QD database is made available under a modified ODC-BY 1.0 license,
-#' which can be found in the provided \emph{LICENSE} file.
-#' Thanks to Michael McCracken, Adrienne Brennecke and the Federal Reserve
-#' Bank of St. Louis for making this database available and their
-#' responsiveness and help regarding licensing issues.
+#' We would like to thank Michael McCracken and Serena Ng, Adrienne Brennecke
+#' and the Federal Reserve Bank of St. Louis for creating, updating and making
+#' available the datasets and many of the contained time series. We also thank
+#' all other owners of included time series that permitted their use.
 #'
 #' @docType data
 #'
-#' @format A \code{data.frame} with 240 observations of 234 (248) variables.
+#' @format A \code{data.frame} object with dates as rownames.
 #'
 #' @keywords dataset FRED macroeconomics
 #'
 #' @references
-#'  ToDo
+#'   Michael W. McCracken and Serena Ng (2016). FRED-MD: A Monthly Database for
+#'   Macroeconomic Research. Journal of Business & Economic Statistics, 34:4,
+#'   574-589, DOI: 10.1080/07350015.2015.1086655.
 #'
 #' @source \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}
 "fred_qd"
 
 #' @rdname fred_qd
+"fred_md"
+
+#' @rdname fred_qd
 "fred_qd_trans"
 
-
+#' @rdname fred_qd
+"fred_md_trans"
 
 
 #' FRED transformation helper
 #'
 #' Retrieve and apply transformations from FRED-MD or FRED-QD. See
-#' \code{\link{fred_md}} and \code{\link{fred_qd}} for information on data and
-#' the details section for information on available transformations. Note that
-#' the transformation codes of FRED-MD and FRED-QD may differ.
+#' \code{\link{fred_qd}} for information on data and the details section for
+#' information on available transformations. Note that the transformation
+#' codes of FRED-MD and FRED-QD may differ.
 #'
 #' The following transformation codes are available:
 #' \enumerate{
