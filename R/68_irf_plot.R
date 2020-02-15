@@ -1,16 +1,23 @@
 #' Plotting method for Bayesian VAR impulse responses
 #'
-#' Plotting method for impulse responses obtained from \code{\link{bvar}} or
-#' \code{\link{irf.bvar}}. Impulse responses of all or a subset of the
-#' available variables can be plotted.
+#' Plotting method for impulse responses obtained from \code{\link{irf.bvar}}.
+#' Impulse responses of all or a subset of the available variables can be
+#' plotted.
 #'
-#' @param x A \code{bvar} / \code{bvar_irf} object, obtained from
-#' \code{\link{bvar}} / \code{\link{irf.bvar}}.
+#' @param x A \code{bvar_irf} object, obtained from \code{\link{irf.bvar}}.
 #' @param conf_bands Deprecated. Use \code{\link{irf.bvar}}. Numeric vector
 #' of desired confidence bands.
-#' @param vars,vars_impulse,vars_response Optional numeric or character vector. Used
+#' @param vars_impulse,vars_response Optional numeric or character vector. Used
 #' to subset the plot's impulses / responses to certain variables by position
 #' or name (must be available). Defaults to \code{NULL}, i.e. all variables.
+#' @param col Character vector. Colour(s) of the lines delineating credible
+#' intervals. Single values will be recycled if necessary. Recycled HEX color
+#' codes are varied in transparency if not provided (e.g. "#737373FF"). Lines
+#' can be bypassed by setting this to \code{"transparent"}.
+#' @param area Logical scalar. Whether to fill the credible intervals using
+#' \code{\link[graphics]{polygon}}.
+#' @param fill Character vector. Colour(s) to fill the credible intervals with.
+#' See \emph{col} for more information.
 #' @param variables Optional character vector. Names of all variables in the
 #' object. Used to subset and title. Taken from \code{x$variables} if available.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
@@ -47,10 +54,9 @@
 plot.bvar_irf <- function(
   x,
   conf_bands, # deprecated, see `irf.bvar()`
-  vars = NULL,
-  col = "#737373",
   vars_response = NULL,
   vars_impulse = NULL,
+  col = "#737373",
   area = FALSE,
   fill = "#808080",
   variables = NULL,
@@ -58,7 +64,9 @@ plot.bvar_irf <- function(
   ...) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
-  plot_irf(x, conf_bands, vars_response, vars_impulse, variables, mar, ...)
+  plot_irf(x = x, conf_bands = conf_bands,
+    vars_response = vars_response, vars_impulse = vars_impulse,
+    variables = variables, mar = mar, area = area, col = col, fill = fill, ...)
 }
 
 
@@ -88,11 +96,9 @@ plot_irf <- function(
   has_quants <- length(dim(x[["quants"]])) == 4L
   if(has_quants) {
     quants <- x[["quants"]]
-    M <- dim(quants)[2]
-    P <- dim(quants)[1]
+    M <- dim(quants)[2]; P <- dim(quants)[1]
   } else {
-    M <- dim(x[["quants"]])[1]
-    P <- 1
+    M <- dim(x[["quants"]])[1]; P <- 1
     # Cheat day - quants must be 4-dimensional, so we fill with NAs
     quants <- array(NA, c(2, dim(x[["quants"]])))
     quants[1, , , ] <- x[["quants"]]
@@ -129,9 +135,11 @@ plot_irf <- function(
 #' @param col Character vector. Colours to feed to \code{\link[stats]{ts.plot}}.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param mfrow Numeric vector. Layout for \code{\link[graphics]{par}}.
+#' @param area Logical scalar. Whether to draw polygons between intervals.
+#' @param fill Character vector. Colours for \code{\link[graphics]{polygon}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
-#' @importFrom graphics par grid abline
+#' @importFrom graphics par grid abline polygons
 #' @importFrom stats ts.plot
 #'
 #' @noRd

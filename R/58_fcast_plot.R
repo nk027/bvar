@@ -1,16 +1,24 @@
-#' Plotting method for Bayesian VAR forecasts
+#' Plotting method for Bayesian VAR predictions
 #'
-#' Plotting method for forecasts obtained from \code{\link{bvar}} or
-#' \code{\link{predict.bvar}}. Forecasts of all or a subset of the available
-#' variables can be plotted.
+#' Plotting method for forecasts obtained from \code{\link{predict.bvar}}.
+#' Forecasts of all or a subset of the available variables can be plotted.
 #'
-#' @param x A \code{bvar} / \code{bvar_fcast} object, obtained from
-#' \code{\link{bvar}} / \code{\link{predict.bvar}}.
+#' @param x A code{bvar_fcast} object, obtained from \code{\link{predict.bvar}}.
 #' @param conf_bands Deprecated. Use \code{\link{predict.bvar}}. Numeric vector
 #' of desired confidence bands.
 #' @param vars Optional numeric or character vector. Used to subset the plot to
 #' certain variables by position or name (must be available). Defaults to
 #' \code{NULL}, i.e. all variables.
+#' @param col Character vector. Colour(s) of the lines delineating credible
+#' intervals. Single values will be recycled if necessary. Recycled HEX color
+#' codes are varied in transparency if not provided (e.g. "#737373FF"). Lines
+#' can be bypassed by setting this to \code{"transparent"}.
+#' @param t_back Integer scalar. Number of actual datapoints to plot ahead of
+#' the forecast.
+#' @param area Logical scalar. Whether to fill the credible intervals using
+#' \code{\link[graphics]{polygon}}.
+#' @param fill Character vector. Colour(s) to fill the credible intervals with.
+#' See \emph{col} for more information.
 #' @param variables Optional character vector. Names of all variables in the
 #' object. Used to subset and title. Taken from \code{x$variables} if available.
 #' @param orientation String indicating the orientation of the plots. Defaults
@@ -96,25 +104,21 @@ plot_fcast <- function(
   }
 
   t_back <- int_check(t_back, 0, nrow(x[["data"]]),
-    msg = "Please check n_back.")
+    msg = "Please check t_back.")
   t_forw <- x[["setup"]][["horizon"]]
 
   has_quants <- length(dim(x[["quants"]])) == 3L
   if(has_quants) {
     quants <- x[["quants"]]
-    M <- dim(quants)[3]
-    P <- P2 <- dim(quants)[1]
+    M <- dim(quants)[3]; P <- P2 <- dim(quants)[1]
   } else {
-    M <- dim(x[["quants"]])[2]
-    P <- 1
-    P2 <- 2
+    M <- dim(x[["quants"]])[2]; P <- 1; P2 <- 2
     # Cheat day - quants must be 3-dimensional, so we fill with NAs
     quants <- array(NA, c(2, dim(x[["quants"]])))
     quants[1, , ] <- x[["quants"]]
   }
 
   # Add t_back actual datapoints
-  # Make sure it can still be called with earlier objects
   if(is.null(x[["data"]])) {
     message("No data found, filling with NAs. Recalculate with `predict()`.")
     data <- matrix(NA, nrow = t_back, ncol = M)
@@ -156,6 +160,9 @@ plot_fcast <- function(
 #' @param col Character vector. Colours to feed to \code{\link[stats]{ts.plot}}.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param mfrow Numeric vector. Layout for \code{\link[graphics]{par}}.
+#' @param t_back Integer scalar. Number of initial datapoints without intervals.
+#' @param area Logical scalar. Whether to draw polygons between intervals.
+#' @param fill Character vector. Colours for \code{\link[graphics]{polygon}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
 #' @importFrom graphics par grid abline
