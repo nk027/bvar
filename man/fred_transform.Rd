@@ -28,9 +28,9 @@ transformation. Note that this function does not perform input checks.
 }
 \description{
 Retrieve and apply transformations from FRED-MD or FRED-QD. See
-\code{\link{fred_md}} and \code{\link{fred_qd}} for information on data and
-the details section for information on available transformations. Note that
-the transformation codes of FRED-MD and FRED-QD may differ.
+\code{\link{fred_qd}} for information on data and the details section for
+information on available transformations. Note that the transformation
+codes of FRED-MD and FRED-QD may differ.
 }
 \details{
 The following transformation codes are available:
@@ -43,6 +43,13 @@ The following transformation codes are available:
   \item \code{6} - percent change differences -
   \eqn{\delta x_t / x_{t-1} - 1};
 }
+}
+\examples{
+# Find transformation codes
+fred_transform(c("RPI", "UNRATE"))
+
+# Apply transformation #2 (first differences)
+fred_transform(code = 2)(rnorm(10))
 }
 \seealso{
 \code{\link{fred_md}}; \code{\link{fred_qd}};

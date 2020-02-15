@@ -90,7 +90,7 @@ fred_trans <- data.frame(variable = union(names_md, names_qd),
 fred_trans$md <- vals_md[fred_trans$variable]
 fred_trans$qd <- vals_qd[fred_trans$variable]
 
-save(fred_trans, file = "inst/fred_trans.rda", version = 2)
+saveRDS(fred_trans, file = "inst/fred_trans.rds", version = 2)
 
 
 # Add transformations -------------------------------------------------------

@@ -24,7 +24,7 @@
 - Add *coda* to suggestions for convergence assessment etc.
 - Add files *LICENSE*, *CITATION* and *NEWS.md*
 - Improve examples for further test coverage
-  - `R CMD check --run-donttest`: One warning (deprecated functions)
+- `R CMD check --run-donttest`: One warning (deprecated functions)
 
 
 # v0.1.6, Internal Release 1
@@ -65,10 +65,6 @@
 - Try to clarify licensing terms with the Federal Reserve
   - Some copyrighted series may have to be removed
   - Subset the dataset to only include variables in public domain for now
-
-
-# v0.1.4, JSS Submission
-
 - Fix addition of prior pdfs to ML
   - `alpha` needs an sd parameter
   - `psi` now needs proper shape and scale parameters
@@ -79,17 +75,11 @@
 - Further split up calculation of marginal likelihood
 
 
-# v0.1.3, CRAN Submission 2
+# v0.1.3, CRAN Submission
 
 - Update DESCRIPTION with linked DOI
 - Change `\dontrun{}` examples to `\donttest{}`
-- Improve examples for plotting and printing
 - Fix bounds in `plot_hyper()`
-- `R CMD check --as-cran`: No errors or warnings, one note (New submission)
-
-
-# v0.1.3, CRAN Submission 1
-
 - Update references with links via DOI
-- Add examples to `print` and `plot` methods
+- Add and improve examples for `print` and `plot` methods
 - `R CMD check --as-cran`: No errors or warnings, one note (New submission)

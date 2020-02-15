@@ -83,6 +83,11 @@
 #' @importFrom utils head
 #'
 #' @examples
+#' # Find transformation codes
+#' fred_transform(c("RPI", "UNRATE"))
+#'
+#' # Apply transformation #2 (first differences)
+#' fred_transform(code = 2)(rnorm(10))
 fred_transform <- function(vars, type = c("full", "qd", "md"),
   code, lag = 1, scale = 100) {
 
@@ -94,7 +99,7 @@ fred_transform <- function(vars, type = c("full", "qd", "md"),
     stop("Please provide a character vector to look up transformation codes.")
   }
   type <- match.arg(type)
-  system.file("fred_trans.rda", package = "BVAR")
+  fred_trans <- readRDS(system.file("fred_trans.rds", package = "BVAR"))
   code <- fred_trans[do.call(c, lapply(vars, grep, fred_trans$variable)), ]
   if(nrow(code) == 0) {stop("Variable not found.")}
   if(type != "full") {code <- code[, type]}

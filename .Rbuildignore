@@ -1,10 +1,11 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 
-^scripts
+^scripts$
+
 ^data/fred_qd_full\.rda$
 ^data/fred_md_full\.rda$
-^data/fred_permitted\.rds$
+^data/fred_permitted\.txt$
 
 ^cran-comments\.md$
 ^README\.md$

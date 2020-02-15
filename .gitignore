@@ -1,15 +1,25 @@
 .Rproj.user
+
 .Rhistory
 .Rapp.history
+
 .RData
-.Ruserdata
+.RDataTmp.Ruserdata
+
 vignettes/*.html
 vignettes/*.pdf
+
 *.utf8.md
 *.knit.md
+
 *_cache/
 /cache/
+
 .DS_Store
+
+/*.tar.gz
 
 data/fred_qd_full.rda
 data/fred_md_full.rda
+
+Makefile

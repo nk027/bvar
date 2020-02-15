@@ -1,18 +1,33 @@
-BVAR
+BVAR: Hierarchical Bayesian Vector Autoregression
 =======
 
-Toolkit for the estimation of hierarchical Bayesian VARs. Implements prior selection for conjugate priors in the fashion of Giannone, Lenza and Primiceri (2015), accounting for uncertainty about prior hyperparameters. Allows for the computation of impulse responses as well as forecasts based on draws of coefficients from their respective posterior distribution.
+[![CRAN](http://www.r-pkg.org/badges/version/BVAR)](http://cran.r-project.org/package=BVAR)
+[![month](http://cranlogs.r-pkg.org/badges/BVAR)](http://www.r-pkg.org/pkg/BVAR)
+[![total](http://cranlogs.r-pkg.org/badges/grand-total/BVAR)](http://www.r-pkg.org/pkg/BVAR)
 
-The main function to perform hierarchical Bayesian VAR estimation is `bvar()`, which includes settings regarding the lag length, the number of iterations to run and several others that are constructed via helpter functions. The included FRED-QD dataset (McCracken and Ng, 2016) can be accessed using `data("fred_qd")` and may be used to investigate a variety of economic issues.
+Estimation of hierarchical Bayesian vector autoregressive models. Implements hierarchical prior selection for conjugate priors in the fashion of Giannone, Lenza & Primiceri (2015). Functions to calculate forecasts, and compute and identify impulse responses and forecast error variance decompositions are available. Several methods to print, plot and summarise results facilitate analysis.
 
-The function `bv_priors()` is used for settings regarding the priors; i.e. which to include and how. Other helper functions functions (see `bv_mn()`, `bv_dummy()`) may be used to set up the Minnesota prior or other conjugate dummy observation priors.
-The helper function `bv_mh()` provides settings regarding the Metropolis-Hastings step. It allows scaling the Hessian matrix that is used to generate hyperparameters, thus allowing fine-tuning of the acceptance rate.
-Further options regarding the computation of impulse responses and forecasts can be accessed via the functions `bv_irf()` and `bv_fcast()`. Adjustments to the horizon can be set as well as the type of identifcation of shocks for the impulse responses.
+Installation
+-------
 
-The generated `bvar` and contained `bvar_fcast` and `bvar_irf` objects can be further analysed using a variety of methods, including `summary()`, `plot()`, `fitted()`, `residuals()`, `coef()`, `vcov()`, `predict()`, `irf()`, `fevd()` and `density()`.
+BVAR is available on CRAN. The development version can be installed from GitHub.
+``` r
+install.packages("BVAR")
+devtools::install_github("nk027/BVAR")
+```
 
-### References
+Usage
+-------
 
-Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451.
+The main function to perform hierarchical Bayesian VAR estimation is `bvar()`. Calls can be customised with regard to the sampling (e.g. via `n_draw`, or see `bv_mh()`) or with regard to the priors (see `bv_priors()`). Forecasts and impulse responses can be computed at runtime, or afterwards (see `predict()` and `irf()`).
 
-McCracken, M. W., and Ng, S. (2016). FRED-MD: A Monthly Database for Macroeconomic Research. Journal of Business & Economic Statistics, 34, 574-589.
+Analysis is facilitated by a variety of standard methods. The default `plot()` method provides trace and density plots of hyperparameters and optionally coefficients. Impulse responses and forecasts can easily be assessed with the provided `plot()` methods. Other available methods include `summary()`, `fitted()`, `residuals()`, `coef()`, `vcov()` and `density()`. Note that BVAR generates draws from the posterior -- all methods include functionality to access this distributional information.
+
+BVAR comes with the FRED-MD and FRED-QD datasets (McCracken and Ng, 2016). They can be accessed using `data("fred_md")` or `data("fred_qd")` respectively. The dataset is licensed under a modified ODC-BY 1.0 license, that is available in the provided *LICENSE* file.
+
+References
+-------
+
+Domenico Giannone, Michele Lenza and Giorgio E. Primiceri (2015). Prior Selection for Vector Autoregressions. The Review of Economics and Statistics, 97:2, 436-451, DOI: [10.1162/REST_a_00483](dx.doi.org/10.1162/REST_a_00483.).
+
+Michael W. McCracken and Serena Ng (2016). FRED-MD: A Monthly Database for Macroeconomic Research. Journal of Business & Economic Statistics, 34:4, 574-589, DOI: [10.1080/07350015.2015.1086655](dx.doi.org/10.1080/07350015.2015.1086655).

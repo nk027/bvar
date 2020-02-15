@@ -1,10 +1,10 @@
 R Package BVAR: Hierarchical Bayesian Vector Autoregression
 GPL (>= 3)
-Copyright (C) 2019 Nikolas Kuschnig and Lukas Vashold
+Copyright (C) 2020 Nikolas Kuschnig and Lukas Vashold
 
 FRED-QD Database
 modified ODC-BY 1.0
-Copyright (C) 2019 Federal Reserve Bank of St. Louis
+Copyright (C) 2020 Federal Reserve Bank of St. Louis
 
 ===========================================================================
 
