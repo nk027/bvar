@@ -22,9 +22,11 @@
 #' @param sign_restr Numeric matrix. Sign restrictions for identification.
 #' Elements should be set to \eqn{1} (\eqn{-1}) to restrict for positive
 #' (negative) impacts. If no presumption about the impact can be made the
-#' corresponding elements can be set to \eqn{0}. The default value is
+#' corresponding elements can be set to \eqn{NA}. The default value is
 #' \code{NULL}, meaning identification would be performed via Cholesky
 #' decomposition.
+#' @param zero_restr Numeric matrix. Zero and sign restrictions for
+#' identification. \emph{Currently not functional.}
 #' @param sign_lim Integer scalar. Maximum number of rotational matrices to
 #' draw and check for fitting sign restrictions.
 #'
@@ -64,6 +66,7 @@ bv_irf <- function(
   fevd = FALSE,
   identification = TRUE,
   sign_restr = NULL,
+  zero_restr = NULL,
   sign_lim = 1000) {
 
   # Input checks
@@ -76,13 +79,22 @@ bv_irf <- function(
     stop("Please provide fevd and identification as logical scalars.")
   }
 
-  if(!is.null(sign_restr) && !all(sign_restr %in% c(-1, 0, 1)) &&
-     sqrt(length(sign_restr)) %% 1 != 0) {
-    stop("Please provide sign_restr as a numeric square matrix containing ",
-         "0s, 1s and -1s.")
-  }
-  if(is.vector(sign_restr)) {
-    sign_restr <- matrix(sign_restr, nrow = sqrt(length(sign_restr)))
+  if(identification) {
+    if(!is.null(zero_restr)) {stop("Zero restrictions are not yet available.")}
+    if(!is.null(sign_restr) && !is.numeric(sign_restr) &&
+      !all(sign_restr %in% c(-1, 0, NA, 1)) &&
+      sqrt(length(sign_restr)) %% 1 != 0) {
+      stop("Please provide sign_restr as a numeric square matrix containing ",
+          "NAs, 1s and -1s.")
+    }
+    if(0 %in% sign_restr) {
+      warning("Please set unrestricted elements to NA instead of 0. ",
+        "This functionality is being deprecated for zero-sign restrictions.")
+      sign_restr[sign_restr == 0] <- NA_integer_
+    }
+    if(is.vector(sign_restr)) {
+      sign_restr <- matrix(sign_restr, nrow = sqrt(length(sign_restr)))
+    }
   }
 
   # Outputs

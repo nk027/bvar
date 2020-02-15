@@ -28,7 +28,8 @@ sign_restr <- function(sigma_chol, sign_restr, M, sign_lim = 10000) {
 
   counter <- 0
   sign_vec <- as.vector(sign_restr)
-  restricted <- which(sign_vec != 0)
+  restricted <- which(!is.na(sign_vec))
+  # restricted <- which(sign_vec != 0)
 
   while(TRUE) {
     counter <- counter + 1
