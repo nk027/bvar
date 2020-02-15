@@ -91,7 +91,7 @@ Returns a \code{bvar} object with the following elements:
 }
 \description{
 Hierarchical Bayesian estimation of Vector Autoregression (VAR) models in
-the fashion of Giannone et al. (2015).
+the fashion of Giannone, Primiceri and Lenza (2015).
 Options for the prior settings and Metropolis-Hastings step are provided to
 \emph{priors} and \emph{mh} arguments via the functions
 \code{\link{bv_priors}} and \code{\link{bv_mh}}.
@@ -106,7 +106,7 @@ data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
 data <- data[5:nrow(data), ]
 
-# Compute VAR using 2 lags and a ridiculously low number of draws
+# Compute VAR using one lag and a ridiculously low number of draws
 x <- bvar(data = data, lags = 1,
           n_draw = 500L, n_burn = 400L, n_thin = 2L, verbose = FALSE)
 
@@ -120,7 +120,7 @@ plot(irf(x))
 }
 }
 \references{
-Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
+Todo
 }
 \seealso{
 \code{\link{bv_priors}}; \code{\link{bv_mh}};

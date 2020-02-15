@@ -8,9 +8,11 @@
 \method{plot}{bvar_irf}(
   x,
   conf_bands,
-  vars = NULL,
   vars_response = NULL,
   vars_impulse = NULL,
+  col = "#737373",
+  area = FALSE,
+  fill = "#808080",
   variables = NULL,
   mar = c(2, 2, 2, 0.5),
   ...
@@ -27,15 +29,25 @@ bv_plot_irf(
 )
 }
 \arguments{
-\item{x}{A \code{bvar} / \code{bvar_irf} object, obtained from
-\code{\link{bvar}} / \code{\link{irf.bvar}}.}
+\item{x}{A \code{bvar_irf} object, obtained from \code{\link{irf.bvar}}.}
 
 \item{conf_bands}{Deprecated. Use \code{\link{irf.bvar}}. Numeric vector
 of desired confidence bands.}
 
-\item{vars, vars_impulse, vars_response}{Optional numeric or character vector. Used
+\item{vars_impulse, vars_response}{Optional numeric or character vector. Used
 to subset the plot's impulses / responses to certain variables by position
 or name (must be available). Defaults to \code{NULL}, i.e. all variables.}
+
+\item{col}{Character vector. Colour(s) of the lines delineating credible
+intervals. Single values will be recycled if necessary. Recycled HEX color
+codes are varied in transparency if not provided (e.g. "#737373FF"). Lines
+can be bypassed by setting this to \code{"transparent"}.}
+
+\item{area}{Logical scalar. Whether to fill the credible intervals using
+\code{\link[graphics]{polygon}}.}
+
+\item{fill}{Character vector. Colour(s) to fill the credible intervals with.
+See \emph{col} for more information.}
 
 \item{variables}{Optional character vector. Names of all variables in the
 object. Used to subset and title. Taken from \code{x$variables} if available.}
@@ -48,9 +60,9 @@ object. Used to subset and title. Taken from \code{x$variables} if available.}
 Returns \emph{x} invisibly.
 }
 \description{
-Plotting method for impulse responses obtained from \code{\link{bvar}} or
-\code{\link{irf.bvar}}. Impulse responses of all or a subset of the
-available variables can be plotted.
+Plotting method for impulse responses obtained from \code{\link{irf.bvar}}.
+Impulse responses of all or a subset of the available variables can be
+plotted.
 }
 \examples{
 \donttest{

@@ -12,3 +12,4 @@ vignettes/*.pdf
 .DS_Store
 
 data/fred_qd_full.rda
+data/fred_md_full.rda

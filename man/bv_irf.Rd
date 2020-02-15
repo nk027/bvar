@@ -9,6 +9,7 @@ bv_irf(
   fevd = FALSE,
   identification = TRUE,
   sign_restr = NULL,
+  zero_restr = NULL,
   sign_lim = 1000
 )
 }
@@ -27,9 +28,12 @@ provided.}
 \item{sign_restr}{Numeric matrix. Sign restrictions for identification.
 Elements should be set to \eqn{1} (\eqn{-1}) to restrict for positive
 (negative) impacts. If no presumption about the impact can be made the
-corresponding elements can be set to \eqn{0}. The default value is
+corresponding elements can be set to \eqn{NA}. The default value is
 \code{NULL}, meaning identification would be performed via Cholesky
 decomposition.}
+
+\item{zero_restr}{Numeric matrix. Zero and sign restrictions for
+identification. \emph{Currently not functional.}}
 
 \item{sign_lim}{Integer scalar. Maximum number of rotational matrices to
 draw and check for fitting sign restrictions.}

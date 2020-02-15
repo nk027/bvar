@@ -20,10 +20,10 @@
 Returns a list of class \code{bvar_summary} with elements that can
 can be accessed individually:
 \itemize{
-  \item \code{bvar} - \emph{object}, the \code{bvar} object provided.
-  \item \code{coef} - Coefficient values from \code{\link{coef.bvar}}.
+  \item \code{bvar} - the \code{bvar} object provided.
+  \item \code{coef} - coefficient values from \code{\link{coef.bvar}}.
   \item \code{vcov} - VCOV values from \code{\link{vcov.bvar}}.
-  \item \code{logLik} - The Log-Likelihood from \code{\link{logLik.bvar}}.
+  \item \code{logLik} - the Log-Likelihood from \code{\link{logLik.bvar}}.
 }
 }
 \description{

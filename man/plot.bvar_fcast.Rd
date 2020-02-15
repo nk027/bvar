@@ -3,12 +3,16 @@
 \name{plot.bvar_fcast}
 \alias{plot.bvar_fcast}
 \alias{bv_plot_fcast}
-\title{Plotting method for Bayesian VAR forecasts}
+\title{Plotting method for Bayesian VAR predictions}
 \usage{
 \method{plot}{bvar_fcast}(
   x,
   conf_bands,
   vars = NULL,
+  col = "#737373",
+  t_back = 1,
+  area = FALSE,
+  fill = "#808080",
   variables = NULL,
   orientation = c("vertical", "horizontal"),
   mar = c(2, 2, 2, 0.5),
@@ -26,8 +30,7 @@ bv_plot_fcast(
 )
 }
 \arguments{
-\item{x}{A \code{bvar} / \code{bvar_fcast} object, obtained from
-\code{\link{bvar}} / \code{\link{predict.bvar}}.}
+\item{x}{A code{bvar_fcast} object, obtained from \code{\link{predict.bvar}}.}
 
 \item{conf_bands}{Deprecated. Use \code{\link{predict.bvar}}. Numeric vector
 of desired confidence bands.}
@@ -35,6 +38,20 @@ of desired confidence bands.}
 \item{vars}{Optional numeric or character vector. Used to subset the plot to
 certain variables by position or name (must be available). Defaults to
 \code{NULL}, i.e. all variables.}
+
+\item{col}{Character vector. Colour(s) of the lines delineating credible
+intervals. Single values will be recycled if necessary. Recycled HEX color
+codes are varied in transparency if not provided (e.g. "#737373FF"). Lines
+can be bypassed by setting this to \code{"transparent"}.}
+
+\item{t_back}{Integer scalar. Number of actual datapoints to plot ahead of
+the forecast.}
+
+\item{area}{Logical scalar. Whether to fill the credible intervals using
+\code{\link[graphics]{polygon}}.}
+
+\item{fill}{Character vector. Colour(s) to fill the credible intervals with.
+See \emph{col} for more information.}
 
 \item{variables}{Optional character vector. Names of all variables in the
 object. Used to subset and title. Taken from \code{x$variables} if available.}
@@ -50,9 +67,8 @@ to \code{"v"} (i.e. vertical); may be set to \code{"h"} (i.e. horizontal).}
 Returns \emph{x} invisibly.
 }
 \description{
-Plotting method for forecasts obtained from \code{\link{bvar}} or
-\code{\link{predict.bvar}}. Forecasts of all or a subset of the available
-variables can be plotted.
+Plotting method for forecasts obtained from \code{\link{predict.bvar}}.
+Forecasts of all or a subset of the available variables can be plotted.
 }
 \examples{
 \donttest{

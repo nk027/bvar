@@ -3,6 +3,7 @@
 \docType{data}
 \name{fred_qd}
 \alias{fred_qd}
+\alias{fred_qd_trans}
 \title{FRED-QD: Quarterly Database for Macroeconomic Research}
 \format{A \code{data.frame} with 240 observations of 234 (248) variables.}
 \source{
@@ -10,6 +11,8 @@
 }
 \usage{
 fred_qd
+
+fred_qd_trans
 }
 \description{
 FRED-QD is a quarterly frequency companion to FRED-MD, a large macroeconomic
@@ -21,7 +24,8 @@ from 1959Q1 until 2018Q4, and has been subset to series that either are
 in public domain, or we were given permission to use.
 }
 \details{
-For further details see McCracken and Ng (2016) or the dataset's appendix at
+For further details see McCracken and Ng (2016) or the dataset's
+appendix at
 \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
 The FRED-QD database is made available under a modified ODC-BY 1.0 license,
 which can be found in the provided \emph{LICENSE} file.
@@ -30,10 +34,9 @@ Bank of St. Louis for making this database available and their
 responsiveness and help regarding licensing issues.
 }
 \references{
-McCracken, M. W., and Ng, S. (2016). FRED-MD: A Monthly Database for Macroeconomic Research. Journal of Business & Economic Statistics, 34, 574-589. \url{https://doi.org/10.1080/07350015.2015.1086655}
-
-    Stock, J. H. and Watson, M. W. (2012). Disentangling the Channels of the 2007-2009 Recession. NBER Working Paper Series, 18094. \url{https://doi.org/10.3386/w18094}
+ToDo
 }
 \keyword{FRED}
 \keyword{dataset}
+\keyword{datasets}
 \keyword{macroeconomics}

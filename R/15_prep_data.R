@@ -53,7 +53,7 @@ prep_data <- function(
   vars_ind <- x[["explanatories"]]
   # Compatibility to older versions (<= 0.2.1)
   if(is.null(vars_ind)) {name_expl
-    vars_ind <- get_expl(vars_dep,
+    vars_ind <- name_expl(vars_dep,
       M = x[["meta"]][["M"]], lags = x[["meta"]][["lags"]])
   }
 

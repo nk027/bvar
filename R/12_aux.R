@@ -136,6 +136,8 @@ fill_ci_col <- function(x, y, P) {
 #' @return Returns a character vector of transparency codes. Note that there is
 #' no central element for polygons and colours should be repeated symmetrically.
 #'
+#' @importFrom grDevices rgb
+#'
 #' @noRd
 transparance_hex <- function(P) {
 
@@ -242,7 +244,7 @@ name_deps <- function(variables, M) {
 name_expl <- function(variables, M, lags) {
 
   if(is.null(variables)) {
-    variables <- get_deps(variables, M)
+    variables <- name_deps(variables, M)
   }
 
   return(c("constant", paste0(rep(variables, lags), "-lag",

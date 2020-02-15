@@ -42,7 +42,7 @@
 #' @noRd
 bv_ml <- function(
   hyper, hyper_min = -Inf, hyper_max = Inf,
-  pars, priors, Y, X, K, M, N, lags,
+  pars, priors, Y, X, XX, K, M, N, lags,
   opt = FALSE) {
 
   # Bounds ------------------------------------------------------------------

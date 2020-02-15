@@ -34,6 +34,8 @@
 #'
 #' @export
 #'
+#' @importFrom utils tail
+#'
 #' @examples
 #' \donttest{
 #' data <- matrix(rnorm(400), ncol = 4)
@@ -134,8 +136,8 @@ plot_fcast <- function(
   orientation <- match.arg(orientation)
 
   # Sort out colours - applies alpha if they're HEX and need recycling
-  col <- fill_vector_col(x = "#000000", y = col, P = P)
-  if(area) {fill <- fill_vector_col(x = integer(), y = fill, P = P)}
+  col <- fill_ci_col(x = "#000000", y = col, P = P)
+  if(area) {fill <- fill_ci_col(x = integer(), y = fill, P = P)}
 
   pos <- pos_vars(vars, variables, M)
 
@@ -165,7 +167,7 @@ plot_fcast <- function(
 #' @param fill Character vector. Colours for \code{\link[graphics]{polygon}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
-#' @importFrom graphics par grid abline
+#' @importFrom graphics par grid abline polygon
 #' @importFrom stats ts.plot
 #'
 #' @noRd
