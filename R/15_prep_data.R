@@ -52,7 +52,10 @@ prep_data <- function(
   vars_dep <- x[["variables"]]
   vars_ind <- x[["explanatories"]]
   # Compatibility to older versions (<= 0.2.1)
-  if(is.null(vars_ind)) {vars_ind <- get_expl(vars_dep, x[["meta"]][["lags"]])}
+  if(is.null(vars_ind)) {name_expl
+    vars_ind <- get_expl(vars_dep,
+      M = x[["meta"]][["M"]], lags = x[["meta"]][["lags"]])
+  }
 
   if(is.null(vars) && is.null(vars_impulse) && is.null(vars_response)) {
     vars <- vars_hyp
@@ -66,14 +69,14 @@ prep_data <- function(
       # Exclude ones matched for independents
       do.call(c, lapply(vars[!grepl("(^const|lag[0-9]+$)", vars)],
         grep, vars_dep))))]
-  } else {get_var_set(vars_response, vars_dep, M = x[["meta"]][["M"]])}
+  } else {pos_vars(vars_response, vars_dep, M = x[["meta"]][["M"]])}
   choice_dep <- choice_dep[!is.na(choice_dep)]
 
   choice_ind <- if(is.null(vars_impulse)) {
     # Limit to ones with "-lag#" or "constant" to separate from dependents
     vars_ind[unique(do.call(c, lapply(vars[grep("(^const|lag[0-9]+$)", vars)],
       grep, vars_ind)))]
-  } else {get_var_set(vars_impulse, vars_ind, M = x[["meta"]][["K"]])}
+  } else {pos_vars(vars_impulse, vars_ind, M = x[["meta"]][["K"]])}
 
   if(all(c(length(choice_hyp), length(choice_dep), length(choice_ind)) == 0)) {
     stop("No data matching the provided vars argument found.")
@@ -101,9 +104,9 @@ prep_data <- function(
   } else {out_chains[["hyper"]] <- rep(list(NULL), length(chains))}
 
   if(length(choice_dep) > 0 || length(choice_ind) > 0) { # Betas
-    pos_dep <- get_var_set(choice_dep,
+    pos_dep <- pos_vars(choice_dep,
       variables = vars_dep, M = x[["meta"]][["M"]])
-    pos_ind <- get_var_set(choice_ind,
+    pos_ind <- pos_vars(choice_ind,
       variables = vars_ind, M = x[["meta"]][["K"]])
     K <- length(pos_dep) * length(pos_ind)
 

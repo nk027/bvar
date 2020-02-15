@@ -53,7 +53,7 @@ summary.bvar_fcast <- function(object, vars = NULL, digits = 2L, ...) {
   variables <- if(is.null(object[["variables"]])) {
     1L:M
   } else {object[["variables"]]}
-  pos <- get_var_set(vars, variables, M)
+  pos <- pos_vars(vars, variables, M)
 
   out <- list(
     "fcast" = object,
@@ -79,7 +79,7 @@ print.bvar_fcast_summary <- function(x, digits = 2L, ...) {
   }
 
   print.bvar_fcast(x$fcast)
-    
+
   cat(if(!x$has_quants) {"Median forecast:\n"} else {"Forecast:\n"})
 
   for(i in x$pos) {

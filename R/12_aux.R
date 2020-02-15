@@ -58,8 +58,8 @@ gamma_coef <- function(mode, sd) {
 #' @return Returns a character vector of parameter names.
 #'
 #' @examples
-#' bvar:::name_pars(c("lambda", "alpha"))
-#' bvar:::name_pars(c("lambda", "psi"), M = 3)
+#' BVAR:::name_pars(c("lambda", "alpha"))
+#' BVAR:::name_pars(c("lambda", "psi"), M = 3)
 #'
 #' @noRd
 name_pars <- function(x, M) {
@@ -88,11 +88,10 @@ name_pars <- function(x, M) {
 #' @return Returns a vector or matrix (if x is a vector) of x, surrounded by y.
 #'
 #' @examples
-#' bvar:::set_gray(3)
-#' bvar:::set_na(1:5, 5)
+#' BVAR:::fill_ci("malcolm", y = c("reese", "dewey"), P = 5)
 #'
 #' @noRd
-set_symm <- function(x, y, P) {
+fill_ci <- function(x, y, P) {
 
   n_y <- if(P %% 2 == 0) {
     message("No central position for x found.")
@@ -109,59 +108,43 @@ set_symm <- function(x, y, P) {
   }
 }
 
-#' @noRd
-set_col <- function(x, y, P) {
-
-  if(length(y) == 1 && is_hex(y, alpha = FALSE)) {
-    y <- paste0(y, get_hex_trans(P))
-  }
-
-  set_symm(x = x, y = y, P = P)
-}
 
 #' @noRd
-set_gray <- function(P) {
-
-  set_col(x = "black", y = "darkgray", P = P)
-}
-
-#' @noRd
-set_na <- function(x, P) {
+fill_ci_na <- function(x, P) {
 
   # Corner case for data when quantiles are missing
   if(P == 2) {return(if(length(x > 1)) {cbind(x, NA)} else {c(x, NA)})}
 
-  set_symm(x = x, y = NA, P = P)
+  fill_ci(x = x, y = NA, P = P)
+}
+
+#' @noRd
+fill_ci_col <- function(x, y, P) {
+
+  if(length(y) == 1 && is_hex(y, alpha = FALSE)) {
+    y <- paste0(y, transparance_hex(P))
+  }
+
+  fill_ci(x = x, y = y, P = P)
 }
 
 
 #' Get a transparency HEX code
-#'
-#' Helper function for colouring lines and polygons.
 #'
 #' @param P Integer scalar. Number of total bands.
 #'
 #' @return Returns a character vector of transparency codes. Note that there is
 #' no central element for polygons and colours should be repeated symmetrically.
 #'
-#' @examples
-#' bvar:::get_hex_trans(5)
-#' bvar:::get_hex_trans(50)
-#'
 #' @noRd
-get_hex_trans <- function(P) {
+transparance_hex <- function(P) {
 
   n_trans <- P %/% 2
-  # Handpicked with love
-  out <- switch(n_trans,
-    "FF",
-    c("FF", "CC"),
-    c("FF", "CC", "99"),
-    c("FF", "CC", "99", "66"),
-    c("FF", "CC", "99", "66", "33"))
+  out <- switch(n_trans, # Handpicked with love
+    "FF", c("FF", "CC"), c("FF", "CC", "99"),
+    c("FF", "CC", "99", "66"), c("FF", "CC", "99", "66", "33"))
 
-  # Let rgb() sort it out
-  if(is.null(out)) {
+  if(is.null(out)) { # Let rgb() sort it out otherwise
     out <- substr(rgb(1, 1, 1, seq(1, 0, length.out = n_trans)), 8, 10)
   }
 
@@ -171,27 +154,23 @@ get_hex_trans <- function(P) {
 
 #' Check valid HEX colour
 #'
-#' Helper function for applying transparency.
-#'
 #' @param x Character scalar or vector. String(s) to check.
 #' @param alpha Logical scalar. Whether the string may contain alpha values.
 #'
 #' @return Returns a logical scalar or vector.
 #'
-#' @examples
-#' bvar:::is_hex("#008080")
-#'
 #' @noRd
 is_hex <- function(x, alpha = FALSE) {
 
   if(alpha) return(grepl("^#[0-9a-fA-F]{3,8}$", x))
+
   return(grepl("^#[0-9a-fA-F]{3,6}$", x))
 }
 
 
-#' Get a subset of variables
+#' Get variable positions
 #'
-#' Helper functions to aid with variable selection in
+#' Helper functions to aid with variable selection, e.g. in
 #' \code{\link{plot.bvar_irf}} and \code{\link{plot.bvar_fcast}}.
 #'
 #' @param vars Vector of variables to subset to. Numeric or character.
@@ -202,27 +181,27 @@ is_hex <- function(x, alpha = FALSE) {
 #' @return Returns a numeric vector with the positions of desired variables.
 #'
 #' @examples
-#' # Assuming the variables are named.
-#' BVAR:::get_var_set("fx_rate", variables = c("gdp_pc", "fx_rate"))
+#' # Use the names
+#' BVAR:::pos_vars("fx_rate", variables = c("gdp_pc", "fx_rate"))
 #'
-#' # Find via position
-#' BVAR:::get_var_set(c(1, 3), M = 3)
+#' # Subset via positions
+#' BVAR:::pos_vars(c(1, 3), M = 3)
 #'
 #' # Get the full set
-#' BVAR:::get_var_set(NULL, M = 3)
+#' BVAR:::pos_vars(NULL, M = 3)
 #'
 #' @noRd
-get_var_set <- function(vars, variables, M) {
+pos_vars <- function(vars, variables, M) {
 
   if(is.null(vars) || length(vars) == 0L) {
-    return(1:M)
+    return(1:M) # Full set
   }
   if(is.numeric(vars)) {
-    return(sort(vapply(vars, int_check,
+    return(sort(vapply(vars, int_check, # By position
       min = 1, max = M, msg = "Variable(s) not found.", integer(1))))
   }
   if(is.character(vars) && !is.null(variables)) {
-    out <- do.call(c, lapply(vars, grep, variables))
+    out <- do.call(c, lapply(vars, grep, variables)) # By name
     if(length(out) > 0) {return(out)}
   }
 
@@ -230,51 +209,41 @@ get_var_set <- function(vars, variables, M) {
 }
 
 
-#' Get names for dependent variables
+#' Name dependent / explanatory variables
 #'
-#' Helper function to quickly generate names for dependent variables.
+#' Helper function to quickly generate names for variables.
 #'
 #' @param variables Character vector of all variable names.
+#' @param M Integer scalar. Number of columns in the data.
 #' @param lags Integer scalar. Number of lags applied in the model.
 #'
-#' @return Returns a character vector of names for dependent variables.
+#' @return Returns a character vector of names for the variables.
 #'
 #' @examples
 #' # Get c("constant", "gdp-lag1", "cpi-lag1")
-#' get_expl(c("gdp", "cpi"), lags = 1)
+#' BVAR:::name_expl(c("gdp", "cpi"), lags = 1)
+#'
+#' # Get c("gdp", "cpi")
+#' BVAR:::name_deps(c("gdp", "cpi"), M = 2)
 #'
 #' @noRd
-get_deps <- function(variables, M) {
+name_deps <- function(variables, M) {
 
   if(is.null(variables)) {
-    variables <- if(is.null(x[["variables"]])) {
-      paste0("var", seq(M))
-    } else {x[["variables"]]}
+    variables <- paste0("var", seq(M))
   } else if(length(variables) != M) {
-    stop("Vector variables is incomplete.")
+    stop("Vector with variables is incomplete.")
   }
 
   return(variables)
 }
 
-
-#' Get names for explanatory variables
-#'
-#' Helper function to quickly generate names for explanatory variables.
-#'
-#' @param variables Character vector of all variable names.
-#' @param lags Integer scalar. Number of lags applied in the model.
-#'
-#' @return Returns a character vector of names for explanatory variables.
-#'
-#' @examples
-#' # Get c("constant", "gdp-lag1", "cpi-lag1")
-#' get_expl(c("gdp", "cpi"), lags = 1)
-#'
 #' @noRd
-get_expl <- function(variables, lags) {
+name_expl <- function(variables, M, lags) {
 
-  if(is.null(variables)) {return(NULL)}
+  if(is.null(variables)) {
+    variables <- get_deps(variables, M)
+  }
 
   return(c("constant", paste0(rep(variables, lags), "-lag",
     rep(seq(lags), each = length(variables)))))
@@ -294,10 +263,10 @@ get_expl <- function(variables, lags) {
 #'
 #' @examples
 #' # Computing log-likelihood of a draw with value 5
-#' BVAR:::log_igamma_pdf(5, 0.004, 0.004)
+#' BVAR:::p_log_ig(5, 0.004, 0.004)
 #'
 #' @noRd
-log_ig_pdf <- function(x, shape, scale) {
+p_log_ig <- function(x, shape, scale) {
 
   return(scale * log(shape) - (scale + 1) * log(x) - shape / x - lgamma(scale))
 }
@@ -316,6 +285,7 @@ log_ig_pdf <- function(x, shape, scale) {
 #'
 #' @noRd
 get_beta_comp <- function(beta, K, M, lags) {
+
   beta_comp <- matrix(0, K - 1, K - 1)
 
   beta_comp[1:M, ] <- t(beta[2:K, ])

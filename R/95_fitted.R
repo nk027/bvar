@@ -95,8 +95,8 @@ plot.bvar_resid <- function(x, vars = NULL, mar = c(2, 2, 2, 0.5), ...) {
   has_quants <- length(dim(x)) == 3
   if(has_quants) {x <- x["50%", , ]}
   M <- dim(x)[2]
-  variables <- get_deps(variables = dimnames(x)[[2]], M = M)
-  pos <- get_var_set(vars, variables, M)
+  variables <- name_deps(variables = dimnames(x)[[2]], M = M)
+  pos <- pos_vars(vars, variables, M)
 
   op <- par(mfrow = c(length(pos), 1), mar = mar, ...)
   for(i in pos) {
@@ -154,13 +154,13 @@ print_fitted <- function(
     N <- dim(x)[2]
     M <- dim(x)[3]
     P <- dim(x)[1]
-    variables <- get_deps(variables = dimnames(x)[[3]], M = M)
+    variables <- name_deps(variables = dimnames(x)[[3]], M = M)
     head <- x["50%", 1:3, ]
     tail <- x["50%", (N - 2):N, ]
   } else {
     N <- dim(x)[1]
     M <- dim(x)[2]
-    variables <- get_deps(variables = dimnames(x)[[2]], M = M)
+    variables <- name_deps(variables = dimnames(x)[[2]], M = M)
     head <- x[1:3, ]
     tail <- x[(N - 2):N, ]
   }

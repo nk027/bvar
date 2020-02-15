@@ -119,7 +119,7 @@ bv_ml <- function(
     psi_coef <- priors[["psi"]][["coef"]]
     log_ml <- log_ml +
       sum(sapply(names(pars)[grep("^psi[0-9]*", names(pars))],
-                 function(x) {log_ig_pdf(pars[[x]],
+                 function(x) {p_log_ig(pars[[x]],
                                          shape = psi_coef[["k"]],
                                          scale = psi_coef[["theta"]]
                  )}

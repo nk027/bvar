@@ -1,7 +1,7 @@
 #' Hierarchical Bayesian Vector Autoregression
 #'
 #' Hierarchical Bayesian estimation of Vector Autoregression (VAR) models in
-#' the fashion of \insertCite{giannone2015}{BVAR}.
+#' the fashion of Giannone, Primiceri and Lenza (2015).
 #' Options for the prior settings and Metropolis-Hastings step are provided to
 #' \emph{priors} and \emph{mh} arguments via the functions
 #' \code{\link{bv_priors}} and \code{\link{bv_mh}}.
@@ -68,7 +68,7 @@
 #' }
 #'
 #' @references
-#'  \insertAllCited{}
+#'  Todo
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_mh}};
 #' \code{\link{bv_fcast}}; \code{\link{bv_irf}};
@@ -169,8 +169,8 @@ bvar <- function(
   M <- ncol(Y)
   N <- nrow(Y)
 
-  variables <- get_deps(variables = colnames(data), M = M)
-  explanatories <- get_expl(variables = variables, lags = lags)
+  variables <- name_deps(variables = colnames(data), M = M)
+  explanatories <- name_expl(variables = variables, M = M, lags = lags)
 
   # Check sign restrictions
   if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {

@@ -97,8 +97,8 @@ summary.bvar_irf <- function(
   variables <- if(is.null(object[["variables"]])) {
     1L:M
   } else {object[["variables"]]}
-  pos_imp <- get_var_set(vars_impulse, variables, M)
-  pos_res <- get_var_set(vars_response, variables, M)
+  pos_imp <- pos_vars(vars_impulse, variables, M)
+  pos_res <- pos_vars(vars_response, variables, M)
 
   out <- list(
     "irf" = object,

@@ -98,14 +98,14 @@ plot_irf <- function(
     quants[1, , , ] <- x[["quants"]]
   }
 
-  variables <- get_deps(variables = x[["variables"]], M = M)
+  variables <- name_deps(variables = x[["variables"]], M = M)
 
   # Sort out colours - applies alpha if they're HEX and need recycling
-  col <- set_col(x = "#000000", y = col, P = P)
-  if(area) {fill <- set_col(x = integer(), y = fill, P = P)}
+  col <- fill_vector_col(x = "#000000", y = col, P = P)
+  if(area) {fill <- fill_vector_col(x = integer(), y = fill, P = P)}
 
-  pos_imp <- get_var_set(vars_impulse, variables, M)
-  pos_res <- get_var_set(vars_response, variables, M)
+  pos_imp <- pos_vars(vars_impulse, variables, M)
+  pos_res <- pos_vars(vars_response, variables, M)
 
   mfrow <- c(length(pos_res), length(pos_imp))
 

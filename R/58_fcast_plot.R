@@ -122,18 +122,18 @@ plot_fcast <- function(
 
   # Extend the quants array with data, quantiles are set to NA
   quants <- vapply(seq(M), function(i) {
-    t(rbind(set_na(data[, i], P2), t(quants[, , i])))
+    t(rbind(fill_ci_na(data[, i], P2), t(quants[, , i])))
   }, matrix(0, P2, t_back + t_forw), USE.NAMES = FALSE)
 
-  variables <- get_deps(variables = x[["variables"]], M = M)
+  variables <- name_deps(variables = x[["variables"]], M = M)
 
   orientation <- match.arg(orientation)
 
   # Sort out colours - applies alpha if they're HEX and need recycling
-  col <- set_col(x = "#000000", y = col, P = P)
-  if(area) {fill <- set_col(x = integer(), y = fill, P = P)}
+  col <- fill_vector_col(x = "#000000", y = col, P = P)
+  if(area) {fill <- fill_vector_col(x = integer(), y = fill, P = P)}
 
-  pos <- get_var_set(vars, variables, M)
+  pos <- pos_vars(vars, variables, M)
 
   mfrow <- if(grepl("^vertical$", orientation)) {
     c(length(pos), 1)
