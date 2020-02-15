@@ -88,8 +88,5 @@ as.mcmc.bvar_chains <- as.mcmc.bvar
 
 
 #' @noRd
-has_coda <- function() {
-  if(!requireNamespace("coda", quietly = TRUE)) {
-    stop("Package \'coda\' required for this method.", call. = FALSE)
-  }
-}
+has_coda <- function() {has_package("coda")}
+

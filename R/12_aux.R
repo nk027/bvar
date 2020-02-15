@@ -297,3 +297,11 @@ get_beta_comp <- function(beta, K, M, lags) {
 
   return(beta_comp)
 }
+
+
+#' @noRd
+has_package <- function(package) {
+  if(!requireNamespace(package, quietly = TRUE)) {
+    stop("Package \'", package, "\' required for this method.", call. = FALSE)
+  }
+}

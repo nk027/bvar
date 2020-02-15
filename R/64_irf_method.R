@@ -231,8 +231,4 @@ fevd.varest <- fevd.svarest <-
 }
 
 #' @noRd
-has_vars <- function() {
-  if(!requireNamespace("vars", quietly = TRUE)) {
-    stop("Package \'vars\' required for this method.", call. = FALSE)
-  }
-}
+has_vars <- function() {has_package("vars")}

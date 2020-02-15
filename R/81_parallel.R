@@ -109,8 +109,4 @@ par_bvar <- function(
 
 
 #' @noRd
-has_parallel <- function() {
-  if(!requireNamespace("parallel", quietly = TRUE)) {
-    stop("Package \'parallel\' required for this method.", call. = FALSE)
-  }
-}
+has_parallel <- function() {has_package("parallel")}
