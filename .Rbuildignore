@@ -3,6 +3,10 @@
 
 ^scripts$
 
+^vignettes/*\.jpg$
+^vignettes/*\.png$
+^vignettes/*\.pdf$
+
 ^data/fred_qd_full\.rda$
 ^data/fred_md_full\.rda$
 ^data/fred_permitted\.txt$
