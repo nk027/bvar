@@ -1,4 +1,3 @@
-#' @rdname bv_priors
 #' @export
 print.bv_priors <- function(x, ...) {
 
@@ -22,7 +21,6 @@ print.bv_priors <- function(x, ...) {
 }
 
 
-#' @rdname bv_priors
 #' @export
 print.bv_minnesota <- function(x, indent = FALSE, ...) {
 
@@ -39,7 +37,6 @@ print.bv_minnesota <- function(x, indent = FALSE, ...) {
 }
 
 
-#' @rdname bv_priors
 #' @export
 print.bv_dummy <- function(x, indent = FALSE, ...) {
 
@@ -53,7 +50,6 @@ print.bv_dummy <- function(x, indent = FALSE, ...) {
 }
 
 
-#' @rdname bv_priors
 #' @export
 print.bv_psi <- function(x, indent = FALSE, ...) {
 

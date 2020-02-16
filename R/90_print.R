@@ -1,4 +1,3 @@
-#' @rdname bvar
 #' @export
 print.bvar <- function(x, ...) {
 

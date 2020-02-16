@@ -1,4 +1,3 @@
-#' @rdname bv_fcast
 #' @export
 print.bv_fcast <- function(x, ...) {
 
@@ -12,7 +11,6 @@ print.bv_fcast <- function(x, ...) {
 }
 
 
-#' @rdname predict.bvar
 #' @export
 print.bvar_fcast <- function(x, vars = NULL, ...) {
 
@@ -40,7 +38,7 @@ print_fcast <- function(x, ...) {
 
 #' @rdname predict.bvar
 #' @export
-summary.bvar_fcast <- function(object, vars = NULL, digits = 2L, ...) {
+summary.bvar_fcast <- function(object, vars = NULL, ...) {
 
   if(!inherits(object, "bvar_fcast")) {
     stop("Please provide a `bvar_fcast` object.")
@@ -70,7 +68,6 @@ summary.bvar_fcast <- function(object, vars = NULL, digits = 2L, ...) {
 }
 
 
-#' @rdname predict.bvar
 #' @export
 print.bvar_fcast_summary <- function(x, digits = 2L, ...) {
 

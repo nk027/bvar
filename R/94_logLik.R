@@ -15,14 +15,7 @@
 #' @importFrom mvtnorm dmvnorm
 #' @importFrom stats logLik
 #'
-#' @examples
-#' \donttest{
-#' data <- matrix(rnorm(200), ncol = 2)
-#' x <- bvar(data, lags = 2)
-#'
-#' # Get log-likelihood
-#' logLik(x)
-#' }
+#' @noRd
 logLik.bvar <- function(object, ...) {
 
   Y <- object[["meta"]][["Y"]]
@@ -35,7 +28,7 @@ logLik.bvar <- function(object, ...) {
     dmvnorm(Y[i, ], mean[i, ], sigma, log = TRUE)
   }, numeric(1)))
 
-  # attr(ll, "df") <- K
+  # attr(ll, "df") <- NA # Maybe provide effective DoF
   attr(ll, "nall") <- N
   class(ll) <- "logLik"
 

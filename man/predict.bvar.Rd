@@ -2,18 +2,12 @@
 % Please edit documentation in R/54_predict.R, R/55_fcast_print.R
 \name{predict.bvar}
 \alias{predict.bvar}
-\alias{print.bvar_fcast}
 \alias{summary.bvar_fcast}
-\alias{print.bvar_fcast_summary}
 \title{Predict method for Bayesian VARs}
 \usage{
 \method{predict}{bvar}(object, ..., conf_bands, n_thin = 1L, newdata)
 
-\method{print}{bvar_fcast}(x, vars = NULL, ...)
-
 \method{summary}{bvar_fcast}(object, vars = NULL, digits = 2L, ...)
-
-\method{print}{bvar_fcast_summary}(x, digits = 2L, ...)
 }
 \arguments{
 \item{object, x}{A \code{bvar} object, obtained from \code{\link{bvar}}.

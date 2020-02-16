@@ -35,8 +35,7 @@
 #' The summary method returns a numeric array of impulse responses at the
 #' specified confidence bands.
 #'
-#' @seealso \code{\link{bvar}}; \code{\link{plot.bvar_irf}};
-#' \code{\link{bv_irf}}
+#' @seealso \code{\link{plot.bvar_irf}}; \code{\link{bv_irf}}
 #'
 #' @keywords VAR BVAR irf impulse-responses fevd
 #' forecast-error-variance-decomposition

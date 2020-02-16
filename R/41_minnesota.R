@@ -18,13 +18,11 @@
 #'
 #' @param lambda List constructed via \code{\link{bv_lambda}}.
 #' Arguments are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}.
-#' May also be provided as a mumeric vector of length 4.
-#' See the Details section for further information.
+#' May also be provided as a numeric vector of length 4.
 #' @param alpha List constructed via \code{\link{bv_alpha}}.
 #' Arguments are \emph{mode}, \emph{min} and \emph{max}. High values for
 #' \emph{mode} may affect invertibility of the augmented data matrix.
 #' May also be provided as a mumeric vector of length 4.
-#' See the Details section for further information.
 #' @param psi List with elements \emph{scale}, \emph{shape} of the prior
 #' as well as \emph{mode} and optionally \emph{min} and \emph{max}. The length
 #' of these needs to match the number of variables (i.e. columns) in the data.
@@ -33,13 +31,14 @@
 #' \code{\link[stats]{arima}} fails due to a non-stationary time series the
 #' order of integration is incremented by 1. By default \emph{min} / \emph{max}
 #' are set to \emph{mode} divided / multiplied by 100.
-#' See the Details section for further information.
 #' @param var Numeric scalar with the prior variance on the model's constant.
 #' @param b Numeric matrix with the prior mean.
-#' @param mode Numeric scalar (/vector). Mode (or the like) of the parameter.
+#' @param mode,sd Numeric scalar. Mode / standard deviation of the
+#' parameter. Note that the \emph{mode} of \emph{psi} is set automatically by
+#' default, and would need to be provided as vector.
 #' @param sd Numeric scalar with the standard deviation.
-#' @param min Numeric scalar (/vector). Minimum allowed value.
-#' @param max Numeric scalar (/vector). Maximum allowed value.
+#' @param min,max Numeric scalar. Minimum / maximum allowed value. Note that
+#' for \emph{psi} these need to provided as vectors.
 #' @param scale,shape Numeric scalar. Scale and shape parameters of a Gamma
 #' distribution.
 #'
@@ -47,7 +46,9 @@
 #' \code{\link{bvar}}.
 #'
 #' @references
-#'     Kilian L, Lütkepohl H (2017). Structural Vector Autoregressive Analysis. Cambridge University Press.
+#'   Kilian, L. and Lütkepohl, H. (2017). \emph{Structural Vector Autoregressive
+#'   Analysis}. Cambridge University Press,
+#'   \url{https://doi.org/10.1017/9781108164818}
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_dummy}}
 #'
@@ -65,9 +66,9 @@
 #' # Only adjust lambda's standard deviation
 #' bv_mn(lambda = bv_lambda(sd = 2))
 bv_minnesota <- function(
-  lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
-  alpha = bv_alpha(2, 0.25, 1, 3),
-  psi = bv_psi(0.004, 0.004, "auto"), # scale, shape, mode
+  lambda = bv_lambda(),
+  alpha = bv_alpha(),
+  psi = bv_psi(), # scale, shape, mode
   var = 1e07,
   b = "auto") {
 
@@ -90,7 +91,7 @@ bv_minnesota <- function(
 bv_mn <- bv_minnesota
 
 
-#' @rdname bv_minnesota
+#' @describeIn bv_minnesota Tightness of the Minnesota prior
 #' @export
 bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 5) {
 
@@ -100,7 +101,7 @@ bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 5) {
 }
 
 
-#' @rdname bv_minnesota
+#' @describeIn bv_minnesota Variance decay with increasing lag order
 #' @export
 bv_alpha <- function(mode = 2, sd = 0.25, min = 1, max = 3) {
 
@@ -108,7 +109,7 @@ bv_alpha <- function(mode = 2, sd = 0.25, min = 1, max = 3) {
 }
 
 
-#' @rdname bv_minnesota
+#' @describeIn bv_minnesota Prior standard deviation on other lags
 #' @export
 bv_psi <- function(scale = 0.004, shape = 0.004, mode = "auto",
                    min = "auto", max = "auto") {

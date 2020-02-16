@@ -1,11 +1,13 @@
-#' Method for coda Markov chain Monte Carlo objects
+#' Methods for \pkg{coda} Markov chain Monte Carlo objects
 #'
-#' Method to convert chains of hyperparameters and marginal likelihoods obtained
-#' from \code{\link{bvar}} or coefficent values to objects compatible for
-#' further processing with \pkg{coda}, i.e., objects of class
+#' Methods to convert chains of hyperparameters and marginal likelihoods
+#' obtained from \code{\link{bvar}} or coefficent values to objects compatible
+#' for further processing with \pkg{coda}, i.e., objects of class
 #' \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
-#' Multiple chains, that is comparable \code{bvar} objects may be converted
+#' Multiple chains, i.e. comparable \code{bvar} objects, may be converted
 #' using the \emph{chains} argument.
+#'
+#' @name coda
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param vars Optional character vector used to subset the converted
@@ -40,6 +42,10 @@
 #' # Add second chain for further processing
 #' as.mcmc(x, vars = c("ml", "lambda"), chains = list(y = y))
 #' }
+NULL
+
+#' @rdname coda
+#' @export as.mcmc.bvar
 as.mcmc.bvar <- function(
   x,
   vars = NULL,
@@ -82,7 +88,7 @@ as.mcmc.bvar <- function(
 }
 
 
-#' @rdname as.mcmc.bvar
+#' @rdname coda
 #' @export as.mcmc.bvar_chains
 as.mcmc.bvar_chains <- as.mcmc.bvar
 

@@ -1,23 +1,20 @@
 #' Fitted and residual methods for Bayesian VARs
 #'
-#' Calculates fitted values / residuals for Bayesian VARs generated with
+#' Calculates fitted or residual values for Bayesian VARs generated with
 #' \code{\link{bvar}}.
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param conf_bands Numeric vector of desired confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
 #' Note that the median, i.e. \code{0.5} is always included.
-#'
 #' @param x Object of class \code{bvar_fitted} / \code{bvar_resid}.
-#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
-#' numeric outputs (i.e. the quantiles).
 #' @param vars Optional numeric vector. Used to subset the plot to certain
 #' variables by position. Defaults to \code{NULL}, i.e. all variables.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Graphical parameters for \code{\link[graphics]{par}}.
 #'
-#' @return Returns a numeric array of class \code{bvar_fitted} /
-#' \code{bvar_resid} with desired values at the specified confidence bands.
+#' @return Returns a numeric array of class \code{bvar_fitted} or
+#' \code{bvar_resid} with values at the specified confidence bands.
 #'
 #' @seealso \code{\link{bvar}}
 #'
@@ -33,8 +30,8 @@
 #' # Get fitted values and adjust confidence bands to 10%, 50% and 90%
 #' fitted(x, conf_bands = 0.10)
 #'
-#' # Get residuals
-#' residuals(x)
+#' # Get residuals and plot them
+#' plot(residuals(x))
 #' }
 fitted.bvar <- function(object, conf_bands = 0.5, ...) {
 
@@ -109,11 +106,12 @@ plot.bvar_resid <- function(x, vars = NULL, mar = c(2, 2, 2, 0.5), ...) {
 }
 
 
-#' @rdname fitted.bvar
 #' @export
 print.bvar_fitted <- function(x, digits = 2L, ...) {
 
-  if(!inherits(x, "bvar_fitted")) {stop("Please provide a `bvar_fitted` object.")}
+  if(!inherits(x, "bvar_fitted")) {
+    stop("Please provide a `bvar_fitted` object.")
+  }
 
   print_fitted(x, digits, type = "fitted", ...)
 
@@ -121,11 +119,12 @@ print.bvar_fitted <- function(x, digits = 2L, ...) {
 }
 
 
-#' @rdname fitted.bvar
 #' @export
 print.bvar_resid <- function(x, digits = 2L, ...) {
 
-  if(!inherits(x, "bvar_resid")) {stop("Please provide a `bvar_resid` object.")}
+  if(!inherits(x, "bvar_resid")) {
+    stop("Please provide a `bvar_resid` object.")
+  }
 
   print_fitted(x, digits, type = "residual", ...)
 
@@ -141,6 +140,8 @@ print.bvar_resid <- function(x, digits = 2L, ...) {
 #' numeric outputs (i.e. the quantiles).
 #' @param type String indicating whether \emph{x} contains fitted or resiudal
 #' values.
+#'
+#' @importFrom utils head tail
 #'
 #' @noRd
 print_fitted <- function(

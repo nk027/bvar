@@ -1,4 +1,3 @@
-#' @noRd
 #' @export
 print.bv_irf <- function(x, ...) {
 
@@ -12,7 +11,6 @@ print.bv_irf <- function(x, ...) {
 }
 
 
-#' @rdname irf.bvar
 #' @export
 print.bvar_irf <- function(x, ...) {
 
@@ -29,7 +27,6 @@ print.bvar_irf <- function(x, ...) {
 }
 
 
-#' @rdname irf.bvar
 #' @export
 print.bvar_fevd <- function(x, digits = 4L, complete = FALSE, ...) {
 

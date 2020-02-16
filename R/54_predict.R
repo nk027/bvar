@@ -7,7 +7,7 @@
 #' \code{predict.bvar} to \code{object$fcast}. May also be used to update
 #' confidence bands.
 #'
-#' @param object,x A \code{bvar} object, obtained from \code{\link{bvar}}.
+#' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' Summary and print methods take in a \code{bvar_fcast} object.
 #' @param ... A \code{bv_fcast} object or parameters to be fed into
 #' \code{\link{bv_fcast}}. Contains settings for the forecast.
@@ -18,20 +18,16 @@
 #' is used for forecasting, others are dropped.
 #' @param newdata Optional numeric matrix or dataframe. Used to base the
 #' prediction on. Fitted values are used by default.
-#'
 #' @param vars Optional numeric or character vector. Used to subset the summary
 #' to certain variables by position or name (must be available). Defaults to
 #' \code{NULL}, i.e. all variables.
-#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied to
-#' numeric outputs (i.e. the quantiles).
 #'
 #' @return Returns a list of class \code{bvar_fcast} including forecasts
 #' at desired confidence bands. See \code{\link{bvar}}.
 #' The summary method returns a numeric array of forecast paths at the
 #' specified confidence bands.
 #'
-#' @seealso \code{\link{bvar}}; \code{\link{plot.bvar_fcast}};
-#' \code{\link{bv_fcast}}
+#' @seealso \code{\link{plot.bvar_fcast}}; \code{\link{bv_fcast}}
 #'
 #' @keywords VAR BVAR forecasts prediction quantiles
 #'

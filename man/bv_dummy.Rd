@@ -13,13 +13,19 @@ bv_soc(mode = 1, sd = 1, min = 0.0001, max = 50)
 bv_sur(mode = 1, sd = 1, min = 0.0001, max = 50)
 }
 \arguments{
-\item{mode}{Numeric scalar (/vector). Mode (or the like) of the parameter.}
+\item{mode}{Numeric scalar. Mode / standard deviation of the
+parameter. Note that the \emph{mode} of \emph{psi} is set automatically by
+default, and would need to be provided as vector.}
 
-\item{sd}{Numeric scalar with the standard deviation.}
+\item{sd}{Numeric scalar. Mode / standard deviation of the
+parameter. Note that the \emph{mode} of \emph{psi} is set automatically by
+default, and would need to be provided as vector.}
 
-\item{min}{Numeric scalar (/vector). Minimum allowed value.}
+\item{min}{Numeric scalar. Minimum / maximum allowed value. Note that
+for \emph{psi} these need to provided as vectors.}
 
-\item{max}{Numeric scalar (/vector). Maximum allowed value.}
+\item{max}{Numeric scalar. Minimum / maximum allowed value. Note that
+for \emph{psi} these need to provided as vectors.}
 
 \item{fun}{Function taking \emph{Y}, \emph{lags} and the prior's parameter
 \emph{par} to generate and return a named list with elements \emph{X} and
@@ -48,6 +54,13 @@ These priors are implemented via Theil mixed estimation, i.e. by adding
 dummy-observations on top of the data matrix. They are readily available
 via the shorthand functions \code{\link{bv_soc}} and \code{\link{bv_sur}}.
 }
+\section{Functions}{
+\itemize{
+\item \code{bv_soc}: Sum-of-coefficients dummy prior
+
+\item \code{bv_sur}: Single-unit-root dummy prior
+}}
+
 \examples{
 # Create a sum-of-coefficients prior
 add_soc <- function(Y, lags, par) {

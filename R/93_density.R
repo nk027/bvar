@@ -18,11 +18,12 @@
 #'
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param mfrow Numeric vector. Rows for \code{\link[graphics]{par}}.
-#' @param var,n_vars,lag Integer scalars.
+#' @param var,n_vars,lag Integer scalars. Retrieve the position of lag
+#' \emph{lag} of variable \emph{var} given \emph{n_vars} total variables.
 #'
 #' @return Returns a list with outputs of \code{\link[stats]{density}}.
 #'
-#' @seealso \code{\link{bvar}}
+#' @seealso \code{\link{bvar}}; \code{\link[stats]{density}}
 #'
 #' @export
 #'
@@ -75,7 +76,6 @@ density.bvar <- function(
 }
 
 
-#' @rdname density.bvar
 #' @export
 print.bvar_density <- function(x, ...) {
 

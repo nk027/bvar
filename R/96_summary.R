@@ -1,13 +1,11 @@
 #' Summary method for Bayesian VARs
 #'
 #' Retrieves several outputs of interest, including the median coefficient
-#' matrix, the median variance-covariance matrix, and the Log-Likelihood.
+#' matrix, the median variance-covariance matrix, and the log-likelihood.
 #' Separate summary methods exist for impulse responses and forecasts.
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param ... Not used.
-#'
-#' @param x A \code{bvar_summary} object.
 #'
 #' @return Returns a list of class \code{bvar_summary} with elements that can
 #' can be accessed individually:
@@ -18,8 +16,7 @@
 #'   \item \code{logLik} - the Log-Likelihood from \code{\link{logLik.bvar}}.
 #' }
 #'
-#' @seealso \code{\link{bvar}}; \code{\link{coef.bvar}};
-#' \code{\link{logLik.bvar}}
+#' @seealso \code{\link{coef.bvar}}; \code{\link{logLik.bvar}}
 #'
 #' @export
 #'
@@ -33,23 +30,17 @@ summary.bvar <- function(object, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  coef_x <- coef(object)
-  vcov_x <- vcov(object)
-  logLik_x <- logLik(object)
-
   out <- list(
     "bvar" = object,
-    "coef" = coef_x,
-    "vcov" = vcov_x,
-    "logLik" = logLik_x
-  )
+    "coef" = coef(object),
+    "vcov" = vcov(object),
+    "logLik" = logLik(object))
   class(out) <- "bvar_summary"
 
   return(out)
 }
 
 
-#' @rdname summary.bvar
 #' @export
 print.bvar_summary <- function(x, ...) {
 

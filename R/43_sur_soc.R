@@ -27,19 +27,15 @@
 }
 
 
-#' Sum-of-coefficients dummy prior
-#'
 #' @export
-#' @rdname bv_dummy
+#' @describeIn bv_dummy Sum-of-coefficients dummy prior
 bv_soc <- function(mode = 1, sd = 1, min = 0.0001, max = 50) {
 
   bv_dummy(mode, sd, min, max, fun = .add_soc)
 }
 
-#' Single-unit-root dummy prior
-#'
 #' @export
-#' @rdname bv_dummy
+#' @describeIn bv_dummy Single-unit-root dummy prior
 bv_sur <- function(mode = 1, sd = 1, min = 0.0001, max = 50) {
 
   bv_dummy(mode, sd, min, max, fun = .add_sur)

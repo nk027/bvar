@@ -33,8 +33,6 @@
 #' \code{\link{irf.bvar}}.
 #' @param verbose Logical scalar. Whether to print intermediate results and
 #' progress.
-#'
-#' @param x A \code{bvar} object.
 #' @param ... Not used.
 #'
 #' @return Returns a \code{bvar} object with the following elements:
@@ -68,9 +66,9 @@
 #' }
 #'
 #' @references
-#'   Domenico Giannone, Michele Lenza and Giorgio E. Primiceri (2015). Prior
-#'   Selection for Vector Autoregressions. The Review of Economics and
-#'   Statistics, 97:2, 436-451, DOI: 10.1162/REST_a_00483.
+#'   Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
+#'   Vector Autoregressions. \emph{The Review of Economics and Statistics},
+#'   \bold{97:2}, 436-451, \url{https://doi.org/10.1162/REST_a_00483}.
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_mh}};
 #' \code{\link{bv_fcast}}; \code{\link{bv_irf}};
