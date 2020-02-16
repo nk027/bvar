@@ -117,7 +117,7 @@ bvar <- function(
   # Input Checking ----------------------------------------------------------
 
   # Data
-  if(!all(vapply(data, is.numeric, logical(1))) ||
+  if(!all(vapply(data, is.numeric, logical(1L))) ||
      any(is.na(data)) || ncol(data) < 2) {
     stop("Problem with the data. Make sure it is numeric, without any NAs.")
   }
@@ -132,9 +132,9 @@ bvar <- function(
   n_thin <- int_check(n_thin, min = 1L, max = ((n_draw - n_burn) / 10),
     msg = "Issue with n_thin. Maximum allowed is (n_draw - n_burn) / 10.")
   if(missing(n_save)) {
-    n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1)
+    n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1L)
   } else {
-    n_save <- int_check(n_save, min = 1L)
+    n_save <- int_check(n_save, min = 1L, msg = "Issue with n_save.")
     n_draw <- int_check(n_save + n_burn, min = 1L)
   }
 
@@ -174,7 +174,7 @@ bvar <- function(
 
   # Check sign restrictions
   if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {
-    stop("Length of provided sign restrictions does not fit data.")
+    stop("Dimensions of provided sign restrictions do not fit the data.")
   }
 
 
@@ -185,7 +185,7 @@ bvar <- function(
     priors[["b"]] <- matrix(0, nrow = K, ncol = M)
     priors[["b"]][2:(M + 1), ] <- diag(M)
   } else if(!all(dim(priors[["b"]]) == c(K, M))) {
-    stop("Dimensions of prior mean (b) do not match the data.")
+    stop("Dimensions of prior mean (b) do not fit the data.")
   }
   if(any(priors[["psi"]][["mode"]] == "auto")) {
     psi_temp <- auto_psi(Y, lags)
@@ -194,8 +194,8 @@ bvar <- function(
     priors[["psi"]][["max"]] <- psi_temp[["max"]]
   }
   if(!all(vapply(priors[["psi"]][1:3],
-                 function(x) length(x) == M, logical(1)))) {
-    stop("Dimensions of psi do not match the data.")
+    function(x) length(x) == M, logical(1L)))) {
+    stop("Dimensions of psi do not fit the data.")
   }
 
   # Parameters
@@ -209,39 +209,35 @@ bvar <- function(
   # Hierarchical priors
   hyper_n <- length(priors[["hyper"]]) +
     sum(priors[["hyper"]] == "psi") * (M - 1)
-  if(hyper_n == 0) {stop("Non-hierarchical estimation not yet implemented.")}
+  if(hyper_n == 0) {stop("Please provide at least one hyperparameter.")}
 
-  hyper <- do.call(c, lapply(priors[["hyper"]],
-                             function(x) priors[[x]][["mode"]]))
-  hyper_min <- do.call(c, lapply(priors[["hyper"]],
-                                 function(x) priors[[x]][["min"]]))
-  hyper_max <- do.call(c, lapply(priors[["hyper"]],
-                                 function(x) priors[[x]][["max"]]))
+  get_priors <- function(name, par) {priors[[name]][[par]]}
+  hyper <- do.call(c, lapply(priors[["hyper"]], get_priors, par = "mode"))
+  hyper_min <- do.call(c, lapply(priors[["hyper"]], get_priors, par = "min"))
+  hyper_max <- do.call(c, lapply(priors[["hyper"]], get_priors, par = "max"))
   names(hyper) <- name_pars(priors[["hyper"]], M)
 
   # Split up psi
   for(i in seq_along(priors[["psi"]][["mode"]])) {
-    priors[[paste0("psi", i)]] <-
-      lapply(priors[["psi"]], function(x) x[i])
+    priors[[paste0("psi", i)]] <- lapply(priors[["psi"]], function(x) x[i])
   }
 
 
   # Optimise ----------------------------------------------------------------
 
-  opt <- optim(
-    par = hyper, bv_ml, gr = NULL,
+  opt <- optim(par = hyper, bv_ml, gr = NULL,
     hyper_min = hyper_min, hyper_max = hyper_max, pars = pars_full,
     priors = priors, Y = Y, X = X, XX = XX, K = K, M = M, N = N, lags = lags,
     opt = TRUE, method = "L-BFGS-B", lower = hyper_min, upper = hyper_max,
-    control = list("fnscale" = -1)
-  )
+    control = list("fnscale" = -1))
+
   names(opt[["par"]]) <- names(hyper)
+
   if(verbose) {
     cat("Optimisation concluded.",
-        "\nPosterior marginal likelihood: ", round(opt[["value"]], 3),
-        "\nParameters: ",
-        paste(names(hyper), round(opt[["par"]], 2),
-              sep = " = ", collapse = "; "), "\n", sep = "")
+      "\nPosterior marginal likelihood: ", round(opt[["value"]], 3),
+      "\nParameters: ", paste(names(hyper), round(opt[["par"]], 2),
+      sep = " = ", collapse = "; "), "\n", sep = "")
   }
 
 
@@ -255,7 +251,7 @@ bvar <- function(
   if(hyper_n != 1) {J <- diag(J)}
   HH <- J %*% H %*% t(J)
 
-  # Make sure HH is positive (definite)
+  # Make sure HH is positive definite
   if(hyper_n != 1) {
     HH_eig <- eigen(HH)
     HH <- HH_eig[["vectors"]] %*% diag(abs(HH_eig[["values"]])) %*%
@@ -267,8 +263,9 @@ bvar <- function(
 
   while(TRUE) {
     hyper_draw <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
-    ml_draw <- bv_ml(hyper = hyper_draw, hyper_min, hyper_max,
-                     pars = pars_full, priors, Y, X, XX, K, M, N, lags)
+    ml_draw <- bv_ml(hyper = hyper_draw,
+      hyper_min = hyper_min, hyper_max = hyper_max, pars = pars_full,
+      priors = priors, Y = Y, X = X, XX = XX, K = K, M = M, N = N, lags = lags)
     if(ml_draw[["log_ml"]] > -1e16) {break}
   }
 
@@ -279,26 +276,21 @@ bvar <- function(
   accepted <- 0 -> accepted_adj # Beauty
   ml_store <- vector("numeric", n_save)
   hyper_store <- matrix(NA, nrow = n_save, ncol = length(hyper_draw),
-                        dimnames = list(NULL, names(hyper)))
+    dimnames = list(NULL, names(hyper)))
   beta_store <- array(NA, c(n_save, K, M))
   sigma_store <- array(NA, c(n_save, M, M))
 
   if(!is.null(fcast)) {
     fcast_store <- list(
       "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
-      "setup" = fcast,
-      "variables" = variables,
-      "data" = Y
-    )
+      "setup" = fcast, "variables" = variables, "data" = Y)
     class(fcast_store) <- "bvar_fcast"
   }
   if(!is.null(irf)) {
     irf_store <- list(
       "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
       "fevd" = if(irf[["fevd"]]) {array(NA, c(n_save, M, M))} else {NULL},
-      "setup" = irf,
-      "variables" = variables
-    )
+      "setup" = irf, "variables" = variables)
     class(irf_store) <- "bvar_irf"
   }
 
@@ -309,11 +301,11 @@ bvar <- function(
 
     # Metropolis-Hastings
     hyper_temp <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
-    ml_temp <- bv_ml(hyper = hyper_temp, hyper_min, hyper_max,
-                     pars = pars_full, priors, Y, X, XX, K, M, N, lags)
+    ml_temp <- bv_ml(hyper = hyper_temp,
+      hyper_min = hyper_min, hyper_max = hyper_max, pars = pars_full,
+      priors = priors, Y = Y, X = X, XX = XX, K = K, M = M, N = N, lags = lags)
 
-    if(runif(1) < exp(ml_temp[["log_ml"]] - ml_draw[["log_ml"]])) {
-      # Accept draw
+    if(runif(1) < exp(ml_temp[["log_ml"]] - ml_draw[["log_ml"]])) { # Accept
       ml_draw <- ml_temp
       hyper_draw <- hyper_temp
       accepted_adj <- accepted_adj + 1
@@ -330,8 +322,7 @@ bvar <- function(
       }
     }
 
-    if(i > 0 && i %% n_thin == 0) {
-      # Store draws
+    if(i > 0 && i %% n_thin == 0) { # Store draws
 
       ml_store[(i / n_thin)] <- ml_draw[["log_ml"]]
       hyper_store[(i / n_thin), ] <- hyper_draw
@@ -339,44 +330,40 @@ bvar <- function(
       # Draw parameters, i.e. beta_draw, sigma_draw & sigma_chol
       # These need X and N including the dummy observations from `ml_draw`
       draws <- draw_post(XX = ml_draw[["XX"]], N = ml_draw[["N"]],
-                         M = M, lags = lags, b = priors[["b"]],
-                         psi = ml_draw[["psi"]], sse = ml_draw[["sse"]],
-                         beta_hat = ml_draw[["beta_hat"]],
-                         omega_inv = ml_draw[["omega_inv"]])
+        M = M, lags = lags, b = priors[["b"]], psi = ml_draw[["psi"]],
+        sse = ml_draw[["sse"]], beta_hat = ml_draw[["beta_hat"]],
+        omega_inv = ml_draw[["omega_inv"]])
 
       beta_store[(i / n_thin), , ] <- draws[["beta_draw"]]
       sigma_store[(i / n_thin), , ] <- draws[["sigma_draw"]]
 
       # Companion matrix is used for both forecasts and impulse responses
       if(!is.null(fcast) || !is.null(irf)) {
-        beta_comp <- get_beta_comp(beta = draws[["beta_draw"]], K, M, lags)
+        beta_comp <- get_beta_comp(beta = draws[["beta_draw"]],
+          K = K, M = M, lags = lags)
       }
 
-      # Forecast
-      if(!is.null(fcast)) {
-        fcast_store[["fcast"]][(i / n_thin), , ] <- compute_fcast(
-          Y = Y, K = K, M = M, N = N, lags = lags,
-          horizon = fcast[["horizon"]],
+      if(!is.null(fcast)) { # Forecast
+        fcast_store[["fcast"]][(i / n_thin), , ] <- compute_fcast(Y = Y,
+          K = K, M = M, N = N, lags = lags, horizon = fcast[["horizon"]],
           beta_comp = beta_comp, beta_const = draws[["beta_draw"]][1, ],
           sigma = draws[["sigma_draw"]])
       } # End forecast
 
-      # Impulse responses
-      if(!is.null(irf)) {
-        irf_comp  <- compute_irf(
-          beta_comp = beta_comp,
+      if(!is.null(irf)) { # Impulse responses
+        irf_comp <- compute_irf(beta_comp = beta_comp,
           sigma = draws[["sigma_draw"]], sigma_chol = draws[["sigma_chol"]],
-          M = M, lags = lags,
-          horizon = irf[["horizon"]], identification = irf[["identification"]],
+          M = M, lags = lags, horizon = irf[["horizon"]],
+          identification = irf[["identification"]],
           sign_restr = irf[["sign_restr"]], sign_lim = irf[["sign_lim"]],
           fevd = irf[["fevd"]])
         irf_store[["irf"]][(i / n_thin), , , ] <- irf_comp[["irf"]]
-        if(irf[["fevd"]]) {
+        if(irf[["fevd"]]) { # Forecast error variance decomposition
           irf_store[["fevd"]][(i / n_thin), , ] <- irf_comp[["fevd"]]
         }
       } # End impulse responses
 
-    }
+    } # End store
 
     if(verbose) {setTxtProgressBar(pb, (i + n_burn))}
 
@@ -397,24 +384,22 @@ bvar <- function(
     "hyper" = hyper_store, "ml" = ml_store,
     "optim" = opt, "priors" = priors,
     "variables" = variables, "call" = cl,
-    "meta" = list(
-      "accepted" = accepted, "timer" = timer,
+    "meta" = list("accepted" = accepted, "timer" = timer,
       "Y" = Y, "X" = X, "N" = N, "K" = K, "M" = M, "lags" = lags,
       "explanatories" = explanatories,
-      "n_draw" = n_draw, "n_burn" = n_burn, "n_save" = n_save, "n_thin" = n_thin
+      "n_draw" = n_draw, "n_burn" = n_burn, "n_save" = n_save,
+      "n_thin" = n_thin
     )
   )
 
   if(!is.null(fcast)) {
-    # Add confidence bands
-    fcast_store[["quants"]] <- apply(fcast_store[["fcast"]],
-                                     c(2, 3), quantile, c(0.16, 0.50, 0.84))
+    fcast_store[["quants"]] <- apply( # Add confidence bands
+      fcast_store[["fcast"]], c(2, 3), quantile, c(0.16, 0.50, 0.84))
     out[["fcast"]] <- fcast_store
   }
   if(!is.null(irf)) {
-    # Add confidence bands
-    irf_store[["quants"]] <- apply(irf_store[["irf"]],
-                                   c(2, 3, 4), quantile, c(0.16, 0.50, 0.84))
+    irf_store[["quants"]] <- apply( # Add confidence bands
+      irf_store[["irf"]], c(2, 3, 4), quantile, c(0.16, 0.50, 0.84))
     out[["irf"]] <- irf_store
   }
 

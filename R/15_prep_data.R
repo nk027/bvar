@@ -50,7 +50,7 @@ prep_data <- function(
 
   vars_hyp <- c("ml", colnames(x[["hyper"]]))
   vars_dep <- x[["variables"]]
-  vars_ind <- x[["explanatories"]]
+  vars_ind <- x[["meta"]][["explanatories"]]
   # Compatibility to older versions (<= 0.2.1)
   if(is.null(vars_ind)) {name_expl
     vars_ind <- name_expl(vars_dep,

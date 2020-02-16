@@ -64,9 +64,8 @@ gamma_coef <- function(mode, sd) {
 #' @noRd
 name_pars <- function(x, M) {
 
-  out <- Reduce(c, sapply(x, function(y) {if(y == "psi") {
-    paste0(y, 1:M)
-  } else {y}}))
+  out <- Reduce(c, sapply(x, function(y) {
+    if(y == "psi") {paste0(y, 1:M)} else {y}}))
 
   return(out)
 }
@@ -118,6 +117,7 @@ fill_ci_na <- function(x, P) {
   fill_ci(x = x, y = NA, P = P)
 }
 
+
 #' @noRd
 fill_ci_col <- function(x, y, P) {
 
@@ -131,12 +131,16 @@ fill_ci_col <- function(x, y, P) {
 
 #' Get a transparency HEX code
 #'
-#' @param P Integer scalar. Number of total bands.
+#' @param P Integer scalar. Number of total bands to determine number of codes.
 #'
 #' @return Returns a character vector of transparency codes. Note that there is
 #' no central element for polygons and colours should be repeated symmetrically.
 #'
 #' @importFrom grDevices rgb
+#'
+#' @examples
+#' # Retrieve auto-generated HEX codes
+#' BVAR:::transparence_hex(21)
 #'
 #' @noRd
 transparance_hex <- function(P) {
@@ -240,6 +244,7 @@ name_deps <- function(variables, M) {
   return(variables)
 }
 
+
 #' @noRd
 name_expl <- function(variables, M, lags) {
 
@@ -299,9 +304,19 @@ get_beta_comp <- function(beta, K, M, lags) {
 }
 
 
+#' Check whether a package is installed
+#'
+#' @param package Character scalar. Package to look for.
+#'
+#' @examples
+#' # Check whether mad cow disease is present
+#' has_package("BSE")
+#'
 #' @noRd
 has_package <- function(package) {
   if(!requireNamespace(package, quietly = TRUE)) {
     stop("Package \'", package, "\' required for this method.", call. = FALSE)
   }
+
+  return(NULL)
 }

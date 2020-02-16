@@ -48,13 +48,13 @@ bv_ml <- function(
   # Bounds ------------------------------------------------------------------
 
   if(any(hyper_min > hyper | hyper > hyper_max)) {
-      if(opt) {return(-1e18)} else {return(list("log_ml" = -1e18))}
+    if(opt) {return(-1e18)} else {return(list("log_ml" = -1e18))}
   }
 
 
   # Priors ------------------------------------------------------------------
 
-  # Overwrite passed parameters with hyperparameters
+  # Overwrite passed parameters with hyperparameters if provided
   for(name in unique(names(hyper))) {
     pars[names(pars) == name] <- hyper[names(hyper) == name]
   }
@@ -72,10 +72,10 @@ bv_ml <- function(
   if(length(priors[["dummy"]]) > 0) {
     dmy <- lapply(priors[["dummy"]], function(x) {
       tryCatch(priors[[x]][["fun"]](Y = Y, lags = lags, par = pars[[x]]),
-               error = function(e) {
-                 message("Issue with generating dummy observations for ",
-                         x, ". Make sure the function works properly.")
-                 stop(e)})
+        error = function(e) {
+          message("Issue generating dummy observations for ",
+            x, ". Make sure the function works properly.")
+          stop(e)})
     })
     Y_dmy <- do.call(rbind, lapply(dmy, function(x) matrix(x[["Y"]], ncol = M)))
     X_dmy <- do.call(rbind, lapply(dmy, function(x) matrix(x[["X"]], ncol = K)))
@@ -95,44 +95,46 @@ bv_ml <- function(
   b <- priors[["b"]]
 
   # Likelihood
-  ev_full <- get_ev(omega_inv, omega_sqrt, psi_inv,
-    X, XX, Y, b, beta_hat = TRUE)
-  log_ml <- get_logml(M, N, psi, ev_full[["omega"]], ev_full[["psi"]])
+  ev_full <- get_ev(omega_inv = omega_inv, omega_sqrt = omega_sqrt,
+    psi_inv = psi_inv, X = X, XX = XX, Y = Y, b = b, beta_hat = TRUE)
+  log_ml <- get_logml(M = M, N = N, psi = psi,
+    omega_ml_ev = ev_full[["omega"]], psi_ml_ev = ev_full[["psi"]])
 
   if(length(priors[["dummy"]]) > 0) {
-    ev_dummy <- get_ev(omega_inv, omega_sqrt, psi_inv,
-      X_dmy, XX = NULL, Y_dmy, b, beta_hat = FALSE)
+    ev_dummy <- get_ev(omega_inv = omega_inv, omega_sqrt = omega_sqrt,
+      psi_inv = psi_inv, X = X_dmy, XX = NULL, Y = Y_dmy, b = b,
+      beta_hat = FALSE)
     log_ml <- log_ml -
-      get_logml(M, N_dummy, psi, ev_dummy[["omega"]], ev_dummy[["psi"]])
+      get_logml(M = M, N = N_dummy, psi = psi,
+        omega_ml_ev = ev_dummy[["omega"]], psi_ml_ev = ev_dummy[["psi"]])
   }
 
   # Add prior-pdfs
-  log_ml <- log_ml +
-    sum(sapply(priors[["hyper"]][which(!priors$hyper == "psi")],
-               function(x) {log(dgamma(pars[[x]],
-                                       shape = priors[[x]][["coef"]][["k"]],
-                                       scale = priors[[x]][["coef"]][["theta"]]
-               ))}
-    ))
+  log_ml <- log_ml + sum(sapply(
+    priors[["hyper"]][which(!priors$hyper == "psi")], function(x) {
+      log(dgamma(pars[[x]],
+        shape = priors[[x]][["coef"]][["k"]],
+        scale = priors[[x]][["coef"]][["theta"]]))
+  }))
 
   if(any(priors[["hyper"]] == "psi")) {
     psi_coef <- priors[["psi"]][["coef"]]
-    log_ml <- log_ml +
-      sum(sapply(names(pars)[grep("^psi[0-9]*", names(pars))],
-                 function(x) {p_log_ig(pars[[x]],
-                                         shape = psi_coef[["k"]],
-                                         scale = psi_coef[["theta"]]
-                 )}
-      ))
+    log_ml <- log_ml + sum(sapply(
+      names(pars)[grep("^psi[0-9]*", names(pars))], function(x) {
+        p_log_ig(pars[[x]],
+          shape = psi_coef[["k"]], scale = psi_coef[["theta"]])
+    }))
   }
 
 
   # Output ------------------------------------------------------------------
 
-  if(opt) {return(log_ml)}
+  if(opt) {return(log_ml)} # For optim
 
   # Return log_ml and objects necessary for drawing
-  return(list("log_ml" = log_ml, "XX" = XX, "N" = N, "psi" = psi,
-              "sse" = ev_full[["sse"]], "beta_hat" = ev_full[["beta_hat"]],
-              "omega_inv" = omega_inv))
+  return(
+    list("log_ml" = log_ml, "XX" = XX, "N" = N, "psi" = psi,
+      "sse" = ev_full[["sse"]], "beta_hat" = ev_full[["beta_hat"]],
+      "omega_inv" = omega_inv)
+  )
 }

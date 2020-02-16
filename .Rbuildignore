@@ -7,7 +7,7 @@
 ^vignettes/*\.png$
 ^vignettes/*\.pdf$
 ^vignettes/Makefile$
-^vignettes/template*$
+^vignettes/template.Rnw$
 
 ^data/fred_qd_full\.rda$
 ^data/fred_md_full\.rda$

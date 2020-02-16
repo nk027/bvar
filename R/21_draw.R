@@ -1,6 +1,6 @@
 #' BVAR posterior draws
 #'
-#' Draw \eqn{\beta} and \eqn{\sigma} from the posterior of a Bayesian VAR.
+#' Draw \eqn{\beta} and \eqn{\sigma} from the posterior.
 #'
 #' @param XX Numeric matrix. Crossproduct of a possibly extended \emph{X}.
 #' @param N Integer scalar. Rows of \emph{X}. Note that \emph{X} may have been
@@ -42,7 +42,8 @@ draw_post <- function(
     t(rmvnorm(n = M, mean = rep(0, (1 + M * lags)), sigma = beta_sigma)) %*%
     sigma_chol
 
-  return(list("beta_draw" = beta_draw,
-              "sigma_draw" = sigma_draw,
-              "sigma_chol" = sigma_chol))
+  return(
+    list("beta_draw" = beta_draw,
+      "sigma_draw" = sigma_draw, "sigma_chol" = sigma_chol)
+  )
 }

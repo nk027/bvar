@@ -81,7 +81,7 @@
 #' # Transform a subset of FRED-QD
 #' fred_transform(fred_qd[, c("GDPC1", "INDPRO", "FEDFUNDS")])
 #'
-#' # Transform all of FRED-MD and subset to a rectangular shape
+#' # Transform all of FRED-MD
 #' \dontrun{
 #' fred_transform(fred_md, type = "md")
 #' }

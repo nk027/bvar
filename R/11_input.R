@@ -27,7 +27,7 @@ num_check <- function(
 #'
 #' @noRd
 int_check <- function(
-  x, min = 0, max = Inf,
+  x, min = 0L, max = Inf,
   msg = "Please check the integer parameters.") {
 
   num_check(x, min, max, msg, fun = as.integer)
@@ -57,22 +57,20 @@ auto_psi <- function(x, lags) {
   #   sqrt(arima(x, order = c(lags, 0, 0))$sigma2)
   # }), error = function(e) {
   #   stop("Some of the data appears to be integrated. ",
-  #        "Setting psi automatically via an AR(", lags, ") failed. ",
-  #        "Please provide modes for psi manually (see `?bv_psi`).")
+  #     "Setting psi automatically via an AR(", lags, ") failed. ",
+  #     "Please provide modes for psi manually (see `?bv_psi`).")
   # })
 
-  out[["mode"]] <- tryCatch(
-    apply(x, 2, function(x) {
-      tryCatch(sqrt(arima(x, order = c(lags, 0, 0))$sigma2), # Try AR(lags)
-        error = function(e) { # If this fails for a series increment integration
-          message("Some of the data appears to be integrated. Setting psi ",
-                  "automatically via an ARIMA(", lags, ", 1, 0).")
-          sqrt(arima(x, order = c(lags, 1, 0))$sigma2) # Try ARIMA(lags, 1, 0)
-    })}),
-    error = function(e) {
+  out[["mode"]] <- tryCatch(apply(x, 2, function(x) {
+    tryCatch(sqrt(arima(x, order = c(lags, 0, 0))$sigma2), # Try AR(lags)
+      error = function(e) { # If this fails for a series increment integration
+        message("Some of the data appears to be integrated. Attempting to set ",
+          "psi automatically via an ARIMA(", lags, ", 1, 0).")
+        sqrt(arima(x, order = c(lags, 1, 0))$sigma2) # Try ARIMA(lags, 1, 0)
+    })}), error = function(e) {
       stop("Some of the data appears to be integrated of higher order than 1. ",
-           "Setting psi automatically failed. Please inspect the data again ",
-           "and/or provide modes for psi manually (see `?bv_psi`).")
+        "Setting psi automatically failed. Please inspect the data again ",
+        "and/or provide modes for psi manually (see `?bv_psi`).")
     }
   )
 
@@ -98,8 +96,8 @@ auto_psi <- function(x, lags) {
 #' @noRd
 quantile_check <- function(conf_bands) {
 
-  conf_bands <- sapply(conf_bands, num_check, min = 0 + 1e-16, max = 1 - 1e-16,
-                       msg = "Confidence bands misspecified.")
+  conf_bands <- sapply(conf_bands, num_check,
+    min = 0 + 1e-16, max = 1 - 1e-16, msg = "Confidence bands misspecified.")
 
   # Allow only returning the median
   if(length(conf_bands) == 1 && conf_bands == 0.5) {return(conf_bands)}
