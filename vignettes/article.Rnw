@@ -145,9 +145,8 @@ library("MASS")
 <<run, eval=TRUE, echo=TRUE>>=
 set.seed(42)
 library("BVAR")
-data("fred_qd_trans")
-x <- fred_qd[, c("GDPC1", "INDPRO", "PAYEMS",
-  "CES0600000007", "CPIAUCSL", "FEDFUNDS")]
+x <- fred_transform(fred_qd[, c("GDPC1", "INDPRO", "PAYEMS",
+  "CES0600000007", "CPIAUCSL", "FEDFUNDS")])
 @
 
 %% -- Summary/conclusions/discussion -------------------------------------------

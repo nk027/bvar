@@ -2,38 +2,47 @@
 % Please edit documentation in R/data.R
 \name{fred_transform}
 \alias{fred_transform}
-\title{FRED transformation helper}
+\title{FRED transformation and subsetting helper}
 \usage{
-fred_transform(vars, type = c("full", "qd", "md"), code, lag = 1, scale = 100)
+fred_transform(
+  data,
+  type = c("qd", "md"),
+  transform = TRUE,
+  na.rm = TRUE,
+  lag = 1,
+  scale = 100
+)
 }
 \arguments{
-\item{vars}{Character vector.}
+\item{data}{A \code{data.frame} with FRED-QD or FRED-MD time series. The
+column names are used to find the correct transformation.}
 
-\item{type}{Character scalar. Specify whether to return both FRED-QD and
-FRED-MD transformation codes (\code{"full"}) or subset to one (via
-\code{"qd"} / \code{"md"}).}
+\item{type}{Character scalar. Specify whether \emph{data} stems from the
+FRED-QD or FRED-MD database.}
 
-\item{code}{Integer scalar.}
+\item{transform}{Logical scalar. Whether to apply transformations.}
 
-\item{lag}{Integer scalar. Number of lags to apply in the returned function
-when taking differences. Defaults to 0.}
+\item{na.rm}{Logical scalar. Whether to subset to rows without any
+\code{NA} values. A warning is thrown if rows are non-sequential.}
+
+\item{lag}{Integer scalar. Number of lags to apply in the transformation
+when taking differences. Defaults to 1.}
 
 \item{scale}{Numeric scalar. Factor by which to scale up values after taking
-differences in the returned function. Defaults to 100.}
+differences. Defaults to 100.}
 }
 \value{
-Given \emph{vars} returns a named vector of transformation codes
-for matching variables. Given \emph{code} returns a function to perform the
-transformation. Note that this function does not perform input checks.
+Returns a \code{data.frame} object.
 }
 \description{
-Retrieve and apply transformations from FRED-MD or FRED-QD. See
-\code{\link{fred_qd}} for information on data and the details section for
-information on available transformations. Note that the transformation
-codes of FRED-MD and FRED-QD may differ.
+Apply transformations given by FRED-MD or FRED-QD and generate rectangular
+subsets. See \code{\link{fred_qd}} for information on data and the details
+section for information on the transformations.
 }
 \details{
-The following transformation codes are available:
+FRED-QD and FRED-MD include a transformation code for every variable. All
+codes are provided in \code{system.file("fred_trans.rds", package = "BVAR")}.
+The transformation codes are as follows:
 \enumerate{
   \item \code{1} - no transformation;
   \item \code{2} - first differences - \eqn{\delta x_t};
@@ -43,14 +52,18 @@ The following transformation codes are available:
   \item \code{6} - percent change differences -
   \eqn{\delta x_t / x_{t-1} - 1};
 }
+Note that the transformation codes of FRED-MD and FRED-QD may differ for
+the same series.
 }
 \examples{
-# Find transformation codes
-fred_transform(c("RPI", "UNRATE"))
+# Transform a subset of FRED-QD
+fred_transform(fred_qd[, c("GDPC1", "INDPRO", "FEDFUNDS")])
 
-# Apply transformation #2 (first differences)
-fred_transform(code = 2)(rnorm(10))
+# Transform all of FRED-MD and subset to a rectangular shape
+\dontrun{
+fred_transform(fred_md, type = "md")
+}
 }
 \seealso{
-\code{\link{fred_md}}; \code{\link{fred_qd}};
+\code{\link{fred_qd}};
 }

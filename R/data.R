@@ -5,9 +5,9 @@
 #' datasets are updated in real-time through the FRED database. They are
 #' intended to facilitate the reproduction of empirical work and simplify
 #' data related tasks.
-#' The included datasets are provided as is, and in a pre-transformed version.
-#' See \code{\link{fred_transform}} for the applied transformations and the
-#' details section for further information on FRED-MD and FRED-QD.
+#' The included datasets are provided as is - transformation codes are provided
+#' in \code{system.file("fred_trans.rds", package = "BVAR")}. These can be
+#' applied automatically with \code{\link{fred_transform}}.
 #'
 #' The versions of FRED-MD and FRED-QD that are provided here are licensed
 #' under a modified ODC-BY 1.0 license that can be found in the provided
@@ -37,21 +37,16 @@
 #' @rdname fred_qd
 "fred_md"
 
-#' @rdname fred_qd
-"fred_qd_trans"
 
-#' @rdname fred_qd
-"fred_md_trans"
-
-
-#' FRED transformation helper
+#' FRED transformation and subsetting helper
 #'
-#' Retrieve and apply transformations from FRED-MD or FRED-QD. See
-#' \code{\link{fred_qd}} for information on data and the details section for
-#' information on available transformations. Note that the transformation
-#' codes of FRED-MD and FRED-QD may differ.
+#' Apply transformations given by FRED-MD or FRED-QD and generate rectangular
+#' subsets. See \code{\link{fred_qd}} for information on data and the details
+#' section for information on the transformations.
 #'
-#' The following transformation codes are available:
+#' FRED-QD and FRED-MD include a transformation code for every variable. All
+#' codes are provided in \code{system.file("fred_trans.rds", package = "BVAR")}.
+#' The transformation codes are as follows:
 #' \enumerate{
 #'   \item \code{1} - no transformation;
 #'   \item \code{2} - first differences - \eqn{\delta x_t};
@@ -61,48 +56,100 @@
 #'   \item \code{6} - percent change differences -
 #'   \eqn{\delta x_t / x_{t-1} - 1};
 #' }
+#' Note that the transformation codes of FRED-MD and FRED-QD may differ for
+#' the same series.
 #'
-#' @param vars Character vector.
-#' @param type Character scalar. Specify whether to return both FRED-QD and
-#' FRED-MD transformation codes (\code{"full"}) or subset to one (via
-#' \code{"qd"} / \code{"md"}).
-#' @param code Integer scalar.
-#' @param lag Integer scalar. Number of lags to apply in the returned function
-#' when taking differences. Defaults to 0.
+#' @param data A \code{data.frame} with FRED-QD or FRED-MD time series. The
+#' column names are used to find the correct transformation.
+#' @param type Character scalar. Specify whether \emph{data} stems from the
+#' FRED-QD or FRED-MD database.
+#' @param transform Logical scalar. Whether to apply transformations.
+#' @param na.rm Logical scalar. Whether to subset to rows without any
+#' \code{NA} values. A warning is thrown if rows are non-sequential.
+#' @param lag Integer scalar. Number of lags to apply in the transformation
+#' when taking differences. Defaults to 1.
 #' @param scale Numeric scalar. Factor by which to scale up values after taking
-#' differences in the returned function. Defaults to 100.
+#' differences. Defaults to 100.
 #'
-#' @return Given \emph{vars} returns a named vector of transformation codes
-#' for matching variables. Given \emph{code} returns a function to perform the
-#' transformation. Note that this function does not perform input checks.
+#' @return Returns a \code{data.frame} object.
 #'
-#' @seealso \code{\link{fred_md}}; \code{\link{fred_qd}};
+#' @seealso \code{\link{fred_qd}};
 #'
 #' @export
 #'
-#' @importFrom utils head
-#'
 #' @examples
-#' # Find transformation codes
-#' fred_transform(c("RPI", "UNRATE"))
+#' # Transform a subset of FRED-QD
+#' fred_transform(fred_qd[, c("GDPC1", "INDPRO", "FEDFUNDS")])
 #'
-#' # Apply transformation #2 (first differences)
-#' fred_transform(code = 2)(rnorm(10))
-fred_transform <- function(vars, type = c("full", "qd", "md"),
-  code, lag = 1, scale = 100) {
+#' # Transform all of FRED-MD and subset to a rectangular shape
+#' \dontrun{
+#' fred_transform(fred_md, type = "md")
+#' }
+fred_transform <- function(
+  data,
+  type = c("qd", "md"),
+  transform = TRUE, na.rm = TRUE,
+  lag = 1, scale = 100) {
 
-  if(missing(vars) && !missing(code)) {
-    return(get_transformation(code, lag, scale))
+  # Data
+  if(!all(vapply(data, is.numeric, logical(1))) || !is.data.frame(data)) {
+    stop("Problem with the data. Please provide a numeric data.frame.")
   }
+
+  vars <- colnames(data)
+  rows <- rownames(data)
+
+  if(transform) {
+    codes <- lookup_code(vars, type = type)
+    data <- vapply(seq(ncol(data)), function(i, codes, data) {
+      get_transformation(codes[i], lag = lag, scale = scale)(data[, i])
+    }, codes = codes, data = data, FUN.VALUE = numeric(nrow(data)))
+  }
+
+  na_rows <- apply(data, 1, function(x) sum(is.na(x)))
+  na_cols <- apply(data, 2, function(x) sum(is.na(x)))
+  used_rows <- na_rows == 0
+
+  if(na.rm) {
+    if(!any(used_rows)) {
+      stop("No row without NA values available. Variable ",
+        vars[which.max(na_cols)], " is problematic at ", max(na_cols), " NAs.")
+    }
+    if(!all(na_rows[used_rows] == cummax(na_rows[used_rows]))) {
+      warning("Rows used to subset are not all sequential.")
+    }
+    data <- data[used_rows, ]
+  }
+  data <- as.data.frame(data)
+  rownames(data) <- rows[na_rows == 0]
+  colnames(data) <- vars
+
+  return(data)
+}
+
+
+#' @noRd
+lookup_code <- function(vars, type = c("qd", "md")) {
 
   if(!is.character(vars) || length(vars) == 0) {
     stop("Please provide a character vector to look up transformation codes.")
   }
   type <- match.arg(type)
+
   fred_trans <- readRDS(system.file("fred_trans.rds", package = "BVAR"))
-  code <- fred_trans[do.call(c, lapply(vars, grep, fred_trans$variable)), ]
-  if(nrow(code) == 0) {stop("Variable not found.")}
-  if(type != "full") {code <- code[, type]}
+  match <- vapply(vars, function(x, y) {
+    out <- grep(paste0("^", x, "$"), y)
+    if(length(out) == 0) {out <- NA_integer_}
+    return(out)
+  }, y = fred_trans$variable, FUN.VALUE = integer(1L))
+  code <- fred_trans[match, type]
+
+  if(any(is.na(code))) {
+    message("No transformation code for ",
+      paste0(vars[is.na(code)], collapse = ", "),
+      " found. Setting to 1 for no transformation.")
+    code[is.na(code)] <- 1
+  }
 
   return(code)
 }

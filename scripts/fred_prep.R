@@ -101,24 +101,24 @@ source("R/11_input.R")
 
 # QD ---
 
-load("data/fred_qd.rda")
+# load("data/fred_qd.rda")
 
-fred_qd_trans <- vapply(names(fred_qd), function(x) {
-    code <- fred_trans$qd[fred_trans$variable == x]
-    if(!code %in% 1L:7L) {stop("Code for", name, "not found!")}
-    get_transformation(code = code, lag = 1, scale = 100)(fred_qd[, x])
-  }, numeric(nrow(fred_qd)))[c(-1, -2), ]
+# fred_qd_trans <- vapply(names(fred_qd), function(x) {
+#     code <- fred_trans$qd[fred_trans$variable == x]
+#     if(!code %in% 1L:7L) {stop("Code for", name, "not found!")}
+#     get_transformation(code = code, lag = 1, scale = 100)(fred_qd[, x])
+#   }, numeric(nrow(fred_qd)))[c(-1, -2), ]
 
-save(fred_qd_trans, file = "data/fred_qd_trans.rda", version = 2)
+# save(fred_qd_trans, file = "data/fred_qd_trans.rda", version = 2)
 
 # MD ---
 
-load("data/fred_md.rda")
+# load("data/fred_md.rda")
 
-fred_md_trans <- vapply(names(fred_md), function(x) {
-    code <- fred_trans$md[fred_trans$variable == x]
-    if(!code %in% 1L:7L) {stop("Code for", name, "not found!")}
-    get_transformation(code = code, lag = 1, scale = 100)(fred_md[, x])
-  }, numeric(nrow(fred_md)))[c(-1, -2), ]
+# fred_md_trans <- vapply(names(fred_md), function(x) {
+#     code <- fred_trans$md[fred_trans$variable == x]
+#     if(!code %in% 1L:7L) {stop("Code for", name, "not found!")}
+#     get_transformation(code = code, lag = 1, scale = 100)(fred_md[, x])
+#   }, numeric(nrow(fred_md)))[c(-1, -2), ]
 
-save(fred_md_trans, file = "data/fred_md_trans.rda", version = 2)
+# save(fred_md_trans, file = "data/fred_md_trans.rda", version = 2)

@@ -4,8 +4,6 @@
 \name{fred_qd}
 \alias{fred_qd}
 \alias{fred_md}
-\alias{fred_qd_trans}
-\alias{fred_md_trans}
 \title{FRED-MD and FRED-QD: Databases for Macroeconomic Research}
 \format{A \code{data.frame} object with dates as rownames.}
 \source{
@@ -15,10 +13,6 @@
 fred_qd
 
 fred_md
-
-fred_qd_trans
-
-fred_md_trans
 }
 \description{
 FRED-MD and FRED-QD are large macroeconomic databases. They contain monthly
@@ -26,9 +20,9 @@ and quarterly time series that are frequently used in the literature. The
 datasets are updated in real-time through the FRED database. They are
 intended to facilitate the reproduction of empirical work and simplify
 data related tasks.
-The included datasets are provided as is, and in a pre-transformed version.
-See \code{\link{fred_transform}} for the applied transformations and the
-details section for further information on FRED-MD and FRED-QD.
+The included datasets are provided as is - transformation codes are provided
+in \code{system.file("fred_trans.rds", package = "BVAR")}. These can be
+applied automatically with \code{\link{fred_transform}}.
 }
 \details{
 The versions of FRED-MD and FRED-QD that are provided here are licensed
