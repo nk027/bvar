@@ -12,15 +12,8 @@
 #' @param companion Logical scalar. Whether to retrieve the companion matrix of
 #' coefficients. See \code{\link{companion.bvar}}.
 #'
-#' @param x Object of class \code{bvar_coefs} or \code{bvar_vcovs}.
-#' @param digits Integer scalar. Fed to \code{\link[base]{round}} and applied
-#' to numeric outputs (i.e. the quantiles).
-#' @param complete Logical scalar. Whether to print only medians or all
-#' available confidence bands.
-#' @param ... Not used.
-#'
-#' @return Returns a numeric array of class \code{bvar_coefs} /
-#' \code{bvar_vcovs} with desired values at the specified confidence bands.
+#' @return Returns a numeric array of class \code{bvar_coefs} or
+#' \code{bvar_vcovs} with values at the specified confidence bands.
 #'
 #' @seealso \code{\link{bvar}}; \code{\link{companion.bvar}}
 #'
@@ -52,16 +45,15 @@ coef.bvar <- function(
 
   M <- object[["meta"]][["M"]]
   lags <- object[["meta"]][["lags"]]
-  vars <- object[["variables"]]
-  if(is.null(vars)) {vars <- paste0("var", 1:M)}
+  vars <- name_deps(object[["variables"]], M = M)
+  vars_expl <- name_expl(vars, M, = M, lags = lags)
 
-  vars_row <- c("const", paste0(rep(vars, lags), "-lag", rep(1:lags, each = M)))
   if(length(quantiles) == 1) {
     dimnames(coefs)[[2]] <- vars
-    dimnames(coefs)[[1]] <- vars_row
+    dimnames(coefs)[[1]] <- vars_expl
   } else {
     dimnames(coefs)[[3]] <- vars
-    dimnames(coefs)[[2]] <- vars_row
+    dimnames(coefs)[[2]] <- vars_expl
   }
 
   class(coefs) <- append("bvar_coefs", class(coefs))
@@ -97,7 +89,6 @@ vcov.bvar <- function(object, conf_bands = 0.5, ...) {
 }
 
 
-#' @rdname coef.bvar
 #' @export
 print.bvar_coefs <- function(x, digits = 3L, complete = FALSE, ...) {
 
@@ -109,7 +100,6 @@ print.bvar_coefs <- function(x, digits = 3L, complete = FALSE, ...) {
 }
 
 
-#' @rdname coef.bvar
 #' @export
 print.bvar_vcovs <- function(x, digits = 3L, complete = FALSE, ...) {
 
@@ -129,11 +119,12 @@ print.bvar_vcovs <- function(x, digits = 3L, complete = FALSE, ...) {
 #' numeric outputs (i.e. the quantiles).
 #' @param type String indicating whether \emph{x} contains coefficient,
 #' variance-covariance or forecast-error-variance decomposition values.
+#' @param complete Logical scalar. Whether to print every contained quantile.
 #'
 #' @noRd
 print_coefs <- function(
   x, digits = 3L,
-  type = c("coefficient", "variance-covariance", "FEVD"),
+  type = c("coefficient", "variance-covariance", "FEVD", "companion"),
   complete = FALSE,
   ...) {
 

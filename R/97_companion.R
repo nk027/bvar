@@ -15,7 +15,7 @@
 #' @return Returns a numeric array/matrix of class \code{bvar_comp} with the
 #' VAR's coefficents in companion form, at the specified confidence bands.
 #'
-#' @seealso \code{\link{bvar}}; \code{\link{coef}}
+#' @seealso \code{\link{bvar}}; \code{\link{coef.bvar}}
 #'
 #' @export
 #'
@@ -32,6 +32,11 @@
 #' # Get companion matrices for all draws of the VAR coefficients
 #' companion(x, complete = TRUE)
 #' }
+companion <- function(object, ...) {UseMethod("companion", object)}
+
+
+#' @rdname companion
+#' @export
 companion.bvar <- function(
   object,
   conf_bands = 0.5, complete = FALSE,
@@ -42,6 +47,8 @@ companion.bvar <- function(
   K <- object[["meta"]][["K"]]
   M <- object[["meta"]][["M"]]
   lags <- object[["meta"]][["lags"]]
+  vars <- name_deps(object[["variables"]], M = M)
+  vars_expl <- name_expl(vars, M, = M, lags = lags)
 
   if(complete) {
     n_save <- object[["meta"]][["n_save"]]
@@ -49,26 +56,36 @@ companion.bvar <- function(
     for(i in 1:n_save) {
       comp[i, , ] <- get_beta_comp(object[["beta"]][i, , ], K, M, lags)
     }
+    dimnames(comp)[[1]] <- paste0("draw", seq(n_save))
+    dimnames(comp)[[3]] <- dimnames(comp)[[2]] <- vars_expl[-1]
   } else { # !complete
     quantiles <- quantile_check(conf_bands)
     coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
 
-    has_quants <- length(quantiles) != 1
-    if(has_quants) {
+    if(length(quantiles) == 1) {
+      comp <- get_beta_comp(coefs, K, M, lags)
+      dimnames(comp) <- list(vars_expl[-1], vars_expl[-1])
+    } else {
       comp <- array(NA, c(length(quantiles), K - 1, K - 1))
       for(i in 1:length(quantiles)) {
         comp[i, , ] <- get_beta_comp(coefs[i, , ], K, M, lags)
       }
-    } else {
-      comp <- get_beta_comp(coefs, K, M, lags)
+      dimnames(comp)[[3]] <- dimnames(comp)[[2]] <- vars_expl[-1]
     }
   }
+
   class(comp) <- append("bvar_comp", class(comp))
 
   return(comp)
 }
 
 
-#' @rdname companion.bvar
 #' @export
-companion <- function(object, ...) {UseMethod("companion", object)}
+print.bvar_comp <- function(x, digits = 3L, complete = FALSE, ...) {
+
+  if(!inherits(x, "bvar_comp")) {stop("Please provide a `bvar_comp` object.")}
+
+  print_coefs(x, digits, type = "companion", complete = complete, ...)
+
+  return(invisible(x))
+}
