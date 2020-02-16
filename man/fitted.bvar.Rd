@@ -4,8 +4,6 @@
 \alias{fitted.bvar}
 \alias{residuals.bvar}
 \alias{plot.bvar_resid}
-\alias{print.bvar_fitted}
-\alias{print.bvar_resid}
 \title{Fitted and residual methods for Bayesian VARs}
 \usage{
 \method{fitted}{bvar}(object, conf_bands = 0.5, ...)
@@ -13,10 +11,6 @@
 \method{residuals}{bvar}(object, conf_bands = 0.5, ...)
 
 \method{plot}{bvar_resid}(x, vars = NULL, mar = c(2, 2, 2, 0.5), ...)
-
-\method{print}{bvar_fitted}(x, digits = 2L, ...)
-
-\method{print}{bvar_resid}(x, digits = 2L, ...)
 }
 \arguments{
 \item{object}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
@@ -33,16 +27,13 @@ Note that the median, i.e. \code{0.5} is always included.}
 variables by position. Defaults to \code{NULL}, i.e. all variables.}
 
 \item{mar}{Numeric vector. Margins for \code{\link[graphics]{par}}.}
-
-\item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied to
-numeric outputs (i.e. the quantiles).}
 }
 \value{
-Returns a numeric array of class \code{bvar_fitted} /
-\code{bvar_resid} with desired values at the specified confidence bands.
+Returns a numeric array of class \code{bvar_fitted} or
+\code{bvar_resid} with values at the specified confidence bands.
 }
 \description{
-Calculates fitted values / residuals for Bayesian VARs generated with
+Calculates fitted or residual values for Bayesian VARs generated with
 \code{\link{bvar}}.
 }
 \examples{
@@ -53,8 +44,8 @@ x <- bvar(data, lags = 2)
 # Get fitted values and adjust confidence bands to 10\%, 50\% and 90\%
 fitted(x, conf_bands = 0.10)
 
-# Get residuals
-residuals(x)
+# Get residuals and plot them
+plot(residuals(x))
 }
 }
 \seealso{

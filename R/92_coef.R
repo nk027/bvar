@@ -11,6 +11,7 @@
 #' Note that the median, i.e. \code{0.5} is always included.
 #' @param companion Logical scalar. Whether to retrieve the companion matrix of
 #' coefficients. See \code{\link{companion.bvar}}.
+#' @param ... Not used.
 #'
 #' @return Returns a numeric array of class \code{bvar_coefs} or
 #' \code{bvar_vcovs} with values at the specified confidence bands.
@@ -46,7 +47,7 @@ coef.bvar <- function(
   M <- object[["meta"]][["M"]]
   lags <- object[["meta"]][["lags"]]
   vars <- name_deps(object[["variables"]], M = M)
-  vars_expl <- name_expl(vars, M, = M, lags = lags)
+  vars_expl <- name_expl(vars, M = M, lags = lags)
 
   if(length(quantiles) == 1) {
     dimnames(coefs)[[2]] <- vars
@@ -71,11 +72,7 @@ vcov.bvar <- function(object, conf_bands = 0.5, ...) {
   quantiles <- quantile_check(conf_bands)
   vcovs <- apply(object[["sigma"]], c(2, 3), quantile, quantiles)
 
-  vars <- object[["variables"]]
-  if(is.null(vars)) {
-    M <- object[["meta"]][["M"]]
-    vars <- paste0("var", 1:M)
-  }
+  vars <- name_deps(object[["variables"]], M = object[["meta"]][["M"]])
 
   if(length(quantiles) == 1) {
     dimnames(vcovs)[[1]] <- dimnames(vcovs)[[2]] <- vars

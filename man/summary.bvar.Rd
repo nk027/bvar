@@ -2,19 +2,14 @@
 % Please edit documentation in R/96_summary.R
 \name{summary.bvar}
 \alias{summary.bvar}
-\alias{print.bvar_summary}
 \title{Summary method for Bayesian VARs}
 \usage{
 \method{summary}{bvar}(object, ...)
-
-\method{print}{bvar_summary}(x, ...)
 }
 \arguments{
 \item{object}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
 
 \item{...}{Not used.}
-
-\item{x}{A \code{bvar_summary} object.}
 }
 \value{
 Returns a list of class \code{bvar_summary} with elements that can
@@ -23,12 +18,12 @@ can be accessed individually:
   \item \code{bvar} - the \code{bvar} object provided.
   \item \code{coef} - coefficient values from \code{\link{coef.bvar}}.
   \item \code{vcov} - VCOV values from \code{\link{vcov.bvar}}.
-  \item \code{logLik} - the Log-Likelihood from \code{\link{logLik.bvar}}.
+  \item \code{logLik} - the log-likelihood from \code{\link[stats]{logLik}}.
 }
 }
 \description{
 Retrieves several outputs of interest, including the median coefficient
-matrix, the median variance-covariance matrix, and the Log-Likelihood.
+matrix, the median variance-covariance matrix, and the log-likelihood.
 Separate summary methods exist for impulse responses and forecasts.
 }
 \examples{
@@ -39,6 +34,5 @@ summary(x)
 }
 }
 \seealso{
-\code{\link{bvar}}; \code{\link{coef.bvar}};
-\code{\link{logLik.bvar}}
+\code{\link{coef.bvar}}
 }

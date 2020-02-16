@@ -3,17 +3,11 @@
 \name{coef.bvar}
 \alias{coef.bvar}
 \alias{vcov.bvar}
-\alias{print.bvar_coefs}
-\alias{print.bvar_vcovs}
 \title{Coefficient and VCOV methods for Bayesian VARs}
 \usage{
 \method{coef}{bvar}(object, conf_bands = 0.5, companion = FALSE, ...)
 
 \method{vcov}{bvar}(object, conf_bands = 0.5, ...)
-
-\method{print}{bvar_coefs}(x, digits = 3L, complete = FALSE, ...)
-
-\method{print}{bvar_vcovs}(x, digits = 3L, complete = FALSE, ...)
 }
 \arguments{
 \item{object}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
@@ -26,18 +20,10 @@ Note that the median, i.e. \code{0.5} is always included.}
 coefficients. See \code{\link{companion.bvar}}.}
 
 \item{...}{Not used.}
-
-\item{x}{Object of class \code{bvar_coefs} or \code{bvar_vcovs}.}
-
-\item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied
-to numeric outputs (i.e. the quantiles).}
-
-\item{complete}{Logical scalar. Whether to print only medians or all
-available confidence bands.}
 }
 \value{
-Returns a numeric array of class \code{bvar_coefs} /
-\code{bvar_vcovs} with desired values at the specified confidence bands.
+Returns a numeric array of class \code{bvar_coefs} or
+\code{bvar_vcovs} with values at the specified confidence bands.
 }
 \description{
 Retrieves coefficient / variance-covariance values for Bayesian VARs

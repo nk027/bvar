@@ -5,8 +5,6 @@
 \alias{fevd.bvar}
 \alias{irf}
 \alias{fevd}
-\alias{print.bvar_irf}
-\alias{print.bvar_fevd}
 \alias{summary.bvar_irf}
 \title{Impulse response and forecast error methods for Bayesian VARs}
 \usage{
@@ -17,10 +15,6 @@
 irf(x, ...)
 
 fevd(x, ...)
-
-\method{print}{bvar_irf}(x, ...)
-
-\method{print}{bvar_fevd}(x, digits = 4L, complete = FALSE, ...)
 
 \method{summary}{bvar_irf}(object, vars_impulse = NULL, vars_response = NULL, ...)
 }
@@ -38,12 +32,6 @@ Note that the median, i.e. \code{0.5} is always included.}
 
 \item{n_thin}{Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
 for calculations, others are dropped.}
-
-\item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied to
-numeric outputs (i.e. the quantiles).}
-
-\item{complete}{Logical scalar. Whether to print only medians or all
-available confidence bands of a a \code{bvar_fevd} object.}
 
 \item{vars_impulse, vars_response}{Optional numeric or character vector. Used
 to subset the summary's impulses / responses to certain variables by position
@@ -92,8 +80,7 @@ summary(x, vars_response = 2L)
 }
 }
 \seealso{
-\code{\link{bvar}}; \code{\link{plot.bvar_irf}};
-\code{\link{bv_irf}}
+\code{\link{plot.bvar_irf}}; \code{\link{bv_irf}}
 }
 \keyword{BVAR}
 \keyword{VAR}

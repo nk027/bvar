@@ -36,7 +36,6 @@
 #' @param mode,sd Numeric scalar. Mode / standard deviation of the
 #' parameter. Note that the \emph{mode} of \emph{psi} is set automatically by
 #' default, and would need to be provided as vector.
-#' @param sd Numeric scalar with the standard deviation.
 #' @param min,max Numeric scalar. Minimum / maximum allowed value. Note that
 #' for \emph{psi} these need to provided as vectors.
 #' @param scale,shape Numeric scalar. Scale and shape parameters of a Gamma

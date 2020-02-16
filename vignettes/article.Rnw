@@ -1,6 +1,7 @@
 \documentclass[article,nojss]{jss} % add nojss for vignette
 
 %\VignetteIndexEntry{BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R}
+%\VignettePackage{BVAR}
 %\VignetteKeyword{Vector autoregressive}
 %\VignetteKeyword{Bayesian}
 %\VignetteKeyword{multivariate}
@@ -11,6 +12,13 @@
 %\VignetteKeyword{conjugate}
 %\VignetteKeyword{macroeconomics}
 %\VignetteKeyword{finance}
+
+\SweaveOpts{engine=R, eps=FALSE, keep.source = TRUE}
+<<preliminaries, echo=FALSE, results=hide>>=
+options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+library("MASS")
+@
+
 
 %% -- LaTeX packages and custom commands ---------------------------------------
 
@@ -26,22 +34,12 @@
 \usepackage{amsmath,amssymb}
 
 % number lines for now
-\usepackage{lineno}
-\linenumbers
+% \usepackage{lineno}
+% \linenumbers
 
 %% new custom commands
 \newcommand{\class}[1]{`\code{#1}'}
 \newcommand{\fct}[1]{\code{#1()}}
-
-% setup
-<<setup, include=FALSE, cache=FALSE>>=
-knitr::render_sweave()
-knitr::opts_chunk$set(prompt = TRUE, fig.show = "hide", warning = FALSE,
-  error = FALSE, message = FALSE, echo = FALSE, cache = TRUE,
-  fig.path = "img/")
-base::options(continue = "+  ", prompt = "R> ")
-@
-
 
 
 %% -- Article metainformation (author, title, ...) -----------------------------
@@ -89,6 +87,7 @@ base::options(continue = "+  ", prompt = "R> ")
 
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 
 %% -- Introduction -------------------------------------------------------------
@@ -106,6 +105,7 @@ base::options(continue = "+  ", prompt = "R> ")
 
 \section{Introduction} \label{sec:intro}
 
+\cite{giannone2015}
 
 
 %% -- Manuscript ---------------------------------------------------------------

@@ -13,10 +13,10 @@
 #'   \item \code{bvar} - the \code{bvar} object provided.
 #'   \item \code{coef} - coefficient values from \code{\link{coef.bvar}}.
 #'   \item \code{vcov} - VCOV values from \code{\link{vcov.bvar}}.
-#'   \item \code{logLik} - the Log-Likelihood from \code{\link{logLik.bvar}}.
+#'   \item \code{logLik} - the log-likelihood from \code{\link[stats]{logLik}}.
 #' }
 #'
-#' @seealso \code{\link{coef.bvar}}; \code{\link{logLik.bvar}}
+#' @seealso \code{\link{coef.bvar}}
 #'
 #' @export
 #'

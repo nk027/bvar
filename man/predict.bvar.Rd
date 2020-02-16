@@ -7,10 +7,10 @@
 \usage{
 \method{predict}{bvar}(object, ..., conf_bands, n_thin = 1L, newdata)
 
-\method{summary}{bvar_fcast}(object, vars = NULL, digits = 2L, ...)
+\method{summary}{bvar_fcast}(object, vars = NULL, ...)
 }
 \arguments{
-\item{object, x}{A \code{bvar} object, obtained from \code{\link{bvar}}.
+\item{object}{A \code{bvar} object, obtained from \code{\link{bvar}}.
 Summary and print methods take in a \code{bvar_fcast} object.}
 
 \item{...}{A \code{bv_fcast} object or parameters to be fed into
@@ -29,9 +29,6 @@ prediction on. Fitted values are used by default.}
 \item{vars}{Optional numeric or character vector. Used to subset the summary
 to certain variables by position or name (must be available). Defaults to
 \code{NULL}, i.e. all variables.}
-
-\item{digits}{Integer scalar. Fed to \code{\link[base]{round}} and applied to
-numeric outputs (i.e. the quantiles).}
 }
 \value{
 Returns a list of class \code{bvar_fcast} including forecasts
@@ -72,8 +69,7 @@ summary(x, vars = 2L)
 }
 }
 \seealso{
-\code{\link{bvar}}; \code{\link{plot.bvar_fcast}};
-\code{\link{bv_fcast}}
+\code{\link{plot.bvar_fcast}}; \code{\link{bv_fcast}}
 }
 \keyword{BVAR}
 \keyword{VAR}

@@ -48,7 +48,7 @@ companion.bvar <- function(
   M <- object[["meta"]][["M"]]
   lags <- object[["meta"]][["lags"]]
   vars <- name_deps(object[["variables"]], M = M)
-  vars_expl <- name_expl(vars, M, = M, lags = lags)
+  vars_expl <- name_expl(vars, M = M, lags = lags)
 
   if(complete) {
     n_save <- object[["meta"]][["n_save"]]

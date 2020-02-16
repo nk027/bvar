@@ -16,7 +16,13 @@ bv_minnesota(
   b = "auto"
 )
 
-bv_mn()
+bv_mn(
+  lambda = bv_lambda(),
+  alpha = bv_alpha(),
+  psi = bv_psi(),
+  var = 10000000,
+  b = "auto"
+)
 
 bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5)
 
@@ -51,8 +57,6 @@ are set to \emph{mode} divided / multiplied by 100.}
 parameter. Note that the \emph{mode} of \emph{psi} is set automatically by
 default, and would need to be provided as vector.}
 
-\item{sd}{Numeric scalar with the standard deviation.}
-
 \item{min, max}{Numeric scalar. Minimum / maximum allowed value. Note that
 for \emph{psi} these need to provided as vectors.}
 
@@ -85,9 +89,9 @@ minimise the importance of conditioning on initial observations. See
 \itemize{
 \item \code{bv_lambda}: Tightness of the Minnesota prior
 
-\item \code{bv_alpha}: Variance decay of the Minnesota prior
+\item \code{bv_alpha}: Variance decay with increasing lag order
 
-\item \code{bv_psi}: Standard deviation shrinkage of the Minnesota prior
+\item \code{bv_psi}: Prior standard deviation on other lags
 }}
 
 \examples{

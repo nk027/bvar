@@ -40,10 +40,6 @@ acceptance rate. Required if \emph{adjust_acc} is set to \code{TRUE}.}
 
 \item{acc_change}{Numeric scalar. Percent change applied to the Hessian
 matrix. Required if \emph{adjust_acc} is set to \code{TRUE}.}
-
-\item{x}{An object of class \code{bv_metropolis}.}
-
-\item{...}{Not used}
 }
 \value{
 Returns a named list of class \code{bv_metropolis} with options for

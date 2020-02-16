@@ -24,9 +24,6 @@
 #' @param acc_change Numeric scalar. Percent change applied to the Hessian
 #' matrix. Required if \emph{adjust_acc} is set to \code{TRUE}.
 #'
-#' @param x An object of class \code{bv_metropolis}.
-#' @param ... Not used
-#'
 #' @return Returns a named list of class \code{bv_metropolis} with options for
 #' \code{\link{bvar}}.
 #'

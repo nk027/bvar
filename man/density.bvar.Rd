@@ -2,14 +2,11 @@
 % Please edit documentation in R/93_density.R
 \name{density.bvar}
 \alias{density.bvar}
-\alias{print.bvar_density}
 \alias{plot.bvar_density}
 \alias{independent_index}
 \title{Density methods for Bayesian VARs}
 \usage{
 \method{density}{bvar}(x, vars = NULL, vars_response = NULL, vars_impulse = NULL, ...)
-
-\method{print}{bvar_density}(x, ...)
 
 \method{plot}{bvar_density}(x, mar = c(2, 2, 2, 0.5), mfrow = c(length(x), 1), ...)
 
@@ -35,7 +32,8 @@ at position one.}
 
 \item{mfrow}{Numeric vector. Rows for \code{\link[graphics]{par}}.}
 
-\item{var, n_vars, lag}{Integer scalars.}
+\item{var, n_vars, lag}{Integer scalars. Retrieve the position of lag
+\emph{lag} of variable \emph{var} given \emph{n_vars} total variables.}
 }
 \value{
 Returns a list with outputs of \code{\link[stats]{density}}.
@@ -69,5 +67,5 @@ density(x, vars_response = 1, vars_impulse = idx)
 }
 }
 \seealso{
-\code{\link{bvar}}
+\code{\link{bvar}}; \code{\link[stats]{density}}
 }
