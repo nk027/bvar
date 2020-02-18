@@ -47,19 +47,23 @@ bv_metropolis <- function(
   acc_lower = 0.25, acc_upper = 0.35,
   acc_change = 0.01) {
 
-  scale_hess <- num_check(scale_hess, 1e-16, 1e16, "Problem with scale_hess.")
+  scale_hess <- num_check(scale_hess, 1e-16, 1e16,
+    "Issue with scale_hess, please check the parameter again.")
 
   if(adjust_acc) {
-    adjust_burn <- num_check(adjust_burn, 1e-16, 1, "Problem with adjust_burn.")
-    acc_lower <- num_check(acc_lower, 0, 1 - 1e-16, "Problem with acc_lower.")
-    acc_upper <- num_check(acc_upper, acc_lower, 1, "Problem with acc_upper.")
-    acc_change <- num_check(acc_change, 1e-16, 1e16, "Problem with acc_change")
+    adjust_burn <- num_check(adjust_burn, 1e-16, 1, "Issue with adjust_burn.")
+    acc_lower <- num_check(acc_lower, 0, 1 - 1e-16, "Issue with acc_lower.")
+    acc_upper <- num_check(acc_upper, acc_lower, 1, "Issue with acc_upper.")
+    acc_change <- num_check(acc_change, 1e-16, 1e16, "Issue with acc_change")
   }
 
-  out <- list("scale_hess" = scale_hess,
-              "adjust_acc" = adjust_acc, "adjust_burn" = adjust_burn,
-              "acc_lower" = acc_lower, "acc_upper" = acc_upper,
-              "acc_tighten" = 1 - acc_change, "acc_loosen" = 1 + acc_change)
+  out <- list(
+    "scale_hess" = scale_hess,
+    "adjust_acc" = adjust_acc, "adjust_burn" = adjust_burn,
+    "acc_lower" = acc_lower, "acc_upper" = acc_upper,
+    "acc_tighten" = 1 - acc_change, "acc_loosen" = 1 + acc_change
+  )
+
   class(out) <- "bv_metropolis"
 
   return(out)

@@ -105,9 +105,7 @@ plot_fcast <- function(
     x <- predict(x, conf_bands = conf_bands)
   }
 
-  t_back <- int_check(t_back, 0, nrow(x[["data"]]),
-    msg = "Please check t_back.")
-  t_forw <- x[["setup"]][["horizon"]]
+  orientation <- match.arg(orientation)
 
   has_quants <- length(dim(x[["quants"]])) == 3L
   if(has_quants) {
@@ -121,19 +119,24 @@ plot_fcast <- function(
   }
 
   # Add t_back actual datapoints
-  if(is.null(x[["data"]])) {
-    message("No data found, filling with NAs. Recalculate with `predict()`.")
-    data <- matrix(NA, nrow = t_back, ncol = M)
-  } else {data <- tail(x[["data"]], t_back)}
+  t_back <- int_check(t_back, 0, Inf, msg = "Issue with t_back.")
 
-  # Extend the quants array with data, quantiles are set to NA
-  quants <- vapply(seq(M), function(i) {
-    t(rbind(fill_ci_na(data[, i], P2), t(quants[, , i])))
-  }, matrix(0, P2, t_back + t_forw), USE.NAMES = FALSE)
+  use_data <- t_back != 0
+  if(use_data) {
+    if(is.null(x[["data"]])) {
+      message("No data found, filling with NAs. Recalculate with `predict()`.")
+      t_back <- 0L
+    } else {
+      data <- tail(x[["data"]], t_back)
+      t_forw <- x[["setup"]][["horizon"]]
+    }
+    # Extend the quants array with data, quantiles are set to NA
+    quants <- vapply(seq(M), function(i) {
+      t(rbind(fill_ci_na(data[, i], P2), t(quants[, , i])))
+    }, matrix(0, P2, t_back + t_forw), USE.NAMES = FALSE)
+  }
 
   variables <- name_deps(variables = x[["variables"]], M = M)
-
-  orientation <- match.arg(orientation)
 
   # Sort out colours - applies alpha if they're HEX and need recycling
   col <- fill_ci_col(x = "#000000", y = col, P = P)
