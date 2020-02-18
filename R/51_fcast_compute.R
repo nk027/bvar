@@ -16,7 +16,8 @@
 #' corresponding to the constant of the model.
 #' @param sigma Numeric matrix. Posterior draw of the vcov-matrix of the
 #' model.
-#' @param conditional Not yet implemented.
+#' @param conditional Logical scalar. Whether or not the produced forecasts
+#' will be used for conditional forecasts.
 #'
 #' @return Returns a matrix containing forecasts for all variables in the model.
 #'
@@ -28,16 +29,24 @@ compute_fcast <- function(
   horizon,
   beta_comp, beta_const,
   sigma,
-  conditional = NULL) {
+  conditional = FALSE) {
 
   Y_f <- matrix(NA, horizon + 1, K - 1)
   Y_f[1, ] <- sapply(t(Y[N:(N - lags + 1), ]), c)
 
-  for(i in 2:(1 + horizon)) {
-    Y_f[i, ] <- Y_f[i - 1, ] %*% t(beta_comp) +
-      c(beta_const, rep(0, M * (lags - 1))) +
-      c(sigma %*% rnorm(M), rep(0, M * (lags - 1)))
+  if(conditional){
+    for(i in 2:(1 + horizon)) {
+      Y_f[i, ] <- Y_f[i - 1, ] %*% t(beta_comp) +
+        c(beta_const, rep(0, M * (lags - 1)))
+    }
+  } else {
+    for(i in 2:(1 + horizon)) {
+      Y_f[i, ] <- Y_f[i - 1, ] %*% t(beta_comp) +
+        c(beta_const, rep(0, M * (lags - 1))) +
+        c(sigma %*% rnorm(M), rep(0, M * (lags - 1)))
+    }
   }
+
 
   # Remove Y_t and further lags from Y_f to get the forecast
   return(Y_f[2:(1 + horizon), 1:M])
