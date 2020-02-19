@@ -235,8 +235,8 @@ bvar <- function(
 
   if(verbose) {
     cat("Optimisation concluded.",
-      "\nPosterior marginal likelihood: ", round(opt[["value"]], 3),
-      "\nParameters: ", paste(names(hyper), round(opt[["par"]], 2),
+      "\nPosterior marginalised likelihood: ", round(opt[["value"]], 3),
+      "\nParameters: ", paste(names(hyper), round(opt[["par"]], 5),
       sep = " = ", collapse = "; "), "\n", sep = "")
   }
 
@@ -289,7 +289,11 @@ bvar <- function(
   if(!is.null(irf)) {
     irf_store <- list(
       "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
-      "fevd" = if(irf[["fevd"]]) {array(NA, c(n_save, M, M))} else {NULL},
+      "fevd" = if(irf[["fevd"]]) {
+        structure(
+          list("fevd" = array(NA, c(n_save, M, irf[["horizon"]], M))),
+          class = "bvar_fevd")
+      } else {NULL},
       "setup" = irf, "variables" = variables)
     class(irf_store) <- "bvar_irf"
   }
@@ -359,7 +363,7 @@ bvar <- function(
           fevd = irf[["fevd"]])
         irf_store[["irf"]][(i / n_thin), , , ] <- irf_comp[["irf"]]
         if(irf[["fevd"]]) { # Forecast error variance decomposition
-          irf_store[["fevd"]][(i / n_thin), , ] <- irf_comp[["fevd"]]
+          irf_store[["fevd"]][(i / n_thin), , , ] <- irf_comp[["fevd"]]
         }
       } # End impulse responses
 

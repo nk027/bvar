@@ -102,7 +102,7 @@ plot.bvar <- function(
   return(invisible(x))
 }
 
-#' @rdname plot.bvar
+
 #' @export
 plot.bvar_chains <- plot.bvar
 
@@ -123,17 +123,17 @@ plot.bvar_chains <- plot.bvar
   # Plot --------------------------------------------------------------------
 
   op <- par(mfrow = c(length(vars), if(type == "full") {2} else {1}),
-            mar = mar, ...)
+    mar = mar, ...)
 
   for(i in seq_len(ncol(x))) {
 
     if(type != "density") { # i.e. full or trace
       .plot_trace(x[, i], name = vars[i], bounds = bounds[, i],
-                 dots = lapply(chains, function(x) {x[, i]}))
+        dots = lapply(chains, function(x) {x[, i]}))
     }
     if(type != "trace") { # i.e. full or density
       .plot_dens(x[, i], name = vars[i], bounds = bounds[, i],
-                dots = lapply(chains, function(x) {x[, i]}))
+        dots = lapply(chains, function(x) {x[, i]}))
     }
   }
 
@@ -158,13 +158,15 @@ plot.bvar_chains <- plot.bvar
 .plot_trace <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
   ylim <- c(min(vapply(dots, min, double(1)), x),
-            max(vapply(dots, max, double(1)), x))
+    max(vapply(dots, max, double(1)), x))
 
   plot(x, type = "l", xlab = "Index", ylab = "Value", ylim = ylim,
-       main = paste0("Trace", if(!is.null(name)) {paste(" of", name)}))
+    main = paste0("Trace", if(!is.null(name)) {paste(" of", name)}))
   for(dot in dots) {lines(dot, col = "lightgray")}
   lines(x)
   abline(h = bounds, lty = "dashed", col = "darkgray")
+
+  return(invisible(x))
 }
 
 
@@ -173,11 +175,12 @@ plot.bvar_chains <- plot.bvar
 .plot_dens <- function(x, name = NULL, bounds = NULL, dots = list()) {
 
   xlim <- c(min(vapply(dots, min, double(1)), x),
-            max(vapply(dots, max, double(1)), x))
+    max(vapply(dots, max, double(1)), x))
   ylim <- c(0, max(vapply(lapply(dots, function(x) density(x)[["y"]]),
-                          max, double(1)), density(x)[["y"]]))
+    max, double(1)), density(x)[["y"]]))
+
   plot(density(x), xlim = xlim, ylim = ylim,
-       main = paste0("Density", if(!is.null(name)) {paste(" of", name)}))
+    main = paste0("Density", if(!is.null(name)) {paste(" of", name)}))
   polygon(density(x), col = "#CCCCCC33", border = NA)
   for(dot in dots) {
     dens <- density(dot)
@@ -186,4 +189,6 @@ plot.bvar_chains <- plot.bvar
   }
   lines(density(x))
   abline(v = bounds, lty = "dashed", col = "darkgray")
+
+  return(invisible(x))
 }

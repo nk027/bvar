@@ -79,7 +79,7 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 
     n_pres <- x[["meta"]][["n_save"]]
     n_thin <- int_check(n_thin, min = 1, max = (n_pres / 10),
-                        "Problematic value for parameter n_thin.")
+      "Issue with n_thin. Maximum allowed is n_save / 10.")
     n_save <- int_check((n_pres / n_thin), min = 1)
 
     Y <- x[["meta"]][["Y"]]
@@ -92,22 +92,29 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 
     irf_store <- list(
       "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
-      "fevd" = if(irf[["fevd"]]) {array(NA, c(n_save, M, M))} else {NULL},
+      "fevd" = if(irf[["fevd"]]) {
+        structure(
+          list("fevd" = array(NA, c(n_save, M, irf[["horizon"]], M))),
+          class = "bvar_fevd")
+      } else {NULL},
       "setup" = irf, "variables" = x[["variables"]]
     )
-    class(irf_store) <- "bvar_irf"
 
     j <- 1
     for(i in seq_len(n_save)) {
       beta_comp <- get_beta_comp(beta[j, , ], K, M, lags)
+
       irf_comp  <- compute_irf(
         beta_comp = beta_comp, sigma = sigma[j, , ],
         sigma_chol = t(chol(sigma[j, , ])), M = M, lags = lags,
         horizon = irf[["horizon"]], identification = irf[["identification"]],
         sign_restr = irf[["sign_restr"]], sign_lim = irf[["sign_lim"]],
         fevd = irf[["fevd"]])
+
       irf_store[["irf"]][i, , , ] <- irf_comp[["irf"]]
-      if(irf[["fevd"]]) {irf_store[["fevd"]][i, , ] <- irf_comp[["fevd"]]}
+      if(irf[["fevd"]]) {
+        irf_store[["fevd"]][i, , , ] <- irf_comp[["fevd"]]
+      }
       j <- j + n_thin
     }
   }
@@ -120,6 +127,8 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       irf.bvar_irf(irf_store, conf_bands)
     } else {irf.bvar_irf(irf_store, c(0.16))}
   }
+
+  class(irf_store) <- "bvar_irf"
 
   return(irf_store)
 }
@@ -144,7 +153,7 @@ irf.bvar_irf <- function(x, conf_bands, ...) {
 
 #' @rdname irf.bvar
 #' @export
-fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
+fevd.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
@@ -160,19 +169,12 @@ fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
       dots[[1]]
     } else {bv_irf(...)}
     irf[["fevd"]] <- TRUE
-
-    irf_store <- irf.bvar(x, irf, n_thin = n_thin)
+    irf_store <- irf.bvar(x, irf, n_thin = n_thin) # Recalculate
   }
 
   # Apply confidence bands ------------------------------------------------
 
   fevd_store <- fevd.bvar_irf(irf_store, conf_bands = conf_bands)
-
-  if(length(dim(fevd_store)) == 2) {
-    dimnames(fevd_store)[[1]] <- dimnames(fevd_store)[[2]] <- vars
-  } else {
-    dimnames(fevd_store)[[2]] <- dimnames(fevd_store)[[3]] <- vars
-  }
 
   return(fevd_store)
 }
@@ -182,20 +184,25 @@ fevd.bvar <- function(x, ..., conf_bands = 0.5, n_thin = 1L) {
 #' @export
 #'
 #' @importFrom stats quantile
-fevd.bvar_irf <- function(x, conf_bands = 0.5, ...) {
+fevd.bvar_irf <- function(x, conf_bands, ...) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
 
   if(is.null(x[["fevd"]])) {
-    stop("No fevd found. Compute some by calling `fevd()` on a `bvar` object.")
+    stop("No forecast error variance decomposition found.")
   }
 
-  quantiles <- quantile_check(conf_bands)
-  fevd_store <- apply(x[["fevd"]], c(2, 3), quantile, quantiles)
+  x <- list("fevd" = x[["fevd"]],
+    "setup" = x[["setup"]], "variables" = x[["variables"]])
 
-  class(fevd_store) <- append("bvar_fevd", class(fevd_store))
+  if(!missing(conf_bands)) {
+    quantiles <- quantile_check(conf_bands)
+    x[["quants"]] <- apply(x[["fevd"]], c(2, 3, 4), quantile, quantiles)
+  }
 
-  return(fevd_store)
+  class(x) <- "bvar_fevd"
+
+  return(x)
 }
 
 

@@ -44,10 +44,13 @@ compute_irf <- function(
   shock <- if(identification) {
     if(is.null(sign_restr)) {
       sigma_chol
-    } else {sign_restr(sigma_chol, sign_restr, M, sign_lim)}
+    } else {
+      sign_restr(sigma_chol = sigma_chol, sign_restr = sign_restr, M = M,
+        sign_lim = sign_lim)
+    }
   } else {sigma}
 
-  # IRF
+  # Impulse responses
   irf_comp <- array(0, c(M * lags, horizon, M * lags))
   irf_comp[1:M, 1, 1:M] <- shock
   for(i in 2:horizon) {
@@ -57,7 +60,10 @@ compute_irf <- function(
 
   # Outputs
   out <- list("irf" = irf_comp)
-  if(fevd) {out[["fevd"]] <- compute_fevd(irf_comp, M, horizon)}
+
+  if(fevd) {
+    out[["fevd"]] <- compute_fevd(irf_comp = irf_comp, M = M, horizon = horizon)
+  }
 
   return(out)
 }

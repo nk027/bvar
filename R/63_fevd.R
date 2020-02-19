@@ -8,7 +8,7 @@
 #' @param M Integer scalar. Columns of \emph{X}.
 #' @param horizon Integer scalar. Horizon of impulse responses and FEVDs.
 #'
-#' @return Returns a numeric matrix of FEVDs.
+#' @return Returns a numeric matrix of mean FEVDs.
 #'
 #' @noRd
 compute_fevd <- function(irf_comp, M, horizon) {
@@ -21,5 +21,5 @@ compute_fevd <- function(irf_comp, M, horizon) {
     fevd_comp[, , i] <- fevd_comp[, , i] / denm
   }
 
-  return(apply(fevd_comp, c(1, 2), mean, na.rm = TRUE))
+  return(aperm(fevd_comp, c(1, 3, 2)))
 }
