@@ -81,13 +81,16 @@ bv_irf <- function(
       "extended for the next release. Return values may differ.")
   }
 
-  if(!is.null(sign_restr) && !all(sign_restr %in% c(-1, 0, 1)) &&
-     sqrt(length(sign_restr)) %% 1 != 0) {
+  if(!is.null(sign_restr) && !is.numeric(sign_restr) &&
+    !all(sign_restr %in% c(-1, 0, NA, 1)) &&
+    sqrt(length(sign_restr)) %% 1 != 0) {
     stop("Please provide sign_restr as a numeric square matrix containing ",
-         "0s, 1s and -1s.")
+      "NAs, 1s and -1s.")
   }
-  if(is.vector(sign_restr)) {
-    sign_restr <- matrix(sign_restr, nrow = sqrt(length(sign_restr)))
+  if(0 %in% sign_restr) {
+    warning("Please set unrestricted elements to NA instead of 0. ",
+      "This functionality is being deprecated for zero-sign restrictions.")
+    sign_restr[sign_restr == 0] <- NA_integer_
   }
 
   # Outputs

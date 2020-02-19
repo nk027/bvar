@@ -6,11 +6,21 @@
 \alias{print.bv_metropolis}
 \title{Metropolis-Hastings settings}
 \usage{
-bv_metropolis(scale_hess = 0.01, adjust_acc = FALSE,
-  acc_lower = 0.25, acc_upper = 0.35, acc_change = 0.01)
+bv_metropolis(
+  scale_hess = 0.01,
+  adjust_acc = FALSE,
+  acc_lower = 0.25,
+  acc_upper = 0.35,
+  acc_change = 0.01
+)
 
-bv_mh(scale_hess = 0.01, adjust_acc = FALSE, acc_lower = 0.25,
-  acc_upper = 0.35, acc_change = 0.01)
+bv_mh(
+  scale_hess = 0.01,
+  adjust_acc = FALSE,
+  acc_lower = 0.25,
+  acc_upper = 0.35,
+  acc_change = 0.01
+)
 
 \method{print}{bv_metropolis}(x, ...)
 }

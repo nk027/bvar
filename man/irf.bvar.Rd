@@ -22,8 +22,7 @@ fevd(x, ...)
 
 \method{print}{bvar_fevd}(x, digits = 4L, complete = FALSE, ...)
 
-\method{summary}{bvar_irf}(object, vars_impulse = NULL,
-  vars_response = NULL, ...)
+\method{summary}{bvar_irf}(object, vars_impulse = NULL, vars_response = NULL, ...)
 }
 \arguments{
 \item{x, object}{A \code{bvar} object, obtained from \code{\link{bvar}}.

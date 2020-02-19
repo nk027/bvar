@@ -5,8 +5,7 @@
 \alias{companion}
 \title{Retrieve companion matrix from a Bayesian VAR}
 \usage{
-\method{companion}{bvar}(object, conf_bands = 0.5, complete = FALSE,
-  ...)
+\method{companion}{bvar}(object, conf_bands = 0.5, complete = FALSE, ...)
 
 companion(object, ...)
 }

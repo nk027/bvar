@@ -1,3 +1,15 @@
+# v0.2.2, CRAN Update 4 / Impulse Response Hotfix
+
+- Fix impulse response calculation (stray transpose of coefficients)
+  - Thanks, Maximilian Böck for helping us track this down
+- Add some verbosity to error messages
+- Prepare for next major release
+  - Include messages about future extensions and changes of FEVDs
+  - Update docs on future construction of sign restrictions
+  - Update docs on prediction and IRFs in `bvar()`
+- Add FRED-MD co-author Serena Ng to data contributors
+
+
 # v0.2.1, CRAN Update 3 / FRED-QD ODC-BY 1.0
 
 - Clarify exact ToU of the FRED-QD dataset with St. Louis Fed

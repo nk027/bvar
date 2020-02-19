@@ -4,8 +4,14 @@
 \alias{as.mcmc.bvar}
 \title{Method for coda Markov chain Monte Carlo objects}
 \usage{
-as.mcmc.bvar(x, vars = NULL, vars_response = NULL,
-  vars_impulse = NULL, chains = list(), ...)
+as.mcmc.bvar(
+  x,
+  vars = NULL,
+  vars_response = NULL,
+  vars_impulse = NULL,
+  chains = list(),
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{bvar} object, obtained from \code{\link{bvar}}.}

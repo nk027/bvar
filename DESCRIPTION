@@ -1,18 +1,20 @@
 Package: BVAR
 Type: Package
 Title: Hierarchical Bayesian Vector Autoregression
-Version: 0.2.1
-Date: 2019-09-05
+Version: 0.2.2
+Date: 2020-02-20
 Authors@R: c(person("Nikolas", "Kuschnig", role = c("aut", "cre"), email = "nikolas.kuschnig@wu.ac.at"),
     person("Lukas", "Vashold", role = "aut"),
-    person("Michael", "McCracken", role = "dtc", comment = "author of the FRED-QD dataset"))
-Author: Nikolas Kuschnig [aut, cre], 
-  Lukas Vashold [aut], 
-  Michael McCracken [dtc] (author of the FRED-QD dataset)
+    person("Michael", "McCracken", role = "dtc"),
+    person("Serena", "Ng", role = "dtc"))
+Author: Nikolas Kuschnig [aut, cre],
+  Lukas Vashold [aut],
+  Michael McCracken [dtc],
+  Serena Ng [dtc]
 Maintainer: Nikolas Kuschnig <nikolas.kuschnig@wu.ac.at>
-Description: Toolkit for the estimation of hierarchical Bayesian vector 
-    autoregressions. Implements hierarchical prior selection for conjugate 
-    priors in the fashion of Giannone, Lenza & Primiceri (2015) 
+Description: Toolkit for the estimation of hierarchical Bayesian vector
+    autoregressions. Implements hierarchical prior selection for conjugate
+    priors in the fashion of Giannone, Lenza & Primiceri (2015)
     <doi:10.1162/REST_a_00483>. Allows for the computation of impulse responses
     and forecasts and provides several methods for assessing results.
 URL: https://github.com/nk027/bvar
@@ -23,4 +25,4 @@ Suggests: coda, vars
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

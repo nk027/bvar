@@ -8,20 +8,27 @@
 \alias{bv_psi}
 \title{Minnesota prior settings}
 \usage{
-bv_minnesota(lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max =
-  5), alpha = bv_alpha(2, 0.25, 1, 3), psi = bv_psi(0.004, 0.004,
-  "auto"), var = 10000000, b = "auto")
+bv_minnesota(
+  lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
+  alpha = bv_alpha(2, 0.25, 1, 3),
+  psi = bv_psi(0.004, 0.004, "auto"),
+  var = 10000000,
+  b = "auto"
+)
 
-bv_mn(lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
-  alpha = bv_alpha(2, 0.25, 1, 3), psi = bv_psi(0.004, 0.004, "auto"),
-  var = 10000000, b = "auto")
+bv_mn(
+  lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
+  alpha = bv_alpha(2, 0.25, 1, 3),
+  psi = bv_psi(0.004, 0.004, "auto"),
+  var = 10000000,
+  b = "auto"
+)
 
 bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5)
 
 bv_alpha(mode = 2, sd = 0.25, min = 1, max = 3)
 
-bv_psi(scale = 0.004, shape = 0.004, mode = "auto", min = "auto",
-  max = "auto")
+bv_psi(scale = 0.004, shape = 0.004, mode = "auto", min = "auto", max = "auto")
 }
 \arguments{
 \item{lambda}{List constructed via \code{\link{bv_lambda}}.
