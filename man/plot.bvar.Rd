@@ -2,21 +2,9 @@
 % Please edit documentation in R/91_plot.R
 \name{plot.bvar}
 \alias{plot.bvar}
-\alias{plot.bvar_chains}
 \title{Plotting method for Bayesian VARs}
 \usage{
 \method{plot}{bvar}(
-  x,
-  type = c("full", "trace", "density", "irf", "fcast"),
-  vars = NULL,
-  vars_response = NULL,
-  vars_impulse = NULL,
-  chains = list(),
-  mar = c(2, 2, 2, 0.5),
-  ...
-)
-
-\method{plot}{bvar_chains}(
   x,
   type = c("full", "trace", "density", "irf", "fcast"),
   vars = NULL,

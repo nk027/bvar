@@ -58,7 +58,7 @@ parameter. Note that the \emph{mode} of \emph{psi} is set automatically by
 default, and would need to be provided as vector.}
 
 \item{min, max}{Numeric scalar. Minimum / maximum allowed value. Note that
-for \emph{psi} these need to provided as vectors.}
+for \emph{psi} these are set automatically or need to provided as vectors.}
 
 \item{scale, shape}{Numeric scalar. Scale and shape parameters of a Gamma
 distribution.}

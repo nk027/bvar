@@ -22,10 +22,10 @@ parameter. Note that the \emph{mode} of \emph{psi} is set automatically by
 default, and would need to be provided as vector.}
 
 \item{min}{Numeric scalar. Minimum / maximum allowed value. Note that
-for \emph{psi} these need to provided as vectors.}
+for \emph{psi} these are set automatically or need to provided as vectors.}
 
 \item{max}{Numeric scalar. Minimum / maximum allowed value. Note that
-for \emph{psi} these need to provided as vectors.}
+for \emph{psi} these are set automatically or need to provided as vectors.}
 
 \item{fun}{Function taking \emph{Y}, \emph{lags} and the prior's parameter
 \emph{par} to generate and return a named list with elements \emph{X} and
@@ -91,7 +91,9 @@ sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
 priors_dum <- bv_priors(hyper = "auto", soc = soc, sur = sur)
 }
 \references{
-Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
+Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
+  Vector Autoregressions. \emph{The Review of Economics and Statistics},
+  \bold{97:2}, 436-451, \url{https://doi.org/10.1162/REST_a_00483}.
 }
 \seealso{
 \code{\link{bv_priors}}; \code{\link{bv_minnesota}}

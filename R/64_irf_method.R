@@ -19,8 +19,8 @@
 #' Note that the median, i.e. \code{0.5} is always included.
 #' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
 #' for calculations, others are dropped.
-#' @param vars_impulse,vars_response Optional numeric or character vector. Used
-#' to subset the summary's impulses / responses to certain variables by position
+#' @param vars,vars_impulse,vars_response Optional numeric or character vector.
+#' Used to subset the summary method's outputs to certain variables by position
 #' or name (must be available). Defaults to \code{NULL}, i.e. all variables.
 #'
 #' @return Returns a list of class \code{bvar_irf} including IRFs and optionally

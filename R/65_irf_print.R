@@ -98,7 +98,7 @@ summary.bvar_irf <- function(
   has_quants <- length(dim(quants)) == 4
   M <- if(has_quants) {dim(quants)[2]} else {dim(quants)[1]}
 
-  variables <- name_deps(variables = x[["variables"]], M = M)
+  variables <- name_deps(variables = object[["variables"]], M = M)
   pos_imp <- pos_vars(vars_impulse, variables, M)
   pos_res <- pos_vars(vars_response, variables, M)
 
@@ -153,7 +153,7 @@ summary.bvar_fevd <- function(object, vars = NULL, ...) {
   has_quants <- length(dim(quants)) == 4
   M <- if(has_quants) {dim(quants)[2]} else {dim(quants)[1]}
 
-  variables <- name_deps(variables = x[["variables"]], M = M)
+  variables <- name_deps(variables = object[["variables"]], M = M)
   pos <- pos_vars(vars, variables = variables, M = M)
 
   out <- list(

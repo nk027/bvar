@@ -4,13 +4,11 @@
 \alias{bv_fcast}
 \title{Forecast settings}
 \usage{
-bv_fcast(horizon = 12, conditional = FALSE)
+bv_fcast(horizon = 12)
 }
 \arguments{
 \item{horizon}{Integer scalar. Horizon for which forecasts should be
 computed.}
-
-\item{conditional}{Logical scalar. Not yet implemented.}
 }
 \value{
 Returns a named list of class \code{bv_fcast} with options for
@@ -21,9 +19,9 @@ Provide forecast settings to \code{\link{bvar}} or
 \code{\link{predict.bvar}}. Allows adjusting the horizon of the forecast.
 }
 \details{
-As of now only unconditional forecasts are implemented and conditional must
-be set to \code{FALSE}. Conditional forecasts will require further options,
-such as variable paths.
+Conditional forecasts must be retrieved via \code{\link{scenario}}
+ex-post. Conditional forecasts will require further options, such as
+variable paths.
 }
 \examples{
 # Set the forecast-horizon to 20 time periods instead of 12

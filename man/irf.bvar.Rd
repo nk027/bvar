@@ -6,17 +6,20 @@
 \alias{irf}
 \alias{fevd}
 \alias{summary.bvar_irf}
+\alias{summary.bvar_fevd}
 \title{Impulse response and forecast error methods for Bayesian VARs}
 \usage{
 \method{irf}{bvar}(x, ..., conf_bands, n_thin = 1L)
 
-\method{fevd}{bvar}(x, ..., conf_bands = 0.5, n_thin = 1L)
+\method{fevd}{bvar}(x, ..., conf_bands, n_thin = 1L)
 
 irf(x, ...)
 
 fevd(x, ...)
 
 \method{summary}{bvar_irf}(object, vars_impulse = NULL, vars_response = NULL, ...)
+
+\method{summary}{bvar_fevd}(object, vars = NULL, ...)
 }
 \arguments{
 \item{x, object}{A \code{bvar} object, obtained from \code{\link{bvar}}.

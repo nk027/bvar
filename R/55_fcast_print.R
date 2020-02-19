@@ -48,7 +48,7 @@ summary.bvar_fcast <- function(object, vars = NULL, ...) {
   has_quants <- length(dim(quants)) == 3
   M <- if(has_quants) {dim(quants)[3]} else {dim(quants)[2]}
 
-  variables <- name_deps(variables = x[["variables"]], M = M)
+  variables <- name_deps(variables = object[["variables"]], M = M)
   pos <- pos_vars(vars, variables = variables, M = M)
 
   out <- list(
