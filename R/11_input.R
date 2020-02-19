@@ -55,8 +55,8 @@ auto_psi <- function(x, lags) {
     sqrt(arima(x, order = c(lags, 0, 0))$sigma2)
   }), error = function(e) {
     stop("Some of the data appears to be integrated. ",
-         "Setting psi automatically via `arima()` (p = ", lags, ") failed.")
-  })
+         "Setting psi automatically via an AR(", lags, ") failed. ",
+         "Please provide modes for psi manually (see `?bv_psi`).")})
 
   out[["min"]] <- out[["mode"]] / 100
   out[["max"]] <- out[["mode"]] * 100

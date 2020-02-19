@@ -6,3 +6,6 @@
 
 ^cran-comments\.md$
 ^README\.md$
+
+^vignettes/
+^data/fred_md_full\.rda$

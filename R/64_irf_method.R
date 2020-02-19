@@ -196,6 +196,9 @@ fevd.bvar_irf <- function(x, conf_bands = 0.5, ...) {
     stop("No fevd found. Compute some by calling `fevd()` on a `bvar` object.")
   }
 
+  message("Attention - this function is going to return a more detailed ",
+    "object in this package's next version.")
+
   quantiles <- quantile_check(conf_bands)
   fevd_store <- apply(x[["fevd"]], c(2, 3), quantile, quantiles)
 

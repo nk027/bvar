@@ -28,7 +28,7 @@ compute_fcast <- function(
   horizon,
   beta_comp, beta_const,
   sigma,
-  conditional = NULL) {
+  conditional = FALSE) {
 
   Y_f <- matrix(NA, horizon + 1, K - 1)
   Y_f[1, ] <- sapply(t(Y[N:(N - lags + 1), ]), c)

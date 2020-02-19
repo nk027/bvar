@@ -76,6 +76,11 @@ bv_irf <- function(
     stop("Please provide fevd and identification as logical scalars.")
   }
 
+  if(fevd) {
+    message("Note that forecast error variance decompositions are being ",
+      "extended for the next release. Return values may differ.")
+  }
+
   if(!is.null(sign_restr) && !all(sign_restr %in% c(-1, 0, 1)) &&
      sqrt(length(sign_restr)) %% 1 != 0) {
     stop("Please provide sign_restr as a numeric square matrix containing ",

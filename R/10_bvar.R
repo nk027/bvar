@@ -172,7 +172,7 @@ bvar <- function(
   } else if(!all(dim(priors[["b"]]) == c(K, M))) {
     stop("Dimensions of prior mean (b) do not match the data.")
   }
-  if(priors[["psi"]][["mode"]] == "auto") {
+  if(any(priors[["psi"]][["mode"]] == "auto")) {
     psi_temp <- auto_psi(Y, lags)
     priors[["psi"]][["mode"]] <- psi_temp[["mode"]]
     priors[["psi"]][["min"]] <- psi_temp[["min"]]
