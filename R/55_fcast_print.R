@@ -52,12 +52,8 @@ summary.bvar_fcast <- function(object, vars = NULL, ...) {
   pos <- pos_vars(vars, variables = variables, M = M)
 
   out <- list(
-    "fcast" = object,
-    "quants" = quants,
-    "variables" = variables,
-    "pos" = pos,
-    "has_quants" = has_quants
-  )
+    "fcast" = object, "quants" = quants,
+    "variables" = variables, "pos" = pos, "has_quants" = has_quants)
 
   class(out) <- "bvar_fcast_summary"
 

@@ -103,13 +103,10 @@ summary.bvar_irf <- function(
   pos_res <- pos_vars(vars_response, variables, M)
 
   out <- list(
-    "irf" = object,
-    "quants" = quants,
-    "variables" = variables,
-    "pos_imp" = pos_imp,
-    "pos_res" = pos_res,
-    "has_quants" = has_quants
-  )
+    "irf" = object, "quants" = quants,
+    "variables" = variables, "pos_imp" = pos_imp,"pos_res" = pos_res,
+    "has_quants" = has_quants)
+
   class(out) <- "bvar_irf_summary"
 
   return(out)
@@ -157,11 +154,8 @@ summary.bvar_fevd <- function(object, vars = NULL, ...) {
   pos <- pos_vars(vars, variables = variables, M = M)
 
   out <- list(
-    "fevd" = object,
-    "quants" = quants,
-    "variables" = variables,
-    "pos" = pos,
-    "has_quants" = has_quants
+    "fevd" = object, "quants" = quants,
+    "variables" = variables, "pos" = pos, "has_quants" = has_quants
   )
 
   class(out) <- "bvar_fevd_summary"

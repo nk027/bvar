@@ -94,8 +94,8 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
       "fevd" = if(irf[["fevd"]]) {
         structure(
-          list("fevd" = array(NA, c(n_save, M, irf[["horizon"]], M))),
-          class = "bvar_fevd")
+          list("fevd" = array(NA, c(n_save, M, irf[["horizon"]], M)),
+            "variables" = x[["variables"]]), class = "bvar_fevd")
       } else {NULL},
       "setup" = irf, "variables" = x[["variables"]]
     )
@@ -118,9 +118,6 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       j <- j + n_thin
     }
   }
-
-
-  # Apply confidence bands ------------------------------------------------
 
   if(is.null(irf_store[["quants"]]) || !missing(conf_bands)) {
     irf_store <- if(!missing(conf_bands)) {
@@ -172,8 +169,6 @@ fevd.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
     irf_store <- irf.bvar(x, irf, n_thin = n_thin) # Recalculate
   }
 
-  # Apply confidence bands ------------------------------------------------
-
   fevd_store <- fevd.bvar_irf(irf_store, conf_bands = conf_bands)
 
   return(fevd_store)
@@ -182,8 +177,6 @@ fevd.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 
 #' @noRd
 #' @export
-#'
-#' @importFrom stats quantile
 fevd.bvar_irf <- function(x, conf_bands, ...) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
@@ -192,15 +185,32 @@ fevd.bvar_irf <- function(x, conf_bands, ...) {
     stop("No forecast error variance decomposition found.")
   }
 
-  x <- list("fevd" = x[["fevd"]],
-    "setup" = x[["setup"]], "variables" = x[["variables"]])
+  fevd_store <- x[["fevd"]]
+
+  if(is.null(fevd_store[["quants"]]) || !missing(conf_bands)) {
+    fevd_store <- if(!missing(conf_bands)) {
+      fevd.bvar_fevd(fevd_store, conf_bands)
+    } else {fevd.bvar_fevd(fevd_store, c(0.16))}
+  }
+
+  class(x) <- "bvar_fevd"
+
+  return(x)
+}
+
+
+#' @noRd
+#' @export
+#'
+#' @importFrom stats quantile
+fevd.bvar_fevd <- function(x, conf_bands, ...) {
+
+  if(!inherits(x, "bvar_fevd")) {stop("Please provide a `bvar_fevd` object.")}
 
   if(!missing(conf_bands)) {
     quantiles <- quantile_check(conf_bands)
     x[["quants"]] <- apply(x[["fevd"]], c(2, 3, 4), quantile, quantiles)
   }
-
-  class(x) <- "bvar_fevd"
 
   return(x)
 }

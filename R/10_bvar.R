@@ -291,8 +291,8 @@ bvar <- function(
       "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
       "fevd" = if(irf[["fevd"]]) {
         structure(
-          list("fevd" = array(NA, c(n_save, M, irf[["horizon"]], M))),
-          class = "bvar_fevd")
+          list("fevd" = array(NA, c(n_save, M, irf[["horizon"]], M)),
+            "variables" = x[["variables"]]), class = "bvar_fevd")
       } else {NULL},
       "setup" = irf, "variables" = variables)
     class(irf_store) <- "bvar_irf"
