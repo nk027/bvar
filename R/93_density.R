@@ -118,6 +118,8 @@ plot.bvar_density <- function(
 #' @rdname density.bvar
 #' @export
 independent_index <- function(var, n_vars, lag) {
+
   x <- vapply(c(var, n_vars, lag), int_check, integer(1L))
+
   return(1 + x[2] * (x[3] - 1) + x[1])
 }

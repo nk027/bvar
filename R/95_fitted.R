@@ -141,8 +141,6 @@ print.bvar_resid <- function(x, digits = 2L, ...) {
 #' @param type String indicating whether \emph{x} contains fitted or resiudal
 #' values.
 #'
-#' @importFrom utils head tail
-#'
 #' @noRd
 print_fitted <- function(
   x, digits = 2L,
@@ -152,31 +150,28 @@ print_fitted <- function(
 
   has_quants <- length(dim(x)) == 3
   if(has_quants) {
-    N <- dim(x)[2]
-    M <- dim(x)[3]
-    P <- dim(x)[1]
+    N <- dim(x)[2]; M <- dim(x)[3]; P <- dim(x)[1]
     variables <- name_deps(variables = dimnames(x)[[3]], M = M)
-    head <- x["50%", 1:3, ]
-    tail <- x["50%", (N - 2):N, ]
+    top <- x["50%", 1:3, ]
+    bot <- x["50%", (N - 2):N, ]
   } else {
-    N <- dim(x)[1]
-    M <- dim(x)[2]
+    N <- dim(x)[1]; M <- dim(x)[2]
     variables <- name_deps(variables = dimnames(x)[[2]], M = M)
-    head <- x[1:3, ]
-    tail <- x[(N - 2):N, ]
+    top <- x[1:3, ]
+    bot <- x[(N - 2):N, ]
   }
 
   cat("Numeric array (dimensions ", paste0(dim(x), collapse = ", "),  ")",
-      " with ", type, " values from a BVAR.\n", sep = "")
+    " with ", type, " values from a BVAR.\n", sep = "")
   if(has_quants) {
     cat("Computed confidence bands: ",
-        paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")
+      paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")
   }
   cat("Median values:\n")
   for(var in seq_len(M)) {
     cat("\t", variables[var], ": ",
-        paste0(round(head[, var], digits), collapse = ", "), ", [...], ",
-        paste0(round(tail[, var], digits), collapse = ", "), "\n", sep = "")
+      paste0(round(top[, var], digits), collapse = ", "), ", [...], ",
+      paste0(round(bot[, var], digits), collapse = ", "), "\n", sep = "")
   }
 
   return(invisible(x))

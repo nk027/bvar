@@ -16,13 +16,13 @@
 #' @importFrom stats logLik
 #'
 #' @noRd
-logLik.bvar <- function(object, ...) {
+logLik.bvar <- function(object, ...) { # Todo: Add conf_bands
 
   Y <- object[["meta"]][["Y"]]
   N <- object[["meta"]][["N"]]
   K <- object[["meta"]][["K"]]
-  mean <- fitted(object)
-  sigma <- vcov(object, 0.5)[]
+  mean <- fitted(object, conf_bands = 0.5)
+  sigma <- vcov(object, conf_bands = 0.5)[]
 
   ll <- sum(vapply(seq_len(N), function(i) {
     dmvnorm(Y[i, ], mean[i, ], sigma, log = TRUE)
