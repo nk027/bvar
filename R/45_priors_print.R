@@ -4,16 +4,17 @@ print.bv_priors <- function(x, ...) {
   if(!inherits(x, "bv_priors")) {stop("Please provide a `bv_priors` object.")}
 
   cat("Object with prior settings for `bvar()`.\n",
-      "Hyperparameters: ",
-      paste0(x[["hyper"]], collapse = ", "),
-      "\n\n", sep = "")
+    "Hyperparameters: ", paste0(x[["hyper"]], collapse = ", "),
+    "\n\n", sep = "")
+
   if(!is.null(x[["lambda"]])) {print.bv_minnesota(x, indent = TRUE)}
+
   dummy_pos <- !names(x) %in% c("lambda", "alpha", "psi", "hyper", "var", "b")
   if(any(dummy_pos)) {
     cat("\nDummy prior(s):\n")
     dummies <- names(x)[dummy_pos]
     for(dummy in dummies) {
-      cat(dummy, ":\n", sep = ""); print(x[[dummy]], indent = TRUE)
+      cat(dummy, ":\n", sep = ""); print.bv_dummy(x[[dummy]], indent = TRUE)
     }
   }
 
@@ -28,9 +29,9 @@ print.bv_minnesota <- function(x, indent = FALSE, ...) {
     stop("Please provide a `bv_minnesota` or `bv_priors` object.")
   }
 
-  cat("Minnesota prior:\nlambda:\n"); print(x[["lambda"]], indent)
-  cat("alpha:\n"); print(x[["alpha"]], indent)
-  cat("psi:\n"); print(x[["psi"]], indent)
+  cat("Minnesota prior:\nlambda:\n"); print(x[["lambda"]], indent = indent)
+  cat("alpha:\n"); print(x[["alpha"]], indent = indent)
+  cat("psi:\n"); print(x[["psi"]], indent = indent)
   cat("\nVariance of the constant term:", x[["var"]], "\n")
 
   return(invisible(x))
@@ -44,7 +45,7 @@ print.bv_dummy <- function(x, indent = FALSE, ...) {
 
   print_priors(x, ...)
   cat(if(indent) {"\t"}, "Mode / Bounds: ",
-      x[["mode"]], " / [", x[["min"]], ", ", x[["max"]], "]\n", sep = "")
+    x[["mode"]], " / [", x[["min"]], ", ", x[["max"]], "]\n", sep = "")
 
   return(invisible(x))
 }
@@ -61,11 +62,10 @@ print.bv_psi <- function(x, indent = FALSE, ...) {
   } else {
     for(i in seq_along(x[["mode"]])) {
       cat(if(indent) {"\t"}, "#", i, " Mode / Bounds: ",
-          x[["mode"]][i], " / [", x[["min"]][i], ", ", x[["max"]][i], "]\n",
-          sep = "")
+        x[["mode"]][i], " / [", x[["min"]][i], ", ", x[["max"]][i], "]\n",
+        sep = "")
     }
   }
-
 
   return(invisible(x))
 }
@@ -80,8 +80,8 @@ print.bv_psi <- function(x, indent = FALSE, ...) {
 print_priors <- function(x, indent = FALSE, ...) {
 
   cat(if(indent) {"\t"}, "Shape / Scale: ",
-      round(x[["coef"]][["k"]], 3L), " / ",
-      round(x[["coef"]][["theta"]], 3L), "\n", sep = "")
+    round(x[["coef"]][["k"]], 3L), " / ",
+    round(x[["coef"]][["theta"]], 3L), "\n", sep = "")
 
   return(invisible(x))
 }

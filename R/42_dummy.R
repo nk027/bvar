@@ -6,10 +6,12 @@ dummy <- function(
   min = 0.0001, max = 5,
   ...) {
 
-  if(0 >= min || min >= max) {stop("Boundaries misspecified.")}
-  if(mode < 0) {stop("Parameter misspecified.")}
+  mode <- num_check(mode, min = 0, max = Inf, msg = "Issue with mode.")
+  min <- num_check(min, min = 0, max = max, msg = "Issue with min boundary.")
+  max <- num_check(max, min = min, max = Inf, msg = "Issue with max boundary.")
 
   out <- list("mode" = mode, "min" = min, "max" = max, ...)
+
   class(out) <- "bv_dummy"
 
   return(out)
@@ -44,7 +46,9 @@ dummy <- function(
 #' \code{\link{bv_priors}}.
 #'
 #' @references
-#'     Giannone, D., Lenza, M., & Primiceri, G. E. (2015). Prior Selection for Vector Autoregressions. Review of Economics and Statistics, 97, 436-451. \url{https://doi.org/10.1162/REST_a_00483}.
+#'   Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
+#'   Vector Autoregressions. \emph{The Review of Economics and Statistics},
+#'   \bold{97:2}, 436-451, \url{https://doi.org/10.1162/REST_a_00483}.
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_minnesota}}
 #'
@@ -86,6 +90,8 @@ bv_dummy <- function(
   if(sd <= 0) {stop("Parameter sd misspecified.")}
   fun <- match.fun(fun)
 
-  return(dummy(mode, min, max, sd = sd, fun = fun,
-               coef = gamma_coef(mode, sd)))
+  return(
+    dummy(mode = mode, min = min, max = max, sd = sd, fun = fun,
+      coef = gamma_coef(mode, sd))
+  )
 }

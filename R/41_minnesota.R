@@ -97,7 +97,9 @@ bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 5) {
 
   if(sd <= 0) {stop("Parameter sd misspecified.")}
 
-  return(dummy(mode, min, max, sd = sd, coef = gamma_coef(mode, sd)))
+  return(
+    dummy(mode, min, max, sd = sd, coef = gamma_coef(mode = mode, sd = sd))
+  )
 }
 
 
