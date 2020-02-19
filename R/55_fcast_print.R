@@ -12,16 +12,16 @@ print.bv_fcast <- function(x, ...) {
 
 
 #' @export
-print.bvar_fcast <- function(x, vars = NULL, ...) {
+print.bvar_fcast <- function(x, ...) {
 
   if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
 
   cat("Forecast object from `bvar()`.\n")
 
-  print_fcast(x$setup, ...)
+  print_fcast(x[["setup"]], ...)
 
   cat("Variables: ", dim(x[["fcast"]])[3], "\n",
-      "Iterations: ", dim(x[["fcast"]])[1], "\n", sep = "")
+    "Iterations: ", dim(x[["fcast"]])[1], "\n", sep = "")
 
   return(invisible(x))
 }
@@ -46,12 +46,12 @@ summary.bvar_fcast <- function(object, vars = NULL, ...) {
 
   quants <- object[["quants"]]
   has_quants <- length(dim(quants)) == 3
-  M <- if(has_quants) {dim(quants)[3]} else {M <- dim(quants)[2]}
+  M <- if(has_quants) {dim(quants)[3]} else {dim(quants)[2]}
 
   variables <- if(is.null(object[["variables"]])) {
-    1L:M
+    seq.int(1L, M)
   } else {object[["variables"]]}
-  pos <- pos_vars(vars, variables, M)
+  pos <- pos_vars(vars, variables = variables, M = M)
 
   out <- list(
     "fcast" = object,
@@ -60,11 +60,10 @@ summary.bvar_fcast <- function(object, vars = NULL, ...) {
     "pos" = pos,
     "has_quants" = has_quants
   )
+
   class(out) <- "bvar_fcast_summary"
 
   return(out)
-
-  return(invisible(if(has_quants) {quants[, , pos]} else {quants[, pos]}))
 }
 
 
@@ -75,14 +74,15 @@ print.bvar_fcast_summary <- function(x, digits = 2L, ...) {
     stop("Please provide a `bvar_fcast_summary` object.")
   }
 
-  print.bvar_fcast(x$fcast)
+  print.bvar_fcast(x[["fcast"]])
 
-  cat(if(!x$has_quants) {"Median forecast:\n"} else {"Forecast:\n"})
+  cat(if(!x[["has_quants"]]) {"Median forecast:\n"} else {"Forecast:\n"})
 
-  for(i in x$pos) {
-    cat("\tVariable ", x$variables[i], ":\n", sep = "")
-    print(round(if(x$has_quants) {x$quants[, , i]} else {x$quants[, i]},
-                digits = digits))
+  for(i in x[["pos"]]) {
+    cat("\tVariable ", x[["variables"]][i], ":\n", sep = "")
+    print(round(
+      if(x[["has_quants"]]) {x[["quants"]][, , i]} else {x[["quants"]][, i]},
+      digits = digits))
   }
 
   return(invisible(x))

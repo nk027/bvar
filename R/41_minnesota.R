@@ -117,18 +117,21 @@ bv_psi <- function(
   scale = 0.004, shape = 0.004,
   mode = "auto", min = "auto", max = "auto") {
 
-  if(any(scale <= 0, shape <= 0)) {stop("Shape and/or scale misspecified.")}
+    scale <- num_check(scale, min = 0 + 1e-16, max = Inf,
+      msg = "Invalid value for scale (outside of (0, Inf]")
+    shape <- num_check(shape, min = 0 + 1e-16, max = Inf,
+      msg = "Invalid value for shape (outside of (0, Inf]")
 
   if(any(mode != "auto")) {
-    mode <- vapply(mode, num_check, numeric(1L),
-      min = 0, max = Inf, msg = "Issue with mode.")
+    mode <- vapply(mode, num_check, numeric(1L), min = 0, max = Inf,
+      msg = "Invalid value(s) for mode (outside of [0, Inf]).")
 
     if(length(min) == 1 && min == "auto") {min <- mode / 100}
     if(length(max) == 1 && max == "auto") {max <- mode * 100}
-    min <- vapply(min, num_check, numeric(1L),
-      min = 0, max = max, msg = "Issue with min boundary.")
-    max <- vapply(max, num_check, numeric(1L),
-      min = min, max = Inf, "Issue with max boundary.")
+    min <- vapply(min, num_check, numeric(1L), min = 0, max = max - 1e-16,
+      msg = "Invalid value(s) for min (outside of [0, max)).")
+    max <- vapply(max, num_check, numeric(1L), min = min + 1e-16, max = Inf,
+      msg = "Invalid value(s) for max (outside of (min, Inf]).")
 
   } else if(any(c(min != "auto", max != "auto"))) {
     stop("Boundaries are only adjustable with a given mode.")

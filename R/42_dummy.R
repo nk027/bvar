@@ -6,9 +6,12 @@ dummy <- function(
   min = 0.0001, max = 5,
   ...) {
 
-  mode <- num_check(mode, min = 0, max = Inf, msg = "Issue with mode.")
-  min <- num_check(min, min = 0, max = max, msg = "Issue with min boundary.")
-  max <- num_check(max, min = min, max = Inf, msg = "Issue with max boundary.")
+  mode <- num_check(mode, min = 0, max = Inf,
+    msg = "Invalid value for mode (outside of [0, Inf]).")
+  min <- num_check(min, min = 0, max = max - 1e-16,
+    msg = "Invalid value for min (outside of [0, max)).")
+  max <- num_check(max, min = min + 1e-16, max = Inf,
+    msg = "Invalid value for max (outside of (min, Inf]).")
 
   out <- list("mode" = mode, "min" = min, "max" = max, ...)
 

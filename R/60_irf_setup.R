@@ -73,9 +73,9 @@ bv_irf <- function(
 
   # Input checks
   horizon <- int_check(horizon, min = 1, max = 1e6,
-                       msg = "Invalid value for horizon (outside of [1, 1e6]).")
-  sign_lim <- int_check(sign_lim, min = 1, max = 1e6,
-                        msg = "Invalid value for sign_lim (outside of [1, 1e6]).")
+    msg = "Invalid value for horizon (outside of [1, 1e6]).")
+  sign_lim <- int_check(sign_lim, min = 1, max = Inf,
+    msg = "Invalid value for sign_lim (outside of [1, Inf]).")
 
   if(!is.logical(c(identification, fevd))){
     stop("Please provide fevd and identification as logical scalars.")
@@ -101,8 +101,10 @@ bv_irf <- function(
 
   # Outputs
   out <- list("horizon" = horizon, "fevd" = fevd,
-              "identification" = identification,
-              "sign_restr" = sign_restr, "sign_lim" = sign_lim)
+    "identification" = identification,
+    "sign_restr" = sign_restr, "sign_lim" = sign_lim
+  )
+
   class(out) <- "bv_irf"
 
   return(out)
