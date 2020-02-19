@@ -37,7 +37,7 @@
 #' parameter. Note that the \emph{mode} of \emph{psi} is set automatically by
 #' default, and would need to be provided as vector.
 #' @param min,max Numeric scalar. Minimum / maximum allowed value. Note that
-#' for \emph{psi} these need to provided as vectors.
+#' for \emph{psi} these are set automatically or need to provided as vectors.
 #' @param scale,shape Numeric scalar. Scale and shape parameters of a Gamma
 #' distribution.
 #'
@@ -78,7 +78,8 @@ bv_minnesota <- function(
 
   # Outputs
   out <- list("lambda" = lambda, "alpha" = alpha,
-              "psi" = psi, "b" = b, "var" = var)
+    "psi" = psi, "b" = b, "var" = var)
+
   class(out) <- "bv_minnesota"
 
   return(out)
@@ -110,21 +111,35 @@ bv_alpha <- function(mode = 2, sd = 0.25, min = 1, max = 3) {
 
 #' @describeIn bv_minnesota Prior standard deviation on other lags
 #' @export
-bv_psi <- function(scale = 0.004, shape = 0.004, mode = "auto",
-                   min = "auto", max = "auto") {
+bv_psi <- function(
+  scale = 0.004, shape = 0.004,
+  mode = "auto", min = "auto", max = "auto") {
 
-  if(any(scale <= 0, shape <= 0)) {stop("Parameters of psi misspecified.")}
+  if(any(scale <= 0, shape <= 0)) {stop("Shape and/or scale misspecified.")}
+
   if(any(mode != "auto")) {
+    mode <- vapply(mode, num_check, numeric(1L),
+      min = 0, max = Inf, msg = "Issue with mode.")
+
     if(length(min) == 1 && min == "auto") {min <- mode / 100}
     if(length(max) == 1 && max == "auto") {max <- mode * 100}
-    if(any(0 >= min, min >= max)) {stop("Boundaries misspecified.")}
+    min <- vapply(min, num_check, numeric(1L),
+      min = 0, max = max, msg = "Issue with min boundary.")
+    max <- vapply(max, num_check, numeric(1L),
+      min = min, max = Inf, "Issue with max boundary.")
+
+  } else if(any(c(min != "auto", max != "auto"))) {
+    stop("Boundaries are only adjustable with a given mode.")
   }
+
   if(length(mode) != length(min) || length(mode) != length(max)) {
-    stop("Issue with mode and/or boundaries.")
+    stop("The length of mode and boundaries diverge.")
   }
 
   out <- list("mode" = mode, "min" = min, "max" = max,
-              "coef" = list("k" = shape, "theta" = scale))
+    "coef" = list("k" = shape, "theta" = scale)
+  )
+
   class(out) <- "bv_psi"
 
   return(out)

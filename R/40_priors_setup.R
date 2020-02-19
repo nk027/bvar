@@ -57,7 +57,7 @@ bv_priors <- function(
   # Check inputs ------------------------------------------------------------
 
   if(!is.null(mn) && !inherits(mn, "bv_minnesota")) {
-    stop("Please use `bv_mn()` to set the minnesota prior.")
+    stop("Please use `bv_mn()` to set the Minnesota prior.")
   }
   dots <- list(...)
   if(!all(vapply(dots, inherits, TRUE, "bv_dummy"))) {
@@ -78,11 +78,13 @@ bv_priors <- function(
   # Output ------------------------------------------------------------------
 
   out <- if(!is.null(mn)) {
-    list(hyper = hyper, lambda = mn[["lambda"]], alpha = mn[["alpha"]],
-         psi = mn[["psi"]], var = mn[["var"]], b = mn[["b"]], ...)
+    list(hyper = hyper,
+      lambda = mn[["lambda"]], alpha = mn[["alpha"]],
+      psi = mn[["psi"]], var = mn[["var"]], b = mn[["b"]], ...)
   } else {
     list(hyper = hyper, ...)
   }
+
   class(out) <- "bv_priors"
 
   return(out)
