@@ -127,7 +127,8 @@ predict.bvar <- function(
 
       irf_store <- object[["irf"]]
       if(is.null(irf_store) ||
-         irf_store[["setup"]][["horizon"]] < fcast[["horizon"]]) {
+         irf_store[["setup"]][["horizon"]] < fcast[["horizon"]] ||
+         !irf_store[["setup"]][["identification"]]) {
         irf_store <- irf.bvar(object, horizon = fcast[["horizon"]],
                               n_thin = n_thin)
       }
@@ -142,28 +143,15 @@ predict.bvar <- function(
           beta_const = beta[j, 1, ], sigma = sigma[j, , ],
           conditional = TRUE)
         ortho_irf <- irf_store[["irf"]][j, , , ]
-        eta <- get_eta(cond_mat, noshock_fcast, ortho_irf, fcast[["horizon"]], M)
-
-        cond_fcast <- matrix(NA, fcast[["horizon"]], M)
-
-        for(h in seq_len(fcast[["horizon"]])) {
-          temp <- matrix(0, M, 1)
-          for(k in seq_len(h)) {
-            temp <- temp + ortho_irf[, (h - k + 1), ] %*% eta[ , k]
-          }
-          cond_fcast[h, ] <- noshock_fcast[h, ] + t(temp)
-        }
-
-        fcast_store[["fcast"]][i, , ] <- cond_fcast
-
+        fcast_store[["fcast"]][i, , ] <- get_cond_fcast(cond_mat = cond_mat,
+                                     noshock_fcast = noshock_fcast,
+                                     ortho_irf = ortho_irf,
+                                     horizon = fcast[["horizon"]], M = M)
         j <- j + n_thin
 
       }
-
     }
-
   }
-
 
   # Prepare outputs -------------------------------------------------------
 
