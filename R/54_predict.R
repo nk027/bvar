@@ -129,7 +129,7 @@ predict.bvar <- function(
       if(is.null(irf_store) ||
          irf_store[["setup"]][["horizon"]] < fcast[["horizon"]]) {
         irf_store <- irf.bvar(object, horizon = fcast[["horizon"]],
-                              n_thin = n_thin)[["irf"]]
+                              n_thin = n_thin)
       }
 
       j <- 1
