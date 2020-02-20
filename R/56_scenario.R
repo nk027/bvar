@@ -1,5 +1,6 @@
 #' currently only helper functions for conditional forecasts
 
+
 # Function to create matrix with conditions for conditional forecasts
 get_cond_mat <- function(path, horizon,
                          cond_var, variables, M) {
