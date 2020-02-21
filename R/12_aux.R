@@ -320,3 +320,43 @@ has_package <- function(package) {
 
   return(NULL)
 }
+
+
+#' Construct matrix with paths for conditional forecasts
+#'
+#' @param path Numeric vector or matrix. Contains the path(s) of variable(s)
+#' on which forecasts are conditioned on. Unrestricted future realisations
+#' should be filled with \code{NA}. Note that not all variables can be
+#' restricted at the same time.
+#' @param horizon Integer scalar. Specifies the horizon for which forecasts
+#' should be computed.
+#' @param cond_var Optional vector. Containing variable names or positions in
+#' case \emph{path} only restricts a subset of the variables.
+#' @param variables Character vector of all variable names.
+#' @param M Integer scalar. Count of all variables.
+#'
+#' @return Returns a matrix with the constrained paths of variables and
+#' \code{NAs} for unrestricted values.
+#'
+#' @noRd
+get_cond_mat <- function(path, horizon,
+                         cond_var, variables, M) {
+
+  cond_mat <- matrix(NA, horizon, M)
+  if(is.vector(path)) {
+    cond_var <- pos_vars(cond_var, variables, M)
+    cond_mat[1:length(path), cond_var] <- path
+  } else {
+    if(ncol(path) > M) {
+      stop("Path of conditions includes too many variables.")
+    }
+    if(ncol(path) == M){
+      cond_mat[seq_len(nrow(path)), ] <- path
+    } else {
+      cond_var <- pos_vars(cond_var, variables, M)
+      cond_mat[1:nrow(path), cond_var] <- path
+    }
+  }
+
+  return(cond_mat)
+}
