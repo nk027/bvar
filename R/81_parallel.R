@@ -36,7 +36,7 @@
 par_bvar <- function(
   cl, n_runs = length(cl),
   data, lags,
-  n_draw = 10000L, n_burn = 5000L, n_save, n_thin = 1L,
+  n_draw = 10000L, n_burn = 5000L, n_thin = 1L,
   priors = bv_priors(),
   mh = bv_mh(),
   fcast = NULL,
@@ -67,12 +67,7 @@ par_bvar <- function(
     msg = "Issue with n_burn. Is n_burn < n_draw?")
   n_thin <- int_check(n_thin, min = 1L, max = ((n_draw - n_burn) / 10),
     msg = "Issue with n_thin. Maximum allowed is (n_draw - n_burn) / 10.")
-  if(missing(n_save)) {
-    n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1)
-  } else {
-    n_save <- int_check(n_save, min = 1L)
-    n_draw <- int_check(n_save + n_burn, min = 1L)
-  }
+  n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1)
 
   # Constructors, required
   if(!inherits(priors, "bv_priors")) {
@@ -99,7 +94,7 @@ par_bvar <- function(
       library("BVAR")
       bvar(data = data, ..., verbose = FALSE)
     }, lags = lags,
-    n_draw = n_draw, n_burn = n_burn, n_save = n_save, n_thin = n_thin,
+    n_draw = n_draw, n_burn = n_burn, n_thin = n_thin,
     priors = priors, mh = mh, fcast = fcast, irf = irf)
 
   class(out) <- "bvar_chains"

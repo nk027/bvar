@@ -322,7 +322,7 @@ has_package <- function(package) {
 }
 
 
-#' Construct paths for conditional forecasts
+#' Build constraint matrix for conditional forecasts
 #'
 #' @param path Numeric vector or matrix. Contains the path(s) of variable(s)
 #' on which forecasts are conditioned on. Unrestricted future realisations
@@ -339,23 +339,16 @@ has_package <- function(package) {
 #' \code{NAs} for unrestricted values.
 #'
 #' @noRd
-get_cond_mat <- function(path, horizon, cond_var, variables, M) {
+get_constr_mat <- function(horizon, path, vars = NULL, variables = NULL, M) {
 
-  cond_mat <- matrix(NA, horizon, M)
-  if(is.vector(path)) {
-    cond_var <- pos_vars(cond_var, variables, M)
-    cond_mat[1:length(path), cond_var] <- path
-  } else {
-    if(ncol(path) > M) {stop("Path of conditions includes too many variables.")}
-    if(ncol(path) == M){
-      cond_mat[seq_len(nrow(path)), ] <- path
-    } else {
-      cond_var <- pos_vars(cond_var, variables, M)
-      cond_mat[1:nrow(path), cond_var] <- path
-    }
+  pos <- pos_vars(vars, variables, M)
+  constr_mat <- matrix(NA_real_, horizon, M)
+  constr_mat[seq_len(nrow(path)), pos] <- path
+  if(any(apply(constr_mat, 1, function(x) !any(is.na(x))))) {
+    stop("One variable must be unrestricted at each point in time.")
   }
 
-  return(cond_mat)
+  return(constr_mat)
 }
 
 

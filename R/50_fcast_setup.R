@@ -32,22 +32,33 @@ bv_fcast <- function(
   horizon <- int_check(horizon, min = 1, max = 1e6,
     msg = "Invalid value for horizon (outside of [1, 1e6]).")
 
-  if(!is.null(conditional)) {
-    if(!inherits(conditional, "bv_cdfcast")) {
-      stop("Please use `bv_cdfcast()` to configure conditional forecasts.")
+  if(!is.null(cond_path)) {
+    if(!is.numeric(cond_path)) {stop("Invalid type of cond_path.")}
+
+    if(is.vector(cond_path)) {
+      if(is.null(cond_vars)) {
+        stop("Please provide the constrained variable(s) via cond_vars.")
+      }
+      cond_path <- matrix(cond_path)
     }
 
-    if((is.matrix(conditional[["path"]]) &&
-      nrow(conditional[["path"]]) > horizon) ||
-      (is.vector(conditional[["path"]]) &&
-      length(conditional[["path"]]) > horizon)) {
-      stop("Horizon of conditions exceeds forecasting horizon.")
+    if(!is.null(cond_vars)) {
+      if(!is.null(cond_vars) && ncol(cond_path) != length(cond_vars)) {
+        stop("Dimensions of cond_path and cond_vars do not match.")
+      }
+      if(any(duplicated(cond_vars))) {
+        stop("Duplicated value(s) found in cond_vars.")
+      }
+    }
+
+    if(nrow(cond_path) > horizon) {
+      horizon <- nrow(cond_path)
+      message("Increasing horizon to the length of cond_path.")
     }
   }
 
-
   out <- structure(list(
-    "horizon" = horizon, "conditional" = conditional),
+    "horizon" = horizon, "cond_path" = cond_path, "cond_vars" = cond_vars),
     class = "bv_fcast")
 
   return(out)
@@ -94,28 +105,6 @@ bv_fcast <- function(
 #' paths[3:8, 3]  <- 3
 #' bv_cdfcast(path = paths)
 bv_cdfcast <- function(path, cond_var = NULL) {
-
-  if(!is.numeric(path)) {stop("Conditions in the wrong format.")}
-
-  if(is.vector(path) && is.null(cond_var)) {
-    stop("Position/Name of constrained variable missing.")
-  }
-
-  if(is.matrix(path) && !is.null(cond_var) && ncol(path) != length(cond_var)) {
-    stop("Number of constrained variables in path and number of positions/names
-         do not match")
-  }
-
-  if(!is.null(cond_var) && any(duplicated(cond_var))) {
-    stop("Multiple paths given for the same variable. Please adjust cond_var.")
-  }
-
-  if(is.matrix(path) && !all(apply(path, 1, function(x) any(is.na(x))))) {
-    stop("All variables restricted at once at some point.")
-  }
-
-  out <- list("path" = path, "cond_var" = cond_var)
-  class(out) <- "bv_cdfcast"
 
   return(out)
 }

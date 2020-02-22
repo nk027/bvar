@@ -113,7 +113,7 @@ bvar <- function(
   start_time <- Sys.time()
 
 
-  # Input Checking ----------------------------------------------------------
+  # Setup and checks -----
 
   # Data
   if(!all(vapply(data, is.numeric, logical(1L))) ||
@@ -150,7 +150,7 @@ bvar <- function(
   if(mh[["adjust_acc"]]) {n_adj <- as.integer(n_burn * mh[["adjust_burn"]])}
 
 
-  # Preparation -------------------------------------------------------------
+  # Preparation ---
 
   X <- lag_var(Y, lags = lags)
 

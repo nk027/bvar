@@ -7,9 +7,8 @@
 bvar(
   data,
   lags,
-  n_draw = 10000L,
-  n_burn = 5000L,
-  n_save,
+  n_draw = 5000L,
+  n_burn = 1000L,
   n_thin = 1L,
   priors = bv_priors(),
   mh = bv_mh(),
@@ -25,9 +24,8 @@ ordered from earliest to latest one.}
 
 \item{lags}{Integer scalar. Number of lags to apply to the data.}
 
-\item{n_draw, n_burn, n_save}{Integer scalar. Define the number of iterations
-to (a) cycle through, (b) burn at the start, (c) save. Note that if provided
-\emph{n_save} takes precedence over \emph{n_draw}.}
+\item{n_draw, n_burn}{Integer scalar. Define the number of iterations
+to (a) cycle through and (b) burn at the start.}
 
 \item{n_thin}{Integer scalar. Provides the option of reducing the number of
 stored iterations to every \emph{n_thin}'th one. The number of saved

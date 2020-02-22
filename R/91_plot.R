@@ -73,13 +73,13 @@ plot.bvar <- function(
 
   # Forward and return if "irf" or "fcast"
   if(type == "irf") {
-    if(is.null(x[["irf"]])) {warning("No `bvar_irf` found, calculating...")}
+    if(is.null(x[["irf"]])) {message("No `bvar_irf` found. Calculating...")}
     return(plot.bvar_irf(
       irf(x), vars_response = vars_response, vars_impulse = vars_impulse,
       variables = x[["variables"]], mar = mar, ...))
   }
   if(type == "fcast") {
-    if(is.null(x[["fcast"]])) {warning("No `bvar_fcast` found, calculating...")}
+    if(is.null(x[["fcast"]])) {message("No `bvar_fcast` found. Calculating...")}
     return(plot.bvar_fcast(
       predict(x), vars = vars, variables = x[["variables"]], mar = mar, ...))
   }

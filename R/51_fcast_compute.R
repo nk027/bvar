@@ -27,9 +27,7 @@
 compute_fcast <- function(
   Y, K, M, N, lags,
   horizon,
-  beta_comp, beta_const,
-  sigma,
-  conditional = FALSE) {
+  beta_comp, beta_const) {
 
   Y_f <- matrix(NA, horizon + 1, K - 1)
   Y_f[1, ] <- vapply(t(Y[N:(N - lags + 1), ]), c, numeric(1L))
@@ -39,13 +37,8 @@ compute_fcast <- function(
       c(beta_const, rep(0, M * (lags - 1)))
   }
 
-  if(!conditional) { # Add noise
-    Y_f[-1, 1:M] <- Y_f[-1, 1:M] +
-      t(sigma %*% matrix(rnorm(M * horizon), nrow = M))
-  }
-
   # Remove Y_t and lagged variables
-  return(Y_f[2:(1 + horizon), 1:M])
+  return(Y_f[-1, 1:M])
 }
 
 
@@ -53,9 +46,9 @@ compute_fcast <- function(
 #'
 #' Compute conditional forecasts using algorithm by Waggoner and Zha (1999).
 #'
-#' @param cond_mat Matrix containing constrained paths of variables and
+#' @param constr_mat Matrix containing constrained paths of variables and
 #' \code{NAs} for unrestricted values.
-#' @param noshock_fcast Matrix containing unconditional forecasts without
+#' @param fcast_base Matrix containing unconditional forecasts without
 #' shocks computed by \code{\link{compute_fcast}}.
 #' @param ortho_irf Matrix containing orthogonal impulse responses for all
 #' variables computed by \code{\link{compute_irf}} or \code{\link{irf.bvar}}.
@@ -75,21 +68,20 @@ compute_fcast <- function(
 #' @importFrom stats rnorm
 #'
 #' @noRd
-get_cond_fcast <- function(cond_mat,
-  noshock_fcast, ortho_irf, horizon, M) {
+cond_fcast <- function(constr_mat, fcast_base, ortho_irf, horizon, M) {
 
   cond_fcast <- matrix(NA, horizon, M)
   # First get constrained shocks
-  v <- sum(!is.na(cond_mat))
+  v <- sum(!is.na(constr_mat))
   s <- M * horizon
   r <- c()
   R <- matrix(0, 0, s)
 
   for(i in seq_len(horizon)) {
     for(j in seq_len(M)) {
-      if(is.na(cond_mat[i, j])) {next}
-      r <- c(r, (cond_mat[i, j] - noshock_fcast[i, j]))
-      R <- rbind(R, c(rep(0, s)))
+      if(is.na(constr_mat[i, j])) {next}
+      r <- c(r, (constr_mat[i, j] - fcast_base[i, j]))
+      R <- rbind(R, c(rep(0, s))) # No growing this
       for(k in 1:i) {
         R[nrow(R), ((k - 1) * M + 1):(k * M)] <- ortho_irf[j, (i - k + 1) , ]
       }
@@ -111,7 +103,7 @@ get_cond_fcast <- function(cond_mat,
     for(k in seq_len(h)) {
       temp <- temp + ortho_irf[, (h - k + 1), ] %*% eta[ , k]
     }
-    cond_fcast[h, ] <- noshock_fcast[h, ] + t(temp)
+    cond_fcast[h, ] <- fcast_base[h, ] + t(temp)
   }
 
   return(cond_fcast)

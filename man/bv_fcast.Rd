@@ -4,7 +4,7 @@
 \alias{bv_fcast}
 \title{Forecast settings}
 \usage{
-bv_fcast(horizon = 12, conditional = NULL)
+bv_fcast(horizon = 12, cond_path = NULL, cond_vars = NULL)
 }
 \arguments{
 \item{horizon}{Integer scalar. Horizon for which forecasts should be

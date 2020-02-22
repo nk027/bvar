@@ -69,14 +69,17 @@ predict.bvar <- function(
   fcast_store <- object[["fcast"]]
 
 
-  # Calculate new forecast ---
+  # Calculate new forecast -----
 
   if(is.null(fcast_store) || length(dots) != 0L || !missing(newdata)) {
+
+    # Setup ---
 
     fcast <- if(length(dots) > 0 && inherits(dots[[1]], "bv_fcast")) {
       dots[[1]]
     } else {bv_fcast(...)}
 
+    # Checks
     n_pres <- object[["meta"]][["n_save"]]
     n_thin <- int_check(n_thin, min = 1, max = (n_pres / 10),
       "Issue with n_thin. Maximum allowed is (n_draw - n_burn) / 10.")
@@ -98,55 +101,52 @@ predict.bvar <- function(
       N <- nrow(Y)
     }
 
-    fcast_store <- structure(list(
-      "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
-      "setup" = fcast, "variables" = object[["variables"]],
-      "data" = Y), class = "bvar_fcast")
-
-    if(is.null(fcast[["conditional"]])) { # Unconditional forecast
-      j <- 1
-      for(i in seq_len(n_save)) {
-        beta_comp <- get_beta_comp(beta[j, , ], K = K, M = M, lags = lags)
-        fcast_store[["fcast"]][i, , ] <- compute_fcast(
-          Y = Y, K = K, M = M, N = N, lags = lags,
-          horizon = fcast[["horizon"]],
-          beta_comp = beta_comp, beta_const = beta[j, 1, ],
-          sigma = sigma[j, , ], conditional = FALSE)
-        j <- j + n_thin
-      }
-    } else { # Conditional forecast
-      cond_mat <- get_cond_mat(fcast[["conditional"]][["path"]],
-        fcast[["horizon"]], fcast[["conditional"]][["cond_var"]],
-        object[["variables"]], M)
-
+    # Conditional forecast
+    if(!is.null(fcast[["cond_path"]])) {
+      conditional <- TRUE
+      constr_mat <- get_constr_mat(horizon = fcast[["horizon"]],
+        path = fcast[["cond_path"]],
+        vars = fcast[["cond_vars"]], object[["variables"]], M)
       irf_store <- object[["irf"]]
       if(is.null(irf_store) || !irf_store[["setup"]][["identification"]] ||
         irf_store[["setup"]][["horizon"]] < fcast[["horizon"]]) {
-        message("No suitable impulse responses found, calculating...")
+        message("No suitable impulse responses found. Calculating...")
         irf_store <- irf.bvar(object,
-          horizon = fcast[["horizon"]], n_thin = n_thin)
+          horizon = fcast[["horizon"]], identification = TRUE, fevd = FALSE,
+          n_thin = n_thin)
       }
+    }
 
-      j <- 1
-      for(i in seq_len(n_save)) {
-        beta_comp <- get_beta_comp(beta[j, , ], K = K, M = M, lags = lags)
-        noshock_fcast <- compute_fcast(
-          Y = Y, K = K, M = M, N = N, lags = lags,
-          horizon = fcast[["horizon"]],
-          beta_comp = beta_comp,
-          beta_const = beta[j, 1, ], sigma = sigma[j, , ],
-          conditional = TRUE)
-        ortho_irf <- irf_store[["irf"]][j, , , ]
-        fcast_store[["fcast"]][i, , ] <- get_cond_fcast(cond_mat = cond_mat,
-          noshock_fcast = noshock_fcast, ortho_irf = ortho_irf,
+    # Sampling ---
+
+    fcast_store <- structure(list(
+      "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
+      "setup" = fcast, "variables" = object[["variables"]], "data" = Y),
+      class = "bvar_fcast")
+
+    j <- 1
+    for(i in seq_len(n_save)) {
+      beta_comp <- get_beta_comp(beta[j, , ], K = K, M = M, lags = lags)
+      fcast_base <- compute_fcast(
+        Y = Y, K = K, M = M, N = N, lags = lags,
+        horizon = fcast[["horizon"]],
+        beta_comp = beta_comp, beta_const = beta[j, 1, ])
+
+      if(conditional) { # Conditional uses impulse responses
+        fcast_store[["fcast"]][i, , ] <- cond_fcast(
+          constr_mat = constr_mat, noshock_fcast = fcast_base,
+          ortho_irf = irf_store[["irf"]][j, , , ],
           horizon = fcast[["horizon"]], M = M)
-        j <- j + n_thin
-
+      } else { # Unconditional gets noise
+        fcast_store[["fcast"]][i, , ] <- fcast_base +
+          t(sigma[j, , ] %*% matrix(rnorm(M * fcast[["horizon"]]), nrow = M))
       }
+      j <- j + n_thin
     }
   } # End new forecast
 
-  # Prepare outputs -------------------------------------------------------
+
+  # Prepare outputs -----
 
   # Apply confidence bands
   if(is.null(fcast_store[["quants"]]) || !missing(conf_bands)) {
