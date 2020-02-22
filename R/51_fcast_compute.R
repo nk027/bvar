@@ -33,8 +33,8 @@ compute_fcast <- function(
   Y_f[1, ] <- vapply(t(Y[N:(N - lags + 1), ]), c, numeric(1L))
 
   for(i in seq.int(2, 1 + horizon)) {
-    Y_f[i, ] <- Y_f[i - 1, ] %*% t(beta_comp) +
-      c(beta_const, rep(0, M * (lags - 1)))
+    Y_f[i, ] <- tcrossprod(Y_f[i - 1, ], beta_comp) +
+      c(beta_const, rep(0, M * (lags - 1))) # Maybe go back to normal beta
   }
 
   # Remove Y_t and lagged variables

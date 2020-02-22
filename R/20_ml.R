@@ -63,8 +63,8 @@ bv_ml <- function(
   psi <- diag(psi_vec)
   omega <- vector("numeric", 1 + M * lags)
   omega[1] <- priors[["var"]]
-  for(i in 1:lags) {
-    omega[seq(2 + M * (i - 1), 1 + i * M)] <- pars[["lambda"]] ^ 2 /
+  for(i in seq.int(1, lags)) {
+    omega[seq.int(2 + M * (i - 1), 1 + i * M)] <- pars[["lambda"]] ^ 2 /
       i ^ pars[["alpha"]] / psi_vec
   }
 

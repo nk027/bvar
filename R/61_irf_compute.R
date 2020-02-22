@@ -24,8 +24,6 @@
 #' expected.
 #' @param sign_lim Integer scalar. Maximum number of rotational matrices to
 #' draw and check for fitting sign restrictions.
-#' @param fevd Logical scalar. Specifies whether or not forecast error variance
-#' decompositions should be calculated.
 #'
 #' @return Returns a list containing a numeric matrix of impulse responses
 #' and optionally a numeric matrix with the FEVD.
@@ -37,8 +35,7 @@ compute_irf <- function(
   M, lags,
   horizon,
   identification,
-  sign_restr, sign_lim,
-  fevd) {
+  sign_restr, sign_lim) {
 
   # Identification
   shock <- if(identification) {
@@ -54,16 +51,9 @@ compute_irf <- function(
   irf_comp <- array(0, c(M * lags, horizon, M * lags))
   irf_comp[1:M, 1, 1:M] <- shock
   for(i in 2:horizon) {
-    irf_comp[, i, ] <- irf_comp[, i - 1, ] %*% beta_comp
+    irf_comp[, i, ] <- irf_comp[, i - 1, ] %*% beta_comp # Could vectorise
   }
   irf_comp <- irf_comp[1:M, , 1:M]
 
-  # Outputs
-  out <- list("irf" = irf_comp)
-
-  if(fevd) {
-    out[["fevd"]] <- compute_fevd(irf_comp = irf_comp, M = M, horizon = horizon)
-  }
-
-  return(out)
+  return(irf_comp)
 }

@@ -22,6 +22,7 @@
 #' @param vars,vars_impulse,vars_response Optional numeric or character vector.
 #' Used to subset the summary method's outputs to certain variables by position
 #' or name (must be available). Defaults to \code{NULL}, i.e. all variables.
+#' @param value yes
 #'
 #' @return Returns a list of class \code{bvar_irf} including IRFs and optionally
 #' FEVDs at desired confidence bands. Also see \code{\link{bvar}}.
@@ -64,14 +65,15 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
-
-  # Retrieve / calculate irf ----------------------------------------------
-
   dots <- list(...)
   irf_store <- x[["irf"]]
 
-  # If no forecast exists or settings are provided
+
+  # Calculate impulse responses -----
+
   if(is.null(irf_store) || length(dots) != 0L) {
+
+    # Setup ---
 
     irf <- if(length(dots) > 0 && inherits(dots[[1]], "bv_irf")) {
       dots[[1]]
@@ -95,36 +97,34 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       stop("Dimensions of provided sign restrictions do not fit the data.")
     }
 
-    irf_store <- list(
+    # Sampling ---
+
+    irf_store <- structure(list(
       "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
       "fevd" = if(irf[["fevd"]]) {
         structure(
           list("fevd" = array(NA, c(n_save, M, irf[["horizon"]], M)),
             "variables" = x[["variables"]]), class = "bvar_fevd")
-      } else {NULL},
-      "setup" = irf, "variables" = x[["variables"]]
-    )
-
-    class(irf_store) <- "bvar_irf"
+      } else {NULL}, "setup" = irf, "variables" = x[["variables"]]),
+      class = "bvar_irf")
 
     j <- 1
     for(i in seq_len(n_save)) {
       beta_comp <- get_beta_comp(beta[j, , ], K, M, lags)
-
       irf_comp  <- compute_irf(
         beta_comp = beta_comp, sigma = sigma[j, , ],
         sigma_chol = t(chol(sigma[j, , ])), M = M, lags = lags,
         horizon = irf[["horizon"]], identification = irf[["identification"]],
-        sign_restr = irf[["sign_restr"]], sign_lim = irf[["sign_lim"]],
-        fevd = irf[["fevd"]])
+        sign_restr = irf[["sign_restr"]], sign_lim = irf[["sign_lim"]])
+      irf_store[["irf"]][i, , , ] <- irf_comp
 
-      irf_store[["irf"]][i, , , ] <- irf_comp[["irf"]]
-      if(irf[["fevd"]]) {
-        irf_store[["fevd"]][i, , , ] <- irf_comp[["fevd"]]
+      if(irf[["fevd"]]) { # Forecast error variance decomposition
+        irf_store[["fevd"]][["fevd"]][i, , , ] <- compute_fevd(
+          irf_comp = irf_comp, M = M, horizon = irf[["horizon"]])
       }
       j <- j + n_thin
     }
-  }
+  } # End new impulse responses
 
   if(is.null(irf_store[["quants"]]) || !missing(conf_bands)) {
     irf_store <- if(!missing(conf_bands)) {
@@ -133,6 +133,20 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
   }
 
   return(irf_store)
+}
+
+
+#' @noRd
+`irf<-.bvar` <- function(x, value) {
+
+  if(!inherits(x, "bvar")) {stop("Please use a `bvar` object.")}
+  if(!inherits(value, "bvar_irf")) {
+    stop("Please provide a `bvar_irf` object to assign.")
+  }
+
+  x[["irf"]] <- value
+
+  return(x)
 }
 
 
@@ -162,9 +176,7 @@ fevd.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
   dots <- list(...)
   irf_store <- x[["irf"]]
   vars <- x[["variables"]]
-  if(is.null(vars)) {
-    vars <- paste0("var", 1:x[["meta"]][["M"]])
-  }
+  if(is.null(vars)) {vars <- paste0("var", 1:x[["meta"]][["M"]])}
 
   if(is.null(irf_store[["fevd"]]) || length(dots) != 0L) {
     irf <- if(length(dots) > 0 && inherits(dots[[1]], "bv_irf")) {
@@ -198,8 +210,6 @@ fevd.bvar_irf <- function(x, conf_bands, ...) {
     } else {fevd.bvar_fevd(fevd_store, c(0.16))}
   }
 
-  class(x) <- "bvar_fevd"
-
   return(x)
 }
 
@@ -224,6 +234,11 @@ fevd.bvar_fevd <- function(x, conf_bands, ...) {
 #' @rdname irf.bvar
 #' @export
 irf <- function(x, ...) {UseMethod("irf", x)}
+
+
+#' @rdname irf.bvar
+#' @export
+`irf<-` <- function(x, value) {UseMethod("irf<-", x)}
 
 
 #' @rdname irf.bvar

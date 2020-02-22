@@ -21,6 +21,7 @@
 #' @param vars Optional numeric or character vector. Used to subset the summary
 #' to certain variables by position or name (must be available). Defaults to
 #' \code{NULL}, i.e. all variables.
+#' @param value yes
 #'
 #' @return Returns a list of class \code{bvar_fcast} including forecasts
 #' at desired confidence bands. See \code{\link{bvar}}.
@@ -138,17 +139,13 @@ predict.bvar <- function(
           ortho_irf = irf_store[["irf"]][j, , , ],
           horizon = fcast[["horizon"]], M = M)
       } else { # Unconditional gets noise
-        fcast_store[["fcast"]][i, , ] <- fcast_base +
-          t(sigma[j, , ] %*% matrix(rnorm(M * fcast[["horizon"]]), nrow = M))
+        fcast_store[["fcast"]][i, , ] <- fcast_base + t(crossprod(sigma[j, , ],
+          matrix(rnorm(M * fcast[["horizon"]]), nrow = M)))
       }
       j <- j + n_thin
     }
   } # End new forecast
 
-
-  # Prepare outputs -----
-
-  # Apply confidence bands
   if(is.null(fcast_store[["quants"]]) || !missing(conf_bands)) {
     fcast_store <- if(!missing(conf_bands)) {
       predict.bvar_fcast(fcast_store, conf_bands)
@@ -160,12 +157,26 @@ predict.bvar <- function(
 
 
 #' @noRd
+`predict<-.bvar` <- function(object, value) {
+
+  if(!inherits(object, "bvar")) {stop("Please use a `bvar` object.")}
+  if(!inherits(value, "bvar_fcast")) {
+    stop("Please provide a `bvar_fcast` object to assign.")
+  }
+
+  object[["fcast"]] <- value
+
+  return(object)
+}
+
+
+#' @noRd
 #' @export
 #'
 #' @importFrom stats predict quantile
 predict.bvar_fcast <- function(object, conf_bands, ...) {
 
-  if(!inherits(object, "bvar_fcast")) {
+  if(!inherits(object, "bvar")) {
     stop("Please provide a `bvar_fcast` object.")
   }
 
@@ -176,3 +187,8 @@ predict.bvar_fcast <- function(object, conf_bands, ...) {
 
   return(object)
 }
+
+
+#' @rdname predict.bvar
+#' @export
+`predict<-` <- function(object, value) {UseMethod("predict<-", object)}

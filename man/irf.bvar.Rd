@@ -4,7 +4,9 @@
 \alias{irf.bvar}
 \alias{fevd.bvar}
 \alias{irf}
+\alias{irf<-}
 \alias{fevd}
+\alias{fevd<-}
 \alias{summary.bvar_irf}
 \alias{summary.bvar_fevd}
 \title{Impulse response and forecast error methods for Bayesian VARs}
@@ -15,7 +17,11 @@
 
 irf(x, ...)
 
+irf(x) <- value
+
 fevd(x, ...)
+
+fevd(x) <- value
 
 \method{summary}{bvar_irf}(object, vars_impulse = NULL, vars_response = NULL, ...)
 
@@ -35,6 +41,8 @@ Note that the median, i.e. \code{0.5} is always included.}
 
 \item{n_thin}{Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
 for calculations, others are dropped.}
+
+\item{value}{yes}
 
 \item{vars, vars_impulse, vars_response}{Optional numeric or character vector.
 Used to subset the summary method's outputs to certain variables by position

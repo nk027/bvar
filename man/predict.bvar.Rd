@@ -2,10 +2,13 @@
 % Please edit documentation in R/54_predict.R, R/55_fcast_print.R
 \name{predict.bvar}
 \alias{predict.bvar}
+\alias{predict<-}
 \alias{summary.bvar_fcast}
 \title{Predict method for Bayesian VARs}
 \usage{
 \method{predict}{bvar}(object, ..., conf_bands, n_thin = 1L, newdata)
+
+predict(object) <- value
 
 \method{summary}{bvar_fcast}(object, vars = NULL, ...)
 }
@@ -25,6 +28,8 @@ is used for forecasting, others are dropped.}
 
 \item{newdata}{Optional numeric matrix or dataframe. Used to base the
 prediction on. Fitted values are used by default.}
+
+\item{value}{yes}
 
 \item{vars}{Optional numeric or character vector. Used to subset the summary
 to certain variables by position or name (must be available). Defaults to

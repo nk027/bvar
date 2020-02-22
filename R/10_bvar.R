@@ -244,15 +244,18 @@ bvar <- function(
   # Make sure HH is positive definite
   if(hyper_n != 1) {
     HH_eig <- eigen(HH, symmetric = TRUE)
-    HH <- HH_eig[["vectors"]] %*% diag(abs(HH_eig[["values"]])) %*%
-      t(HH_eig[["vectors"]])
+    HH_eig[["values"]] <- abs(HH_eig[["values"]])
+    HH <- HH_eig
+    # HH <- HH_eig[["vectors"]] %*% diag(abs(HH_eig[["values"]])) %*%
+    #   t(HH_eig[["vectors"]])
   } else {HH <- abs(HH)}
 
 
   # Initial draw ---
 
   while(TRUE) {
-    hyper_draw <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
+    # hyper_draw <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
+    hyper_draw <- rmvn_proposal(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
     ml_draw <- bv_ml(hyper = hyper_draw,
       hyper_min = hyper_min, hyper_max = hyper_max, pars = pars_full,
       priors = priors, Y = Y, X = X, XX = XX, K = K, M = M, N = N, lags = lags)
@@ -273,10 +276,11 @@ bvar <- function(
   if(verbose) {pb <- txtProgressBar(min = 0, max = n_draw, style = 3)}
 
   # Start loop ---
-  for(i in (1 - n_burn):(n_draw - n_burn)) {
+  for(i in seq.int(1 - n_burn, n_draw - n_burn)) {
 
     # Metropolis-Hastings
-    hyper_temp <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
+    # hyper_temp <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
+    hyper_temp <- rmvn_proposal(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
     ml_temp <- bv_ml(hyper = hyper_temp,
       hyper_min = hyper_min, hyper_max = hyper_max, pars = pars_full,
       priors = priors, Y = Y, X = X, XX = XX, K = K, M = M, N = N, lags = lags)
@@ -342,12 +346,12 @@ bvar <- function(
     ), class = "bvar")
 
   if(!is.null(irf)) {
-    out[["irf"]] <- tryCatch(irf.bvar(out, irf), function(e) {
+    out[["irf"]] <- tryCatch(irf.bvar(out, irf), error = function(e) {
       warning("Impulse response calculation failed with:\n", e)
       return(NULL)})
   }
   if(!is.null(fcast)) {
-    out[["fcast"]] <- tryCatch(predict.bvar(out, fcast), function(e) {
+    out[["fcast"]] <- tryCatch(predict.bvar(out, fcast), error = function(e) {
       warning("Forecast calculation failed with:\n", e)
       return(NULL)})
   }
