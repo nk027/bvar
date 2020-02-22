@@ -26,6 +26,7 @@ forecasts i.e. the conditions imposed on certain variables and their
 respective name or position in the dataset.
 }
 \examples{
+\dontrun{
 # Set the path of the second variable for the first six forecast periods.
 bv_cdfcast(path = c(1, 1, 1, 1, 1, 1), cond_var = 2)
 
@@ -41,6 +42,7 @@ paths[1:5, 1] <- 1
 paths[6:10, 2] <- 2
 paths[3:8, 3]  <- 3
 bv_cdfcast(path = paths)
+}
 }
 \seealso{
 \code{\link{predict.bvar}}; \code{\link{plot.bvar_fcast}};

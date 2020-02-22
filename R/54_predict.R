@@ -102,8 +102,8 @@ predict.bvar <- function(
     }
 
     # Conditional forecast
-    if(!is.null(fcast[["cond_path"]])) {
-      conditional <- TRUE
+    conditional <- !is.null(fcast[["cond_path"]])
+    if(conditional) {
       constr_mat <- get_constr_mat(horizon = fcast[["horizon"]],
         path = fcast[["cond_path"]],
         vars = fcast[["cond_vars"]], object[["variables"]], M)
@@ -134,7 +134,7 @@ predict.bvar <- function(
 
       if(conditional) { # Conditional uses impulse responses
         fcast_store[["fcast"]][i, , ] <- cond_fcast(
-          constr_mat = constr_mat, noshock_fcast = fcast_base,
+          constr_mat = constr_mat, fcast_base = fcast_base,
           ortho_irf = irf_store[["irf"]][j, , , ],
           horizon = fcast[["horizon"]], M = M)
       } else { # Unconditional gets noise

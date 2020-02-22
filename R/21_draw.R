@@ -38,7 +38,7 @@ draw_post <- function(
   noise <- rmvnorm(n = M, mean = rep(0, (1 + M * lags)),
     sigma = chol2inv(chol(XX + omega_inv)))
 
-  beta_draw <- beta_hat + tcrossprod(noise, sigma_chol)
+  beta_draw <- beta_hat + crossprod(noise, sigma_chol)
 
   return(
     list("beta_draw" = beta_draw,

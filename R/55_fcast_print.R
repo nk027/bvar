@@ -30,7 +30,8 @@ print.bvar_fcast <- function(x, ...) {
 #' @noRd
 print_fcast <- function(x, ...) {
 
-  cat("Horizon: ", x[["horizon"]], "\n", sep = "")
+  cat("Horizon: ", x[["horizon"]], "\n",
+    "Conditional: ", !is.null(x[["cond_path"]]), "\n", sep = "")
 
   return(invisible(x))
 }
@@ -51,11 +52,10 @@ summary.bvar_fcast <- function(object, vars = NULL, ...) {
   variables <- name_deps(variables = object[["variables"]], M = M)
   pos <- pos_vars(vars, variables = variables, M = M)
 
-  out <- list(
+  out <- structure(list(
     "fcast" = object, "quants" = quants,
-    "variables" = variables, "pos" = pos, "has_quants" = has_quants)
-
-  class(out) <- "bvar_fcast_summary"
+    "variables" = variables, "pos" = pos, "has_quants" = has_quants),
+    class = "bvar_fcast_summary")
 
   return(out)
 }

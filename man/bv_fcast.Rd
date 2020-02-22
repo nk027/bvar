@@ -10,8 +10,9 @@ bv_fcast(horizon = 12, cond_path = NULL, cond_vars = NULL)
 \item{horizon}{Integer scalar. Horizon for which forecasts should be
 computed.}
 
-\item{conditional}{Optional list. Contains list with settings for
-conditional forecasts created via \code{\link{bv_cdfcast}}.}
+\item{cond_path}{present}
+
+\item{cond_vars}{ya}
 }
 \value{
 Returns a named list of class \code{bv_fcast} with options for

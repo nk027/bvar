@@ -322,36 +322,6 @@ has_package <- function(package) {
 }
 
 
-#' Build constraint matrix for conditional forecasts
-#'
-#' @param path Numeric vector or matrix. Contains the path(s) of variable(s)
-#' on which forecasts are conditioned on. Unrestricted future realisations
-#' should be filled with \code{NA}. Note that not all variables can be
-#' restricted at the same time.
-#' @param horizon Integer scalar. Specifies the horizon for which forecasts
-#' should be computed.
-#' @param cond_var Optional vector. Containing variable names or positions in
-#' case \emph{path} only restricts a subset of the variables.
-#' @param variables Character vector of all variable names.
-#' @param M Integer scalar. Count of all variables.
-#'
-#' @return Returns a matrix with the constrained paths of variables and
-#' \code{NAs} for unrestricted values.
-#'
-#' @noRd
-get_constr_mat <- function(horizon, path, vars = NULL, variables = NULL, M) {
-
-  pos <- pos_vars(vars, variables, M)
-  constr_mat <- matrix(NA_real_, horizon, M)
-  constr_mat[seq_len(nrow(path)), pos] <- path
-  if(any(apply(constr_mat, 1, function(x) !any(is.na(x))))) {
-    stop("One variable must be unrestricted at each point in time.")
-  }
-
-  return(constr_mat)
-}
-
-
 #' Generate quantiles
 #'
 #' Check and create a given vector of confidence bands and create suitable

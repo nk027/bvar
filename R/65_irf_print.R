@@ -102,12 +102,11 @@ summary.bvar_irf <- function(
   pos_imp <- pos_vars(vars_impulse, variables, M)
   pos_res <- pos_vars(vars_response, variables, M)
 
-  out <- list(
+  out <- structure(list(
     "irf" = object, "quants" = quants,
     "variables" = variables, "pos_imp" = pos_imp,"pos_res" = pos_res,
-    "has_quants" = has_quants)
-
-  class(out) <- "bvar_irf_summary"
+    "has_quants" = has_quants),
+    class = "bvar_irf_summary")
 
   return(out)
 }
@@ -153,12 +152,10 @@ summary.bvar_fevd <- function(object, vars = NULL, ...) {
   variables <- name_deps(variables = object[["variables"]], M = M)
   pos <- pos_vars(vars, variables = variables, M = M)
 
-  out <- list(
+  out <- structure(list(
     "fevd" = object, "quants" = quants,
-    "variables" = variables, "pos" = pos, "has_quants" = has_quants
-  )
-
-  class(out) <- "bvar_fevd_summary"
+    "variables" = variables, "pos" = pos, "has_quants" = has_quants),
+    class = "bvar_fevd_summary")
 
   return(out)
 }

@@ -8,8 +8,8 @@
 #'
 #' @param horizon Integer scalar. Horizon for which forecasts should be
 #' computed.
-#' @param conditional Optional list. Contains list with settings for
-#' conditional forecasts created via \code{\link{bv_cdfcast}}.
+#' @param cond_path present
+#' @param cond_vars ya
 #'
 #' @return Returns a named list of class \code{bv_fcast} with options for
 #' \code{\link{bvar}} or \code{\link{predict.bvar}}.
@@ -89,6 +89,7 @@ bv_fcast <- function(
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Set the path of the second variable for the first six forecast periods.
 #' bv_cdfcast(path = c(1, 1, 1, 1, 1, 1), cond_var = 2)
 #'
@@ -104,8 +105,9 @@ bv_fcast <- function(
 #' paths[6:10, 2] <- 2
 #' paths[3:8, 3]  <- 3
 #' bv_cdfcast(path = paths)
+#' }
 bv_cdfcast <- function(path, cond_var = NULL) {
 
-  return(out)
+  return(NULL)
 }
 
