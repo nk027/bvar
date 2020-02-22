@@ -90,6 +90,11 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
     beta <- x[["beta"]]
     sigma <- x[["sigma"]]
 
+    # Check sign restrictions
+    if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {
+      stop("Dimensions of provided sign restrictions do not fit the data.")
+    }
+
     irf_store <- list(
       "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
       "fevd" = if(irf[["fevd"]]) {
@@ -99,6 +104,8 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       } else {NULL},
       "setup" = irf, "variables" = x[["variables"]]
     )
+
+    class(irf_store) <- "bvar_irf"
 
     j <- 1
     for(i in seq_len(n_save)) {
@@ -124,8 +131,6 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       irf.bvar_irf(irf_store, conf_bands)
     } else {irf.bvar_irf(irf_store, c(0.16))}
   }
-
-  class(irf_store) <- "bvar_irf"
 
   return(irf_store)
 }

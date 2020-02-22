@@ -76,7 +76,7 @@ compute_fcast <- function(
 #' @seealso \code{\link{compute_fcast}}; \code{\link{compute_irf}};
 #' \code{\link{irf.bvar}}
 #'
-#' @importFrom svd rnorm
+#' @importFrom stats rnorm
 #'
 #' @noRd
 get_cond_fcast <- function(cond_mat, noshock_fcast,
@@ -110,7 +110,7 @@ get_cond_fcast <- function(cond_mat, noshock_fcast,
 
   # Use constrained shocks and unconditional forecasts (without shocks) to
   # create conditional forecasts
-  for(h in seq_len(fcast[["horizon"]])) {
+  for(h in seq_len(horizon)) {
     temp <- matrix(0, M, 1)
     for(k in seq_len(h)) {
       temp <- temp + ortho_irf[, (h - k + 1), ] %*% eta[ , k]

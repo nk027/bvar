@@ -172,18 +172,18 @@ bvar <- function(
   variables <- name_deps(variables = colnames(data), M = M)
   explanatories <- name_expl(variables = variables, M = M, lags = lags)
 
-  # Check sign restrictions
-  if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {
-    stop("Dimensions of provided sign restrictions do not fit the data.")
-  }
+  # # Check sign restrictions
+  # if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {
+  #   stop("Dimensions of provided sign restrictions do not fit the data.")
+  # }
 
-  # Check and get conditioning matrix for forecasts
-  if(!is.null(fcast) && !is.null(fcast[["conditional"]])) {
-    cond_mat <- get_cond_mat(path = fcast[["conditional"]][["path"]],
-                             horizon= fcast[["horizon"]],
-                             cond_var = fcast[["conditional"]][["cond_var"]],
-                             variables = variables, M = M)
-  }
+  # # Check and get conditioning matrix for forecasts
+  # if(!is.null(fcast) && !is.null(fcast[["conditional"]])) {
+  #   cond_mat <- get_cond_mat(path = fcast[["conditional"]][["path"]],
+  #                            horizon= fcast[["horizon"]],
+  #                            cond_var = fcast[["conditional"]][["cond_var"]],
+  #                            variables = variables, M = M)
+  # }
 
   # Priors ------------------------------------------------------------------
 
@@ -287,23 +287,23 @@ bvar <- function(
   beta_store <- array(NA, c(n_save, K, M))
   sigma_store <- array(NA, c(n_save, M, M))
 
-  if(!is.null(irf)) {
-    irf_store <- list(
-      "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
-      "fevd" = if(irf[["fevd"]]) {
-        structure(
-          list("fevd" = array(NA, c(n_save, M, irf[["horizon"]], M))),
-            "variables" = x[["variables"]], class = "bvar_fevd")
-      } else {NULL},
-      "setup" = irf, "variables" = variables)
-    class(irf_store) <- "bvar_irf"
-  }
-  if(!is.null(fcast)) {
-    fcast_store <- list(
-      "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
-      "setup" = fcast, "variables" = variables, "data" = Y)
-    class(fcast_store) <- "bvar_fcast"
-  }
+  # if(!is.null(irf)) {
+  #   irf_store <- list(
+  #     "irf" = array(NA, c(n_save, M, irf[["horizon"]], M)),
+  #     "fevd" = if(irf[["fevd"]]) {
+  #       structure(
+  #         list("fevd" = array(NA, c(n_save, M, irf[["horizon"]], M)),
+  #           "variables" = variables), class = "bvar_fevd")
+  #     } else {NULL},
+  #     "setup" = irf, "variables" = variables)
+  #   class(irf_store) <- "bvar_irf"
+  # }
+  # if(!is.null(fcast)) {
+  #   fcast_store <- list(
+  #     "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
+  #     "setup" = fcast, "variables" = variables, "data" = Y)
+  #   class(fcast_store) <- "bvar_fcast"
+  # }
 
   # Loop
   if(verbose) {pb <- txtProgressBar(min = 0, max = n_draw, style = 3)}
@@ -348,52 +348,52 @@ bvar <- function(
       beta_store[(i / n_thin), , ] <- draws[["beta_draw"]]
       sigma_store[(i / n_thin), , ] <- draws[["sigma_draw"]]
 
-      # Companion matrix is used for both forecasts and impulse responses
-      if(!is.null(fcast) || !is.null(irf)) {
-        beta_comp <- get_beta_comp(beta = draws[["beta_draw"]],
-          K = K, M = M, lags = lags)
-      }
+      # # Companion matrix is used for both forecasts and impulse responses
+      # if(!is.null(fcast) || !is.null(irf)) {
+      #   beta_comp <- get_beta_comp(beta = draws[["beta_draw"]],
+      #     K = K, M = M, lags = lags)
+      # }
 
-      if(!is.null(irf)) { # Impulse responses
-        irf_comp <- compute_irf(beta_comp = beta_comp,
-          sigma = draws[["sigma_draw"]], sigma_chol = draws[["sigma_chol"]],
-          M = M, lags = lags, horizon = irf[["horizon"]],
-          identification = irf[["identification"]],
-          sign_restr = irf[["sign_restr"]], sign_lim = irf[["sign_lim"]],
-          fevd = irf[["fevd"]])
-        irf_store[["irf"]][(i / n_thin), , , ] <- irf_comp[["irf"]]
-        if(irf[["fevd"]]) { # Forecast error variance decomposition
-          irf_store[["fevd"]][(i / n_thin), , , ] <- irf_comp[["fevd"]]
-        }
-      } # End impulse responses
+      # if(!is.null(irf)) { # Impulse responses
+      #   irf_comp <- compute_irf(beta_comp = beta_comp,
+      #     sigma = draws[["sigma_draw"]], sigma_chol = draws[["sigma_chol"]],
+      #     M = M, lags = lags, horizon = irf[["horizon"]],
+      #     identification = irf[["identification"]],
+      #     sign_restr = irf[["sign_restr"]], sign_lim = irf[["sign_lim"]],
+      #     fevd = irf[["fevd"]])
+      #   irf_store[["irf"]][(i / n_thin), , , ] <- irf_comp[["irf"]]
+      #   if(irf[["fevd"]]) { # Forecast error variance decomposition
+      #     irf_store[["fevd"]][(i / n_thin), , , ] <- irf_comp[["fevd"]]
+      #   }
+      # } # End impulse responses
 
-      if(!is.null(fcast)) { # Forecast
-        if(is.null(fcast[["conditional"]])) { # unconditional
-          fcast_store[["fcast"]][(i / n_thin), , ] <- compute_fcast(Y = Y,
-             K = K, M = M, N = N, lags = lags, horizon = fcast[["horizon"]],
-             beta_comp = beta_comp, beta_const = draws[["beta_draw"]][1, ],
-             sigma = draws[["sigma_draw"]],
-             conditional = FALSE)
-        } else { # conditional
-          if(is.null(irf) ||
-             irf[["horizon"]] < fcast[["horizon"]] ||
-             !irf[["identification"]]) {
-            irf_comp <- compute_irf(beta_comp = beta_comp,
-              sigma = draws[["sigma_draw"]], sigma_chol = draws[["sigma_chol"]],
-              M = M, lags = lags, horizon = fcast[["horizon"]],
-              identification = TRUE,
-              sign_restr = NULL, sign_lim = NULL, fevd = FALSE)
-          }
-          noshock_fcast <- compute_fcast(Y = Y,
-            K = K, M = M, N = N, lags = lags, horizon = fcast[["horizon"]],
-            beta_comp = beta_comp, beta_const = draws[["beta_draw"]][1, ],
-            sigma = draws[["sigma_draw"]],
-            conditional = TRUE)
-          fcast_store[["fcast"]][(i / n_thin), , ] <- get_cond_fcast(M = M,
-            cond_mat = cond_mat, noshock_fcast = noshock_fcast,
-            ortho_irf = irf_comp[["irf"]], horizon = fcast[["horizon"]])
-        }
-      } # End forecast
+      # if(!is.null(fcast)) { # Forecast
+      #   if(is.null(fcast[["conditional"]])) { # unconditional
+      #     fcast_store[["fcast"]][(i / n_thin), , ] <- compute_fcast(Y = Y,
+      #        K = K, M = M, N = N, lags = lags, horizon = fcast[["horizon"]],
+      #        beta_comp = beta_comp, beta_const = draws[["beta_draw"]][1, ],
+      #        sigma = draws[["sigma_draw"]],
+      #        conditional = FALSE)
+      #   } else { # conditional
+      #     if(is.null(irf) ||
+      #        irf[["horizon"]] < fcast[["horizon"]] ||
+      #        !irf[["identification"]]) {
+      #       irf_comp <- compute_irf(beta_comp = beta_comp,
+      #         sigma = draws[["sigma_draw"]], sigma_chol = draws[["sigma_chol"]],
+      #         M = M, lags = lags, horizon = fcast[["horizon"]],
+      #         identification = TRUE,
+      #         sign_restr = NULL, sign_lim = NULL, fevd = FALSE)
+      #     }
+      #     noshock_fcast <- compute_fcast(Y = Y,
+      #       K = K, M = M, N = N, lags = lags, horizon = fcast[["horizon"]],
+      #       beta_comp = beta_comp, beta_const = draws[["beta_draw"]][1, ],
+      #       sigma = draws[["sigma_draw"]],
+      #       conditional = TRUE)
+      #     fcast_store[["fcast"]][(i / n_thin), , ] <- get_cond_fcast(M = M,
+      #       cond_mat = cond_mat, noshock_fcast = noshock_fcast,
+      #       ortho_irf = irf_comp[["irf"]], horizon = fcast[["horizon"]])
+      #   }
+      # } # End forecast
 
     } # End store
 
@@ -425,14 +425,22 @@ bvar <- function(
   )
 
   if(!is.null(irf)) {
-    irf_store[["quants"]] <- apply( # Add confidence bands
-      irf_store[["irf"]], c(2, 3, 4), quantile, c(0.16, 0.50, 0.84))
-    out[["irf"]] <- irf_store
+    out[["irf"]] <- tryCatch(irf.bvar(out, irf), function(e) {
+      warning("Impulse response calculation failed with:\n", e)
+      return(NULL)
+    })
+    # irf_store[["quants"]] <- apply( # Add confidence bands
+    #   irf_store[["irf"]], c(2, 3, 4), quantile, c(0.16, 0.50, 0.84))
+    # out[["irf"]] <- irf_store
   }
   if(!is.null(fcast)) {
-    fcast_store[["quants"]] <- apply( # Add confidence bands
-      fcast_store[["fcast"]], c(2, 3), quantile, c(0.16, 0.50, 0.84))
-    out[["fcast"]] <- fcast_store
+    out[["fcast"]] <- tryCatch(predict.bvar(out, fcast), function(e) {
+      warning("Impulse response calculation failed with:\n", e)
+      return(NULL)
+    })
+    # fcast_store[["quants"]] <- apply( # Add confidence bands
+    #   fcast_store[["fcast"]], c(2, 3), quantile, c(0.16, 0.50, 0.84))
+    # out[["fcast"]] <- fcast_store
   }
 
   class(out) <- "bvar"

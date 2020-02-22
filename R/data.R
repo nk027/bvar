@@ -156,6 +156,8 @@ lookup_code <- function(vars, type = c("qd", "md")) {
 
 
 #' @noRd
+#'
+#' @importFrom utils head
 get_transformation <- function(code, lag = 1L, scale = 100L) {
 
   code <- int_check(code, min = 0L, max = 7L, msg = "Code not found.")

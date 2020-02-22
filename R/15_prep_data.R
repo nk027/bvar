@@ -51,7 +51,7 @@ prep_data <- function(
   vars_hyp <- c("ml", colnames(x[["hyper"]]))
   vars_dep <- x[["variables"]]
   vars_ind <- x[["meta"]][["explanatories"]]
-  # Compatibility to older versions (<= 0.2.1)
+  # Compatibility to older versions (<= 0.2.2)
   if(is.null(vars_ind)) {name_expl
     vars_ind <- name_expl(vars_dep,
       M = x[["meta"]][["M"]], lags = x[["meta"]][["lags"]])
@@ -79,7 +79,7 @@ prep_data <- function(
   } else {pos_vars(vars_impulse, vars_ind, M = x[["meta"]][["K"]])}
 
   if(all(c(length(choice_hyp), length(choice_dep), length(choice_ind)) == 0)) {
-    stop("No data matching the provided vars argument found.")
+    stop("No data matching vars found.")
   }
 
 

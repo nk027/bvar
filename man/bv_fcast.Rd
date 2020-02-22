@@ -4,11 +4,14 @@
 \alias{bv_fcast}
 \title{Forecast settings}
 \usage{
-bv_fcast(horizon = 12)
+bv_fcast(horizon = 12, conditional = NULL)
 }
 \arguments{
 \item{horizon}{Integer scalar. Horizon for which forecasts should be
 computed.}
+
+\item{conditional}{Optional list. Contains list with settings for
+conditional forecasts created via \code{\link{bv_cdfcast}}.}
 }
 \value{
 Returns a named list of class \code{bv_fcast} with options for
@@ -16,19 +19,18 @@ Returns a named list of class \code{bv_fcast} with options for
 }
 \description{
 Provide forecast settings to \code{\link{bvar}} or
-\code{\link{predict.bvar}}. Allows adjusting the horizon of the forecast.
-}
-\details{
-Conditional forecasts must be retrieved via \code{\link{scenario}}
-ex-post. Conditional forecasts will require further options, such as
-variable paths.
+\code{\link{predict.bvar}}. Allows adjusting the horizon of the forecast for
+unconditional forecasts and settings for conditional forecasts. These should
+be set via \code{\link{bv_cdfcast}} and provided to argument
+\emph{conditional}.
 }
 \examples{
 # Set the forecast-horizon to 20 time periods instead of 12
 bv_fcast(horizon = 20)
 }
 \seealso{
-\code{\link{predict.bvar}}; \code{\link{plot.bvar_fcast}}
+\code{\link{predict.bvar}}; \code{\link{plot.bvar_fcast}};
+\code{\link{bv_cdfcast}}
 }
 \keyword{BVAR}
 \keyword{VAR}

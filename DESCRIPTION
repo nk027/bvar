@@ -1,7 +1,7 @@
 Package: BVAR
 Type: Package
 Title: Hierarchical Bayesian Vector Autoregression
-Version: 0.2.1.9000
+Version: 0.2.2.9000
 Date: 2020-02-15
 Authors@R: c(person("Nikolas", "Kuschnig", role = c("aut", "cre"), email = "nikolas.kuschnig@wu.ac.at", comment = c(ORCID = "0000-0002-6642-2543")),
     person("Lukas", "Vashold", role = "aut"),
@@ -15,9 +15,9 @@ Maintainer: Nikolas Kuschnig <nikolas.kuschnig@wu.ac.at>
 Description: Estimation of hierarchical Bayesian vector autoregressive models.
     Implements hierarchical prior selection for conjugate priors in the fashion
     of Giannone, Lenza & Primiceri (2015) <doi:10.1162/REST_a_00483>. Functions
-    to calculate forecasts, and compute and identify impulse responses and
-    forecast error variance decompositions are available. Several methods to
-    print, plot and summarise results facilitate analysis.
+    to compute and identify impulse responses, calculate forecasts,
+    forecast error variance decompositions and scenarios are available.
+    Several methods to print, plot and summarise results facilitate analysis.
 URL: https://github.com/nk027/bvar
 BugReports: https://github.com/nk027/bvar/issues
 Depends: R (>= 3.3.0)
