@@ -13,9 +13,8 @@ dummy <- function(
   max <- num_check(max, min = min + 1e-16, max = Inf,
     msg = "Invalid value for max (outside of (min, Inf]).")
 
-  out <- list("mode" = mode, "min" = min, "max" = max, ...)
-
-  class(out) <- "bv_dummy"
+  out <- structure(list(
+    "mode" = mode, "min" = min, "max" = max, ...), class = "bv_dummy")
 
   return(out)
 }

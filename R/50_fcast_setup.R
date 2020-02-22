@@ -25,11 +25,12 @@
 #' # Set the forecast-horizon to 20 time periods instead of 12
 #' bv_fcast(horizon = 20)
 bv_fcast <- function(
-  horizon = 12, conditional = NULL) {
+  horizon = 12,
+  cond_path = NULL,
+  cond_vars = NULL) {
 
   horizon <- int_check(horizon, min = 1, max = 1e6,
-                       msg = "Invalid value for horizon (outside of [1, 1e6]).")
-
+    msg = "Invalid value for horizon (outside of [1, 1e6]).")
 
   if(!is.null(conditional)) {
     if(!inherits(conditional, "bv_cdfcast")) {
@@ -37,16 +38,17 @@ bv_fcast <- function(
     }
 
     if((is.matrix(conditional[["path"]]) &&
-        nrow(conditional[["path"]]) > horizon) ||
-       (is.vector(conditional[["path"]]) &&
-        length(conditional[["path"]]) > horizon)) {
+      nrow(conditional[["path"]]) > horizon) ||
+      (is.vector(conditional[["path"]]) &&
+      length(conditional[["path"]]) > horizon)) {
       stop("Horizon of conditions exceeds forecasting horizon.")
     }
   }
 
 
-  out <- list("horizon" = horizon, "conditional" = conditional)
-  class(out) <- "bv_fcast"
+  out <- structure(list(
+    "horizon" = horizon, "conditional" = conditional),
+    class = "bv_fcast")
 
   return(out)
 }

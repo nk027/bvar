@@ -338,8 +338,8 @@ bvar <- function(
       "Y" = Y, "X" = X, "N" = N, "K" = K, "M" = M, "lags" = lags,
       "explanatories" = explanatories,
       "n_draw" = n_draw, "n_burn" = n_burn, "n_save" = n_save,
-      "n_thin" = n_thin
-    )), class = "bvar")
+      "n_thin" = n_thin)
+    ), class = "bvar")
 
   if(!is.null(irf)) {
     out[["irf"]] <- tryCatch(irf.bvar(out, irf), function(e) {

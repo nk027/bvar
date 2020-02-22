@@ -32,23 +32,19 @@ compute_fcast <- function(
   conditional = FALSE) {
 
   Y_f <- matrix(NA, horizon + 1, K - 1)
-  Y_f[1, ] <- sapply(t(Y[N:(N - lags + 1), ]), c)
+  Y_f[1, ] <- vapply(t(Y[N:(N - lags + 1), ]), c, numeric(1L))
 
-  if(conditional){
-    for(i in 2:(1 + horizon)) {
-      Y_f[i, ] <- Y_f[i - 1, ] %*% t(beta_comp) +
-        c(beta_const, rep(0, M * (lags - 1)))
-    }
-  } else {
-    for(i in 2:(1 + horizon)) {
-      Y_f[i, ] <- Y_f[i - 1, ] %*% t(beta_comp) +
-        c(beta_const, rep(0, M * (lags - 1))) +
-        c(sigma %*% rnorm(M), rep(0, M * (lags - 1)))
-    }
+  for(i in seq.int(2, 1 + horizon)) {
+    Y_f[i, ] <- Y_f[i - 1, ] %*% t(beta_comp) +
+      c(beta_const, rep(0, M * (lags - 1)))
   }
 
+  if(!conditional) { # Add noise
+    Y_f[-1, 1:M] <- Y_f[-1, 1:M] +
+      t(sigma %*% matrix(rnorm(M * horizon), nrow = M))
+  }
 
-  # Remove Y_t and further lags from Y_f to get the forecast
+  # Remove Y_t and lagged variables
   return(Y_f[2:(1 + horizon), 1:M])
 }
 
@@ -79,8 +75,8 @@ compute_fcast <- function(
 #' @importFrom stats rnorm
 #'
 #' @noRd
-get_cond_fcast <- function(cond_mat, noshock_fcast,
-                               ortho_irf, horizon, M) {
+get_cond_fcast <- function(cond_mat,
+  noshock_fcast, ortho_irf, horizon, M) {
 
   cond_fcast <- matrix(NA, horizon, M)
   # First get constrained shocks
@@ -88,14 +84,14 @@ get_cond_fcast <- function(cond_mat, noshock_fcast,
   s <- M * horizon
   r <- c()
   R <- matrix(0, 0, s)
+
   for(i in seq_len(horizon)) {
     for(j in seq_len(M)) {
-      if(!is.na(cond_mat[i, j])) {
-        r <- c(r, (cond_mat[i, j] - noshock_fcast[i, j]))
-        R <- rbind(R, c(rep(0, s)))
-        for(k in 1:i) {
-          R[nrow(R), ((k - 1) * M + 1):(k * M)] <- ortho_irf[j, (i - k + 1) , ]
-        }
+      if(is.na(cond_mat[i, j])) {next}
+      r <- c(r, (cond_mat[i, j] - noshock_fcast[i, j]))
+      R <- rbind(R, c(rep(0, s)))
+      for(k in 1:i) {
+        R[nrow(R), ((k - 1) * M + 1):(k * M)] <- ortho_irf[j, (i - k + 1) , ]
       }
     }
   }

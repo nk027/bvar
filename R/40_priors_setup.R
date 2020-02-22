@@ -54,7 +54,7 @@ bv_priors <- function(
   mn = bv_mn(),
   ...) {
 
-  # Check inputs ------------------------------------------------------------
+  # Check inputs ---
 
   if(!is.null(mn) && !inherits(mn, "bv_minnesota")) {
     stop("Please use `bv_mn()` to set the Minnesota prior.")
@@ -75,17 +75,16 @@ bv_priors <- function(
   }
 
 
-  # Output ------------------------------------------------------------------
+  # Prepare output ---
 
   out <- if(!is.null(mn)) {
-    list(hyper = hyper,
+    structure(list(hyper = hyper,
       lambda = mn[["lambda"]], alpha = mn[["alpha"]],
-      psi = mn[["psi"]], var = mn[["var"]], b = mn[["b"]], ...)
+      psi = mn[["psi"]], var = mn[["var"]], b = mn[["b"]], ...
+      ), class = "bv_priors")
   } else {
-    list(hyper = hyper, ...)
+    structure(list(hyper = hyper, ...), class = "bv_priors")
   }
-
-  class(out) <- "bv_priors"
 
   return(out)
 }

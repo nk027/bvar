@@ -98,11 +98,10 @@ fill_ci <- function(x, y, P) {
 
   fill <- rep(y, length.out = n_y)
 
-  if(length(x) > 1) {
+  if(length(x) > 1) { # Matrix
     n_row <- length(x)
-    return(cbind(
-      t(rev(fill))[rep(1, n_row), ], x, t(fill)[rep(1, n_row), ]))
-  } else {
+    return(cbind(t(rev(fill))[rep(1, n_row), ], x, t(fill)[rep(1, n_row), ]))
+  } else { # Vector
     return(c(rev(fill), x, fill))
   }
 }
@@ -251,9 +250,10 @@ name_expl <- function(variables, M, lags) {
   if(is.null(variables)) {
     variables <- name_deps(variables, M)
   }
+  explanatories <- c("constant", paste0(rep(variables, lags), "-lag",
+    rep(seq(lags), each = length(variables))))
 
-  return(c("constant", paste0(rep(variables, lags), "-lag",
-    rep(seq(lags), each = length(variables)))))
+  return(explanatories)
 }
 
 
@@ -295,7 +295,7 @@ get_beta_comp <- function(beta, K, M, lags) {
 
   beta_comp <- matrix(0, K - 1, K - 1)
 
-  beta_comp[1:M, ] <- t(beta[2:K, ])
+  beta_comp[1:M, ] <- t(beta[2:K, ]) # Kick constant
   if(lags > 1) { # Add block-diagonal matrix beneath VAR coefficients
     beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
   }
@@ -309,7 +309,7 @@ get_beta_comp <- function(beta, K, M, lags) {
 #' @param package Character scalar. Package to look for.
 #'
 #' @examples
-#' # Check whether mad cow disease is present
+#' # Check whether mad cow disease is present on this machine
 #' has_package("BSE")
 #'
 #' @noRd
@@ -322,7 +322,7 @@ has_package <- function(package) {
 }
 
 
-#' Construct matrix with paths for conditional forecasts
+#' Construct paths for conditional forecasts
 #'
 #' @param path Numeric vector or matrix. Contains the path(s) of variable(s)
 #' on which forecasts are conditioned on. Unrestricted future realisations
@@ -339,17 +339,14 @@ has_package <- function(package) {
 #' \code{NAs} for unrestricted values.
 #'
 #' @noRd
-get_cond_mat <- function(path, horizon,
-                         cond_var, variables, M) {
+get_cond_mat <- function(path, horizon, cond_var, variables, M) {
 
   cond_mat <- matrix(NA, horizon, M)
   if(is.vector(path)) {
     cond_var <- pos_vars(cond_var, variables, M)
     cond_mat[1:length(path), cond_var] <- path
   } else {
-    if(ncol(path) > M) {
-      stop("Path of conditions includes too many variables.")
-    }
+    if(ncol(path) > M) {stop("Path of conditions includes too many variables.")}
     if(ncol(path) == M){
       cond_mat[seq_len(nrow(path)), ] <- path
     } else {
@@ -359,4 +356,33 @@ get_cond_mat <- function(path, horizon,
   }
 
   return(cond_mat)
+}
+
+
+#' Generate quantiles
+#'
+#' Check and create a given vector of confidence bands and create suitable
+#' quantiles from it.
+#'
+#' @param conf_bands Numeric vector of probabilities (\eqn{[0, 1]}).
+#'
+#' @return Returns a sorted vector of quantiles created from \emph{conf_bands}.
+#'
+#' @examples
+#' bvar:::quantile_check(c(0.1, 0.16))
+#'
+#' @noRd
+quantile_check <- function(conf_bands) {
+
+  conf_bands <- sapply(conf_bands, num_check,
+    min = 0 + 1e-16, max = 1 - 1e-16, msg = "Confidence bands misspecified.")
+
+  # Allow only returning the median
+  if(length(conf_bands) == 1 && conf_bands == 0.5) {return(conf_bands)}
+
+  # Sort and make sure we have no duplicates (thank mr float)
+  quants <- sort(c(conf_bands, 0.5, (1 - conf_bands)))
+  quants <- quants[!duplicated(round(quants, digits = 12L))]
+
+  return(quants)
 }

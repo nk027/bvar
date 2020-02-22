@@ -65,13 +65,12 @@ predict.bvar <- function(
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-
-  # Retrieve / calculate fcast --------------------------------------------
-
   dots <- list(...)
   fcast_store <- object[["fcast"]]
 
-  # If no forecast exists or no settings are provided - calculate
+
+  # Calculate new forecast ---
+
   if(is.null(fcast_store) || length(dots) != 0L || !missing(newdata)) {
 
     fcast <- if(length(dots) > 0 && inherits(dots[[1]], "bv_fcast")) {
@@ -80,7 +79,7 @@ predict.bvar <- function(
 
     n_pres <- object[["meta"]][["n_save"]]
     n_thin <- int_check(n_thin, min = 1, max = (n_pres / 10),
-                        "Issue with n_thin.")
+      "Issue with n_thin. Maximum allowed is (n_draw - n_burn) / 10.")
     n_save <- int_check((n_pres / n_thin), min = 1)
 
     K <- object[["meta"]][["K"]]
@@ -94,48 +93,43 @@ predict.bvar <- function(
       N <- object[["meta"]][["N"]]
     } else {
       if(!all(vapply(newdata, is.numeric, logical(1))) || any(is.na(newdata)) ||
-         ncol(newdata) != M) {stop("Problem with newdata.")}
+        ncol(newdata) != M) {stop("Problem with newdata.")}
       Y <- as.matrix(newdata)
       N <- nrow(Y)
     }
 
-    fcast_store <- list(
+    fcast_store <- structure(list(
       "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
       "setup" = fcast, "variables" = object[["variables"]],
-      "data" = object[["meta"]][["Y"]]
-    )
-    class(fcast_store) <- "bvar_fcast"
+      "data" = Y), class = "bvar_fcast")
 
-    if(is.null(fcast[["conditional"]])) {
+    if(is.null(fcast[["conditional"]])) { # Unconditional forecast
       j <- 1
       for(i in seq_len(n_save)) {
-        beta_comp <- get_beta_comp(beta[j, , ], K, M, lags)
+        beta_comp <- get_beta_comp(beta[j, , ], K = K, M = M, lags = lags)
         fcast_store[["fcast"]][i, , ] <- compute_fcast(
           Y = Y, K = K, M = M, N = N, lags = lags,
           horizon = fcast[["horizon"]],
-          beta_comp = beta_comp,
-          beta_const = beta[j, 1, ], sigma = sigma[j, , ],
-          conditional = FALSE)
+          beta_comp = beta_comp, beta_const = beta[j, 1, ],
+          sigma = sigma[j, , ], conditional = FALSE)
         j <- j + n_thin
       }
-    } else { # do conditional forecasts
-
+    } else { # Conditional forecast
       cond_mat <- get_cond_mat(fcast[["conditional"]][["path"]],
-                               fcast[["horizon"]],
-                               fcast[["conditional"]][["cond_var"]],
-                               object[["variables"]], M)
+        fcast[["horizon"]], fcast[["conditional"]][["cond_var"]],
+        object[["variables"]], M)
 
       irf_store <- object[["irf"]]
-      if(is.null(irf_store) ||
-         irf_store[["setup"]][["horizon"]] < fcast[["horizon"]] ||
-         !irf_store[["setup"]][["identification"]]) {
-        irf_store <- irf.bvar(object, horizon = fcast[["horizon"]],
-                              n_thin = n_thin)
+      if(is.null(irf_store) || !irf_store[["setup"]][["identification"]] ||
+        irf_store[["setup"]][["horizon"]] < fcast[["horizon"]]) {
+        message("No suitable impulse responses found, calculating...")
+        irf_store <- irf.bvar(object,
+          horizon = fcast[["horizon"]], n_thin = n_thin)
       }
 
       j <- 1
       for(i in seq_len(n_save)) {
-        beta_comp <- get_beta_comp(beta[j, , ], K, M, lags)
+        beta_comp <- get_beta_comp(beta[j, , ], K = K, M = M, lags = lags)
         noshock_fcast <- compute_fcast(
           Y = Y, K = K, M = M, N = N, lags = lags,
           horizon = fcast[["horizon"]],
@@ -144,14 +138,13 @@ predict.bvar <- function(
           conditional = TRUE)
         ortho_irf <- irf_store[["irf"]][j, , , ]
         fcast_store[["fcast"]][i, , ] <- get_cond_fcast(cond_mat = cond_mat,
-                                     noshock_fcast = noshock_fcast,
-                                     ortho_irf = ortho_irf,
-                                     horizon = fcast[["horizon"]], M = M)
+          noshock_fcast = noshock_fcast, ortho_irf = ortho_irf,
+          horizon = fcast[["horizon"]], M = M)
         j <- j + n_thin
 
       }
     }
-  }
+  } # End new forecast
 
   # Prepare outputs -------------------------------------------------------
 

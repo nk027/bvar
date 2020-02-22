@@ -22,7 +22,7 @@ get_ev <- function(
   if(is.null(XX)) {XX <- crossprod(X)}
 
   beta_hat <- if(beta_hat) {
-    solve(XX + omega_inv, (crossprod(X, Y) + omega_inv %*% b))
+    solve(XX + omega_inv, crossprod(X, Y) + omega_inv %*% b)
   } else {b}
 
   sse <- crossprod(Y - X %*% beta_hat)
@@ -32,10 +32,13 @@ get_ev <- function(
   })
 
   # Eigenvalues + 1 as another way of computing the determinants
-  omega_ml_ev <- Re(eigen(omega_ml, only.values = TRUE)[["values"]])
+  omega_ml_ev <- Re(eigen(omega_ml,
+    symmetric = TRUE, only.values = TRUE)[["values"]])
   omega_ml_ev[omega_ml_ev < 1e-12] <- 0
   omega_ml_ev <- omega_ml_ev + 1
-  psi_ml_ev <- Re(eigen(psi_ml, only.values = TRUE)[["values"]])
+
+  psi_ml_ev <- Re(eigen(psi_ml,
+    symmetric = TRUE, only.values = TRUE)[["values"]])
   psi_ml_ev[psi_ml_ev < 1e-12] <- 0
   psi_ml_ev <- psi_ml_ev + 1
 

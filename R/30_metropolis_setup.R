@@ -57,14 +57,12 @@ bv_metropolis <- function(
     acc_change <- num_check(acc_change, 1e-16, 1e16, "Issue with acc_change")
   }
 
-  out <- list(
+  out <- structure(list(
     "scale_hess" = scale_hess,
     "adjust_acc" = adjust_acc, "adjust_burn" = adjust_burn,
     "acc_lower" = acc_lower, "acc_upper" = acc_upper,
-    "acc_tighten" = 1 - acc_change, "acc_loosen" = 1 + acc_change
-  )
-
-  class(out) <- "bv_metropolis"
+    "acc_tighten" = 1 - acc_change, "acc_loosen" = 1 + acc_change),
+    class = "bv_metropolis")
 
   return(out)
 }

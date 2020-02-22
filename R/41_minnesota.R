@@ -77,10 +77,9 @@ bv_minnesota <- function(
   if(!inherits(psi, "bv_psi")) {stop("Please use `bv_psi()` to set psi.")}
 
   # Outputs
-  out <- list("lambda" = lambda, "alpha" = alpha,
-    "psi" = psi, "b" = b, "var" = var)
-
-  class(out) <- "bv_minnesota"
+  out <- structure(list(
+    "lambda" = lambda, "alpha" = alpha, "psi" = psi, "b" = b, "var" = var),
+    class = "bv_minnesota")
 
   return(out)
 }
@@ -117,11 +116,14 @@ bv_psi <- function(
   scale = 0.004, shape = 0.004,
   mode = "auto", min = "auto", max = "auto") {
 
-    scale <- num_check(scale, min = 0 + 1e-16, max = Inf,
-      msg = "Invalid value for scale (outside of (0, Inf]")
-    shape <- num_check(shape, min = 0 + 1e-16, max = Inf,
-      msg = "Invalid value for shape (outside of (0, Inf]")
+  # Checks ---
 
+  scale <- num_check(scale, min = 0 + 1e-16, max = Inf,
+    msg = "Invalid value for scale (outside of (0, Inf]")
+  shape <- num_check(shape, min = 0 + 1e-16, max = Inf,
+    msg = "Invalid value for shape (outside of (0, Inf]")
+
+  # Check mode, min and max
   if(any(mode != "auto")) {
     mode <- vapply(mode, num_check, numeric(1L), min = 0, max = Inf,
       msg = "Invalid value(s) for mode (outside of [0, Inf]).")
@@ -141,11 +143,12 @@ bv_psi <- function(
     stop("The length of mode and boundaries diverge.")
   }
 
-  out <- list("mode" = mode, "min" = min, "max" = max,
-    "coef" = list("k" = shape, "theta" = scale)
-  )
+  # Outputs ---
 
-  class(out) <- "bv_psi"
+  out <- structure(list(
+    "mode" = mode, "min" = min, "max" = max,
+    "coef" = list("k" = shape, "theta" = scale)
+    ), class = "bv_psi")
 
   return(out)
 }
@@ -155,8 +158,7 @@ bv_psi <- function(
 lazy_priors <- function(x) {
 
   if(!inherits(x, "bv_dummy")) {
-    # Allow receiving length 4 numeric vectors
-    if(length(x) == 4 && is.numeric(x)) {
+    if(length(x) == 4 && is.numeric(x)) { # Allow length 4 numeric vectors
       return(x = bv_lambda(x[1], x[2], x[3], x[4]))
     }
     stop("Please use `bv_lambda()` / `bv_alpha()` to set lambda / alpha.")
