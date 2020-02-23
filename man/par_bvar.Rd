@@ -25,35 +25,37 @@ par_bvar(
 \item{n_runs}{The number of parallel runs to calculate. Defaults to the
 length of \emph{cl}, i.e. the number of registered nodes.}
 
-\item{data}{Numeric matrix or dataframe. Note that observations need to be
-ordered from earliest to latest one.}
+\item{data}{Numeric matrix or dataframe. Note that observations are expected
+to be ordered from earliest to latest one.}
 
-\item{lags}{Integer scalar. Number of lags to apply to the data.}
+\item{lags}{Integer scalar. Lag order for the model.}
 
-\item{n_draw}{Integer scalar. Define the number of iterations
-to (a) cycle through and (b) burn at the start.}
+\item{n_draw}{Integer scalar. The number of iterations to (a) cycle
+through and (b) burn at the start.}
 
-\item{n_burn}{Integer scalar. Define the number of iterations
-to (a) cycle through and (b) burn at the start.}
+\item{n_burn}{Integer scalar. The number of iterations to (a) cycle
+through and (b) burn at the start.}
 
-\item{n_thin}{Integer scalar. Provides the option of reducing the number of
-stored iterations to every \emph{n_thin}'th one. The number of saved
-iterations thus equals \emph{(n_draw - n_burn) / n_thin}.}
+\item{n_thin}{Integer scalar. Every \emph{n_thin}'th iteration is stored.
+For a given memory requirement thinning reduces autocorrelation, while
+increasing effective sample size.}
 
-\item{priors}{\code{bv_priors} object containing priors and their settings.
-See \code{\link{bv_priors}}.}
+\item{priors}{Object from \code{\link{bv_priors}} with prior settings for.
+Used to adjust the Minnesota prior, add custom dummy priors, and choose
+hyperparameters for hierarchical estimation.}
 
-\item{mh}{\code{bv_metropolis} object with settings regarding the acceptance
-rate of the Metropolis-Hastings step. See \code{\link{bv_mh}}.}
+\item{mh}{Object from \code{\link{bv_mh}} with settings for the
+Metropolis-Hastings step. Used to tune enable automatic adjustment of the
+acceptance rate, or manually adjust the proposal variance.}
 
-\item{fcast}{\code{bv_fcast} object of forecast options set with
-\code{\link{bv_fcast}}. May be set to \code{NULL} to skip forecasting.
-Forecasts may also be calculated ex-post using \code{\link{predict.bvar}}.}
+\item{fcast}{Object from \code{\link{bv_fcast}} with forecast settings.
+Options include the horizon and conditional forecasts for scenario analysis.
+May also be calculated ex-post using \code{\link{predict.bvar}}.}
 
-\item{irf}{\code{bv_irf} object with options regarding impulse responses and
-forecast error variance decompositions. Set via \code{\link{bv_irf}} or
-skipped when set to \code{NULL}. May also be computed ex-post using
-\code{\link{irf.bvar}}.}
+\item{irf}{Object from code{\link{bv_irf}} with settings for the calculation
+of impulse responses and forecast error variance decompositions. Options
+include the horizon and different identification schemes.
+May also be calculated ex-post using \code{\link{irf.bvar}}.}
 }
 \description{
 Wrapper to speed up parallel computation using

@@ -6,7 +6,7 @@
 \usage{
 fred_transform(
   data,
-  type = c("qd", "md"),
+  type = c("fred_qd", "fred_md"),
   transform = TRUE,
   na.rm = TRUE,
   lag = 1,
@@ -61,7 +61,7 @@ fred_transform(fred_qd[, c("GDPC1", "INDPRO", "FEDFUNDS")])
 
 # Transform all of FRED-MD
 \dontrun{
-fred_transform(fred_md, type = "md")
+fred_transform(fred_md, type = "fred_md")
 }
 }
 \seealso{

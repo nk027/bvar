@@ -49,7 +49,7 @@ prep_data <- function(
 
   vars_hyp <- c("ml", colnames(x[["hyper"]]))
   vars_dep <- x[["variables"]]
-  vars_ind <- x[["meta"]][["explanatories"]]
+  vars_ind <- x[["explanatories"]]
   if(is.null(vars_ind)) { # Compatibility to older versions (<= 0.2.2)
     vars_ind <- name_expl(vars_dep,
       M = x[["meta"]][["M"]], lags = x[["meta"]][["lags"]])

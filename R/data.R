@@ -83,11 +83,11 @@
 #'
 #' # Transform all of FRED-MD
 #' \dontrun{
-#' fred_transform(fred_md, type = "md")
+#' fred_transform(fred_md, type = "fred_md")
 #' }
 fred_transform <- function(
   data,
-  type = c("qd", "md"),
+  type = c("fred_qd", "fred_md"),
   transform = TRUE, na.rm = TRUE,
   lag = 1, scale = 100) {
 
@@ -129,14 +129,17 @@ fred_transform <- function(
 
 
 #' @noRd
-lookup_code <- function(vars, type = c("qd", "md")) {
+#'
+#' @importFrom utils read.table
+lookup_code <- function(vars, type = c("fred_qd", "fred_md")) {
 
   if(!is.character(vars) || length(vars) == 0) {
     stop("Please provide a character vector to look up transformation codes.")
   }
   type <- match.arg(type)
 
-  fred_trans <- readRDS(system.file("fred_trans.rds", package = "BVAR"))
+  fred_trans <- read.table(system.file("fred_trans.csv", package = "BVAR"),
+    header = TRUE, sep = ",", na.strings = c("", "NA"))
   match <- vapply(vars, function(x, y) {
     out <- grep(paste0("^", x, "$"), y)
     if(length(out) == 0) {out <- NA_integer_}
