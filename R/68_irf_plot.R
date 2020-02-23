@@ -104,7 +104,9 @@ plot_irf <- function(
     quants[1, , , ] <- x[["quants"]]
   }
 
-  variables <- name_deps(variables = x[["variables"]], M = M)
+
+  variables <- name_deps(variables = if(is.null(variables)) {
+    x[["variables"]]} else {variables}, M = M)
 
   # Sort out colours - applies alpha if they're HEX and need recycling
   col <- fill_ci_col(x = "#000000", y = col, P = P)

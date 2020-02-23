@@ -136,7 +136,8 @@ plot_fcast <- function(
     }, matrix(0, P2, t_back + t_forw), USE.NAMES = FALSE)
   }
 
-  variables <- name_deps(variables = x[["variables"]], M = M)
+  variables <- name_deps(variables = if(is.null(variables)) {
+    x[["variables"]]} else {variables}, M = M)
 
   # Sort out colours - applies alpha if they're HEX and need recycling
   col <- fill_ci_col(x = "#000000", y = col, P = P)
