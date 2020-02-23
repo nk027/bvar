@@ -28,22 +28,21 @@ draw_post <- function(
   b, psi, sse, beta_hat, omega_inv) {
 
   S_post <- psi + sse + crossprod((beta_hat - b), omega_inv) %*% (beta_hat - b)
-  S_eig <- eigen(S_post, symmetric = TRUE)
+  # S_eig <- eigen(S_post, symmetric = TRUE)
   # S_inv <- S_eig[["vectors"]] %*%
   #   tcrossprod(diag(1 / abs(S_eig[["values"]])), S_eig[["vectors"]])
-
   # eta <- rmvnorm(n = (N + M + 2), mean = rep(0, M), sigma = S_inv)
-  eta <- rmvn_eta(n = (N + M + 2), sigma = S_eig)
+  eta <- rmvn_eta(n = (N + M + 2), sigma = eigen(S_post, symmetric = TRUE))
+
   sigma_draw <- chol2inv(chol(crossprod(eta)))
   sigma_chol <- t(chol(sigma_draw))
   # noise <- rmvnorm(n = M, mean = rep(0, (1 + M * lags)),
   #   sigma = chol2inv(chol(XX + omega_inv)))
-  noise <- rmvn_noise(n = M, sigma = chol2inv(chol(XX + omega_inv)))
+  noise <- rmvn_inv(n = M, sigma = XX + omega_inv)
 
   beta_draw <- beta_hat + crossprod(noise, sigma_chol)
 
   return(
-    list("beta_draw" = beta_draw,
-      "sigma_draw" = sigma_draw, "sigma_chol" = sigma_chol)
+    list("beta_draw" = beta_draw, "sigma_draw" = sigma_draw)
   )
 }

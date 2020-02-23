@@ -6,7 +6,6 @@
 \alias{irf}
 \alias{irf<-}
 \alias{fevd}
-\alias{fevd<-}
 \alias{summary.bvar_irf}
 \alias{summary.bvar_fevd}
 \title{Impulse response and forecast error methods for Bayesian VARs}
@@ -20,8 +19,6 @@ irf(x, ...)
 irf(x) <- value
 
 fevd(x, ...)
-
-fevd(x) <- value
 
 \method{summary}{bvar_irf}(object, vars_impulse = NULL, vars_response = NULL, ...)
 

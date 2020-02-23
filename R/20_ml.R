@@ -100,14 +100,6 @@ bv_ml <- function(
   log_ml <- get_logml(M = M, N = N, psi = psi,
     omega_ml_ev = ev_full[["omega"]], psi_ml_ev = ev_full[["psi"]])
 
-  if(length(priors[["dummy"]]) > 0) {
-    ev_dummy <- get_ev(omega_inv = omega_inv, omega_sqrt = omega_sqrt,
-      psi_inv = psi_inv, X = X_dmy, XX = NULL, Y = Y_dmy, b = b,
-      beta_hat = FALSE)
-    log_ml <- log_ml - get_logml(M = M, N = N_dummy, psi = psi,
-      omega_ml_ev = ev_dummy[["omega"]], psi_ml_ev = ev_dummy[["psi"]])
-  }
-
   # Add priors
   log_ml <- log_ml + sum(vapply(
     priors[["hyper"]][which(!priors$hyper == "psi")], function(x) {
@@ -124,6 +116,15 @@ bv_ml <- function(
           shape = psi_coef[["k"]], scale = psi_coef[["theta"]])
     }))
   }
+
+  if(length(priors[["dummy"]]) > 0) {
+    ev_dummy <- get_ev(omega_inv = omega_inv, omega_sqrt = omega_sqrt,
+      psi_inv = psi_inv, X = X_dmy, XX = NULL, Y = Y_dmy, b = b,
+      beta_hat = FALSE)
+    log_ml <- log_ml - get_logml(M = M, N = N_dummy, psi = psi,
+      omega_ml_ev = ev_dummy[["omega"]], psi_ml_ev = ev_dummy[["psi"]])
+  }
+
 
 
   # Output -----

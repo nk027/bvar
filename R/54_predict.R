@@ -157,6 +157,7 @@ predict.bvar <- function(
 
 
 #' @noRd
+#' @export
 `predict<-.bvar` <- function(object, value) {
 
   if(!inherits(object, "bvar")) {stop("Please use a `bvar` object.")}
@@ -176,7 +177,7 @@ predict.bvar <- function(
 #' @importFrom stats predict quantile
 predict.bvar_fcast <- function(object, conf_bands, ...) {
 
-  if(!inherits(object, "bvar")) {
+  if(!inherits(object, "bvar_fcast")) {
     stop("Please provide a `bvar_fcast` object.")
   }
 

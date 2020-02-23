@@ -3,10 +3,11 @@
 
 keep <- readLines("data/fred_permitted.txt")
 
+file <- "2020-01.csv" # Update this
+
 # QD ---
 # See https://research.stlouisfed.org/econ/mccracken/fred-databases/
 link <- "https://s3.amazonaws.com/files.fred.stlouisfed.org/fred-md/quarterly/"
-file <- "2020-01.csv" # Update this
 
 fred_qd <- read.csv(paste(link, file, sep = ""), stringsAsFactors = FALSE)
 
@@ -40,7 +41,6 @@ save(fred_qd, file = "data/fred_qd.rda", version = 2)
 # MD ---
 # See https://research.stlouisfed.org/econ/mccracken/fred-databases/
 link <- "https://s3.amazonaws.com/files.fred.stlouisfed.org/fred-md/monthly/"
-file <- "2020-01.csv" # Update this
 
 fred_md <- read.csv(paste(link, file, sep = ""), stringsAsFactors = FALSE)
 
@@ -86,11 +86,13 @@ which(vals_qd[qd_overlap] != vals_md[qd_overlap])
 
 # We provide two columns
 fred_trans <- data.frame(variable = union(names_md, names_qd),
-  md = NA, qd = NA, stringsAsFactors = FALSE)
-fred_trans$md <- vals_md[fred_trans$variable]
-fred_trans$qd <- vals_qd[fred_trans$variable]
+  fred_md = NA, fred_qd = NA, stringsAsFactors = FALSE)
+fred_trans$fred_md <- vals_md[fred_trans$variable]
+fred_trans$fred_qd <- vals_qd[fred_trans$variable]
 
-saveRDS(fred_trans, file = "inst/fred_trans.rds", version = 2)
+write.table(fred_trans, file = "inst/fred_trans.csv",
+  sep = ",", na = "", row.names = FALSE, fileEncoding = "UTF-8")
+# saveRDS(fred_trans, file = "inst/fred_trans.rds", version = 2)
 
 
 # Add transformations -------------------------------------------------------

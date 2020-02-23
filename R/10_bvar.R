@@ -248,7 +248,10 @@ bvar <- function(
     HH <- HH_eig
     # HH <- HH_eig[["vectors"]] %*% diag(abs(HH_eig[["values"]])) %*%
     #   t(HH_eig[["vectors"]])
-  } else {HH <- abs(HH)}
+  } else {
+    HH <- list("values" = abs(HH))
+    # HH <- abs(HH)
+  }
 
 
   # Initial draw ---
@@ -279,8 +282,8 @@ bvar <- function(
   for(i in seq.int(1 - n_burn, n_draw - n_burn)) {
 
     # Metropolis-Hastings
-    # hyper_temp <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
-    hyper_temp <- rmvn_proposal(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
+    # hyper_temp <- rmvnorm(n = 1, mean = hyper_draw, sigma = HH)[1, ]
+    hyper_temp <- rmvn_proposal(n = 1, mean = hyper_draw, sigma = HH)[1, ]
     ml_temp <- bv_ml(hyper = hyper_temp,
       hyper_min = hyper_min, hyper_max = hyper_max, pars = pars_full,
       priors = priors, Y = Y, X = X, XX = XX, K = K, M = M, N = N, lags = lags)
@@ -296,9 +299,11 @@ bvar <- function(
     if(mh[["adjust_acc"]] && i <= -n_adj && (i + n_burn) %% 10 == 0) {
       acc_rate <- accepted_adj / (i + n_burn)
       if(acc_rate < mh[["acc_lower"]]) {
-        HH <- HH * mh[["acc_tighten"]]
+        HH[["values"]] <- HH[["values"]] * mh[["acc_tighten"]]
+        # HH <- HH * mh[["acc_tighten"]]
       } else if(acc_rate > mh[["acc_upper"]]) {
-        HH <- HH * mh[["acc_loosen"]]
+        HH[["values"]] <- HH[["values"]] * mh[["acc_loosen"]]
+        # HH <- HH * mh[["acc_loosen"]]
       }
     }
 
@@ -346,11 +351,13 @@ bvar <- function(
     ), class = "bvar")
 
   if(!is.null(irf)) {
+    if(verbose) {cat("Calculating impulse responses.\n")}
     out[["irf"]] <- tryCatch(irf.bvar(out, irf), error = function(e) {
       warning("Impulse response calculation failed with:\n", e)
       return(NULL)})
   }
   if(!is.null(fcast)) {
+    if(verbose) {cat("Calculating forecasts.\n")}
     out[["fcast"]] <- tryCatch(predict.bvar(out, fcast), error = function(e) {
       warning("Forecast calculation failed with:\n", e)
       return(NULL)})

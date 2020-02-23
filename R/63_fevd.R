@@ -13,13 +13,16 @@
 #' @noRd
 compute_fevd <- function(irf_comp, M, horizon) {
 
-  fevd_comp <- aperm(apply(irf_comp * irf_comp, c(1, 3), cumsum), c(2, 3, 1))
-  accm <- matrix(0, M, M)
+  # fevd_comp <- aperm(apply(irf_comp * irf_comp, c(1, 3), cumsum), c(2, 3, 1))
+  fevd_comp <- apply(irf_comp * irf_comp, c(1, 3), cumsum)
+  tmp <- matrix(0, M, M)
   for(i in 1:horizon) {
-    accm <- accm + irf_comp[, i, ] %*% t(irf_comp[, i, ])
-    denm <- matrix((diag(accm)), M, M)
-    fevd_comp[, , i] <- fevd_comp[, , i] / denm
+    tmp <- tmp + tcrossprod(irf_comp[, i, ])
+    # denm <- matrix(diag(tmp), M, M)
+    # fevd_comp[, , i] <- fevd_comp[, , i] / denm
+    fevd_comp[i, , ] <- fevd_comp[i, , ] * (1 / diag(tmp))
   }
 
-  return(aperm(fevd_comp, c(1, 3, 2)))
+  # return(aperm(fevd_comp, c(1, 3, 2)))
+  return(aperm(fevd_comp, c(2, 1, 3)))
 }

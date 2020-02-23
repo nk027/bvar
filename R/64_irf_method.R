@@ -137,6 +137,7 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 
 
 #' @noRd
+#' @export
 `irf<-.bvar` <- function(x, value) {
 
   if(!inherits(x, "bvar")) {stop("Please use a `bvar` object.")}
@@ -210,7 +211,7 @@ fevd.bvar_irf <- function(x, conf_bands, ...) {
     } else {fevd.bvar_fevd(fevd_store, c(0.16))}
   }
 
-  return(x)
+  return(fevd_store)
 }
 
 
