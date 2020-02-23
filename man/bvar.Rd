@@ -22,7 +22,7 @@ bvar(
 \item{data}{Numeric matrix or dataframe. Note that observations are expected
 to be ordered from earliest to latest one.}
 
-\item{lags}{Integer scalar. Lag order for the model.}
+\item{lags}{Integer scalar. Lag order of the model.}
 
 \item{n_draw, n_burn}{Integer scalar. The number of iterations to (a) cycle
 through and (b) burn at the start.}

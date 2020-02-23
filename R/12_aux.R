@@ -1,13 +1,13 @@
-#' Lag a matrix of time series
+#' Lag a matrix
 #'
-#' Compute a lagged version of matrix to be used in vector autoregressions.
-#' Multiple lags are added side by side.
+#' Compute a lagged version of a matrix to be used in vector autoregressions.
+#' Higher lags are further to the right.
 #'
 #' @param x Matrix (\eqn{N * M}) to lag.
-#' @param lags Numeric scalar. Number of lags to create.
+#' @param lags Integer scalar. Number of lags to apply.
 #'
 #' @return Returns an \eqn{N * (M * lags)} matrix with consecutive lags on the
-#' right.
+#' right. The elements of the first \emph{lags} rows are 0.
 #'
 #' @noRd
 lag_var <- function(x, lags) {
@@ -27,13 +27,13 @@ lag_var <- function(x, lags) {
 
 #' Compute gamma coefficients
 #'
-#' Compute the shape \emph{k} and scale \eqn{\theta} of a Gamma
-#' distribution via mode and standard deviation.
+#' Compute the shape \emph{k} and scale \emph{theta} of a Gamma
+#' distribution via the mode and standard deviation.
 #'
 #' @param mode Numeric scalar.
 #' @param sd Numeric scalar.
 #'
-#' @return Returns a list with shape \emph{k} and scale parameter \eqn{\theta}.
+#' @return Returns a list with shape \emph{k} and scale parameter \emph{theta}.
 #'
 #' @noRd
 gamma_coef <- function(mode, sd) {
@@ -47,19 +47,15 @@ gamma_coef <- function(mode, sd) {
 }
 
 
-#' Create parameter names
+#' Nape hyperparameters
 #'
-#' Function to help name prior parameters. Accounts for multiple occurences
-#' of \emph{psi} when \eqn{M > 1} by adding sequential numbers.
+#' Function to help name hyperparameters. Accounts for multiple occurences
+#' of \emph{psi} by adding sequential numbers.
 #'
-#' @param x Character vector. Names of all relevant paramters.
+#' @param x Character vector. Parameter names.
 #' @param M Integer scalar. Number of columns in the data.
 #'
-#' @return Returns a character vector of parameter names.
-#'
-#' @examples
-#' BVAR:::name_pars(c("lambda", "alpha"))
-#' BVAR:::name_pars(c("lambda", "psi"), M = 3)
+#' @return Returns a character vector of adjusted parameter names.
 #'
 #' @noRd
 name_pars <- function(x, M) {
@@ -71,23 +67,22 @@ name_pars <- function(x, M) {
 }
 
 
-#' Credible interval symmetric filling
+#' Fill credible intervals
 #'
-#' Helper function to fill data, colours or similar things around credible
+#' Helper function to fill data, colours or similar things based on credible
 #' intervals. These are used in \code{\link{plot.bvar_irf}} and
 #' \code{\link{plot.bvar_fcast}}.
 #'
-#' Note that HEX colours that need recycling are dealt some transparency.
+#' Note that transparency may get appended to recycled HEX colours. Also note
+#' that no, i.e. a length 0 central element is required when drawing polygons.
 #'
 #' @param x Scalar or vector. The central element.
 #' @param y Scalar or vector. Value(s) to surround the central element with.
-#' The first value is closest and values may get recycled.
-#' @param P Integer scalar. Number of total bands.
+#' The first value is closest, values may get recycled.
+#' @param P Odd integer scalar. Number of total bands.
 #'
-#' @return Returns a vector or matrix (if x is a vector) of x, surrounded by y.
-#'
-#' @examples
-#' BVAR:::fill_ci("malcolm", y = c("reese", "dewey"), P = 5)
+#' @return Returns a vector or matrix (if \emph{x} is a vector) of \emph{x},
+#' surrounded by \emph{y}.
 #'
 #' @noRd
 fill_ci <- function(x, y, P) {
@@ -110,7 +105,7 @@ fill_ci <- function(x, y, P) {
 #' @noRd
 fill_ci_na <- function(x, P) {
 
-  # Corner case for data when quantiles are missing
+  # Corner case when quantiles are missing (t_back or conditional forecasts)
   if(P == 2) {return(if(length(x > 1)) {cbind(x, NA)} else {c(x, NA)})}
 
   fill_ci(x = x, y = NA, P = P)
@@ -120,8 +115,9 @@ fill_ci_na <- function(x, P) {
 #' @noRd
 fill_ci_col <- function(x, y, P) {
 
+  # Apply transparency to HEX colours
   if(length(y) == 1 && is_hex(y, alpha = FALSE)) {
-    y <- paste0(y, transparance_hex(P))
+    y <- paste0(y, alpha_hex(P))
   }
 
   fill_ci(x = x, y = y, P = P)
@@ -130,19 +126,14 @@ fill_ci_col <- function(x, y, P) {
 
 #' Get a transparency HEX code
 #'
-#' @param P Integer scalar. Number of total bands to determine number of codes.
+#' @param P Integer scalar. Number of total bands.
 #'
-#' @return Returns a character vector of transparency codes. Note that there is
-#' no central element for polygons and colours should be repeated symmetrically.
+#' @return Returns a character vector of transparency codes.
 #'
 #' @importFrom grDevices rgb
 #'
-#' @examples
-#' # Retrieve auto-generated HEX codes
-#' BVAR:::transparence_hex(21)
-#'
 #' @noRd
-transparance_hex <- function(P) {
+alpha_hex <- function(P) {
 
   n_trans <- P %/% 2
   out <- switch(n_trans, # Handpicked with love
@@ -178,22 +169,12 @@ is_hex <- function(x, alpha = FALSE) {
 #' Helper functions to aid with variable selection, e.g. in
 #' \code{\link{plot.bvar_irf}} and \code{\link{plot.bvar_fcast}}.
 #'
-#' @param vars Vector of variables to subset to. Numeric or character.
+#' @param vars Numeric or character cector of variables to subset to.
 #' @param variables Character vector of all variable names. Required if
 #' \emph{vars} is provided as character vector.
 #' @param M Integer scalar. Count of all variables.
 #'
 #' @return Returns a numeric vector with the positions of desired variables.
-#'
-#' @examples
-#' # Use the names
-#' BVAR:::pos_vars("fx_rate", variables = c("gdp_pc", "fx_rate"))
-#'
-#' # Subset via positions
-#' BVAR:::pos_vars(c(1, 3), M = 3)
-#'
-#' # Get the full set
-#' BVAR:::pos_vars(NULL, M = 3)
 #'
 #' @noRd
 pos_vars <- function(vars, variables, M) {
@@ -202,8 +183,8 @@ pos_vars <- function(vars, variables, M) {
     return(1:M) # Full set
   }
   if(is.numeric(vars)) {
-    return(sort(vapply(vars, int_check, # By position
-      min = 1, max = M, msg = "Variable(s) not found.", integer(1))))
+    return(vapply(vars, int_check, # By position
+      min = 1, max = M, msg = "Variable(s) not found.", integer(1)))
   }
   if(is.character(vars) && !is.null(variables)) {
     out <- do.call(c, lapply(vars, grep, variables)) # By name
@@ -216,20 +197,11 @@ pos_vars <- function(vars, variables, M) {
 
 #' Name dependent / explanatory variables
 #'
-#' Helper function to quickly generate names for variables.
-#'
 #' @param variables Character vector of all variable names.
-#' @param M Integer scalar. Number of columns in the data.
-#' @param lags Integer scalar. Number of lags applied in the model.
+#' @param M Integer scalar. Count of the variables.
+#' @param lags Integer scalar. Number of lags applied.
 #'
-#' @return Returns a character vector of names for the variables.
-#'
-#' @examples
-#' # Get c("constant", "gdp-lag1", "cpi-lag1")
-#' BVAR:::name_expl(c("gdp", "cpi"), lags = 1)
-#'
-#' # Get c("gdp", "cpi")
-#' BVAR:::name_deps(c("gdp", "cpi"), M = 2)
+#' @return Returns a character vector of variable names.
 #'
 #' @noRd
 name_deps <- function(variables, M) {
@@ -257,25 +229,18 @@ name_expl <- function(variables, M, lags) {
 }
 
 
-#' Compute log pdf of an inverse Gamma distribution
-#'
-#' Compute the logged pdf of a draw of a variable assumed to be inverse-Gamma
-#' (IG) distributed with parameters \emph{scale} and \emph{shape}.
+#' Compute log distribution function of Inverse Gamma
 #'
 #' @param x Numeric scalar. Draw of the IG-distributed variable.
-#' @param scale Numeric scalar. Scale of the IG prior distribution.
-#' @param shape Numeric scalar. Shape of the IG prior distribution.
+#' @param shape Numeric scalar.
+#' @param scale Numeric scalar.
 #'
-#' @return A numeric scalar of the draw's log-likelihood.
-#'
-#' @examples
-#' # Computing log-likelihood of a draw with value 5
-#' BVAR:::p_log_ig(5, 0.004, 0.004)
+#' @return Returns the log Inverse Gamma distribution function.
 #'
 #' @noRd
 p_log_ig <- function(x, shape, scale) {
 
-  return(scale * log(shape) - (scale + 1) * log(x) - shape / x - lgamma(scale))
+  return(shape * log(scale) - (shape + 1) * log(x) - scale / x - lgamma(shape))
 }
 
 
@@ -283,12 +248,13 @@ p_log_ig <- function(x, shape, scale) {
 #'
 #' Compute the companion form of the VAR coefficients.
 #'
-#' @param beta Numeric matrix. Non-companion form of the VAR coefficients.
-#' @param K Integer scalar. Number of columns in the data.
-#' @param M Integer scalar. Number of columns in the lagged data.
+#' @param beta Numeric (\eqn{K * M}) matrix with VAR coefficients.
+#' @param K Integer scalar. Number of columns in the independent data.
+#' @param M Integer scalar. Number of columns in the dependent data.
 #' @param lags Integer scalar. Number of lags applied.
 #'
-#' @return Returns a numeric matrix with \emph{beta} in companion form.
+#' @return Returns a numeric (\eqn{K - 1 * K -1}) matrix with \emph{beta} in
+#' companion form.
 #'
 #' @noRd
 get_beta_comp <- function(beta, K, M, lags) {
@@ -306,14 +272,11 @@ get_beta_comp <- function(beta, K, M, lags) {
 
 #' Check whether a package is installed
 #'
-#' @param package Character scalar. Package to look for.
-#'
-#' @examples
-#' # Check whether mad cow disease is present on this machine
-#' has_package("BSE")
+#' @param package Character scalar.
 #'
 #' @noRd
 has_package <- function(package) {
+
   if(!requireNamespace(package, quietly = TRUE)) {
     stop("Package \'", package, "\' required for this method.", call. = FALSE)
   }
@@ -324,15 +287,11 @@ has_package <- function(package) {
 
 #' Generate quantiles
 #'
-#' Check and create a given vector of confidence bands and create suitable
-#' quantiles from it.
+#' Check a vector of confidence bands and create quantiles from it.
 #'
-#' @param conf_bands Numeric vector of probabilities (\eqn{[0, 1]}).
+#' @param conf_bands Numeric vector of probabilities (\eqn{(0, 1)}).
 #'
-#' @return Returns a sorted vector of quantiles created from \emph{conf_bands}.
-#'
-#' @examples
-#' bvar:::quantile_check(c(0.1, 0.16))
+#' @return Returns a sorted, symmetric vector of quantiles.
 #'
 #' @noRd
 quantile_check <- function(conf_bands) {

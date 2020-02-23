@@ -6,6 +6,8 @@
 .RData
 .RDataTmp.Ruserdata
 
+.Renviron
+
 vignettes/*.html
 vignettes/*.png
 vignettes/*.jpg

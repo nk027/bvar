@@ -80,7 +80,7 @@ prep_data <- function(
   }
 
 
-  # Build up required outputs ---------------------------------------------
+  # Build up required outputs ---
 
   out <- out_vars <- out_bounds <- out_chains <- list()
   N <- x[["meta"]][["n_save"]]
@@ -116,7 +116,8 @@ prep_data <- function(
    out_chains[["betas"]] <- rep(list(NULL), length(chains))
  }
 
-  # Merge stuff and return
+  # Merge stuff and return ---
+
   out_data <- cbind(out[["hyper"]], out[["betas"]])
   out_vars <- c(out_vars[["hyper"]], out_vars[["betas"]])
   colnames(out_data) <- out_vars

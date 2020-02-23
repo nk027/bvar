@@ -103,9 +103,9 @@ bv_ml <- function(
   # Add priors
   log_ml <- log_ml + sum(vapply(
     priors[["hyper"]][which(!priors$hyper == "psi")], function(x) {
-      log(dgamma(pars[[x]],
+      dgamma(pars[[x]],
         shape = priors[[x]][["coef"]][["k"]],
-        scale = priors[[x]][["coef"]][["theta"]]))
+        scale = priors[[x]][["coef"]][["theta"]], log = TRUE)
   }, numeric(1L)))
 
   if(any(priors[["hyper"]] == "psi")) {

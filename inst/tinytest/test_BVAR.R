@@ -17,4 +17,20 @@ expect_error(bvar(data2, lags = 2))
 
 expect_error(bvar(data, lags = 2, priors = NULL))
 expect_error(bvar(data, lags = 2, mh = NULL))
+expect_error(bvar(data, lags = 2, fcast = TRUE))
+expect_error(bvar(data, lags = 2, irf = TRUE))
+
+# 3*_metropolis ---
+
+# 4*_priors ---
+
+# 5*_fcast ---
+
+# 6*_irf ---
+
+# 80_coda.R ---
+
+# 81_parallel.R ---
+
+# 9*_methods ---
 
