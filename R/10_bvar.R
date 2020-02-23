@@ -141,13 +141,14 @@ bvar <- function(
   Y <- as.matrix(data)
 
   # Integers
-  lags <- int_check(lags, min = 1L, max = nrow(Y))
-  n_draw <- int_check(n_draw, min = 1L, msg = "Issue with n_draw.")
+  lags <- int_check(lags, min = 1L, max = nrow(Y) - 1, msg = "Issue with lags.")
+  n_draw <- int_check(n_draw, min = 10L, msg = "Issue with n_draw.")
   n_burn <- int_check(n_burn, min = 0L, max = n_draw - 1L,
     msg = "Issue with n_burn. Is n_burn < n_draw?")
   n_thin <- int_check(n_thin, min = 1L, max = ((n_draw - n_burn) / 10),
     msg = "Issue with n_thin. Maximum allowed is (n_draw - n_burn) / 10.")
   n_save <- int_check(((n_draw - n_burn) / n_thin), min = 1L)
+  verbose <- isTRUE(verbose)
 
   # Constructors, required
   if(!inherits(priors, "bv_priors")) {

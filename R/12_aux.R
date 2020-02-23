@@ -93,7 +93,7 @@ name_pars <- function(x, M) {
 fill_ci <- function(x, y, P) {
 
   n_y <- if(P %% 2 == 0) {
-    message("No central position for x found.")
+    stop("No central position for x found.")
   } else {P %/% 2}
 
   fill <- rep(y, length.out = n_y)
@@ -167,9 +167,9 @@ transparance_hex <- function(P) {
 #' @noRd
 is_hex <- function(x, alpha = FALSE) {
 
-  if(alpha) return(grepl("^#[0-9a-fA-F]{3,8}$", x))
+  if(alpha) return(grepl("^#[0-9a-fA-F]{6,8}$", x))
 
-  return(grepl("^#[0-9a-fA-F]{3,6}$", x))
+  return(grepl("^#[0-9a-fA-F]{6,6}$", x))
 }
 
 
