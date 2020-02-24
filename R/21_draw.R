@@ -13,12 +13,8 @@
 #' @param beta_hat Numeric matrix.
 #' @param omega_inv Numeric matrix.
 #'
-#' @return Returns a list with the following elements:
-#' \itemize{
-#'   \item \code{beta_draw}, \code{sigma_draw} - Draws from the posterior.
-#'   \item \code{sigma_chol} - The lower part of a Cholesky decomposition
-#'   of sigma_draw. Calculated as \code{t(chol(sigma_draw))}.
-#' }
+#' @return Returns a list with the following posterior draws of \emph{beta} and
+#' \emph{sigma}.
 #'
 #' @importFrom mvtnorm rmvnorm
 #'
@@ -34,8 +30,12 @@ draw_post <- function(
   # eta <- rmvnorm(n = (N + M + 2), mean = rep(0, M), sigma = S_inv)
   eta <- rmvn_inv(n = (N + M + 2), sigma_inv = S_post, method = "eigen")
 
-  sigma_draw <- chol2inv(chol(crossprod(eta)))
-  sigma_chol <- t(chol(sigma_draw))
+  # sigma_draw <- chol2inv(chol(crossprod(eta)))
+  # sigma_chol <- t(chol(sigma_draw))
+  chol_de <- chol(crossprod(eta))
+  sigma_chol <- forwardsolve(t(chol_de), diag(nrow(chol_de)))
+  sigma_draw <- crossprod(sigma_chol)
+
   # noise <- rmvnorm(n = M, mean = rep(0, (1 + M * lags)),
   #   sigma = chol2inv(chol(XX + omega_inv)))
   noise <- rmvn_inv(n = M, sigma_inv = XX + omega_inv, method = "chol")

@@ -261,7 +261,7 @@ bvar <- function(
 
   # Make sure HH is positive definite
   if(hyper_n != 1) {
-    HH_eig <- eigen(HH, symmetric = TRUE)
+    HH_eig <- eigen(HH)
     HH_eig[["values"]] <- abs(HH_eig[["values"]])
     HH <- HH_eig
     # HH <- HH_eig[["vectors"]] %*% diag(abs(HH_eig[["values"]])) %*%

@@ -1,3 +1,23 @@
+#' Optimised multivariate normal drawing
+#'
+#' Function to quickly draw from a multivariate normal distribution in special
+#' cases required by \code{\link{bvar}}. Based on the implementation by
+#' Friedrich Leisch and Fabian Scheipl in \code{\link[mvtnorm]{rmvnorm}}.
+#'
+#' The two special cases are (1) the proposal, where the spectral decomposition
+#' of \emph{sigma} only needs to be calculated once, and (2) drawing when only
+#' the inverse of \emph{sigma} is available. Note that we skip steps to check
+#' the symmetry and definiteness of \emph{sigma}, since these properties are
+#' given per construction.
+#'
+#' @param n Numeric scalar. Number of draws.
+#' @param mean Numeric vector. Mean of the draws.
+#' @param sigma Numeric matrix. Variance-covariance of draws.
+#' @param sigma_inv Numeric matrix. Inverse of variance-covariance of draws.
+#' @param method Character scalar. Type of decomposition to use.
+#'
+#' @return Returns a numeric matrix of draws.
+#''
 #' @noRd
 rmvn_proposal <- function(n, mean, sigma) {
 
@@ -6,7 +26,6 @@ rmvn_proposal <- function(n, mean, sigma) {
     return(matrix(rnorm(n, mean = mean, sd = sigma[["values"]])))
   }
 
-  # We have sigma's eigen-decomposition and know it is positive definite
   m <- length(sigma[["values"]])
   R <- t(sigma[["vectors"]] %*%
     (t(sigma[["vectors"]]) * sqrt(sigma[["values"]])))
@@ -21,8 +40,6 @@ rmvn_proposal <- function(n, mean, sigma) {
 #' @noRd
 rmvn_inv <- function(n, sigma_inv, method = c("eigen", "chol")) {
 
-  # We know sigma is positive definite, want its inverse and the mean is 0
-
   if(method == "eigen") {
     # Spectral  ---
     sigma_inv <- eigen(sigma_inv, symmetric = TRUE)
@@ -35,7 +52,7 @@ rmvn_inv <- function(n, sigma_inv, method = c("eigen", "chol")) {
     m <- ncol(sigma_inv)
     R <- chol(sigma_inv)
     out <- t(backsolve(R, matrix(rnorm(n * m), ncol = n, byrow = TRUE)))
-  }
+  } else {stop("SOMEBODY TOUCHA MY SPAGHET!")}
 
   return(out)
 }
