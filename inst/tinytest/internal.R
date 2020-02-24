@@ -1,7 +1,6 @@
 
-# Internal tests -----
 
-set.seed(42)
+# Internal tests -----
 
 # 11_input.R ---
 

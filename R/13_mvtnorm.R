@@ -29,7 +29,7 @@ rmvn_proposal <- function(n, mean, sigma) {
   m <- length(sigma[["values"]])
   R <- t(sigma[["vectors"]] %*%
     (t(sigma[["vectors"]]) * sqrt(sigma[["values"]])))
-  out <- matrix(rnorm(n * m), nrow = n, byrow = TRUE) %*% R
+  out <- matrix(rnorm(n * m), nrow = n, ncol = m, byrow = TRUE) %*% R
   out <- sweep(out, 2, mean, "+")
   colnames(out) <- names(mean)
 
@@ -46,12 +46,13 @@ rmvn_inv <- function(n, sigma_inv, method = c("eigen", "chol")) {
     m <- length(sigma_inv[["values"]])
     R <- t(sigma_inv[["vectors"]] %*%
       (t(sigma_inv[["vectors"]]) * sqrt(1 / pmax(sigma_inv[["values"]], 0))))
-    out <- matrix(rnorm(n * m), nrow = n, byrow = TRUE) %*% R
+    out <- matrix(rnorm(n * m), nrow = n, ncol = m, byrow = TRUE) %*% R
   } else if(method == "chol") {
     # Cholesky ---
     m <- ncol(sigma_inv)
     R <- chol(sigma_inv)
-    out <- t(backsolve(R, matrix(rnorm(n * m), ncol = n, byrow = TRUE)))
+    out <- t(backsolve(R,
+      matrix(rnorm(n * m), nrow = m, ncol = n, byrow = TRUE)))
   } else {stop("SOMEBODY TOUCHA MY SPAGHET!")}
 
   return(out)

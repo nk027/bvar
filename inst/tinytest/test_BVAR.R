@@ -1,8 +1,6 @@
 
 # API tests -----
 
-set.seed(42)
-
 data <- data2 <- data3 <- matrix(rnorm(1000), nrow = 200)
 
 # 10_bvar.R ---
