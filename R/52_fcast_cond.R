@@ -31,17 +31,17 @@ cond_fcast <- function(constr_mat, fcast_base, ortho_irf, horizon, M) {
   # First get constrained shocks
   v <- sum(!is.na(constr_mat))
   s <- M * horizon
-  r <- c()
-  R <- matrix(0, 0, s)
-
+  r <- c(rep(0, v))
+  R <- matrix(0, v, s)
+  pos <- 1
   for(i in seq_len(horizon)) {
     for(j in seq_len(M)) {
       if(is.na(constr_mat[i, j])) {next}
-      r <- c(r, (constr_mat[i, j] - fcast_base[i, j]))
-      R <- rbind(R, c(rep(0, s))) # No growing this
-      for(k in 1:i) {
-        R[nrow(R), ((k - 1) * M + 1):(k * M)] <- ortho_irf[j, (i - k + 1) , ]
+      r[pos] <- constr_mat[i, j] - fcast_base[i, j]
+      for(k in seq_len(i)) {
+        R[pos, ((k - 1) * M + 1):(k * M)] <- ortho_irf[j, (i - k + 1) , ]
       }
+      pos <- pos + 1
     }
   }
 
