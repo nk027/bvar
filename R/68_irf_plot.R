@@ -156,14 +156,14 @@ plot_irf <- function(
 
   if(area) {
     P <- dim(x)[1]
-    x_vals <- c(seq(dim(x)[3]), rev(seq(dim(x)[3])))
+    x_vals <- c(seq(dim(x)[3]) - 1, rev(seq(dim(x)[3]) - 1))
   }
   mid <- length(col) %/% 2 + 1
 
   op <- par(mfrow = mfrow, mar = mar, ...)
   for(i in pos_res) {
     for(j in pos_imp) {
-      ts.plot(t(as.matrix(x[, i, , j])), col = col, lty = 1,
+      ts.plot(ts(t(as.matrix(x[, i, , j])), start = 0), col = col, lty = 1,
         main = paste("Shock", variables[j], "on", variables[i]))
       # Fill areas
       if(area) {for(k in seq(P - 1)) {
@@ -172,7 +172,7 @@ plot_irf <- function(
       }}
       grid()
       abline(h = 0, lty = "dashed", col = "gray")
-      lines(x[mid, i, , j], col = col[mid])
+      lines(ts(x[mid, i, , j], start = 0), col = col[mid])
     }
   }
   par(op)
