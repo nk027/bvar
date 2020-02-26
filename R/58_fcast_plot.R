@@ -119,7 +119,7 @@ plot_fcast <- function(
   }
 
   # Add t_back actual datapoints
-  t_back <- int_check(t_back, 0, Inf, msg = "Issue with t_back.")
+  t_back <- int_check(t_back, 0, nrow(x[["data"]]), msg = "Issue with t_back.")
 
   use_data <- t_back != 0
   if(use_data) {
