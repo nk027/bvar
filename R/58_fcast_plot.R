@@ -187,13 +187,13 @@ plot_fcast <- function(
   if(area) {
     excl <- seq(t_back)
     P <- dim(x)[1]
-    x_vals <- c(seq(dim(x)[2])[-excl], rev(seq(dim(x)[2])[-excl]))
+    x_vals <- c(seq(dim(x)[2] - t_back), rev(seq(dim(x)[2] - t_back)))
   }
   mid <- length(col) %/% 2 + 1
 
-  op <- par(mfrow = mfrow, mar = mar, ...)
+  op <- par(mfrow = mfrow, mar = mar)
   for(i in pos) {
-    ts.plot(t(as.matrix(x[, , i])),
+    ts.plot(ts(t(as.matrix(x[, , i])), start = (-t_back + 1)),
       col = col, lty = 1, main = paste("Forecast", variables[i]))
     # Fill areas
     if(area) {for(j in seq(P - 1)) {
@@ -201,9 +201,9 @@ plot_fcast <- function(
         x = x_vals, col = fill[j], border = NA)
     }}
     grid()
-    abline(v = t_back + 1, lty = "dashed", col = "gray")
+    abline(v = 1, lty = "dashed", col = "gray")
     abline(h = 0, lty = "dashed", col = "gray")
-    lines(x[mid, , i], col = col[mid])
+    lines(ts(x[mid, , i], start = (-t_back + 1)), col = col[mid])
   }
   par(op)
 }
