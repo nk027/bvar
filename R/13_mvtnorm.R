@@ -23,7 +23,9 @@ rmvn_proposal <- function(n, mean, sigma) {
 
   # Univariate cornercase
   if(length(sigma[["values"]]) == 1) {
-    return(matrix(rnorm(n, mean = mean, sd = sigma[["values"]])))
+    out <- matrix(rnorm(n, mean = mean, sd = sigma[["values"]]))
+    colnames(out) <- names(mean)
+    return(out)
   }
 
   m <- length(sigma[["values"]])

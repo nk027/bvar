@@ -208,7 +208,8 @@ bvar <- function(
   }
 
   # Parameters ---
-  pars_names <- names(priors)[!names(priors) %in% c("hyper", "var", "b")]
+  pars_names <- names(priors)[ # Exclude reserved names
+    !grepl("^hyper$|^var$|^b$|^psi[0-9]+$|^dummy$", names(priors))]
   pars_full <- do.call(c, lapply(pars_names, function(x) priors[[x]][["mode"]]))
   names(pars_full) <- name_pars(pars_names, M)
 

@@ -10,7 +10,7 @@ print.bv_priors <- function(x, ...) {
   if(!is.null(x[["lambda"]])) {print.bv_minnesota(x, indent = TRUE)}
 
   dummy_pos <- !names(x) %in% c("lambda", "alpha", "psi", "hyper", "var", "b")
-  if(any(dummy_pos)) {
+  if(any(dummy_pos) && !length(x[["dummies"]]) == 0) {
     cat("\nDummy prior(s):\n")
     dummies <- names(x)[dummy_pos]
     for(dummy in dummies) {
