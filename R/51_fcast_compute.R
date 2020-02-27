@@ -1,7 +1,7 @@
 #' Forecast computation
 #'
-#' Compute unconditional forecasts from the VAR's posterior draws obtained via
-#' \code{\link{draw_post}}.
+#' Compute unconditional forecasts without shocks from the VAR's posterior draws
+#' obtained via \code{\link{draw_post}}.
 #'
 #' @param Y Numeric matrix (\eqn{N * M}).
 #' @param K Integer scalar. Columns of \emph{X}, i.e. \eqn{M * lags + 1}.
@@ -14,12 +14,9 @@
 #' the model in state space representation.
 #' @param beta_const Numeric vector. Posterior draw of the VAR coefficients
 #' corresponding to the constant of the model.
-#' @param sigma Numeric matrix. Posterior draw of the vcov-matrix of the
-#' model.
-#' @param conditional Logical scalar. Whether or not the produced forecasts
-#' will be used for conditional forecasts (i.e. forecasts without shocks).
 #'
-#' @return Returns a matrix containing forecasts for all variables in the model.
+#' @return Returns a matrix containing forecasts (without shocks) for all
+#' variables in the model.
 #'
 #' @importFrom stats rnorm
 #'

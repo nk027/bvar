@@ -1,4 +1,3 @@
-
 #' Conditional forecast computation
 #'
 #' Compute conditional forecasts using algorithm by Waggoner and Zha (1999).
@@ -69,13 +68,13 @@ cond_fcast <- function(constr_mat, fcast_base, ortho_irf, horizon, M) {
 
 #' Build constraint matrix for conditional forecasts
 #'
-#' @param path Numeric vector or matrix. Contains the path(s) of variable(s)
-#' on which forecasts are conditioned on. Unrestricted future realisations
-#' should be filled with \code{NA}. Note that not all variables can be
-#' restricted at the same time.
 #' @param horizon Integer scalar. Specifies the horizon for which forecasts
 #' should be computed.
-#' @param cond_var Optional vector. Containing variable names or positions in
+#' @param path Numeric vector or matrix. Contains the path(s) of variable(s) on
+#' which forecasts are conditioned on. Unrestricted future realisations should
+#' be filled with \code{NA}. Note that not all variables can be restricted at
+#' the same time.
+#' @param vars Optional vector. Containing variable names or positions in
 #' case \emph{path} only restricts a subset of the variables.
 #' @param variables Character vector of all variable names.
 #' @param M Integer scalar. Count of all variables.
