@@ -40,10 +40,10 @@ compute_irf <- function(
   # Identification
   shock <- if(identification) {
     if(is.null(sign_restr)) {
-      sigma_chol
+      sigma_chol <- t(chol(sigma))
     } else {
-      sign_restr(sigma_chol = sigma_chol, sign_restr = sign_restr, M = M,
-        sign_lim = sign_lim)
+      sign_restr(sigma_chol = t(chol(sigma)), sign_restr = sign_restr,
+        M = M, sign_lim = sign_lim)
     }
   } else {sigma}
 

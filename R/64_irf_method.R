@@ -112,8 +112,7 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
     for(i in seq_len(n_save)) {
       beta_comp <- get_beta_comp(beta[j, , ], K, M, lags)
       irf_comp  <- compute_irf(
-        beta_comp = beta_comp, sigma = sigma[j, , ],
-        sigma_chol = t(chol(sigma[j, , ])), M = M, lags = lags,
+        beta_comp = beta_comp, sigma = sigma[j, , ], M = M, lags = lags,
         horizon = irf[["horizon"]], identification = irf[["identification"]],
         sign_restr = irf[["sign_restr"]], sign_lim = irf[["sign_lim"]])
       irf_store[["irf"]][i, , , ] <- irf_comp
