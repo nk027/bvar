@@ -1,19 +1,18 @@
 #' Forecast settings
 #'
-#' Provide forecast settings to \code{\link{bvar}} or
-#' \code{\link{predict.bvar}}. Allows adjusting the horizon of the forecast for
-#' unconditional forecasts and settings for conditional forecasts i.e. the
-#' conditions imposed on certain variables and optionally their respective name
-#' or position in the dataset.
+#' Provide forecast settings to \code{\link{predict.bvar}}. Allows adjusting
+#' the horizon of the forecast for unconditional forecasts, and specifying
+#' conditional forecasts. This is done by imposing conditions on certain
+#' variables.
 #'
-#' @param horizon Integer scalar. Horizon for which forecasts should be
-#' computed.
-#' @param cond_path Optional numeric vector or matrix for conditional forecasts.
-#' Contains the path(s) of variable(s) on which forecasts are conditioned on.
+#' @param horizon Integer scalar. Horizon for which to compute forecasts.
+#' @param cond_path Optional numeric vector or matrix used for conditional
+#' forecasts. Supply (a) variable path(s) on which forecasts are conditioned on.
 #' Unrestricted future realisations should be filled with \code{NA}. Note that
 #' not all variables can be restricted at the same time.
-#' @param cond_vars Optional vector. Containing variable names or positions in
-#' case \emph{cond_path} only restricts a subset of the variables.
+#' @param cond_vars Optional character or numeric vector. Used to subset
+#' \emph{cond_path} to (a) specific variable(s) via name or position. Not
+#' needed when \emph{cond_path} is constructed for all variables.
 #'
 #' @return Returns a named list of class \code{bv_fcast} with options for
 #' \code{\link{bvar}} or \code{\link{predict.bvar}}.

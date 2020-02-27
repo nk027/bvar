@@ -32,14 +32,17 @@ print.bvar_fevd <- function(x, digits = 4L, complete = FALSE, ...) {
 
   if(!inherits(x, "bvar_fevd")) {stop("Please provide a `bvar_fevd` object.")}
 
-  # Average over time for printing
-  if(length(dim(x[["quants"]])) == 4) {
-    y <- apply(x[["quants"]], c(1, 2, 4), mean)
-  } else if(length(dim(x[["quants"]])) == 3) {
-    y <- apply(x[["quants"]], c(1, 3), mean)
+  has_quants <- length(dim(x[["quants"]])) == 4
+  if(has_quants) {
+    bands <- dimnames(x[["quants"]])[[1]]
   }
 
-  print_coefs(y, digits = digits, type = "FEVD", complete = complete, ...)
+  cat("Numeric array (dimensions ", paste0(dim(x[["fevd"]]), collapse = ", "),
+    ") of FEVD values from a BVAR.\n", sep = "")
+  if(has_quants) {
+    cat("Computed confidence bands: ",
+      paste(bands, collapse = ", "), "\n", sep = "")
+  }
 
   return(invisible(x))
 }
@@ -104,7 +107,7 @@ summary.bvar_irf <- function(
 
   out <- structure(list(
     "irf" = object, "quants" = quants,
-    "variables" = variables, "pos_imp" = pos_imp,"pos_res" = pos_res,
+    "variables" = variables, "pos_imp" = pos_imp, "pos_res" = pos_res,
     "has_quants" = has_quants),
     class = "bvar_irf_summary")
 
@@ -132,53 +135,6 @@ print.bvar_irf_summary <- function(x, digits = 2L, ...) {
         x[["quants"]][, i, , j]
       } else {x[["quants"]][i, , j]}, digits = digits))
   }}
-
-  return(invisible(x))
-}
-
-
-#' @rdname irf.bvar
-#' @export
-summary.bvar_fevd <- function(object, vars = NULL, ...) {
-
-  if(!inherits(object, "bvar_fevd")) {
-    stop("Please provide a `bvar_fevd` object.")
-  }
-
-  quants <- object[["quants"]]
-  has_quants <- length(dim(quants)) == 4
-  M <- if(has_quants) {dim(quants)[2]} else {dim(quants)[1]}
-
-  variables <- name_deps(variables = object[["variables"]], M = M)
-  pos <- pos_vars(vars, variables = variables, M = M)
-
-  out <- structure(list(
-    "fevd" = object, "quants" = quants,
-    "variables" = variables, "pos" = pos, "has_quants" = has_quants),
-    class = "bvar_fevd_summary")
-
-  return(out)
-}
-
-
-#' @export
-print.bvar_fevd_summary <- function(x, digits = 2L, ...) {
-
-  if(!inherits(x, "bvar_fevd_summary")) {
-    stop("Please provide a `bvar_fevd_summary` object.")
-  }
-
-  print.bvar_fcast(x[["fevd"]])
-
-  cat(if(!x[["has_quants"]]) {"Median forecast"} else {"Forecast"},
-    "error variance decomposition:\n")
-
-  for(i in x[["pos"]]) {
-    cat("\tVariable ", x[["variables"]][i], ":\n", sep = "")
-    print(round(
-      if(x[["has_quants"]]) {x[["quants"]][, , i]} else {x[["quants"]][, i]},
-      digits = digits))
-  }
 
   return(invisible(x))
 }

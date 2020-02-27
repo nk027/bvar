@@ -23,7 +23,7 @@
 #' @param opt Optional logical scalar. Determines whether the return value is
 #' a numeric scalar or a list. Used to call \code{\link{bv_ml}} in
 #' \code{\link[stats]{optim}}.
-#' @inheritParams BVAR::bvar
+#' @inheritParams bvar
 #'
 #' @return Returns a list by default, containing the following objects:
 #' \itemize{

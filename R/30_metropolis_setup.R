@@ -5,7 +5,7 @@
 #' is used to draw parameter proposals and automatic scaling to
 #' achieve a certain acceptance rate.
 #'
-#' @details Note that adjustment of the acceptance rate by scaling the parameter
+#' Note that adjustment of the acceptance rate by scaling the parameter
 #' draw variability can only be done during the burn-in phase, as otherwise the
 #' resulting draws do not feature the desirable properties of a Markov chain.
 #' After the parameter draws have been scaled some additional draws should be

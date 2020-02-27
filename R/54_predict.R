@@ -21,7 +21,7 @@
 #' @param vars Optional numeric or character vector. Used to subset the summary
 #' to certain variables by position or name (must be available). Defaults to
 #' \code{NULL}, i.e. all variables.
-#' @param value yes
+#' @param value A \code{bvar_fcast} object to assign.
 #'
 #' @return Returns a list of class \code{bvar_fcast} including forecasts
 #' at desired confidence bands. See \code{\link{bvar}}.
@@ -106,8 +106,9 @@ predict.bvar <- function(
     conditional <- !is.null(fcast[["cond_path"]])
     if(conditional) {
       constr_mat <- get_constr_mat(horizon = fcast[["horizon"]],
-        path = fcast[["cond_path"]],
-        vars = fcast[["cond_vars"]], object[["variables"]], M)
+        path = fcast[["cond_path"]], vars = fcast[["cond_vars"]],
+        object[["variables"]], M)
+      fcast[["setup"]] <- constr_mat
       irf_store <- object[["irf"]]
       if(is.null(irf_store) || !irf_store[["setup"]][["identification"]] ||
         irf_store[["setup"]][["horizon"]] < fcast[["horizon"]]) {
@@ -124,9 +125,6 @@ predict.bvar <- function(
       "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
       "setup" = fcast, "variables" = object[["variables"]], "data" = Y),
       class = "bvar_fcast")
-    if(conditional) {
-      fcast_store[["setup"]][["constr_mat"]] <- constr_mat
-    }
 
     j <- 1
     for(i in seq_len(n_save)) {

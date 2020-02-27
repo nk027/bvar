@@ -1,25 +1,22 @@
 #' Conditional forecast computation
 #'
-#' Compute conditional forecasts using algorithm by Waggoner and Zha (1999).
+#' Compute conditional forecasts using the algorithm of Waggoner and Zha (1999).
 #'
-#' @param constr_mat Matrix containing constrained paths of variables and
-#' \code{NAs} for unrestricted values.
-#' @param fcast_base Matrix containing unconditional forecasts without
-#' shocks computed by \code{\link{compute_fcast}}.
-#' @param ortho_irf Matrix containing orthogonal impulse responses for all
-#' variables computed by \code{\link{compute_irf}} or \code{\link{irf.bvar}}.
-#' @param horizon Integer scalar. Specifies the horizon for which forecasts
-#' should be computed.
+#' @param constr_mat Numeric matrix with constrained paths of variables
+#' and \code{NAs} for unrestricted values.
+#' @param fcast_base Numeric matrix with unconditional forecasts without the
+#' random shocks present in unconditional forecasts.
+#' @param ortho_irf Numeric matrix with orthogonal impulse responses for all
+#' variables. Computed by \code{\link{compute_irf}} or \code{\link{irf.bvar}}.
+#' @param horizon Integer scalar. Horizon for which to compute forecasts.
 #' @param M Integer scalar. Columns of \emph{Y}.
 #'
-#' @return Returns a matrix containing conditional forecasts for all variables
-#' in the model.
+#' @return Returns a numeric matrix with conditional forecasts.
 #'
 #' @references
-#'     Waggoner, D. F., & Zha, T. (1999). Conditional forecasts in dynamic multivariate models. Review of Economics and Statistics, 81(4), 639-651. \url{https://doi.org/10.1162/003465399558508}
-#'
-#' @seealso \code{\link{compute_fcast}}; \code{\link{compute_irf}};
-#' \code{\link{irf.bvar}}
+#'   Waggoner, D. F., & Zha, T. (1999). Conditional Forecasts in Dynamic
+#'   Multivariate Models. \emph{Review of Economics and Statistics},
+#'   \bold{81:4}, 639-651, \url{https://doi.org/10.1162/003465399558508}.
 #'
 #' @importFrom stats rnorm
 #'
@@ -66,20 +63,13 @@ cond_fcast <- function(constr_mat, fcast_base, ortho_irf, horizon, M) {
 }
 
 
-#' Build constraint matrix for conditional forecasts
+#' Build a constraint matrix for conditional forecasts
 #'
-#' @param horizon Integer scalar. Specifies the horizon for which forecasts
-#' should be computed.
-#' @param path Numeric vector or matrix. Contains the path(s) of variable(s) on
-#' which forecasts are conditioned on. Unrestricted future realisations should
-#' be filled with \code{NA}. Note that not all variables can be restricted at
-#' the same time.
-#' @param vars Optional vector. Containing variable names or positions in
-#' case \emph{path} only restricts a subset of the variables.
+#' @inheritParams bv_irf
 #' @param variables Character vector of all variable names.
 #' @param M Integer scalar. Count of all variables.
 #'
-#' @return Returns a matrix with the constrained paths of variables and
+#' @return Returns a numeric matrix with the constrained paths of variables and
 #' \code{NAs} for unrestricted values.
 #'
 #' @noRd

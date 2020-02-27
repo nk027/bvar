@@ -71,7 +71,7 @@ print.bvar_fcast_summary <- function(x, digits = 2L, ...) {
   print.bvar_fcast(x[["fcast"]])
 
   if(!is.null(x[["fcast"]][["setup"]][["constr_mat"]])) {
-    cat("\nConstraint matrix for conditional forecasts:\n")
+    cat("Constraints for conditional forecast:\n")
     print(x[["fcast"]][["setup"]][["constr_mat"]])
   }
 
