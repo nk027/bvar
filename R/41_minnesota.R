@@ -4,7 +4,7 @@
 #' Details section for further information.
 #'
 #' Essentially this prior imposes the hypothesis, that the individual variables
-#' all follow random walk processes. This parsimonious specification  typically
+#' all follow random walk processes. This parsimonious specification typically
 #' performs well in forecasts of macroeconomic time series and is often used as
 #' a benchmark for evaluating accuracy (Kilian and Lütkepohl, 2017).
 #' The key parameter is \eqn{\lambda} (\emph{lambda}), which controls the
