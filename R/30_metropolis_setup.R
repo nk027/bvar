@@ -5,9 +5,9 @@
 #' is used to draw parameter proposals and automatic scaling to
 #' achieve a certain acceptance rate.
 #'
-#' Note that adjustment of the acceptance rate by scaling the parameter draw
-#' variability can only be done during the burn-in phase, as the resulting
-#' draws do not feature the desirable properties of a Markov chain.
+#' @details Note that adjustment of the acceptance rate by scaling the parameter
+#' draw variability can only be done during the burn-in phase, as otherwise the
+#' resulting draws do not feature the desirable properties of a Markov chain.
 #' After the parameter draws have been scaled some additional draws should be
 #' burnt, to ensure the chain has reached a high-probability region.
 #'
@@ -22,7 +22,8 @@
 #' @param acc_lower,acc_upper Numeric scalar. Lower (upper) bound of the target
 #' acceptance rate. Required if \emph{adjust_acc} is set to \code{TRUE}.
 #' @param acc_change Numeric scalar. Percent change applied to the Hessian
-#' matrix. Required if \emph{adjust_acc} is set to \code{TRUE}.
+#' matrix for tuning acceptance rate. Required if \emph{adjust_acc} is set to
+#' \code{TRUE}.
 #'
 #' @return Returns a named list of class \code{bv_metropolis} with options for
 #' \code{\link{bvar}}.

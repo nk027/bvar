@@ -31,14 +31,16 @@
 #' @param n_thin Integer scalar. Every \emph{n_thin}'th iteration is stored.
 #' For a given memory requirement thinning reduces autocorrelation, while
 #' increasing effective sample size.
-#' @param priors Object from \code{\link{bv_priors}} with prior settings for.
+#' @param priors Object from \code{\link{bv_priors}} with prior settings.
 #' Used to adjust the Minnesota prior, add custom dummy priors, and choose
 #' hyperparameters for hierarchical estimation.
 #' @param mh Object from \code{\link{bv_mh}} with settings for the
-#' Metropolis-Hastings step. Used to tune enable automatic adjustment of the
-#' acceptance rate, or manually adjust the proposal variance.
+#' Metropolis-Hastings step. Used to tune automatic adjustment of the
+#' acceptance rate within the burn-in period, or manually adjust the proposal
+#' variance.
 #' @param fcast Object from \code{\link{bv_fcast}} with forecast settings.
-#' Options include the horizon and conditional forecasts for scenario analysis.
+#' Options include the horizon and settings for conditional forecasts i.e.
+#' scenario analysis.
 #' May also be calculated ex-post using \code{\link{predict.bvar}}.
 #' @param irf Object from code{\link{bv_irf}} with settings for the calculation
 #' of impulse responses and forecast error variance decompositions. Options
@@ -85,8 +87,8 @@
 #' \code{\link{bv_fcast}}; \code{\link{bv_irf}};
 #' \code{\link{predict.bvar}}; \code{\link{irf.bvar}}; \code{\link{plot.bvar}};
 #'
-#' @keywords BVAR VAR estimation hierarchical Metropolis-Hastings MCMC priors
-#'   macroeconomics vector-autoregressive regression
+#' @keywords BVAR Bayesian VAR estimation hierarchical Metropolis-Hastings MCMC
+#'   priors macroeconomics vector-autoregressive regression
 #'
 #' @export
 #'
@@ -112,7 +114,6 @@
 #' \dontrun{
 #' # Check convergence of the hyperparameters with a trace and density plot
 #' plot(x)
-#' predict(x)
 #' # Plot forecasts and impulse responses
 #' plot(predict(x))
 #' plot(irf(x))

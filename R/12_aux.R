@@ -47,7 +47,7 @@ gamma_coef <- function(mode, sd) {
 }
 
 
-#' Nape hyperparameters
+#' Name hyperparameters
 #'
 #' Function to help name hyperparameters. Accounts for multiple occurences
 #' of \emph{psi} by adding sequential numbers.
@@ -169,7 +169,7 @@ is_hex <- function(x, alpha = FALSE) {
 #' Helper functions to aid with variable selection, e.g. in
 #' \code{\link{plot.bvar_irf}} and \code{\link{plot.bvar_fcast}}.
 #'
-#' @param vars Numeric or character cector of variables to subset to.
+#' @param vars Numeric or character vector of variables to subset to.
 #' @param variables Character vector of all variable names. Required if
 #' \emph{vars} is provided as character vector.
 #' @param M Integer scalar. Count of all variables.
@@ -198,7 +198,7 @@ pos_vars <- function(vars, variables, M) {
 #' Name dependent / explanatory variables
 #'
 #' @param variables Character vector of all variable names.
-#' @param M Integer scalar. Count of the variables.
+#' @param M Integer scalar. Count of all variables.
 #' @param lags Integer scalar. Number of lags applied.
 #'
 #' @return Returns a character vector of variable names.

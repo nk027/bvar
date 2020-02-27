@@ -1,6 +1,6 @@
 #' Check numeric scalar
 #'
-#' Check whether an object is bounded and coercible to a a numeric value.
+#' Check whether an object is bounded and coercible to a numeric value.
 #'
 #' @param x Numeric scalar.
 #' @param min Numeric scalar. Minimum value of \emph{x}.
@@ -35,10 +35,10 @@ int_check <- function(
 #'
 #' Automatically set the prior values of \emph{psi}. Fits an \eqn{AR(p)} model
 #' and sets the mode to the square-root of the innovations variance. Boundaries
-#' are set to the mode times / by 100.
+#' are set to the mode times / divided by 100.
 #'
 #' If the call to \code{\link[stats]{arima}} fails, an integrated
-#' \eqn{ARIMA(p, 1, 0)} model is fit instead.
+#' \eqn{ARIMA(p, 1, 0)} model is fitted instead.
 #'
 #' @param x Numeric matrix with the data.
 #' @param lags Numeric scalar. Number of lags in the model.
@@ -57,10 +57,10 @@ auto_psi <- function(x, lags) {
     tryCatch(sqrt(arima(x, order = c(lags, 0, 0))$sigma2), # Try AR(lags)
       error = function(e) { # If this fails for a series, increment integration
         message("Some of the data appears to be integrated. Attempting to set ",
-          "psi automatically via an ARIMA(", lags, ", 1, 0).")
+          "psi automatically via an ARIMA(", lags, ", 1, 0) model.")
         sqrt(arima(x, order = c(lags, 1, 0))$sigma2) # Try ARIMA(lags, 1, 0)
     })}), error = function(e) {
-      stop("Some of the data appears to be integrated of higher order than 1. ",
+      stop("Some of the data appears to be integrated of order higher than 1. ",
         "Setting psi automatically failed. Please inspect the data again ",
         "and/or provide modes for psi manually (see `?bv_psi`).")
     }
