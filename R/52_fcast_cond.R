@@ -88,6 +88,7 @@ get_constr_mat <- function(horizon, path, vars = NULL, variables = NULL, M) {
   pos <- pos_vars(vars, variables, M)
   constr_mat <- matrix(NA_real_, horizon, M)
   constr_mat[seq_len(nrow(path)), pos] <- path
+  colnames(constr_mat) <- variables
   if(any(apply(constr_mat, 1, function(x) !any(is.na(x))))) {
     stop("One variable must be unrestricted at each point in time.")
   }

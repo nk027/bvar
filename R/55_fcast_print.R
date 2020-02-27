@@ -70,7 +70,12 @@ print.bvar_fcast_summary <- function(x, digits = 2L, ...) {
 
   print.bvar_fcast(x[["fcast"]])
 
-  cat(if(!x[["has_quants"]]) {"Median forecast:\n"} else {"Forecast:\n"})
+  if(!is.null(x[["fcast"]][["setup"]][["constr_mat"]])) {
+    cat("\nConstraint matrix for conditional forecasts:\n")
+    print(x[["fcast"]][["setup"]][["constr_mat"]])
+  }
+
+  cat(if(!x[["has_quants"]]) {"\nMedian forecast:\n"} else {"\nForecast:\n"})
 
   for(i in x[["pos"]]) {
     cat("\tVariable ", x[["variables"]][i], ":\n", sep = "")

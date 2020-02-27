@@ -124,6 +124,9 @@ predict.bvar <- function(
       "fcast" = array(NA, c(n_save, fcast[["horizon"]], M)),
       "setup" = fcast, "variables" = object[["variables"]], "data" = Y),
       class = "bvar_fcast")
+    if(conditional) {
+      fcast_store[["setup"]][["constr_mat"]] <- constr_mat
+    }
 
     j <- 1
     for(i in seq_len(n_save)) {
