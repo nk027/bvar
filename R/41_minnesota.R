@@ -3,14 +3,14 @@
 #' Provide settings for the Minnesota prior to \code{\link{bv_priors}}. See the
 #' Details section for further information.
 #'
-#' Essentially this prior imposes the hypothesis, that the individual variables
+#' Essentially this prior imposes the hypothesis, that individual variables
 #' all follow random walk processes. This parsimonious specification typically
 #' performs well in forecasts of macroeconomic time series and is often used as
 #' a benchmark for evaluating accuracy (Kilian and Lütkepohl, 2017).
 #' The key parameter is \eqn{\lambda}{lambda} (\emph{lambda}), which controls
 #' the tightness of the prior. The parameter \eqn{\alpha}{alpha} (\emph{alpha})
 #' governs variance decay with increasing lag order, while \eqn{\psi}{psi}
-#' (\emph{psi} controls the prior's standard deviation on lags of variables
+#' (\emph{psi}) controls the prior's standard deviation on lags of variables
 #' other than the dependent.
 #' The Minnesota prior is often refined with additional priors, trying to
 #' minimise the importance of conditioning on initial observations. See
@@ -45,8 +45,8 @@
 #' \code{\link{bvar}}.
 #'
 #' @references
-#'   Kilian, L. and Lütkepohl, H. (2017). \emph{Structural Vector Autoregressive
-#'   Analysis}. Cambridge University Press,
+#'   Kilian, L. and Lütkepohl, H. (2017). \emph{Structural Vector
+#'   Autoregressive Analysis}. Cambridge University Press,
 #'   \url{https://doi.org/10.1017/9781108164818}
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_dummy}}

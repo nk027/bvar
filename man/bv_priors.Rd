@@ -16,8 +16,8 @@ names of additional dummy priors included via \emph{...}.}
 \item{mn}{List of class \code{"bv_minnesota"}. Options for the Minnesota
 prior, set via \code{\link{bv_mn}}.}
 
-\item{...}{Optional lists of class \code{"bv_dummy"} with options for
-dummy priors. \strong{Must be assigned a name in the function call}. Created
+\item{...}{Optional lists of class \code{bv_dummy} with options for
+dummy priors. \bold{Must be assigned a name in the function call}. Created
 with \code{\link{bv_dummy}}.}
 }
 \value{

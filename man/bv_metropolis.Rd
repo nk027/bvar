@@ -8,7 +8,7 @@
 bv_metropolis(
   scale_hess = 0.01,
   adjust_acc = FALSE,
-  adjust_burn = 0.5,
+  adjust_burn = 0.75,
   acc_lower = 0.25,
   acc_upper = 0.35,
   acc_change = 0.01
@@ -17,7 +17,7 @@ bv_metropolis(
 bv_mh(
   scale_hess = 0.01,
   adjust_acc = FALSE,
-  adjust_burn = 0.5,
+  adjust_burn = 0.75,
   acc_lower = 0.25,
   acc_upper = 0.35,
   acc_change = 0.01
@@ -25,9 +25,9 @@ bv_mh(
 }
 \arguments{
 \item{scale_hess}{Numeric scalar or vector. Scaling parameter, determining
-the range of hyperparameter draws. \strong{Should be calibrated so a
-reasonable rate of acceptance is reached}. If provided as vector the length
-must equal the number of hyperparameters (one per variable for \code{psi}).}
+the range of hyperparameter draws. Should be calibrated so a reasonable
+acceptance rate is reached. If provided as vector the length must equal
+the number of hyperparameters (one per variable for \code{psi}).}
 
 \item{adjust_acc}{Logical scalar. Whether or not to further scale the
 variability of parameter draws during the burn-in phase.}
@@ -48,16 +48,16 @@ Returns a named list of class \code{bv_metropolis} with options for
 }
 \description{
 Function to provide settings for the Metropolis-Hastings step in
-\code{\link{bvar}}. Options include scaling the inverse Hessian that
-is used to draw parameter proposals and automatic scaling to
-achieve a certain acceptance rate.
+\code{\link{bvar}}. Options include scaling the inverse Hessian that is
+used to draw parameter proposals and automatic scaling to achieve certain
+acceptance rates.
 }
 \details{
 Note that adjustment of the acceptance rate by scaling the parameter
 draw variability can only be done during the burn-in phase, as otherwise the
 resulting draws do not feature the desirable properties of a Markov chain.
-After the parameter draws have been scaled some additional draws should be
-burnt, to ensure the chain has reached a high-probability region.
+After the parameter draws have been scaled, some additional draws should be
+burnt.
 }
 \examples{
 # Only adjust the scale parameter

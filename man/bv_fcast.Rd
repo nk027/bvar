@@ -10,12 +10,12 @@ bv_fcast(horizon = 12, cond_path = NULL, cond_vars = NULL)
 \item{horizon}{Integer scalar. Horizon for which to compute forecasts.}
 
 \item{cond_path}{Optional numeric vector or matrix used for conditional
-forecasts. Supply (a) variable path(s) on which forecasts are conditioned on.
+forecasts. Supply variable path(s) on which forecasts are conditioned on.
 Unrestricted future realisations should be filled with \code{NA}. Note that
 not all variables can be restricted at the same time.}
 
 \item{cond_vars}{Optional character or numeric vector. Used to subset
-\emph{cond_path} to (a) specific variable(s) via name or position. Not
+\emph{cond_path} to specific variable(s) via name or position. Not
 needed when \emph{cond_path} is constructed for all variables.}
 }
 \value{
@@ -24,9 +24,12 @@ Returns a named list of class \code{bv_fcast} with options for
 }
 \description{
 Provide forecast settings to \code{\link{predict.bvar}}. Allows adjusting
-the horizon of the forecast for unconditional forecasts, and specifying
-conditional forecasts. This is done by imposing conditions on certain
-variables.
+the horizon of forecasts, and for setting up conditional forecasts. See the
+details section for further information.
+}
+\details{
+Conditional forecasts are calculated using the algorithm by Waggoner and Zha
+(1999). They are set up by imposing a path on selected variables.
 }
 \examples{
 # Set forecast-horizon to 20 time periods for unconditional forecasts
@@ -49,6 +52,11 @@ paths[6:10, 2] <- 2
 paths[3:8, 3]  <- 3
 bv_fcast(cond_path = paths)
 }
+}
+\references{
+Waggoner, D. F., & Zha, T. (1999). Conditional Forecasts in Dynamic
+  Multivariate Models. \emph{Review of Economics and Statistics},
+  \bold{81:4}, 639-651, \url{https://doi.org/10.1162/003465399558508}.
 }
 \seealso{
 \code{\link{predict.bvar}}; \code{\link{plot.bvar_fcast}}

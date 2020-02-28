@@ -14,8 +14,8 @@
 #' names of additional dummy priors included via \emph{...}.
 #' @param mn List of class \code{"bv_minnesota"}. Options for the Minnesota
 #' prior, set via \code{\link{bv_mn}}.
-#' @param ... Optional lists of class \code{"bv_dummy"} with options for
-#' dummy priors. \strong{Must be assigned a name in the function call}. Created
+#' @param ... Optional lists of class \code{bv_dummy} with options for
+#' dummy priors. \bold{Must be assigned a name in the function call}. Created
 #' with \code{\link{bv_dummy}}.
 #'
 #' @return Returns a named list of class \code{bv_priors} with options for
