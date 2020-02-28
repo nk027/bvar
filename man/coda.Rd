@@ -6,7 +6,7 @@
 \alias{as.mcmc.bvar_chains}
 \title{Methods for \pkg{coda} Markov chain Monte Carlo objects}
 \usage{
-as.mcmc.bvar(
+\method{as.mcmc}{bvar}(
   x,
   vars = NULL,
   vars_response = NULL,
@@ -15,7 +15,7 @@ as.mcmc.bvar(
   ...
 )
 
-as.mcmc.bvar_chains(
+\method{as.mcmc}{bvar_chains}(
   x,
   vars = NULL,
   vars_response = NULL,
@@ -67,10 +67,10 @@ y <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 # Convert the hyperparameter lambda
 as.mcmc(x, vars = c("lambda"))
 
-# Convert coefficients for the first dependent across both runs
-as.mcmc(list(x, y), vars = "CPIAUCSL")
+# Convert coefficients for the first dependent, use chains in method
+as.mcmc.bvar(list(x, y), vars = "CPIAUCSL")
 
-# Convert the coefficents of variable three's first lag, also add y
+# Convert the coefs of variable three's first lag, use in the generic
 as.mcmc(x, vars = "FEDFUNDS-lag1", chains = y)
 
 # Convert hyperparameters and constant coefficient values for variable 1

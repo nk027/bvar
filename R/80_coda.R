@@ -46,10 +46,10 @@
 #' # Convert the hyperparameter lambda
 #' as.mcmc(x, vars = c("lambda"))
 #'
-#' # Convert coefficients for the first dependent across both runs
-#' as.mcmc(list(x, y), vars = "CPIAUCSL")
+#' # Convert coefficients for the first dependent, use chains in method
+#' as.mcmc.bvar(list(x, y), vars = "CPIAUCSL")
 #'
-#' # Convert the coefficents of variable three's first lag, also add y
+#' # Convert the coefs of variable three's first lag, use in the generic
 #' as.mcmc(x, vars = "FEDFUNDS-lag1", chains = y)
 #'
 #' # Convert hyperparameters and constant coefficient values for variable 1
@@ -91,7 +91,7 @@ as.mcmc.bvar <- function(
 
   prep <- prep_data(x,
     vars = vars, vars_response = vars_response, vars_impulse = vars_impulse,
-    chains, check_chains = TRUE, Ms = TRUE, n_saves = TRUE)
+    chains = chains, check_chains = TRUE, Ms = TRUE, n_saves = TRUE)
   chains <- prep[["chains"]]
 
   if(!is.null(chains) && length(chains) > 0) {
