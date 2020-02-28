@@ -1,6 +1,6 @@
 #' Log-posterior of a BVAR
 #'
-#' Compute the log-posterior (or log-marginal-likelihood) of a Bayesian VAR
+#' Compute the log-posterior (or log-marginalised-likelihood) of a Bayesian VAR
 #' with a Minnesota prior and optional dummy priors. Prior parameters may be
 #' treated hierarchically. Create objects necessary for drawing from the
 #' posterior distributions of coefficients and covariance matrix of the

@@ -40,7 +40,7 @@
 #' # Plot them
 #' plot(density(x))
 #'
-#' # Only get the density of the marginal likelihood
+#' # Only get the density of the marginalised likelihood
 #' density(x, vars = "ml")
 #'
 #' # Check out the constant's density on both dependents

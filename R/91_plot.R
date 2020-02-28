@@ -1,8 +1,9 @@
 #' Plotting method for Bayesian VARs
 #'
-#' Method to plot trace and densities of hyperparameters and marginal likelihood
-#' or coefficient values obtained from \code{\link{bvar}}. Plots may be subset
-#' to certain types using \emph{type} and to hyperparameters using \emph{vars}.
+#' Method to plot trace and densities of hyperparameters and marginalised
+#' likelihood or coefficient values obtained from \code{\link{bvar}}. Plots may
+#' be subset to certain types using \emph{type} and to hyperparameters using
+#' \emph{vars}.
 #' Multiple chains, that is comparable \code{bvar} objects, may be plotted
 #' together using the \emph{chains} argument.
 #' The \emph{type} argument may be used to access \code{\link{plot.bvar_irf}}
@@ -45,7 +46,7 @@
 #' # Compare with second chain
 #' plot(x, chains = y)
 #'
-#' # Only plot the marginal likelihood's density
+#' # Only plot the marginalised likelihood's density
 #' plot(x, "dens", "ml")
 #'
 #' # Use plot as an alternative to plot(irf(x)) and plot(predict(x))

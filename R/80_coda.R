@@ -22,7 +22,8 @@
 #' @param ... Other parameters for \code{\link[coda]{as.mcmc}} and
 #' \code{\link[coda]{as.mcmc.list}}.
 #'
-#' @seealso \code{\link{bvar}}; \code{\link[coda]{mcmc}}
+#' @seealso \code{\link{bvar}}; \code{\link[coda]{mcmc}};
+#' \code{\link[coda]{mcmc.list}}
 #'
 #' @keywords VAR BVAR coda mcmc convergence
 #'
@@ -36,7 +37,7 @@
 #' x <- bvar(data, lags = 2)
 #' y <- bvar(data, lags = 2)
 #'
-#' # Convert hyperparameter lambda and the marginal likelihood
+#' # Convert hyperparameter lambda and the marginalised likelihood
 #' as.mcmc(x, vars = c("ml", "lambda"))
 #'
 #' # Add second chain for further processing
