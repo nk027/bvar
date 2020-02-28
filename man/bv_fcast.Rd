@@ -7,31 +7,59 @@
 bv_fcast(horizon = 12, cond_path = NULL, cond_vars = NULL)
 }
 \arguments{
-\item{horizon}{Integer scalar. Horizon for which forecasts should be
-computed.}
+\item{horizon}{Integer scalar. Horizon for which to compute forecasts.}
 
-\item{cond_path}{present}
+\item{cond_path}{Optional numeric vector or matrix used for conditional
+forecasts. Supply variable path(s) on which forecasts are conditioned on.
+Unrestricted future realisations should be filled with \code{NA}. Note that
+not all variables can be restricted at the same time.}
 
-\item{cond_vars}{ya}
+\item{cond_vars}{Optional character or numeric vector. Used to subset
+\emph{cond_path} to specific variable(s) via name or position. Not
+needed when \emph{cond_path} is constructed for all variables.}
 }
 \value{
 Returns a named list of class \code{bv_fcast} with options for
 \code{\link{bvar}} or \code{\link{predict.bvar}}.
 }
 \description{
-Provide forecast settings to \code{\link{bvar}} or
-\code{\link{predict.bvar}}. Allows adjusting the horizon of the forecast for
-unconditional forecasts and settings for conditional forecasts. These should
-be set via \code{\link{bv_cdfcast}} and provided to argument
-\emph{conditional}.
+Provide forecast settings to \code{\link{predict.bvar}}. Allows adjusting
+the horizon of forecasts, and for setting up conditional forecasts. See the
+details section for further information.
+}
+\details{
+Conditional forecasts are calculated using the algorithm by Waggoner and Zha
+(1999). They are set up by imposing a path on selected variables.
 }
 \examples{
-# Set the forecast-horizon to 20 time periods instead of 12
+# Set forecast-horizon to 20 time periods for unconditional forecasts
 bv_fcast(horizon = 20)
+
+\dontrun{
+# Set the path of the second variable for the first six forecast periods.
+bv_fcast(cond_path = c(1, 1, 1, 1, 1, 1), cond_var = 2)
+
+# Set the path of the first and third variable.
+paths <- matrix(NA, nrow = 10, ncol = 2)
+paths[1:5, 1] <- 1
+paths[6:10, 2] <- 2
+bv_fcast(cond_path = paths, cond_var = c(1, 3))
+
+# Set path for all variables (assuming 3-variable VAR).
+paths <- matrix(NA, nrow = 10, ncol = 3)
+paths[1:5, 1] <- 1
+paths[6:10, 2] <- 2
+paths[3:8, 3]  <- 3
+bv_fcast(cond_path = paths)
+}
+}
+\references{
+Waggoner, D. F., & Zha, T. (1999). Conditional Forecasts in Dynamic
+  Multivariate Models. \emph{Review of Economics and Statistics},
+  \bold{81:4}, 639-651, \url{https://doi.org/10.1162/003465399558508}.
 }
 \seealso{
-\code{\link{predict.bvar}}; \code{\link{plot.bvar_fcast}};
-\code{\link{bv_cdfcast}}
+\code{\link{predict.bvar}}; \code{\link{plot.bvar_fcast}}
 }
 \keyword{BVAR}
 \keyword{VAR}

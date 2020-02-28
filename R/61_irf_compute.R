@@ -26,7 +26,7 @@
 #' @param sign_lim Integer scalar. Maximum number of rotational matrices to
 #' draw and check for fitting sign restrictions.
 #'
-#' @return Returns a list containing a numeric matrix of impulse responses.
+#' @return Returns a numeric array of impulse responses.
 #'
 #' @noRd
 compute_irf <- function(

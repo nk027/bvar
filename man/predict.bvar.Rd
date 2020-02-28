@@ -29,7 +29,7 @@ is used for forecasting, others are dropped.}
 \item{newdata}{Optional numeric matrix or dataframe. Used to base the
 prediction on. Fitted values are used by default.}
 
-\item{value}{yes}
+\item{value}{A \code{bvar_fcast} object to assign.}
 
 \item{vars}{Optional numeric or character vector. Used to subset the summary
 to certain variables by position or name (must be available). Defaults to
@@ -44,9 +44,9 @@ specified confidence bands.
 \description{
 Retrieves / calculates forecasts for Bayesian VARs generated via
 \code{\link{bvar}}. If a forecast is already present and no settings are
-supplied it is simply retrieved, otherwise it will be calculated ex-post.
-To store a prediction you may want to assign the output of
-\code{predict.bvar} to \code{object$fcast}. May also be used to update
+supplied it is simply retrieved, otherwise it will be calculated.
+To store a prediction you may want to assign the output using the setter
+function (\code{predict(x) <- predict(x)}). May also be used to update
 confidence bands.
 }
 \examples{

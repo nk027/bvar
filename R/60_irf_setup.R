@@ -8,7 +8,7 @@
 #'
 #' Identification can be performed via Cholesky decomposition and sign
 #' restrictions. The algorithm for generating suitable sign restrictions
-#' follows Rubio-Ramirez et al. (2010).
+#' follows Rubio-Ramirez, Waggoner and Zha (2010).
 #' Note the possiblity of finding no suitable sign restrictions.
 #'
 #' @param horizon Integer scalar. The horizon for which impulse responses
@@ -21,12 +21,12 @@
 #' identification via Cholesky decomposition of the VCOV-matrix unless
 #' \emph{sign_restr} is provided.
 #' @param sign_restr Numeric matrix. Sign restrictions for identification.
-#' Elements should be set to \eqn{1} (\eqn{-1}) to restrict for positive
+#' Elements should be set to 1 (-1) to restrict for positive
 #' (negative) impacts. If no presumption about the impact can be made the
-#' corresponding elements can be set to \eqn{NA}. The default value is
+#' corresponding elements can be set to \code{NA}. The default value is
 #' \code{NULL}, meaning identification would be performed via Cholesky
 #' decomposition. Note that in order to be fully identified at least
-#' \equ{M * (M - 1) / 2} restrictions have to be set.
+#' \eqn{M * (M - 1) / 2} restrictions have to be set.
 #' @param zero_restr Numeric matrix. Zero and sign restrictions for
 #' identification. \emph{Currently not functional.}
 #' @param sign_lim Integer scalar. Maximum number of rotational matrices to

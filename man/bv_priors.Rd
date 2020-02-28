@@ -16,8 +16,8 @@ names of additional dummy priors included via \emph{...}.}
 \item{mn}{List of class \code{"bv_minnesota"}. Options for the Minnesota
 prior, set via \code{\link{bv_mn}}.}
 
-\item{...}{Optional lists of class \code{"bv_dummy"} with options for
-dummy priors. \strong{Must be assigned a name in the function call}. Created
+\item{...}{Optional lists of class \code{bv_dummy} with options for
+dummy priors. \bold{Must be assigned a name in the function call}. Created
 with \code{\link{bv_dummy}}.}
 }
 \value{
@@ -28,9 +28,9 @@ Returns a named list of class \code{bv_priors} with options for
 Function to provide priors and their parameters to \code{\link{bvar}}. Used
 for adjusting the parameters treated as hyperparameters, the Minnesota prior
 and adding various dummy priors through the ellipsis parameter.
-Note that treating \eqn{\psi} (\emph{psi}) as a hyperparameter in a model
-with many variables may lead to very low acceptance rates and thus hinder
-convergence.
+Note that treating \eqn{\psi}{psi} (\emph{psi}) as a hyperparameter in a
+model with many variables may lead to very low acceptance rates and thus
+hinder convergence.
 }
 \examples{
 # Extending hyperparameters to the full Minnesota prior

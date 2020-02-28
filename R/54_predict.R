@@ -2,9 +2,9 @@
 #'
 #' Retrieves / calculates forecasts for Bayesian VARs generated via
 #' \code{\link{bvar}}. If a forecast is already present and no settings are
-#' supplied it is simply retrieved, otherwise it will be calculated ex-post.
-#' To store a prediction you may want to assign the output of
-#' \code{predict.bvar} to \code{object$fcast}. May also be used to update
+#' supplied it is simply retrieved, otherwise it will be calculated.
+#' To store a prediction you may want to assign the output using the setter
+#' function (\code{predict(x) <- predict(x)}). May also be used to update
 #' confidence bands.
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.

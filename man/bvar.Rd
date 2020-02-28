@@ -7,8 +7,8 @@
 bvar(
   data,
   lags,
-  n_draw = 5000L,
-  n_burn = 1000L,
+  n_draw = 10000L,
+  n_burn = 5000L,
   n_thin = 1L,
   priors = bv_priors(),
   mh = bv_mh(),
@@ -31,16 +31,18 @@ through and (b) burn at the start.}
 For a given memory requirement thinning reduces autocorrelation, while
 increasing effective sample size.}
 
-\item{priors}{Object from \code{\link{bv_priors}} with prior settings for.
+\item{priors}{Object from \code{\link{bv_priors}} with prior settings.
 Used to adjust the Minnesota prior, add custom dummy priors, and choose
 hyperparameters for hierarchical estimation.}
 
 \item{mh}{Object from \code{\link{bv_mh}} with settings for the
-Metropolis-Hastings step. Used to tune enable automatic adjustment of the
-acceptance rate, or manually adjust the proposal variance.}
+Metropolis-Hastings step. Used to tune automatic adjustment of the
+acceptance rate within the burn-in period, or manually adjust the proposal
+variance.}
 
 \item{fcast}{Object from \code{\link{bv_fcast}} with forecast settings.
-Options include the horizon and conditional forecasts for scenario analysis.
+Options include the horizon and settings for conditional forecasts i.e.
+scenario analysis.
 May also be calculated ex-post using \code{\link{predict.bvar}}.}
 
 \item{irf}{Object from code{\link{bv_irf}} with settings for the calculation
@@ -86,7 +88,8 @@ The Metropolis-Hastings step can be modified with \code{\link{bv_mh}}.
 }
 \details{
 The model can be expressed as:
-\eqn{y_t = a_0 + A_1 y_{t-1} + ... + A_p y_{t-p} + \epsilon_t}
+\deqn{y_t = a_0 + A_1 y_{t-1} + ... + A_p y_{t-p} + \epsilon_t}{y_t = a_0 +
+A_1 y_{t-1} + ... + A_p y_{t-p} + e_t}
 See Kuschnig and Vashold (2019) and Giannone, Lenza and Primiceri (2015)
 for further information.
 Methods for a \code{bvar} object and its derivatives can be used to:
@@ -119,7 +122,6 @@ irf(x) <- irf(x, horizon = 8, fevd = FALSE)
 \dontrun{
 # Check convergence of the hyperparameters with a trace and density plot
 plot(x)
-predict(x)
 # Plot forecasts and impulse responses
 plot(predict(x))
 plot(irf(x))
@@ -143,6 +145,7 @@ Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
 Nikolas Kuschnig, Lukas Vashold
 }
 \keyword{BVAR}
+\keyword{Bayesian}
 \keyword{MCMC}
 \keyword{Metropolis-Hastings}
 \keyword{VAR}

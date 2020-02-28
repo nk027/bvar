@@ -40,16 +40,18 @@ through and (b) burn at the start.}
 For a given memory requirement thinning reduces autocorrelation, while
 increasing effective sample size.}
 
-\item{priors}{Object from \code{\link{bv_priors}} with prior settings for.
+\item{priors}{Object from \code{\link{bv_priors}} with prior settings.
 Used to adjust the Minnesota prior, add custom dummy priors, and choose
 hyperparameters for hierarchical estimation.}
 
 \item{mh}{Object from \code{\link{bv_mh}} with settings for the
-Metropolis-Hastings step. Used to tune enable automatic adjustment of the
-acceptance rate, or manually adjust the proposal variance.}
+Metropolis-Hastings step. Used to tune automatic adjustment of the
+acceptance rate within the burn-in period, or manually adjust the proposal
+variance.}
 
 \item{fcast}{Object from \code{\link{bv_fcast}} with forecast settings.
-Options include the horizon and conditional forecasts for scenario analysis.
+Options include the horizon and settings for conditional forecasts i.e.
+scenario analysis.
 May also be calculated ex-post using \code{\link{predict.bvar}}.}
 
 \item{irf}{Object from code{\link{bv_irf}} with settings for the calculation
