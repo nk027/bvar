@@ -90,6 +90,15 @@ fred_trans <- data.frame(variable = union(names_md, names_qd),
 fred_trans$fred_md <- vals_md[fred_trans$variable]
 fred_trans$fred_qd <- vals_qd[fred_trans$variable]
 
+transformations <- c("none" = 1, "1st-diff" = 2, "2nd-diff" = 3,
+  "log" = 4, "log-diff" = 5, "log-2nd-diff" = 6, "pct-ch-diff" = 7)
+
+# Transform to factor
+fred_trans$fred_md <- factor(fred_trans$fred_md,
+  levels = transformations, labels = names(transformations))
+fred_trans$fred_qd <- factor(fred_trans$fred_qd,
+  levels = transformations, labels = names(transformations))
+
 write.table(fred_trans, file = "inst/fred_trans.csv",
   sep = ",", na = "", row.names = FALSE, fileEncoding = "UTF-8")
 # saveRDS(fred_trans, file = "inst/fred_trans.rds", version = 2)

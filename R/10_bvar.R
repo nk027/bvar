@@ -120,7 +120,7 @@
 #' }
 bvar <- function(
   data, lags,
-  n_draw = 5000L, n_burn = 1000L, n_thin = 1L,
+  n_draw = 10000L, n_burn = 5000L, n_thin = 1L,
   priors = bv_priors(),
   mh = bv_mh(),
   fcast = NULL,
