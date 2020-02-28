@@ -18,7 +18,7 @@
 #'
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param mfrow Numeric vector. Rows for \code{\link[graphics]{par}}.
-#' @param var,n_vars,lag Integer scalars. Retrieve the position of lag
+#' @param var,n_vars,lag Integer scalars. Retrieve the position of
 #' \emph{lag} of variable \emph{var} given \emph{n_vars} total variables.
 #'
 #' @return Returns a list with outputs of \code{\link[stats]{density}}.
@@ -40,7 +40,7 @@
 #' # Plot them
 #' plot(density(x))
 #'
-#' # Only get the density of the marginal likelihood
+#' # Only get the density of the marginalised likelihood
 #' density(x, vars = "ml")
 #'
 #' # Check out the constant's density on both dependents
