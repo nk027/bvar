@@ -5,7 +5,7 @@ print.bv_irf <- function(x, ...) {
 
   cat("Object with settings for computing impulse responses.\n")
 
-  print_irf(x, ...)
+  .print_irf(x, ...)
 
   return(invisible(x))
 }
@@ -18,7 +18,7 @@ print.bvar_irf <- function(x, ...) {
 
   cat("Impulse response object from `bvar()`.\n")
 
-  print_irf(x[["setup"]], ...)
+  .print_irf(x[["setup"]], ...)
 
   cat("Variables: ", dim(x[["irf"]])[2], "\n",
       "Iterations: ", dim(x[["irf"]])[1], "\n", sep = "")
@@ -49,7 +49,7 @@ print.bvar_fevd <- function(x, digits = 4L, complete = FALSE, ...) {
 
 
 #' @noRd
-print_irf <- function(x, ...) {
+.print_irf <- function(x, ...) {
 
   cat("Horizon:", x[["horizon"]])
 

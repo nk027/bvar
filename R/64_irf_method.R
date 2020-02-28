@@ -5,29 +5,26 @@
 #' \code{\link{bvar}}. If the object is already present and no settings are
 #' supplied it is simply retrieved, otherwise it will be calculated ex-post.
 #' Note that FEVDs require the presence / calculation of IRFs.
-#' To store IRFs you may want to assign the output of \code{irf.bvar} to
-#' \code{x$irf}. May also be used to update confidence bands, i.e.
-#' credible intervals.
+#' To store the results you may want to assign the output using the setter
+#' function (\code{irf(x) <- irf(x)}). May also be used to update
+#' confidence bands.
 #'
 #' @param x,object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' Summary and print methods take in a \code{bvar_irf} / \code{bvar_fevd}
 #' object.
 #' @param ... A \code{bv_irf} object or arguments to be fed into
 #' \code{\link{bv_irf}}. Contains settings for the IRFs / FEVDs.
-#' @param conf_bands Numeric vector of desired confidence bands to apply.
-#' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' Note that the median, i.e. \code{0.5} is always included.
 #' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
-#' for calculations, others are dropped.
+#' to calculate, others are dropped.
 #' @param vars_impulse,vars_response Optional numeric or character vector.
 #' Used to subset the summary method's outputs to certain variables by position
 #' or name (must be available). Defaults to \code{NULL}, i.e. all variables.
 #' @param value A \code{bvar_irf} object to assign.
+#' @inheritParams predict.bvar
 #'
 #' @return Returns a list of class \code{bvar_irf} including IRFs and optionally
-#' FEVDs at desired confidence bands. Also see \code{\link{bvar}}.
-#' Note that the \code{fevd} method only returns a numeric array of FEVDs at
-#' desired confidence bands.
+#' FEVDs at desired confidence bands. The \code{fevd} method only returns a
+#' the nested \code{bvar_fevd} object.
 #' The summary method returns a numeric array of impulse responses at the
 #' specified confidence bands.
 #'
@@ -236,6 +233,12 @@ fevd.bvar_fevd <- function(x, conf_bands, ...) {
 irf <- function(x, ...) {UseMethod("irf", x)}
 
 
+#' @noRd
+irf.default <- function(x, ...) {
+  stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
+}
+
+
 #' @rdname irf.bvar
 #' @export
 `irf<-` <- function(x, value) {UseMethod("irf<-", x)}
@@ -244,6 +247,12 @@ irf <- function(x, ...) {UseMethod("irf", x)}
 #' @rdname irf.bvar
 #' @export
 fevd <- function(x, ...) {UseMethod("fevd", x)}
+
+
+#' @noRd
+fevd.default <- function(x, ...) {
+  stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
+}
 
 
 # vars compatibility ------------------------------------------------------

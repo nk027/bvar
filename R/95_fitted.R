@@ -1,17 +1,15 @@
 #' Fitted and residual methods for Bayesian VARs
 #'
-#' Calculates fitted or residual values for Bayesian VARs generated with
+#' Calculates fitted or residual values for Bayesian VAR models generated with
 #' \code{\link{bvar}}.
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param conf_bands Numeric vector of desired confidence bands to apply.
-#' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' Note that the median, i.e. \code{0.5} is always included.
 #' @param x Object of class \code{bvar_fitted} / \code{bvar_resid}.
 #' @param vars Optional numeric vector. Used to subset the plot to certain
 #' variables by position. Defaults to \code{NULL}, i.e. all variables.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Graphical parameters for \code{\link[graphics]{par}}.
+#' @inheritParams predict.bvar
 #'
 #' @return Returns a numeric array of class \code{bvar_fitted} or
 #' \code{bvar_resid} with values at the specified confidence bands.

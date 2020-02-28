@@ -9,7 +9,7 @@
 #' model.
 #' @param sigma_chol Numeric matrix. Lower part of the Cholesky decomposition
 #' of \emph{sigma}. Calculated as \code{t(chol(sigma))}.
-#' @param M Integer scalar. Columns of \emph{Y}.
+#' @param M Integer scalar. Number of columns in \emph{Y}.
 #' @param lags Integer scalar. Number of lags in the model.
 #' @param horizon Integer scalar. Horizon for which impulse responses should be
 #' computed. Note that the first period corresponds to impacts i.e.
@@ -20,8 +20,8 @@
 #' Cholesky decomposition of the VCOV-matrix as long as \emph{sign_restr} is
 #' \code{NULL}. If set to \code{FALSE}, shocks will be unidentified.
 #' @param sign_restr Numeric matrix. Elements inform about expected impacts
-#' of certain shocks. Can be either \eqn{1}, \eqn{-1} or \eqn{NA} depending on
-#' whether a positive, negative or no contemporaneous effect of a certain shock
+#' of certain shocks. Can be either 1, -1 or \code{NA} depending on
+#' whether a positive, negative, or no contemporaneous effect of a certain shock
 #' is expected.
 #' @param sign_lim Integer scalar. Maximum number of rotational matrices to
 #' draw and check for fitting sign restrictions.

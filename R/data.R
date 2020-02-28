@@ -24,6 +24,8 @@
 #'
 #' @format A \code{data.frame} object with dates as rownames.
 #'
+#' @seealso \code{\link{fred_transform}}
+#'
 #' @keywords dataset FRED macroeconomics
 #'
 #' @references

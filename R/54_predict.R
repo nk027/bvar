@@ -3,7 +3,7 @@
 #' Retrieves / calculates forecasts for Bayesian VARs generated via
 #' \code{\link{bvar}}. If a forecast is already present and no settings are
 #' supplied it is simply retrieved, otherwise it will be calculated.
-#' To store a prediction you may want to assign the output using the setter
+#' To store the results you may want to assign the output using the setter
 #' function (\code{predict(x) <- predict(x)}). May also be used to update
 #' confidence bands.
 #'
@@ -11,20 +11,20 @@
 #' Summary and print methods take in a \code{bvar_fcast} object.
 #' @param ... A \code{bv_fcast} object or parameters to be fed into
 #' \code{\link{bv_fcast}}. Contains settings for the forecast.
-#' @param conf_bands Numeric vector of desired confidence bands to apply.
+#' @param conf_bands Numeric vector of confidence bands to apply.
 #' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' Note that the median, i.e. \code{0.5} is always included.
+#' Note that the median, i.e. 0.5 is always included.
 #' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{object}
-#' is used for forecasting, others are dropped.
+#' is used to predict, others are dropped.
 #' @param newdata Optional numeric matrix or dataframe. Used to base the
-#' prediction on. Fitted values are used by default.
+#' prediction on.
 #' @param vars Optional numeric or character vector. Used to subset the summary
 #' to certain variables by position or name (must be available). Defaults to
 #' \code{NULL}, i.e. all variables.
 #' @param value A \code{bvar_fcast} object to assign.
 #'
 #' @return Returns a list of class \code{bvar_fcast} including forecasts
-#' at desired confidence bands. See \code{\link{bvar}}.
+#' at desired confidence bands.
 #' The summary method returns a numeric array of forecast paths at the
 #' specified confidence bands.
 #'

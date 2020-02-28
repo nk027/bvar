@@ -1,7 +1,9 @@
 #' Log-Likelihood method for Bayesian VARs
 #'
-#' Calculates the log-likelihood of Bayesian VARs generated with
+#' Calculates the log-likelihood of Bayesian VAR models generated with
 #' \code{\link{bvar}}.
+#'
+#' @author Nikolas Kuschnig, Florian Huber
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.

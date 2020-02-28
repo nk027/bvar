@@ -1,17 +1,15 @@
 #' Coefficient and VCOV methods for Bayesian VARs
 #'
-#' Retrieves coefficient / variance-covariance values for Bayesian VARs
+#' Retrieves coefficient / variance-covariance values from Bayesian VAR models
 #' generated with \code{\link{bvar}}. Note that coefficients are available for
 #' every stored draw and credible intervals may be set via the
 #' \emph{conf_bands} argument.
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param conf_bands Numeric vector of desired confidence bands to apply.
-#' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' Note that the median, i.e. \code{0.5} is always included.
 #' @param companion Logical scalar. Whether to retrieve the companion matrix of
 #' coefficients. See \code{\link{companion.bvar}}.
 #' @param ... Not used.
+#' @inheritParams predict.bvar
 #'
 #' @return Returns a numeric array of class \code{bvar_coefs} or
 #' \code{bvar_vcovs} with values at the specified confidence bands.
@@ -91,7 +89,7 @@ print.bvar_coefs <- function(x, digits = 3L, complete = FALSE, ...) {
 
   if(!inherits(x, "bvar_coefs")) {stop("Please provide a `bvar_coefs` object.")}
 
-  print_coefs(x, digits, type = "coefficient", complete = complete, ...)
+  .print_coefs(x, digits, type = "coefficient", complete = complete, ...)
 
   return(invisible(x))
 }
@@ -102,7 +100,7 @@ print.bvar_vcovs <- function(x, digits = 3L, complete = FALSE, ...) {
 
   if(!inherits(x, "bvar_vcovs")) {stop("Please provide a `bvar_vcovs` object.")}
 
-  print_coefs(x, digits, type = "variance-covariance", complete = complete, ...)
+  .print_coefs(x, digits, type = "variance-covariance", complete = complete, ...)
 
   return(invisible(x))
 }
@@ -119,7 +117,7 @@ print.bvar_vcovs <- function(x, digits = 3L, complete = FALSE, ...) {
 #' @param complete Logical scalar. Whether to print every contained quantile.
 #'
 #' @noRd
-print_coefs <- function(
+.print_coefs <- function(
   x, digits = 3L,
   type = c("coefficient", "variance-covariance", "FEVD", "companion"),
   complete = FALSE,
@@ -135,10 +133,10 @@ print_coefs <- function(
   } else {coefs <- x[]} # Remove class to avoid recursion
 
   cat("Numeric array (dimensions ", paste0(dim(x), collapse = ", "),  ")",
-      " of ", type, " values from a BVAR.\n", sep = "")
+    " of ", type, " values from a BVAR.\n", sep = "")
   if(has_quants) {
     cat("Computed confidence bands: ",
-        paste(bands, collapse = ", "), "\n", sep = "")
+      paste(bands, collapse = ", "), "\n", sep = "")
   }
   if(complete && has_quants) {
     cat("Values:\n")

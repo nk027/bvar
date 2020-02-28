@@ -16,7 +16,8 @@
 #'   \item \code{logLik} - the log-likelihood from \code{\link[stats]{logLik}}.
 #' }
 #'
-#' @seealso \code{\link{coef.bvar}}
+#' @seealso \code{\link{bvar}};
+#' \code{\link{predict.bvar}}; \code{\link{irf.bvar}}
 #'
 #' @export
 #'
@@ -30,12 +31,9 @@ summary.bvar <- function(object, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  out <- list(
-    "bvar" = object,
-    "coef" = coef(object),
-    "vcov" = vcov(object),
-    "logLik" = logLik(object))
-  class(out) <- "bvar_summary"
+  out <- structure(list(
+    "bvar" = object, "coef" = coef.bvar(object), "vcov" = vcov.bvar(object),
+    "logLik" = logLik.bvar(object)), class = "bvar_summary")
 
   return(out)
 }
@@ -46,8 +44,8 @@ print.bvar_summary <- function(x, ...) {
 
   print(x[["bvar"]])
 
-  cat("\n"); print(x[["coef"]])
-  cat("\n"); print(x[["vcov"]])
+  cat("\n"); print.bvar_coefs(x[["coef"]])
+  cat("\n"); print.bvar_vcovs(x[["vcov"]])
   cat("\n"); cat("Log-Likelihood:", x[["logLik"]], "\n")
 
   return(invisible(x))

@@ -1,18 +1,20 @@
-#' Prepare BVAR data for plotting etc.
+#' Prepare BVAR data for methods
 #'
 #' Helper function to retrieve hyperparameters or coefficient values based on
 #' name / position. Also supports multiple \code{bvar} objects and may be used
 #' to check them for similarity.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param vars Optional character vector used to subset the plot. The elements
-#' need to match the names of hyperparameters (plus \code{"ml"}). Defaults
-#' to \code{NULL}, i.e. all variables.
-#' @param vars_response,vars_impulse Optional integer vectors with the
-#' positions of coefficient values to retrieve densities of.
-#' \emph{vars_response} corresponds to a specific dependent variable,
-#' \emph{vars_impulse} to an independent one. Note that the constant is found
-#' at position one.
+#' @param vars Character vector used to select variables. Elements are matched
+#' to hyperparameters or coefficients. Coefficients may be matched based on
+#' the dependent variable (by providing the name or position) or the
+#' explanatory variables (by providing the name and the desired lag). See the
+#' example section for a demonstration. Defaults to \code{NULL}, i.e. all
+#' hyperparameters.
+#' @param vars_response,vars_impulse Optional character or integer vectors used
+#' to select coefficents. Dependent variables are specified with
+#' \emph{vars_response}, explanatory ones with \emph{vars_impulse}. See the
+#' example section for a demonstration.
 #' @param chains List with additional \code{bvar} objects. Contents are then
 #' added to trace and density plots.
 #' @param check_chains Logical scalar. Whether to check \emph{x} and

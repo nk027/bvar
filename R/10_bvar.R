@@ -1,4 +1,4 @@
-#' Hierarchical Bayesian Vector Autoregression
+#' Hierarchical Bayesian vector autoregression
 #'
 #' Used to estimate hierarchical Bayesian Vector Autoregression (VAR) models in
 #' the fashion of Giannone, Lenza and Primiceri (2015).

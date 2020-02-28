@@ -29,6 +29,12 @@
 companion <- function(object, ...) {UseMethod("companion", object)}
 
 
+#' @noRd
+companion.default <- function(x, ...) {
+  stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
+}
+
+
 #' @rdname companion
 #' @export
 companion.bvar <- function(
@@ -70,7 +76,7 @@ print.bvar_comp <- function(x, digits = 3L, complete = FALSE, ...) {
 
   if(!inherits(x, "bvar_comp")) {stop("Please provide a `bvar_comp` object.")}
 
-  print_coefs(x, digits, type = "companion", complete = complete, ...)
+  .print_coefs(x, digits, type = "companion", complete = complete, ...)
 
   return(invisible(x))
 }

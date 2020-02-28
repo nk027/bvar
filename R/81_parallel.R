@@ -1,6 +1,6 @@
-#' Parallel Bayesian Vector Autoregression
+#' Parallel hierarchical Bayesian vector autoregression
 #'
-#' Wrapper to speed up parallel computation using
+#' Wrapper for \code{\link{bvar}} to simplify parallel computation via
 #' \code{\link[parallel]{parLapply}}. Make sure to properly start and stop the
 #' provided cluster.
 #'
@@ -9,6 +9,8 @@
 #' @param n_runs The number of parallel runs to calculate. Defaults to the
 #' length of \emph{cl}, i.e. the number of registered nodes.
 #' @inheritParams bvar
+#'
+#' @return Returns a list of \code{bvar} objects.
 #'
 #' @seealso \code{\link{bvar}}; \code{\link[parallel]{parLapply}}
 #'

@@ -5,7 +5,7 @@ print.bv_fcast <- function(x, ...) {
 
   cat("Object with settings for computing forecasts.\n")
 
-  print_fcast(x, ...)
+  .print_fcast(x, ...)
 
   return(invisible(x))
 }
@@ -18,7 +18,7 @@ print.bvar_fcast <- function(x, ...) {
 
   cat("Forecast object from `bvar()`.\n")
 
-  print_fcast(x[["setup"]], ...)
+  .print_fcast(x[["setup"]], ...)
 
   cat("Variables: ", dim(x[["fcast"]])[3], "\n",
     "Iterations: ", dim(x[["fcast"]])[1], "\n", sep = "")
@@ -28,7 +28,7 @@ print.bvar_fcast <- function(x, ...) {
 
 
 #' @noRd
-print_fcast <- function(x, ...) {
+.print_fcast <- function(x, ...) {
 
   cat("Horizon: ", x[["horizon"]], "\n",
     "Conditional: ", !is.null(x[["cond_path"]]), "\n", sep = "")

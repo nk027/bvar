@@ -1,27 +1,25 @@
 #' Plotting method for Bayesian VARs
 #'
-#' Method to plot trace and densities of hyperparameters and marginalised
-#' likelihood or coefficient values obtained from \code{\link{bvar}}. Plots may
-#' be subset to certain types using \emph{type} and to hyperparameters using
-#' \emph{vars}.
-#' Multiple chains, that is comparable \code{bvar} objects, may be plotted
-#' together using the \emph{chains} argument.
-#' The \emph{type} argument may be used to access \code{\link{plot.bvar_irf}}
-#' and \code{\link{plot.bvar_fcast}}.
+#' Method to plot trace and densities of coefficient, hyperparameter and
+#' marginalised draws obtained from \code{\link{bvar}}. Several types of plot
+#' are available via the argument \emph{type}, including traces, densities,
+#' plots of forecasts and impulse responses.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param type A string with the type of plot desired. The standard method
-#' \code{"full"} includes both density and trace plots.
-#' @param vars Optional character vector used to subset the plot. The elements
-#' need to match the names of hyperparameters (plus \code{"ml"}). Defaults
-#' to \code{NULL}, i.e. all hyperparameters.
-#' @param vars_response,vars_impulse Optional integer vector with the
-#' positions of coefficient values used to subset the plot.
-#' \emph{vars_response} corresponds to a specific dependent variable,
-#' \emph{vars_impulse} to an independent one. Note that the constant is found
-#' at position one.
-#' @param chains List with additional \code{bvar} objects. Contents are then
-#' added to trace and density plots.
+#' @param type A string with the type of plot desired. The default option
+#' \code{"full"} plots both densities and traces.
+#' @param vars Character vector used to select variables. Elements are matched
+#' to hyperparameters or coefficients. Coefficients may be matched based on
+#' the dependent variable (by providing the name or position) or the
+#' explanatory variables (by providing the name and the desired lag). See the
+#' example section for a demonstration. Defaults to \code{NULL}, i.e. all
+#' hyperparameters.
+#' @param vars_response,vars_impulse Optional character or integer vectors used
+#' to select coefficents. Dependent variables are specified with
+#' \emph{vars_response}, explanatory ones with \emph{vars_impulse}. See the
+#' example section for a demonstration.
+#' @param chains List of \code{bvar} objects. Contents are then added to trace
+#' and density plots to help assessing covergence.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
@@ -108,7 +106,7 @@ plot.bvar <- function(
 plot.bvar_chains <- plot.bvar
 
 
-#' @rdname plot.bvar
+#' @rdname .plot_trace
 #' @noRd
 #'
 #' @importFrom graphics par
@@ -121,7 +119,7 @@ plot.bvar_chains <- plot.bvar
   mar = c(2, 2, 2, 0.5),
   ...) {
 
-  # Plot --------------------------------------------------------------------
+  # Plot ---
 
   op <- par(mfrow = c(length(vars), if(type == "full") {2} else {1}),
     mar = mar, ...)

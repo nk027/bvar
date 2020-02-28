@@ -1,4 +1,4 @@
-#' FRED transformation and subsetting helper
+#' FRED transformation and subset helper
 #'
 #' Apply transformations given by FRED-MD or FRED-QD and generate rectangular
 #' subsets. See \code{\link{fred_qd}} for information on data and the details
@@ -36,11 +36,11 @@
 #' @param table Logical scalar. Whether to return a table of matching
 #' transformation codes instead of just the codes.
 #'
-#' @return \code{fred_transform} returns a \code{data.frame} object with
-#' applied transformations. \code{fred_code} returns transformation codes or
-#' a table of matching transformation codes.
+#' @return \code{\link{fred_transform}} returns a \code{data.frame} object with
+#' applied transformations. \code{\link{fred_code}} returns transformation
+#' codes, or a \code{data.frmae} of matching transformation codes.
 #'
-#' @seealso \code{\link{fred_qd}};
+#' @seealso \code{\link{fred_qd}}
 #'
 #' @export
 #'
@@ -155,6 +155,11 @@ fred_code <- function(vars, type = c("fred_qd", "fred_md"), table = FALSE) {
 
 
 #' @noRd
+#'
+#' @param code Integer scalar. Code of the requested transformation.
+#' @param lag Integer scalar. Number of lags to apply.
+#'
+#' @return Returns a function that provides the requested transformation.
 #'
 #' @importFrom utils head
 get_transformation <- function(code, lag = 1L) {

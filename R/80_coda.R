@@ -1,22 +1,22 @@
 #' Methods for \pkg{coda} Markov chain Monte Carlo objects
 #'
-#' Methods to convert chains of hyperparameters and marginal likelihoods
-#' obtained from \code{\link{bvar}} or coefficent values to objects compatible
-#' for further processing with \pkg{coda}, i.e., objects of class
-#' \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
-#' Multiple chains, i.e. comparable \code{bvar} objects, may be converted
-#' using the \emph{chains} argument.
+#' Methods to convert parameter and/or coefficient draws from \code{\link{bvar}}
+#' to \pkg{coda}'s \code{\link[coda]{mcmc}} (or \code{\link[coda]{mcmc.list}})
+#' format for further processing.
 #'
 #' @name coda
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param vars Optional character vector used to subset the converted
-#' hyperparameters. The elements need to match the names of hyperparameters
-#' (plus \code{"ml"}). Defaults to \code{NULL}, i.e. all variables.
-#' @param vars_response,vars_impulse Optional integer vector with the
-#' positions of coefficient values to convert. \emph{vars_response} corresponds
-#' to a specific dependent variable, \emph{vars_impulse} to an independent one.
-#' Note that the constant is found at position one.
+#' @param vars Character vector used to select variables. Elements are matched
+#' to hyperparameters or coefficients. Coefficients may be matched based on
+#' the dependent variable (by providing the name or position) or the
+#' explanatory variables (by providing the name and the desired lag). See the
+#' example section for a demonstration. Defaults to \code{NULL}, i.e. all
+#' hyperparameters.
+#' @param vars_response,vars_impulse Optional character or integer vectors used
+#' to select coefficents. Dependent variables are specified with
+#' \emph{vars_response}, explanatory ones with \emph{vars_impulse}. See the
+#' example section for a demonstration.
 #' @param chains List with additional \code{bvar} objects. If provided, contents
 #' are converted to an object of class \code{\link[coda]{mcmc.list}}.
 #' @param ... Other parameters for \code{\link[coda]{as.mcmc}} and
@@ -44,6 +44,7 @@
 #' as.mcmc(x, vars = c("ml", "lambda"), chains = list(y = y))
 #' }
 NULL
+
 
 #' @rdname coda
 #' @export as.mcmc.bvar

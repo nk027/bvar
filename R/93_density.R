@@ -1,21 +1,22 @@
 #' Density methods for Bayesian VARs
 #'
-#' Calculates densities of hyperparameters or coefficient values of Bayesian
-#' VARs generated via \code{\link{bvar}}. Wraps standard
-#' \code{\link[stats]{density}} functionality into a \code{list}.
+#' Calculates densities of hyperparameters or coefficient draws from Bayesian
+#' VAR models generated via \code{\link{bvar}}. Wraps standard
+#' \code{\link[stats]{density}} outputs into a \code{list}.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param vars Optional character vector used to specify hyperparemeters to
-#' retrieve the density of. The elements need to match the names of
-#' hyperparameters (plus \code{"ml"}). Defaults to \code{NULL}, i.e. all
+#' @param vars Character vector used to select variables. Elements are matched
+#' to hyperparameters or coefficients. Coefficients may be matched based on
+#' the dependent variable (by providing the name or position) or the
+#' explanatory variables (by providing the name and the desired lag). See the
+#' example section for a demonstration. Defaults to \code{NULL}, i.e. all
 #' hyperparameters.
-#' @param vars_response,vars_impulse Optional integer vector with the
-#' positions of coefficient values to retrieve densities of.
-#' \emph{vars_response} corresponds to a specific dependent variable,
-#' \emph{vars_impulse} to an independent one. Note that the constant is found
-#' at position one.
-#' @param ... Fed to \code{\link[stats]{density}} or \code{\link[graphics]{par}}.
-#'
+#' @param vars_response,vars_impulse Optional character or integer vectors used
+#' to select coefficents. Dependent variables are specified with
+#' \emph{vars_response}, explanatory ones with \emph{vars_impulse}. See the
+#' example section for a demonstration.
+#' @param ... Fed to \code{\link[stats]{density}} or
+#' \code{\link[graphics]{par}}.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param mfrow Numeric vector. Rows for \code{\link[graphics]{par}}.
 #' @param var,n_vars,lag Integer scalars. Retrieve the position of
@@ -59,10 +60,10 @@ density.bvar <- function(
   if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
 
-  # Get data and apply density --------------------------------------------
+  # Get data and apply density ---
 
-  prep <- prep_data(x,
-    vars = vars, vars_response = vars_response, vars_impulse = vars_impulse)
+  prep <- prep_data(x, vars = vars,
+    vars_response = vars_response, vars_impulse = vars_impulse)
   data <- prep[["data"]]
   vars <- prep[["vars"]]
 

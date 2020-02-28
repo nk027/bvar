@@ -83,6 +83,8 @@ plot_irf <- function(
   fill = "#808080",
   ...) {
 
+  # Checks ---
+
   if(!inherits(x, "bvar") && !inherits(x, "bvar_irf")) {
     stop("Please provide a `bvar` or `bvar_irf` object.")
   }
@@ -92,6 +94,8 @@ plot_irf <- function(
     message("Parameter conf_bands is deprecated. Please use `irf()`.")
     x <- irf(x, conf_bands = conf_bands)
   }
+
+  # Prepare data ---
 
   has_quants <- length(dim(x[["quants"]])) == 4L
   if(has_quants) {
@@ -104,6 +108,7 @@ plot_irf <- function(
     quants[1, , , ] <- x[["quants"]]
   }
 
+  # Prepare other arguments ---
 
   variables <- name_deps(variables = if(is.null(variables)) {
     x[["variables"]]} else {variables}, M = M)
@@ -156,7 +161,7 @@ plot_irf <- function(
 
   if(area) {
     P <- dim(x)[1]
-     x_vals <- c(seq(dim(x)[3]) - 1, rev(seq(dim(x)[3]) - 1))
+    x_vals <- c(seq(dim(x)[3]) - 1, rev(seq(dim(x)[3]) - 1))
   }
   mid <- length(col) %/% 2 + 1
 
@@ -172,7 +177,8 @@ plot_irf <- function(
       }}
       grid()
       abline(h = 0, lty = "dashed", col = "gray")
-      lines(ts(x[mid, i, , j], start = 0), col = col[mid])    }
+      lines(ts(x[mid, i, , j], start = 0), col = col[mid])
+    }
   }
   par(op)
 }

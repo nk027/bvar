@@ -93,7 +93,7 @@ plot_fcast <- function(
   fill = "#808080",
   ...) {
 
-  # Checks ----------------------------------------------------------------
+  # Checks ---
 
   if(!inherits(x, "bvar") && !inherits(x, "bvar_fcast")) {
     stop("Please provide a `bvar` or `bvar_fcast` object.")
@@ -106,6 +106,8 @@ plot_fcast <- function(
   }
 
   orientation <- match.arg(orientation)
+
+  # Prepare data ---
 
   has_quants <- length(dim(x[["quants"]])) == 3L
   if(has_quants) {
@@ -135,6 +137,8 @@ plot_fcast <- function(
       t(rbind(fill_ci_na(data[, i], P2), t(quants[, , i])))
     }, matrix(0, P2, t_back + t_forw), USE.NAMES = FALSE)
   }
+
+  # Prepare other arguments ---
 
   variables <- name_deps(variables = if(is.null(variables)) {
     x[["variables"]]} else {variables}, M = M)
@@ -180,12 +184,12 @@ plot_fcast <- function(
   variables,
   pos,
   col, mar, mfrow,
-  t_back = NA,
+  t_back = 0,
   area = FALSE, fill,
   ...) {
 
   if(area) {
-    excl <- seq(t_back)
+    excl <- if(t_back > 0) {seq(t_back)} else {0}
     P <- dim(x)[1]
     x_vals <- c(seq(dim(x)[2] - t_back), rev(seq(dim(x)[2] - t_back)))
   }

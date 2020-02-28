@@ -8,7 +8,7 @@
 #' @param M Integer scalar. Columns of \emph{Y}.
 #' @param horizon Integer scalar. Horizon of impulse responses and FEVDs.
 #'
-#' @return Returns a numeric matrix of mean FEVDs.
+#' @return Returns a numeric array of FEVDs.
 #'
 #' @noRd
 compute_fevd <- function(irf_comp, M, horizon) {
