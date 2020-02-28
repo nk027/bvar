@@ -18,21 +18,23 @@
 \arguments{
 \item{x}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
 
-\item{type}{A string with the type of plot desired. The standard method
-\code{"full"} includes both density and trace plots.}
+\item{type}{A string with the type of plot desired. The default option
+\code{"full"} plots both densities and traces.}
 
-\item{vars}{Optional character vector used to subset the plot. The elements
-need to match the names of hyperparameters (plus \code{"ml"}). Defaults
-to \code{NULL}, i.e. all hyperparameters.}
+\item{vars}{Character vector used to select variables. Elements are matched
+to hyperparameters or coefficients. Coefficients may be matched based on
+the dependent variable (by providing the name or position) or the
+explanatory variables (by providing the name and the desired lag). See the
+example section for a demonstration. Defaults to \code{NULL}, i.e. all
+hyperparameters.}
 
-\item{vars_response, vars_impulse}{Optional integer vector with the
-positions of coefficient values used to subset the plot.
-\emph{vars_response} corresponds to a specific dependent variable,
-\emph{vars_impulse} to an independent one. Note that the constant is found
-at position one.}
+\item{vars_response, vars_impulse}{Optional character or integer vectors used
+to select coefficents. Dependent variables are specified with
+\emph{vars_response}, explanatory ones with \emph{vars_impulse}. See the
+example section for a demonstration.}
 
-\item{chains}{List with additional \code{bvar} objects. Contents are then
-added to trace and density plots.}
+\item{chains}{List of \code{bvar} objects. Contents are then added to trace
+and density plots to help assessing covergence.}
 
 \item{mar}{Numeric vector. Margins for \code{\link[graphics]{par}}.}
 
@@ -42,32 +44,31 @@ added to trace and density plots.}
 Returns \emph{x} invisibly.
 }
 \description{
-Method to plot trace and densities of hyperparameters and marginal likelihood
-or coefficient values obtained from \code{\link{bvar}}. Plots may be subset
-to certain types using \emph{type} and to hyperparameters using \emph{vars}.
-Multiple chains, that is comparable \code{bvar} objects, may be plotted
-together using the \emph{chains} argument.
-The \emph{type} argument may be used to access \code{\link{plot.bvar_irf}}
-and \code{\link{plot.bvar_fcast}}.
+Method to plot trace and densities of coefficient, hyperparameter and
+marginalised draws obtained from \code{\link{bvar}}. Several types of plot
+are available via the argument \emph{type}, including traces, densities,
+plots of forecasts and impulse responses.
 }
 \examples{
 \donttest{
-data <- matrix(rnorm(200), ncol = 2)
-x <- bvar(data, lags = 2, irf = bv_irf(), fcast = bv_fcast())
-y <- bvar(data, lags = 2)
+# Access a subset of the fred_qd dataset
+data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+# Transform it to be stationary
+data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+data <- data[5:nrow(data), ]
+
+# Estimate a BVAR using one lag, default settings and very few draws
+x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 
 # Plot full traces and densities
 plot(x)
 
-# Compare with second chain
-plot(x, chains = y)
+# Only plot the marginalised likelihood's trace
+plot(x, "trace", "ml")
 
-# Only plot the marginal likelihood's density
-plot(x, "dens", "ml")
-
-# Use plot as an alternative to plot(irf(x)) and plot(predict(x))
-plot(x, "irf")
-plot(x, "fcast", vars = 2)
+# Access IRF and forecast plotting functions
+plot(x, type = "irf", vars_response = 2)
+plot(x, type = "fcast", vars = 2)
 }
 }
 \seealso{

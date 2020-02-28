@@ -12,9 +12,9 @@
 \arguments{
 \item{object}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
 
-\item{conf_bands}{Numeric vector of desired confidence bands to apply.
+\item{conf_bands}{Numeric vector of confidence bands to apply.
 E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-Note that the median, i.e. \code{0.5} is always included.}
+Note that the median, i.e. 0.5 is always included.}
 
 \item{companion}{Logical scalar. Whether to retrieve the companion matrix of
 coefficients. See \code{\link{companion.bvar}}.}
@@ -26,15 +26,21 @@ Returns a numeric array of class \code{bvar_coefs} or
 \code{bvar_vcovs} with values at the specified confidence bands.
 }
 \description{
-Retrieves coefficient / variance-covariance values for Bayesian VARs
+Retrieves coefficient / variance-covariance values from Bayesian VAR models
 generated with \code{\link{bvar}}. Note that coefficients are available for
 every stored draw and credible intervals may be set via the
 \emph{conf_bands} argument.
 }
 \examples{
 \donttest{
-data <- matrix(rnorm(200), ncol = 2)
-x <- bvar(data, lags = 2)
+# Access a subset of the fred_qd dataset
+data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+# Transform it to be stationary
+data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+data <- data[5:nrow(data), ]
+
+# Estimate a BVAR using one lag, default settings and very few draws
+x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 
 # Get coefficent values at the 10\%, 50\% and 90\% quantiles
 coef(x, conf_bands = 0.10)

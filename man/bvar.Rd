@@ -2,7 +2,7 @@
 % Please edit documentation in R/10_bvar.R
 \name{bvar}
 \alias{bvar}
-\title{Hierarchical Bayesian Vector Autoregression}
+\title{Hierarchical Bayesian vector autoregression}
 \usage{
 bvar(
   data,
@@ -112,8 +112,7 @@ data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
 data <- data[5:nrow(data), ]
 
 # Estimate a BVAR using one lag, default settings and very few draws
-x <- bvar(data = data, lags = 1,
-  n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 
 # Calculate and store forecasts and impulse responses
 predict(x) <- predict(x, horizon = 8)
@@ -125,12 +124,15 @@ plot(x)
 # Plot forecasts and impulse responses
 plot(predict(x))
 plot(irf(x))
+# Check coefficient values and variance-covariance matrix
+summary(x)
 }
 }
 \references{
 Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
   Vector Autoregressions. \emph{The Review of Economics and Statistics},
   \bold{97:2}, 436-451, \url{https://doi.org/10.1162/REST_a_00483}.
+
   Kuschnig, N. and Vashold, L. (2019) BVAR: Bayesian Vector Autoregressions
   with Hierarchical Prior Selection in R. \emph{Department of Economics
   Working Paper Series}, \bold{296}, WU Vienna University of Economics and

@@ -19,15 +19,15 @@ Summary and print methods take in a \code{bvar_fcast} object.}
 \item{...}{A \code{bv_fcast} object or parameters to be fed into
 \code{\link{bv_fcast}}. Contains settings for the forecast.}
 
-\item{conf_bands}{Numeric vector of desired confidence bands to apply.
+\item{conf_bands}{Numeric vector of confidence bands to apply.
 E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-Note that the median, i.e. \code{0.5} is always included.}
+Note that the median, i.e. 0.5 is always included.}
 
 \item{n_thin}{Integer scalar. Every \emph{n_thin}'th draw in \emph{object}
-is used for forecasting, others are dropped.}
+is used to predict, others are dropped.}
 
 \item{newdata}{Optional numeric matrix or dataframe. Used to base the
-prediction on. Fitted values are used by default.}
+prediction on.}
 
 \item{value}{A \code{bvar_fcast} object to assign.}
 
@@ -37,7 +37,7 @@ to certain variables by position or name (must be available). Defaults to
 }
 \value{
 Returns a list of class \code{bvar_fcast} including forecasts
-at desired confidence bands. See \code{\link{bvar}}.
+at desired confidence bands.
 The summary method returns a numeric array of forecast paths at the
 specified confidence bands.
 }
@@ -45,31 +45,40 @@ specified confidence bands.
 Retrieves / calculates forecasts for Bayesian VARs generated via
 \code{\link{bvar}}. If a forecast is already present and no settings are
 supplied it is simply retrieved, otherwise it will be calculated.
-To store a prediction you may want to assign the output using the setter
+To store the results you may want to assign the output using the setter
 function (\code{predict(x) <- predict(x)}). May also be used to update
 confidence bands.
 }
 \examples{
 \donttest{
-data <- matrix(rnorm(200), ncol = 2)
-x <- bvar(data, lags = 2)
+# Access a subset of the fred_qd dataset
+data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+# Transform it to be stationary
+data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+data <- data[5:nrow(data), ]
 
-# Access forecast and update confidence bands
-predict(x, conf_bands = 0.01)
+# Estimate a BVAR using one lag, default settings and very few draws
+x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 
-# Adjust, compute and store a longer forecast
-x$fcast <- predict(x, horizon = 24L)
+# Calculate a forecast with an increased horizon
+y <- predict(x, horizon = 20)
 
-# Lower draws, use `bv_fcast()` to set options and add confidence bands
-predict(x, bv_fcast(24L), n_thin = 10L, conf_bands = c(0.05, 0.16))
+# Add some confidence bands and store the forecast
+predict(x) <- predict(x, conf_bands = c(0.05, 0.16))
 
-# Use new data to calculate a prediction
+# Recalculate with different settings and increased thinning
+predict(x, bv_fcast(24L), n_thin = 10L)
+
+# Simulate some new data to predict on
 predict(x, newdata = matrix(rnorm(200), ncol = 2))
 
-# Get a summary of the last saved forecast
+# Calculate a conditional forecast (with a constrained second variable).
+predict(x, cond_path = c(1, 1, 1, 1, 1, 1), cond_var = 2)
+
+# Get a summary of the stored forecast
 summary(x)
 
-# Limit the summary to variable #2
+# Only get the summary for variable #2
 summary(x, vars = 2L)
 }
 }

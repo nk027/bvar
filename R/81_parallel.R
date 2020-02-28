@@ -23,17 +23,28 @@
 #' library("parallel")
 #'
 #' cl <- makeCluster(2L)
-#' data <- matrix(rnorm(200), ncol = 2)
 #'
-#' # A singular run
-#' x <- bvar(data, lags = 2)
+#' # Access a subset of the fred_qd dataset
+#' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' # Transform it to be stationary
+#' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+#' data <- data[5:nrow(data), ]
+#'
+#' # A singular run using one lag, default settings and very few draws
+#' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+#'
 #' # Two parallel runs
-#' y <- par_bvar(cl, n_runs = 2, data = data, lags = 2)
+#' y <- par_bvar(cl, n_runs = 2,
+#'   data = data, lags = 1, n_draw = 1000L, n_burn = 200L)
 #'
 #' stopCluster(cl)
-#'
+#' }
 #' # Plot lambda for all of the runs
+#' \dontrun{
 #' plot(x, type = "full", vars = "lambda", chains = y)
+#'
+#' # Convert the hyperparameter lambda to a coda mcmc.list object
+#' coda::as.mcmc(y, vars = "lambda")
 #' }
 par_bvar <- function(
   cl, n_runs = length(cl),
@@ -44,15 +55,13 @@ par_bvar <- function(
   fcast = NULL,
   irf = NULL) {
 
-  # Checks ------------------------------------------------------------------
+  # Checks ---
 
   if(!inherits(cl, "cluster")) {stop("Please provide a `cluster` object.")}
 
   # Maybe check whether it is actually loaded
   has_parallel()
 
-
-  # Move checks to here -----------------------------------------------------
 
   # Data
   if(!all(vapply(data, is.numeric, logical(1))) ||
@@ -89,7 +98,7 @@ par_bvar <- function(
   if(mh[["adjust_acc"]]) {n_adj <- as.integer(n_burn * mh[["adjust_burn"]])}
 
 
-  # Get several BVARs -------------------------------------------------------
+  # Get several BVARs ---
 
   out <- parallel::parLapply(cl, rep(list(data), n_runs),
     function(data, ...) { # This guy is spawned all alone, we need to load BVAR

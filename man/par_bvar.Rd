@@ -2,7 +2,7 @@
 % Please edit documentation in R/81_parallel.R
 \name{par_bvar}
 \alias{par_bvar}
-\title{Parallel Bayesian Vector Autoregression}
+\title{Parallel hierarchical Bayesian vector autoregression}
 \usage{
 par_bvar(
   cl,
@@ -59,8 +59,11 @@ of impulse responses and forecast error variance decompositions. Options
 include the horizon and different identification schemes.
 May also be calculated ex-post using \code{\link{irf.bvar}}.}
 }
+\value{
+Returns a list of \code{bvar} objects.
+}
 \description{
-Wrapper to speed up parallel computation using
+Wrapper for \code{\link{bvar}} to simplify parallel computation via
 \code{\link[parallel]{parLapply}}. Make sure to properly start and stop the
 provided cluster.
 }
@@ -69,17 +72,28 @@ provided cluster.
 library("parallel")
 
 cl <- makeCluster(2L)
-data <- matrix(rnorm(200), ncol = 2)
 
-# A singular run
-x <- bvar(data, lags = 2)
+# Access a subset of the fred_qd dataset
+data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+# Transform it to be stationary
+data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+data <- data[5:nrow(data), ]
+
+# A singular run using one lag, default settings and very few draws
+x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+
 # Two parallel runs
-y <- par_bvar(cl, n_runs = 2, data = data, lags = 2)
+y <- par_bvar(cl, n_runs = 2,
+  data = data, lags = 1, n_draw = 1000L, n_burn = 200L)
 
 stopCluster(cl)
-
+}
 # Plot lambda for all of the runs
+\dontrun{
 plot(x, type = "full", vars = "lambda", chains = y)
+
+# Convert the hyperparameter lambda to a coda mcmc.list object
+coda::as.mcmc(y, vars = "lambda")
 }
 }
 \seealso{

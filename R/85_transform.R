@@ -48,8 +48,11 @@
 #' # Transform a subset of FRED-QD
 #' fred_transform(fred_qd[, c("GDPC1", "INDPRO", "FEDFUNDS")])
 #'
-#' # Get transformation codes for unemployment variables
+#' # Get info on transformation codes for unemployment variables
 #' fred_code("UNRATE", table = TRUE)
+#'
+#' # Get the transformation code for GDPC1
+#' fred_code("GDPC1", type = "fred_qd")
 #'
 #' # Transform all of FRED-MD
 #' \dontrun{

@@ -38,26 +38,35 @@
 #'
 #' @examples
 #' \donttest{
-#' data <- matrix(rnorm(400), ncol = 4)
-#' x <- bvar(data, lags = 2, fcast = bv_fcast())
+#' # Access a subset of the fred_qd dataset
+#' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' # Transform it to be stationary
+#' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+#' data <- data[5:nrow(data), ]
+#'
+#' # Estimate a BVAR using one lag, default settings and very few draws
+#' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+#'
+#' # Store predictions ex-post
+#' predict(x) <- predict(x)
 #'
 #' # Plot forecasts for all available variables
 #' plot(predict(x))
-#' # Alternatively
-#' plot(x$fcast)
 #'
-#' # Subset to variables in positions 1, 2 and 4 via position and name
-#' plot(x$fcast, vars = c(1, 2, 4))
-#' plot(x$fcast,
-#'   variables = c("gdp", "flux", "cpi", "capacitor"),
-#'   vars = c("gdp", "flux", "capacitor")
-#' )
+#' # Subset to variables in positions 1 and 3 via their name
+#' plot(predict(x), vars = c("CPI", "FED"))
 #'
-#' # Use the method to plot and adjust orientation
-#' plot(x$fcast, orientation = "h")
+#' # Subset via position, increase the plotted forecast horizon and past data
+#' plot(predict(x, horizon = 20), vars = c(1, 4), t_back = 10)
 #'
-#' # Adjust confidence bands via predict
-#' plot(predict(x, conf_bands = c(0.01, 0.05)))
+#' # Adjust confidence bands and the plot's orientation
+#' plot(predict(x, conf_bands = 0.25), orientation = "h")
+#'
+#' # Draw areas inbetween the confidence bands and skip drawing lines
+#' plot(predict(x), col = "transparent", area = TRUE)
+#'
+#' # Plot a conditional forecast (with a constrained second variable).
+#' plot(predict(x, cond_path = c(1, 1, 1, 1, 1, 1), cond_var = 2))
 #' }
 plot.bvar_fcast <- function(
   x,

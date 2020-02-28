@@ -96,15 +96,15 @@ minimise the importance of conditioning on initial observations. See
 
 \examples{
 # Adjust alpha and the Minnesota prior variance.
-bv_mn(
-  alpha = bv_alpha(mode = 0.5, sd = 1, min = 1e-12, max = 10),
-  var = 1e6
-)
+bv_mn(alpha = bv_alpha(mode = 0.5, sd = 1, min = 1e-12, max = 10), var = 1e6)
 # Optionally use a vector as shorthand
 bv_mn(alpha = c(0.5, 1, 1e-12, 10), var = 1e6)
 
 # Only adjust lambda's standard deviation
 bv_mn(lambda = bv_lambda(sd = 2))
+
+# Provide prior modes for psi (for a VAR with three variables)
+bv_mn(psi = bv_psi(mode = c(0.7, 0.3, 0.9)))
 }
 \references{
 Kilian, L. and Lütkepohl, H. (2017). \emph{Structural Vector

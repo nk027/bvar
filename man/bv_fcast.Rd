@@ -35,23 +35,14 @@ Conditional forecasts are calculated using the algorithm by Waggoner and Zha
 # Set forecast-horizon to 20 time periods for unconditional forecasts
 bv_fcast(horizon = 20)
 
-\dontrun{
-# Set the path of the second variable for the first six forecast periods.
+# Define a path for the second variable (in the initial six periods).
 bv_fcast(cond_path = c(1, 1, 1, 1, 1, 1), cond_var = 2)
 
-# Set the path of the first and third variable.
+# Constrain the paths of the first and third variables.
 paths <- matrix(NA, nrow = 10, ncol = 2)
 paths[1:5, 1] <- 1
-paths[6:10, 2] <- 2
+paths[1:10, 2] <- 2
 bv_fcast(cond_path = paths, cond_var = c(1, 3))
-
-# Set path for all variables (assuming 3-variable VAR).
-paths <- matrix(NA, nrow = 10, ncol = 3)
-paths[1:5, 1] <- 1
-paths[6:10, 2] <- 2
-paths[3:8, 3]  <- 3
-bv_fcast(cond_path = paths)
-}
 }
 \references{
 Waggoner, D. F., & Zha, T. (1999). Conditional Forecasts in Dynamic

@@ -32,25 +32,32 @@
 #'
 #' @examples
 #' \donttest{
-#' data <- matrix(rnorm(200), ncol = 2)
-#' x <- bvar(data, lags = 2)
+#' # Access a subset of the fred_qd dataset
+#' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' # Transform it to be stationary
+#' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+#' data <- data[5:nrow(data), ]
 #'
-#' # Get densities of standard hyperparameters
+#' # Estimate a BVAR using one lag, default settings and very few draws
+#' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+#'
+#' # Get densities of the hyperparameters
 #' density(x)
 #'
 #' # Plot them
 #' plot(density(x))
 #'
-#' # Only get the density of the marginalised likelihood
-#' density(x, vars = "ml")
+#' # Only get the densities associated with dependent variable 1
+#' density(x, vars_response = "CPI")
 #'
-#' # Check out the constant's density on both dependents
+#' # Check out the constant's densities
 #' plot(density(x, vars_impulse = 1))
 #'
-#' # Get the density of the 1st lag of variable 2's coefficients with
-#' # respect to variable 1
-#' idx <- independent_index(var = 2, n_vars = 2, lag = 1)
-#' density(x, vars_response = 1, vars_impulse = idx)
+#' # Get the densities of variable three's first lag
+#' density(x, vars = "FEDFUNDS-lag1")
+#'
+#' # Get densities of lambda and the coefficients of dependent variable 2
+#' density(x, vars = c("lambda", "UNRATE"))
 #' }
 density.bvar <- function(
   x, vars = NULL,

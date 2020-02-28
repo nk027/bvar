@@ -1,25 +1,3 @@
-#' @return Returns a list of class \code{bv_dummy.}
-#'
-#' @noRd
-dummy <- function(
-  mode = 1,
-  min = 0.0001, max = 5,
-  ...) {
-
-  mode <- num_check(mode, min = 0, max = Inf,
-    msg = "Invalid value for mode (outside of [0, Inf]).")
-  min <- num_check(min, min = 0, max = max - 1e-16,
-    msg = "Invalid value for min (outside of [0, max)).")
-  max <- num_check(max, min = min + 1e-16, max = Inf,
-    msg = "Invalid value for max (outside of (min, Inf]).")
-
-  out <- structure(list(
-    "mode" = mode, "min" = min, "max" = max, ...), class = "bv_dummy")
-
-  return(out)
-}
-
-
 #' Dummy prior settings
 #'
 #' Allows the creation of dummy observation priors for \code{\link{bv_priors}}.
@@ -83,8 +61,8 @@ dummy <- function(
 #'
 #' sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
 #'
-#' # Adding them to the prior list with `bv_priors()`
-#' priors_dum <- bv_priors(hyper = "auto", soc = soc, sur = sur)
+#' # Add the new custom dummy priors
+#' bv_priors(hyper = "auto", soc = soc, sur = sur)
 bv_dummy <- function(
   mode = 1, sd = 1,
   min = 0.0001, max = 5,
@@ -97,4 +75,25 @@ bv_dummy <- function(
     dummy(mode = mode, min = min, max = max, sd = sd, fun = fun,
       coef = gamma_coef(mode, sd))
   )
+}
+
+
+#' @rdname bv_dummy
+#' @noRd
+dummy <- function(
+  mode = 1,
+  min = 0.0001, max = 5,
+  ...) {
+
+  mode <- num_check(mode, min = 0, max = Inf,
+    msg = "Invalid value for mode (outside of [0, Inf]).")
+  min <- num_check(min, min = 0, max = max - 1e-16,
+    msg = "Invalid value for min (outside of [0, max)).")
+  max <- num_check(max, min = min + 1e-16, max = Inf,
+    msg = "Invalid value for max (outside of (min, Inf]).")
+
+  out <- structure(list(
+    "mode" = mode, "min" = min, "max" = max, ...), class = "bv_dummy")
+
+  return(out)
 }

@@ -15,55 +15,64 @@ independent_index(var, n_vars, lag)
 \arguments{
 \item{x}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
 
-\item{vars}{Optional character vector used to specify hyperparemeters to
-retrieve the density of. The elements need to match the names of
-hyperparameters (plus \code{"ml"}). Defaults to \code{NULL}, i.e. all
+\item{vars}{Character vector used to select variables. Elements are matched
+to hyperparameters or coefficients. Coefficients may be matched based on
+the dependent variable (by providing the name or position) or the
+explanatory variables (by providing the name and the desired lag). See the
+example section for a demonstration. Defaults to \code{NULL}, i.e. all
 hyperparameters.}
 
-\item{vars_response, vars_impulse}{Optional integer vector with the
-positions of coefficient values to retrieve densities of.
-\emph{vars_response} corresponds to a specific dependent variable,
-\emph{vars_impulse} to an independent one. Note that the constant is found
-at position one.}
+\item{vars_response, vars_impulse}{Optional character or integer vectors used
+to select coefficents. Dependent variables are specified with
+\emph{vars_response}, explanatory ones with \emph{vars_impulse}. See the
+example section for a demonstration.}
 
-\item{...}{Fed to \code{\link[stats]{density}} or \code{\link[graphics]{par}}.}
+\item{...}{Fed to \code{\link[stats]{density}} or
+\code{\link[graphics]{par}}.}
 
 \item{mar}{Numeric vector. Margins for \code{\link[graphics]{par}}.}
 
 \item{mfrow}{Numeric vector. Rows for \code{\link[graphics]{par}}.}
 
-\item{var, n_vars, lag}{Integer scalars. Retrieve the position of lag
+\item{var, n_vars, lag}{Integer scalars. Retrieve the position of
 \emph{lag} of variable \emph{var} given \emph{n_vars} total variables.}
 }
 \value{
 Returns a list with outputs of \code{\link[stats]{density}}.
 }
 \description{
-Calculates densities of hyperparameters or coefficient values of Bayesian
-VARs generated via \code{\link{bvar}}. Wraps standard
-\code{\link[stats]{density}} functionality into a \code{list}.
+Calculates densities of hyperparameters or coefficient draws from Bayesian
+VAR models generated via \code{\link{bvar}}. Wraps standard
+\code{\link[stats]{density}} outputs into a \code{list}.
 }
 \examples{
 \donttest{
-data <- matrix(rnorm(200), ncol = 2)
-x <- bvar(data, lags = 2)
+# Access a subset of the fred_qd dataset
+data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+# Transform it to be stationary
+data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+data <- data[5:nrow(data), ]
 
-# Get densities of standard hyperparameters
+# Estimate a BVAR using one lag, default settings and very few draws
+x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+
+# Get densities of the hyperparameters
 density(x)
 
 # Plot them
 plot(density(x))
 
-# Only get the density of the marginal likelihood
-density(x, vars = "ml")
+# Only get the densities associated with dependent variable 1
+density(x, vars_response = "CPI")
 
-# Check out the constant's density on both dependents
+# Check out the constant's densities
 plot(density(x, vars_impulse = 1))
 
-# Get the density of the 1st lag of variable 2's coefficients with
-# respect to variable 1
-idx <- independent_index(var = 2, n_vars = 2, lag = 1)
-density(x, vars_response = 1, vars_impulse = idx)
+# Get the densities of variable three's first lag
+density(x, vars = "FEDFUNDS-lag1")
+
+# Get densities of lambda and the coefficients of dependent variable 2
+density(x, vars = c("lambda", "UNRATE"))
 }
 }
 \seealso{

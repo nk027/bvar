@@ -33,14 +33,17 @@
 #' @export
 #'
 #' @examples
-#' # Only adjust the scale parameter
-#' bv_mh(scale_hess = 10)
+#' # Increase the scaling parameter
+#' bv_mh(scale_hess = 1)
 #'
 #' # Turn on automatic scaling of the acceptance rate to [20%, 40%]
 #' bv_mh(adjust_acc = TRUE, acc_lower = 0.2, acc_upper = 0.4)
 #'
 #' # Increase the rate of automatic scaling
 #' bv_mh(adjust_acc = TRUE, acc_lower = 0.2, acc_upper = 0.4, acc_change = 0.1)
+#'
+#' # Use only 50% of the burn-in phase to adjust scaling
+#' bv_mh(adjust_acc = TRUE, adjust_burn = 0.5)
 bv_metropolis <- function(
   scale_hess = 0.01,
   adjust_acc = FALSE,

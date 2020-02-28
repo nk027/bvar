@@ -38,25 +38,34 @@
 #'
 #' @examples
 #' \donttest{
-#' data <- matrix(rnorm(200), ncol = 2)
-#' x <- bvar(data, lags = 2)
+#' # Access a subset of the fred_qd dataset
+#' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' # Transform it to be stationary
+#' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+#' data <- data[5:nrow(data), ]
 #'
-#' # Access forecast and update confidence bands
-#' predict(x, conf_bands = 0.01)
+#' # Estimate a BVAR using one lag, default settings and very few draws
+#' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 #'
-#' # Adjust, compute and store a longer forecast
-#' x$fcast <- predict(x, horizon = 24L)
+#' # Calculate a forecast with an increased horizon
+#' y <- predict(x, horizon = 20)
 #'
-#' # Lower draws, use `bv_fcast()` to set options and add confidence bands
-#' predict(x, bv_fcast(24L), n_thin = 10L, conf_bands = c(0.05, 0.16))
+#' # Add some confidence bands and store the forecast
+#' predict(x) <- predict(x, conf_bands = c(0.05, 0.16))
 #'
-#' # Use new data to calculate a prediction
+#' # Recalculate with different settings and increased thinning
+#' predict(x, bv_fcast(24L), n_thin = 10L)
+#'
+#' # Simulate some new data to predict on
 #' predict(x, newdata = matrix(rnorm(200), ncol = 2))
 #'
-#' # Get a summary of the last saved forecast
+#' # Calculate a conditional forecast (with a constrained second variable).
+#' predict(x, cond_path = c(1, 1, 1, 1, 1, 1), cond_var = 2)
+#'
+#' # Get a summary of the stored forecast
 #' summary(x)
 #'
-#' # Limit the summary to variable #2
+#' # Only get the summary for variable #2
 #' summary(x, vars = 2L)
 #' }
 predict.bvar <- function(

@@ -22,8 +22,14 @@
 #'
 #' @examples
 #' \donttest{
-#' data <- matrix(rnorm(200), ncol = 2)
-#' x <- bvar(data, lags = 2)
+#' # Access a subset of the fred_qd dataset
+#' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' # Transform it to be stationary
+#' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+#' data <- data[5:nrow(data), ]
+#'
+#' # Estimate a BVAR using one lag, default settings and very few draws
+#' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 #'
 #' # Get coefficent values at the 10%, 50% and 90% quantiles
 #' coef(x, conf_bands = 0.10)

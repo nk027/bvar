@@ -33,15 +33,30 @@
 #' \donttest{
 #' library("coda")
 #'
-#' data <- matrix(rnorm(200), ncol = 2)
-#' x <- bvar(data, lags = 2)
-#' y <- bvar(data, lags = 2)
+#' # Access a subset of the fred_qd dataset
+#' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' # Transform it to be stationary
+#' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+#' data <- data[5:nrow(data), ]
 #'
-#' # Convert hyperparameter lambda and the marginalised likelihood
-#' as.mcmc(x, vars = c("ml", "lambda"))
+#' # Estimate two BVARs using one lag, default settings and very few draws
+#' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+#' y <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 #'
-#' # Add second chain for further processing
-#' as.mcmc(x, vars = c("ml", "lambda"), chains = list(y = y))
+#' # Convert the hyperparameter lambda
+#' as.mcmc(x, vars = c("lambda"))
+#'
+#' # Convert coefficients for the first dependent across both runs
+#' as.mcmc(list(x, y), vars = "CPIAUCSL")
+#'
+#' # Convert the coefficents of variable three's first lag, also add y
+#' as.mcmc(x, vars = "FEDFUNDS-lag1", chains = y)
+#'
+#' # Convert hyperparameters and constant coefficient values for variable 1
+#' as.mcmc(x, vars = "lambda", "CPI", "constant")
+#'
+#' # Specify coefficent values to convert in alternative way
+#' as.mcmc(x, vars_impulse = c("FED", "CPI"), vars_response = "UNRATE")
 #' }
 NULL
 

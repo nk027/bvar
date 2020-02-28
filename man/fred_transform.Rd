@@ -3,7 +3,7 @@
 \name{fred_transform}
 \alias{fred_transform}
 \alias{fred_code}
-\title{FRED transformation and subsetting helper}
+\title{FRED transformation and subset helper}
 \usage{
 fred_transform(
   data,
@@ -37,9 +37,9 @@ See \code{\link[base]{diff}}.}
 transformation codes instead of just the codes.}
 }
 \value{
-\code{fred_transform} returns a \code{data.frame} object with
-applied transformations. \code{fred_code} returns transformation codes or
-a table of matching transformation codes.
+\code{\link{fred_transform}} returns a \code{data.frame} object with
+applied transformations. \code{\link{fred_code}} returns transformation
+codes, or a \code{data.frmae} of matching transformation codes.
 }
 \description{
 Apply transformations given by FRED-MD or FRED-QD and generate rectangular
@@ -69,8 +69,11 @@ the same series.
 # Transform a subset of FRED-QD
 fred_transform(fred_qd[, c("GDPC1", "INDPRO", "FEDFUNDS")])
 
-# Get transformation codes for unemployment variables
+# Get info on transformation codes for unemployment variables
 fred_code("UNRATE", table = TRUE)
+
+# Get the transformation code for GDPC1
+fred_code("GDPC1", type = "fred_qd")
 
 # Transform all of FRED-MD
 \dontrun{
@@ -78,5 +81,5 @@ fred_transform(fred_md, type = "fred_md")
 }
 }
 \seealso{
-\code{\link{fred_qd}};
+\code{\link{fred_qd}}
 }

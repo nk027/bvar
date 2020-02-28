@@ -62,19 +62,12 @@ Note the possiblity of finding no suitable sign restrictions.
 # (Identification is performed via Cholesky decomposition)
 bv_irf(horizon = 20, fevd = TRUE)
 
-# Identify impulse responses using sign restrictions
-data("fred_qd")
-data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
-data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
-data <- data[5:nrow(data), ]
+# Set up structural impulse responses using sign restrictions
+signs <- matrix(c(1, NA, NA, -1, 1, -1, -1, 1, 1), nrow = 3)
+bv_irf(sign_restr = signs)
 
-# Signs should be based on economic theory
-signs <- matrix(c(1, 1, -1, -1, 1, -1, -1, 1, 1), nrow = 3)
-
-irf_signs <- bv_irf(sign_restr = signs)
-\donttest{
-bvar(data, lags = 5, irf = irf_signs)
-}
+# Prepare to estimate unidentified impulse responses
+bv_irf(identification = FALSE)
 }
 \references{
 Rubio-Ramirez, J. F. and Waggoner, D. F. and Zha, T. (2010) Structural

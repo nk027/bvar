@@ -37,22 +37,31 @@
 #'
 #' @examples
 #' \donttest{
-#' data <- matrix(rnorm(400), ncol = 4)
-#' x <- bvar(data, lags = 2)
+#' # Access a subset of the fred_qd dataset
+#' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' # Transform it to be stationary
+#' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+#' data <- data[5:nrow(data), ]
 #'
-#' # Add IRFs
-#' x$irf <- irf(x)
+#' # Estimate a BVAR using one lag, default settings and very few draws
+#' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 #'
-#' # Access IRFs and update confidence bands
-#' irf(x, conf_bands = 0.01)
+#' # Calculate and store structural IRFs (via Cholesky decomposition)
+#' irf(x) <- irf(x, identification = TRUE)
 #'
-#' # Compute and store IRFs with a longer horizon
-#' x$irf <- irf(x, horizon = 24L)
+#' # Update the confidence bands of the IRFs
+#' irf(x, conf_bands = c(0.01, 0.05, 0.1))
 #'
-#' # Lower draws, use `bv_irf()` to set options and add confidence bands
-#' irf(x, bv_irf(24L), n_thin = 10L, conf_bands = c(0.05, 0.16))
+#' # Compute and store with a longer horizon, no identification and thinning
+#' irf(x) <- irf(x, bv_irf(horizon = 24L, identification = FALSE), n_thin = 10L)
 #'
-#' # Get a summary of the last saved IRFs
+#' # Recalculate with sign restrictions provided via the ellipsis
+#' irf(x, signs = matrix(c(1, NA, NA, -1, 1, -1, -1, 1, 1), nrow = 3))
+#'
+#' # Calculate the forecast error variance decomposition
+#' fevd(x)
+#'
+#' # Get a summary of the saved impulse response function
 #' summary(x)
 #'
 #' # Limit the summary to responses of variable #2

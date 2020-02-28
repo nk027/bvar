@@ -122,12 +122,13 @@ prep_data <- function(
 
   out_data <- cbind(out[["hyper"]], out[["betas"]])
   out_vars <- c(out_vars[["hyper"]], out_vars[["betas"]])
+  out_chains <- mapply(cbind,
+    out_chains[["hyper"]], out_chains[["betas"]], SIMPLIFY = FALSE)
+  out_chains <- lapply(out_chains, `colnames<-`, out_vars)
   colnames(out_data) <- out_vars
 
   out <- list(
-    "data" = out_data, "vars" = out_vars,
-    "chains" = mapply(cbind,
-      out_chains[["hyper"]], out_chains[["betas"]], SIMPLIFY = FALSE),
+    "data" = out_data, "vars" = out_vars, "chains" = out_chains,
     "bounds" = cbind(out_bounds[["hyper"]], out_bounds[["betas"]]))
 
   return(out)

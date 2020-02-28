@@ -15,9 +15,9 @@
 \arguments{
 \item{object}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
 
-\item{conf_bands}{Numeric vector of desired confidence bands to apply.
+\item{conf_bands}{Numeric vector of confidence bands to apply.
 E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-Note that the median, i.e. \code{0.5} is always included.}
+Note that the median, i.e. 0.5 is always included.}
 
 \item{...}{Graphical parameters for \code{\link[graphics]{par}}.}
 
@@ -33,17 +33,27 @@ Returns a numeric array of class \code{bvar_fitted} or
 \code{bvar_resid} with values at the specified confidence bands.
 }
 \description{
-Calculates fitted or residual values for Bayesian VARs generated with
+Calculates fitted or residual values for Bayesian VAR models generated with
 \code{\link{bvar}}.
 }
 \examples{
 \donttest{
-data <- matrix(rnorm(200), ncol = 2)
-x <- bvar(data, lags = 2)
+# Access a subset of the fred_qd dataset
+data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+# Transform it to be stationary
+data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+data <- data[5:nrow(data), ]
+
+# Estimate a BVAR using one lag, default settings and very few draws
+x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 
 # Get fitted values and adjust confidence bands to 10\%, 50\% and 90\%
 fitted(x, conf_bands = 0.10)
 
+# Get the residuals of variable 1
+resid(x, vars = 1)
+}
+\dontrun{
 # Get residuals and plot them
 plot(residuals(x))
 }

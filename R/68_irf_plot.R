@@ -33,23 +33,35 @@
 #'
 #' @examples
 #' \donttest{
-#' data <- matrix(rnorm(400), ncol = 4)
-#' x <- bvar(data, lags = 2, irf = bv_irf())
+#' # Access a subset of the fred_qd dataset
+#' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
+#' # Transform it to be stationary
+#' data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
+#' data <- data[5:nrow(data), ]
+#'
+#' # Estimate a BVAR using one lag, default settings and very few draws
+#' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+#'
+#' # Store IRFs ex-post
+#' irf(x) <- irf(x)
 #'
 #' # Plot impulse responses for all available variables
 #' plot(irf(x))
-#' # Alternatively
-#' plot(x$irf)
 #'
-#' # Subset to impulse variables in positions 2 and 4 via position and name
-#' plot(x$irf, vars_impulse = c(2, 4))
-#' plot(x$irf,
-#'   variables = c("solved", "for", "many", "decades"),
-#'   vars_impulse = c("for", "decades")
-#' )
+#' # Subset to impulse variables in positions 2 and 3 via their name
+#' plot(irf(x), vars_impulse = c(2, 3))
 #'
-#' # Adjust confidence bands via irf
-#' plot(irf(x, conf_bands = c(0.01, 0.05)))
+#' # Subset via position and increase the plotted IRF horizon
+#' plot(irf(x, horizon = 20), vars_impulse = c("UNRATE", "FED"))
+#'
+#' # Adjust confidence bands and subset to one response variables
+#' plot(irf(x, conf_bands = 0.25), vars_response = "CPI")
+#'
+#' # Draw areas inbetween the confidence bands and skip drawing lines
+#' plot(irf(x), col = "transparent", area = TRUE)
+#'
+#' # Subset to a specific impulse and response
+#' plot(irf(x), vars_response = "CPI", vars_impulse = "FED")
 #' }
 plot.bvar_irf <- function(
   x,

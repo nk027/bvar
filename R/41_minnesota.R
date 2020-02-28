@@ -55,15 +55,15 @@
 #'
 #' @examples
 #' # Adjust alpha and the Minnesota prior variance.
-#' bv_mn(
-#'   alpha = bv_alpha(mode = 0.5, sd = 1, min = 1e-12, max = 10),
-#'   var = 1e6
-#' )
+#' bv_mn(alpha = bv_alpha(mode = 0.5, sd = 1, min = 1e-12, max = 10), var = 1e6)
 #' # Optionally use a vector as shorthand
 #' bv_mn(alpha = c(0.5, 1, 1e-12, 10), var = 1e6)
 #'
 #' # Only adjust lambda's standard deviation
 #' bv_mn(lambda = bv_lambda(sd = 2))
+#'
+#' # Provide prior modes for psi (for a VAR with three variables)
+#' bv_mn(psi = bv_psi(mode = c(0.7, 0.3, 0.9)))
 bv_minnesota <- function(
   lambda = bv_lambda(),
   alpha = bv_alpha(),
@@ -130,10 +130,12 @@ bv_psi <- function(
 
     if(length(min) == 1 && min == "auto") {min <- mode / 100}
     if(length(max) == 1 && max == "auto") {max <- mode * 100}
-    min <- vapply(min, num_check, numeric(1L), min = 0, max = max - 1e-16,
+
+    min <- vapply(min, num_check, numeric(1L), min = 0, max = Inf,
       msg = "Invalid value(s) for min (outside of [0, max)).")
-    max <- vapply(max, num_check, numeric(1L), min = min + 1e-16, max = Inf,
+    max <- vapply(max, num_check, numeric(1L), min = 0, max = Inf,
       msg = "Invalid value(s) for max (outside of (min, Inf]).")
+    if(any(min >= max)) {stop("Invalid values for min / max.")}
 
   } else if(any(c(min != "auto", max != "auto"))) {
     stop("Boundaries are only adjustable with a given mode.")

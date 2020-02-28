@@ -41,6 +41,9 @@ McCracken, M. W. and Ng, S. (2016) FRED-MD: A Monthly Database for
   Macroeconomic Research. \emph{Journal of Business & Economic Statistics},
   \bold{34:4}, 574-589, \url{https://doi.org/10.1080/07350015.2015.1086655}.
 }
+\seealso{
+\code{\link{fred_transform}}
+}
 \keyword{FRED}
 \keyword{dataset}
 \keyword{datasets}

@@ -28,14 +28,14 @@
 #' @export
 #'
 #' @examples
-#' # Extending hyperparameters to the full Minnesota prior
-#' bv_priors(c("lambda", "alpha", "psi"))
+#' # Extend the hyperparameters to the full Minnesota prior
+#' bv_priors(hyper = c("lambda", "alpha", "psi"))
 #' # Alternatively
-#' bv_priors("full")
+#' # bv_priors("full")
 #'
-#' # Adding a dummy prior via `bv_dummy()`
+#' # Add a dummy prior via `bv_dummy()`
 #'
-#' # First create a single-unit-root prior
+#' # Re-create the single-unit-root prior
 #' add_sur <- function(Y, lags, par) {
 #'   sur <- if(lags == 1) {Y[1, ] / par} else {
 #'     colMeans(Y[1:lags, ]) / par
@@ -47,8 +47,8 @@
 #' }
 #' sur <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_sur)
 #'
-#' # Then add the prior to `bv_priors()`
-#' priors_dum <- bv_priors(hyper = "auto", sur = sur)
+#' # Add the new prior
+#' bv_priors(hyper = "auto", sur = sur)
 bv_priors <- function(
   hyper = "auto",
   mn = bv_mn(),

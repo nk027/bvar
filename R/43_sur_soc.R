@@ -1,5 +1,7 @@
 #' Sum-of-coefficients and single-unit-root prior creation functions
 #'
+#' @param Y Numeric matrix. Data to base the dummy observations on.
+#' @param lags Integer scalar. Lag order of the model.
 #' @param par Numeric scalar. Parameter value of the prior.
 #'
 #' @return Returns a list with \emph{Y} and \emph{X} extended with the
@@ -16,6 +18,7 @@
 }
 
 
+#' @rdname .add_soc
 #' @noRd
 .add_sur <- function(Y, lags, par) {
   sur <- if(lags == 1) {Y[1, ] / par} else {

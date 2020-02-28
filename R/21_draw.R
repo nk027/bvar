@@ -42,7 +42,5 @@ draw_post <- function(
 
   beta_draw <- beta_hat + crossprod(noise, sigma_chol)
 
-  return(
-    list("beta_draw" = beta_draw, "sigma_draw" = sigma_draw)
-  )
+  return(list("beta_draw" = beta_draw, "sigma_draw" = sigma_draw))
 }
