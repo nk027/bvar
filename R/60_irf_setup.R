@@ -1,6 +1,6 @@
 #' Impulse response settings
 #'
-#' Provide settings for the computation of impulse responses to
+#' Provides settings for the computation of impulse responses to
 #' \code{\link{bvar}}, \code{\link{irf.bvar}} or \code{\link{fevd.bvar}}. Allows
 #' setting the horizon for which impulse responses should be computed, whether
 #' or not forecast error variance decompositions (FEVDs) should be included
@@ -12,19 +12,21 @@
 #' Note the possiblity of finding no suitable sign restrictions.
 #'
 #' @param horizon Integer scalar. The horizon for which impulse responses
-#' (and FEVDs) should be computed.
+#' (and FEVDs) should be computed. Note that the first period corresponds to
+#' impacts i.e. contemporaneous effects.
 #' @param fevd Logical scalar. Whether or not forecast error variance
 #' decompositions should be calculated.
 #' @param identification Logical scalar. Whether or not the shocks used for
 #' calculating impulses should be identified. Defaults to \code{TRUE}, i.e.
-#' identification via Cholesky decomposition unless \emph{sign_restr} is
-#' provided.
+#' identification via Cholesky decomposition of the VCOV-matrix unless
+#' \emph{sign_restr} is provided.
 #' @param sign_restr Numeric matrix. Sign restrictions for identification.
 #' Elements should be set to \eqn{1} (\eqn{-1}) to restrict for positive
 #' (negative) impacts. If no presumption about the impact can be made the
 #' corresponding elements can be set to \eqn{NA}. The default value is
 #' \code{NULL}, meaning identification would be performed via Cholesky
-#' decomposition.
+#' decomposition. Note that in order to be fully identified at least
+#' \equ{M * (M - 1) / 2} restrictions have to be set.
 #' @param zero_restr Numeric matrix. Zero and sign restrictions for
 #' identification. \emph{Currently not functional.}
 #' @param sign_lim Integer scalar. Maximum number of rotational matrices to
@@ -39,7 +41,7 @@
 #'   Inference. \emph{The Review of Economic Studies}, \bold{77}, 665-696,
 #'   \url{https://doi.org/10.1111/j.1467-937X.2009.00578.x}.
 #'
-#' @seealso \\code{\link{irf.bvar}}; \code{\link{plot.bvar_irf}}
+#' @seealso \code{\link{irf.bvar}}; \code{\link{plot.bvar_irf}}
 #'
 #' @keywords VAR BVAR irf impulse responses fevd settings
 #'
@@ -93,6 +95,10 @@ bv_irf <- function(
       warning("Please set unrestricted elements to NA instead of 0. ",
         "This functionality is being deprecated for zero-sign restrictions.")
       sign_restr[sign_restr == 0] <- NA_integer_
+    }
+    if(sum(!is.na(sign_restr)) < (sqrt(length(sign_restr)) - 1) *
+                                  sqrt(length(sign_restr)) / 2) {
+      warning("Number of restrictions implies underidentified system.")
     }
     if(is.vector(sign_restr)) {
       sign_restr <- matrix(sign_restr, nrow = sqrt(length(sign_restr)))

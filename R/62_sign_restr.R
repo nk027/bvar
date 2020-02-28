@@ -8,18 +8,21 @@
 #' @param sigma_chol Numeric matrix. Lower part of the Cholesky decomposition
 #' of \emph{sigma}. Calculated as \code{t(chol(sigma))}.
 #' @param sign_restr Numeric matrix. Elements inform about expected impacts
-#' of certain shocks. Can be either 1, -1 or 0, depending on whether a
-#' positive, a negative or no contemporaneous effect of a certain shock is
-#' expected.
-#' @param M Integer scalar. Columns of \emph{X}.
+#' of certain shocks. Can be either \eqn{1}, \eqn{-1} or \eqn{NA} depending on
+#' whether a positive, a negative or no contemporaneous effect of a certain
+#' shock is expected.
+#' @param M Integer scalar. Columns of \emph{Y}.
 #' @param sign_lim Integer scalar. Maximum number of rotational matrices to
 #' draw and check for fitting sign restrictions.
 #'
-#' @return Returns a matrix used as shock for computation of impulse responses,
+#' @return Returns a matrix used as shock for computation of impulse responses
 #' that is identified via sign restrictions.
 #'
 #' @references
-#'     Rubio-Ramirez, J. F., Waggoner, D. F., & Zha, T. (2010). Structural Vector Autoregressions: Theory of Identification and Algorithms for Inference. The Review of Economic Studies, 77, 665-696. \url{https://doi.org/10.1111/j.1467-937X.2009.00578.x}
+#'   Rubio-Ramirez, J. F. and Waggoner, D. F. and Zha, T. (2010) Structural
+#'   Vector Autoregressions: Theory of Identification and Algorithms for
+#'   Inference. \emph{The Review of Economic Studies}, \bold{77}, 665-696,
+#'   \url{https://doi.org/10.1111/j.1467-937X.2009.00578.x}.
 #'
 #' @importFrom stats rnorm
 #'
@@ -45,7 +48,7 @@ sign_restr <- function(sigma_chol, sign_restr, M, sign_lim = 10000) {
 
     if(identical(shock_vec[restricted], sign_vec[restricted])) {return(shock)}
     if(counter > sign_lim) {
-      stop("No matrix fitting the sign-restrictions found.")
+      stop("No matrix fitting the sign restrictions found.")
     }
   }
 }

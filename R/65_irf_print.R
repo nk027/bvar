@@ -60,7 +60,7 @@ print_irf <- function(x, ...) {
     } else {
       cat("Sign restrictions", "\nChosen restrictions:\n", sep = "")
       sign_restr <- apply(x[["sign_restr"]], 2, factor,
-        levels = c(-1, 0, 1), labels = c("-", "0", "+"))
+        levels = c(-1, NA, 1), labels = c("-", "NA", "+"))
       if(length(sign_restr) < 10 ^ 2) {
         cat("\t\t\tShock to\n\t\t\t", # Use cat cause it's nice
           paste0("Var", 1:nrow(sign_restr), sep = "\t"),
