@@ -26,7 +26,7 @@
 #' column names are used to find the correct transformation.
 #' @param type Character scalar. Whether \emph{data} stems from the FRED-QD or
 #' the FRED-MD database.
-#' @param code Integer vector. Transformation code(s) to apply to \emph{data}.
+#' @param codes Integer vector. Transformation code(s) to apply to \emph{data}.
 #' Overrides automatic lookup of transformation codes.
 #' @param na.rm Logical scalar. Whether to subset to rows without any
 #' \code{NA} values. A warning is thrown if rows are non-sequential.
@@ -108,6 +108,7 @@ fred_transform <- function(
 
 
 #' @rdname fred_transform
+#' @export
 #'
 #' @importFrom utils read.table
 fred_code <- function(vars, type = c("fred_qd", "fred_md"), table = FALSE) {

@@ -36,9 +36,9 @@ Arguments are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}.
 May also be provided as a numeric vector of length 4.}
 
 \item{alpha}{List constructed via \code{\link{bv_alpha}}.
-Arguments are \emph{mode}, \emph{min} and \emph{max}. High values for
-\emph{mode} may affect invertibility of the augmented data matrix.
-May also be provided as a mumeric vector of length 4.}
+Arguments are \emph{mode}, \emph{sd}, \emph{min} and \emph{max}. High values
+for \emph{mode} may affect invertibility of the augmented data matrix.
+May also be provided as a numeric vector of length 4.}
 
 \item{psi}{List with elements \emph{scale}, \emph{shape} of the prior
 as well as \emph{mode} and optionally \emph{min} and \emph{max}. The length
@@ -74,8 +74,8 @@ Details section for further information.
 \details{
 Essentially this prior imposes the hypothesis, that the individual variables
 all follow random walk processes. This parsimonious specification typically
-performs well in forecasts of macroeconomic time series and is often used
-as a benchmark for evaluating accuracy (Kilian and Lütkepohl, 2017).
+performs well in forecasts of macroeconomic time series and is often used as
+a benchmark for evaluating accuracy (Kilian and Lütkepohl, 2017).
 The key parameter is \eqn{\lambda} (\emph{lambda}), which controls the
 tightness of the prior. The parameter \eqn{\alpha} (\emph{alpha}) governs
 variance decay with increasing lag order, while \eqn{\psi} (\emph{psi}

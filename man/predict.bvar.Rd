@@ -29,7 +29,7 @@ is used for forecasting, others are dropped.}
 \item{newdata}{Optional numeric matrix or dataframe. Used to base the
 prediction on. Fitted values are used by default.}
 
-\item{value}{yes}
+\item{value}{A \code{bvar_fcast} object to assign.}
 
 \item{vars}{Optional numeric or character vector. Used to subset the summary
 to certain variables by position or name (must be available). Defaults to

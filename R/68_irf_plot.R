@@ -142,7 +142,7 @@ plot_irf <- function(
 #' @param ... Other graphical parameters for \code{\link[graphics]{par}}.
 #'
 #' @importFrom graphics par grid abline polygon
-#' @importFrom stats ts.plot
+#' @importFrom stats ts.plot ts
 #'
 #' @noRd
 .plot_irf <- function(
