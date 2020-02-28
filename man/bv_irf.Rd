@@ -15,22 +15,24 @@ bv_irf(
 }
 \arguments{
 \item{horizon}{Integer scalar. The horizon for which impulse responses
-(and FEVDs) should be computed.}
+(and FEVDs) should be computed. Note that the first period corresponds to
+impacts i.e. contemporaneous effects.}
 
 \item{fevd}{Logical scalar. Whether or not forecast error variance
 decompositions should be calculated.}
 
 \item{identification}{Logical scalar. Whether or not the shocks used for
 calculating impulses should be identified. Defaults to \code{TRUE}, i.e.
-identification via Cholesky decomposition unless \emph{sign_restr} is
-provided.}
+identification via Cholesky decomposition of the VCOV-matrix unless
+\emph{sign_restr} is provided.}
 
 \item{sign_restr}{Numeric matrix. Sign restrictions for identification.
-Elements should be set to \eqn{1} (\eqn{-1}) to restrict for positive
+Elements should be set to 1 (-1) to restrict for positive
 (negative) impacts. If no presumption about the impact can be made the
-corresponding elements can be set to \eqn{NA}. The default value is
+corresponding elements can be set to \code{NA}. The default value is
 \code{NULL}, meaning identification would be performed via Cholesky
-decomposition.}
+decomposition. Note that in order to be fully identified at least
+\eqn{M * (M - 1) / 2} restrictions have to be set.}
 
 \item{zero_restr}{Numeric matrix. Zero and sign restrictions for
 identification. \emph{Currently not functional.}}
@@ -43,7 +45,7 @@ Returns a named list of class \code{bv_irf} with options for
 \code{\link{bvar}}, \code{\link{irf.bvar}} or \code{\link{fevd.bvar}}.
 }
 \description{
-Provide settings for the computation of impulse responses to
+Provides settings for the computation of impulse responses to
 \code{\link{bvar}}, \code{\link{irf.bvar}} or \code{\link{fevd.bvar}}. Allows
 setting the horizon for which impulse responses should be computed, whether
 or not forecast error variance decompositions (FEVDs) should be included
@@ -52,7 +54,7 @@ and if and what kind of identification should be used.
 \details{
 Identification can be performed via Cholesky decomposition and sign
 restrictions. The algorithm for generating suitable sign restrictions
-follows Rubio-Ramirez et al. (2010).
+follows Rubio-Ramirez, Waggoner and Zha (2010).
 Note the possiblity of finding no suitable sign restrictions.
 }
 \examples{
@@ -81,7 +83,7 @@ Rubio-Ramirez, J. F. and Waggoner, D. F. and Zha, T. (2010) Structural
   \url{https://doi.org/10.1111/j.1467-937X.2009.00578.x}.
 }
 \seealso{
-\\code{\link{irf.bvar}}; \code{\link{plot.bvar_irf}}
+\code{\link{irf.bvar}}; \code{\link{plot.bvar_irf}}
 }
 \keyword{BVAR}
 \keyword{VAR}

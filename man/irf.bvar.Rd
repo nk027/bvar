@@ -37,6 +37,10 @@ Note that the median, i.e. \code{0.5} is always included.}
 for calculations, others are dropped.}
 
 \item{value}{A \code{bvar_irf} object to assign.}
+
+\item{vars_impulse, vars_response}{Optional numeric or character vector.
+Used to subset the summary method's outputs to certain variables by position
+or name (must be available). Defaults to \code{NULL}, i.e. all variables.}
 }
 \value{
 Returns a list of class \code{bvar_irf} including IRFs and optionally

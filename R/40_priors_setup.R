@@ -3,9 +3,9 @@
 #' Function to provide priors and their parameters to \code{\link{bvar}}. Used
 #' for adjusting the parameters treated as hyperparameters, the Minnesota prior
 #' and adding various dummy priors through the ellipsis parameter.
-#' Note that treating \eqn{\psi} (\emph{psi}) as a hyperparameter in a model
-#' with many variables may lead to very low acceptance rates and thus hinder
-#' convergence.
+#' Note that treating \eqn{\psi}{psi} (\emph{psi}) as a hyperparameter in a
+#' model with many variables may lead to very low acceptance rates and thus
+#' hinder convergence.
 #'
 #' @param hyper Character vector. Used to specify the parameters to be treated
 #' as hyperparameters. May also be set to \code{"auto"} or \code{"full"} for

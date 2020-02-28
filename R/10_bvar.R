@@ -6,7 +6,8 @@
 #' The Metropolis-Hastings step can be modified with \code{\link{bv_mh}}.
 #'
 #' The model can be expressed as:
-#' \eqn{y_t = a_0 + A_1 y_{t-1} + ... + A_p y_{t-p} + \epsilon_t}
+#' \deqn{y_t = a_0 + A_1 y_{t-1} + ... + A_p y_{t-p} + \epsilon_t}{y_t = a_0 +
+#' A_1 y_{t-1} + ... + A_p y_{t-p} + e_t}
 #' See Kuschnig and Vashold (2019) and Giannone, Lenza and Primiceri (2015)
 #' for further information.
 #' Methods for a \code{bvar} object and its derivatives can be used to:

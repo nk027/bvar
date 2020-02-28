@@ -27,17 +27,19 @@ dummy <- function(
 #'
 #' Dummy priors are often used to "reduce the importance of the deterministic
 #' component implied by VARs estimated conditioning on the initial
-#' observations" (Giannone et al. 2015, p. 440). One such prior is the
-#' sum-of-coefficients (SOC) prior, which imposes the notion that a no-change
-#' forecast is optimal at the beginning of a time series. Its key parameter
-#' \eqn{\mu} controls the tightness - i.e. for low values the model is pulled
-#' towards a form with as many unit roots as variables and no cointegration.
+#' observations" (Giannone et al. 2015, p. 440).
+#' One such prior is the sum-of-coefficients (SOC) prior, which imposes the
+#' notion that a no-change forecast is optimal at the beginning of a time
+#' series. Its key parameter \eqn{\mu}{mu} controls the tightness - i.e. for
+#' low values the model is pulled towards a form with as many unit roots as
+#' variables and no cointegration.
 #' Another such prior is the single-unit-root (SUR) prior, that allows for
 #' cointegration relationships in the data. It pushes variables either towards
 #' their unconditional mean or towards the presence of at least one unit root.
 #' These priors are implemented via Theil mixed estimation, i.e. by adding
-#' dummy-observations on top of the data matrix. They are readily available
-#' via the shorthand functions \code{\link{bv_soc}} and \code{\link{bv_sur}}.
+#' dummy-observations on top of the data matrix.
+#' They are available via the functions \code{\link{bv_soc}} and
+#' \code{\link{bv_sur}}.
 #'
 #' @param fun Function taking \emph{Y}, \emph{lags} and the prior's parameter
 #' \emph{par} to generate and return a named list with elements \emph{X} and

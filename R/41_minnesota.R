@@ -7,11 +7,11 @@
 #' all follow random walk processes. This parsimonious specification typically
 #' performs well in forecasts of macroeconomic time series and is often used as
 #' a benchmark for evaluating accuracy (Kilian and Lütkepohl, 2017).
-#' The key parameter is \eqn{\lambda} (\emph{lambda}), which controls the
-#' tightness of the prior. The parameter \eqn{\alpha} (\emph{alpha}) governs
-#' variance decay with increasing lag order, while \eqn{\psi} (\emph{psi}
-#' controls the prior's standard deviation on lags of variables other than
-#' the dependent.
+#' The key parameter is \eqn{\lambda}{lambda} (\emph{lambda}), which controls
+#' the tightness of the prior. The parameter \eqn{\alpha}{alpha} (\emph{alpha})
+#' governs variance decay with increasing lag order, while \eqn{\psi}{psi}
+#' (\emph{psi} controls the prior's standard deviation on lags of variables
+#' other than the dependent.
 #' The Minnesota prior is often refined with additional priors, trying to
 #' minimise the importance of conditioning on initial observations. See
 #' \code{\link{bv_dummy}} for more information on such priors.
@@ -27,8 +27,8 @@
 #' as well as \emph{mode} and optionally \emph{min} and \emph{max}. The length
 #' of these needs to match the number of variables (i.e. columns) in the data.
 #' By default \emph{mode} is set automatically to the square-root of the
-#' innovations variance after fitting an \eqn{AR(p)} model to the data. If
-#' \code{\link[stats]{arima}} fails due to a non-stationary time series the
+#' innovations variance after fitting an \eqn{AR(p)}{AR(p)} model to the data.
+#' If \code{\link[stats]{arima}} fails due to a non-stationary time series the
 #' order of integration is incremented by 1. By default \emph{min} / \emph{max}
 #' are set to \emph{mode} divided / multiplied by 100.
 #' @param var Numeric scalar with the prior variance on the model's constant.
