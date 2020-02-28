@@ -80,7 +80,7 @@ plot(predict(x))
 plot(predict(x), vars = c("CPI", "FED"))
 
 # Subset via position, increase the plotted forecast horizon and past data
-plot(predict(x, horizon = 20), vars = c(1, 4), t_back = 10)
+plot(predict(x, horizon = 20), vars = c(1, 3), t_back = 10)
 
 # Adjust confidence bands and the plot's orientation
 plot(predict(x, conf_bands = 0.25), orientation = "h")

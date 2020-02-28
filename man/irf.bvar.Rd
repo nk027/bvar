@@ -80,7 +80,7 @@ irf(x, conf_bands = c(0.01, 0.05, 0.1))
 irf(x) <- irf(x, bv_irf(horizon = 24L, identification = FALSE), n_thin = 10L)
 
 # Recalculate with sign restrictions provided via the ellipsis
-irf(x, signs = matrix(c(1, NA, NA, -1, 1, -1, -1, 1, 1), nrow = 3))
+irf(x, sign_restr = matrix(c(1, NA, NA, -1, 1, -1, -1, 1, 1), nrow = 3))
 
 # Calculate the forecast error variance decomposition
 fevd(x)

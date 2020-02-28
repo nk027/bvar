@@ -70,7 +70,7 @@ predict(x) <- predict(x, conf_bands = c(0.05, 0.16))
 predict(x, bv_fcast(24L), n_thin = 10L)
 
 # Simulate some new data to predict on
-predict(x, newdata = matrix(rnorm(200), ncol = 2))
+predict(x, newdata = matrix(rnorm(300), ncol = 3))
 
 # Calculate a conditional forecast (with a constrained second variable).
 predict(x, cond_path = c(1, 1, 1, 1, 1, 1), cond_var = 2)

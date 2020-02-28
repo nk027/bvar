@@ -1,4 +1,4 @@
-#' Impulse response settings
+#' Impulse response settings and identification
 #'
 #' Provides settings for the computation of impulse responses to
 #' \code{\link{bvar}}, \code{\link{irf.bvar}} or \code{\link{fevd.bvar}}. Allows
