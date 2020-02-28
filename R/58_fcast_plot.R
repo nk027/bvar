@@ -13,7 +13,7 @@
 #' intervals. Single values will be recycled if necessary. Recycled HEX color
 #' codes are varied in transparency if not provided (e.g. "#737373FF"). Lines
 #' can be bypassed by setting this to \code{"transparent"}.
-#' @param t_back Integer scalar. Number of actual datapoints to plot ahead of
+#' @param t_back Integer scalar. Number of observed datapoints to plot ahead of
 #' the forecast.
 #' @param area Logical scalar. Whether to fill the credible intervals using
 #' \code{\link[graphics]{polygon}}.
