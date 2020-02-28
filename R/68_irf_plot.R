@@ -9,7 +9,7 @@
 #' of desired confidence bands.
 #' @param vars_impulse,vars_response Optional numeric or character vector. Used
 #' to subset the plot's impulses / responses to certain variables by position
-#' or name (must be available). Defaults to \code{NULL}, i.e. all variables.
+#' or name (must be available). Default to \code{NULL}, i.e. all variables.
 #' @param col Character vector. Colour(s) of the lines delineating credible
 #' intervals. Single values will be recycled if necessary. Recycled HEX color
 #' codes are varied in transparency if not provided (e.g. "#737373FF"). Lines
@@ -156,14 +156,14 @@ plot_irf <- function(
 
   if(area) {
     P <- dim(x)[1]
-    x_vals <- c(seq(dim(x)[3]) - 1, rev(seq(dim(x)[3]) - 1))
+    x_vals <- c(seq(dim(x)[3]), rev(seq(dim(x)[3])))
   }
   mid <- length(col) %/% 2 + 1
 
   op <- par(mfrow = mfrow, mar = mar, ...)
   for(i in pos_res) {
     for(j in pos_imp) {
-      ts.plot(ts(t(as.matrix(x[, i, , j])), start = 0), col = col, lty = 1,
+      ts.plot(t(as.matrix(x[, i, , j])), col = col, lty = 1,
         main = paste("Shock", variables[j], "on", variables[i]))
       # Fill areas
       if(area) {for(k in seq(P - 1)) {
@@ -172,7 +172,7 @@ plot_irf <- function(
       }}
       grid()
       abline(h = 0, lty = "dashed", col = "gray")
-      lines(ts(x[mid, i, , j], start = 0), col = col[mid])
+      lines(x[mid, i, , j], col = col[mid])
     }
   }
   par(op)
