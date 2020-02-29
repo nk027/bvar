@@ -40,7 +40,7 @@ rmvn_proposal <- function(n, mean, sigma) {
 
 
 #' @noRd
-rmvn_inv <- function(n, sigma_inv, method = c("eigen", "chol")) {
+rmvn_inv <- function(n, sigma_inv, method) {
 
   if(method == "eigen") {
     # Spectral  ---

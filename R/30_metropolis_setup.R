@@ -54,7 +54,7 @@ bv_metropolis <- function(
   scale_hess <- num_check(scale_hess, 1e-16, 1e16,
     "Issue with scale_hess, please check the parameter again.")
 
-  if(adjust_acc) {
+  if(isTRUE(adjust_acc)) {
     adjust_burn <- num_check(adjust_burn, 1e-16, 1, "Issue with adjust_burn.")
     acc_lower <- num_check(acc_lower, 0, 1 - 1e-16, "Issue with acc_lower.")
     acc_upper <- num_check(acc_upper, acc_lower, 1, "Issue with acc_upper.")

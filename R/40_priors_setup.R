@@ -56,7 +56,7 @@ bv_priors <- function(
 
   # Check inputs ---
 
-  if(!is.null(mn) && !inherits(mn, "bv_minnesota")) {
+  if(!inherits(mn, "bv_minnesota")) { # Require Minnesota prior
     stop("Please use `bv_mn()` to set the Minnesota prior.")
   }
   dots <- list(...)

@@ -75,6 +75,8 @@ bv_minnesota <- function(
   lambda <- lazy_priors(lambda)
   alpha <- lazy_priors(alpha)
   if(!inherits(psi, "bv_psi")) {stop("Please use `bv_psi()` to set psi.")}
+  var <- num_check(var, min = 1e-16, max = Inf,
+    msg = "Issue with the prior variance var.")
 
   # Outputs
   out <- structure(list(

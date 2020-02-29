@@ -19,6 +19,7 @@ expect_error(BVAR:::auto_psi(cbind(rep(1, 100), rnorm(100))))
 expect_message(BVAR:::auto_psi(cbind(c(2, 1, 1, 3), c(1, 2, 0, 2)), lags = 1))
 expect_silent(BVAR:::auto_psi(cbind(c(2, 1, 1, 2), c(1, 2, 0, 2)), lags = 1))
 
+
 # 12_aux.R ---
 
 expect_equal(
@@ -100,3 +101,15 @@ expect_equal(BVAR:::quantile_check(0.1), c(0.1, 0.5, 0.9))
 expect_equal(
   BVAR:::quantile_check(c(0.6, 0.4, 0.3)),
   c(0.3, 0.4, 0.5, 0.6, 0.7))
+
+
+# 13_mvtnorm.R ---
+
+sigma <- matrix(c(1, 0.2, 0.1, 0, 1, 0.2, 0, 0, 1), nrow = 3)
+sigma <- crossprod(sigma)
+
+expect_silent(BVAR:::rmvn_proposal(1, mean = 0.5, sigma = list("values" = 1)))
+expect_silent(BVAR:::rmvn_proposal(1, mean = 2, sigma = eigen(sigma)))
+expect_silent(BVAR:::rmvn_inv(1, sigma_inv = solve(sigma), method = "eigen"))
+expect_silent(BVAR:::rmvn_inv(1, sigma_inv = solve(sigma), method = "chol"))
+expect_error(BVAR:::rmvn_inv(1, sigma_inv = solve(sigma), method = "svd"))
