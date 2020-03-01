@@ -96,7 +96,7 @@ bv_mn <- bv_minnesota
 #' @export
 bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 5) {
 
-  if(sd <= 0) {stop("Parameter sd misspecified.")}
+  sd <- num_check(sd, min = 0, max = Inf, msg = "Parameter sd misspecified.")
 
   return(
     dummy(mode, min, max, sd = sd, coef = gamma_coef(mode = mode, sd = sd))
@@ -120,9 +120,9 @@ bv_psi <- function(
 
   # Checks ---
 
-  scale <- num_check(scale, min = 0 + 1e-16, max = Inf,
+  scale <- num_check(scale, min = 1e-16, max = Inf,
     msg = "Invalid value for scale (outside of (0, Inf]")
-  shape <- num_check(shape, min = 0 + 1e-16, max = Inf,
+  shape <- num_check(shape, min = 1e-16, max = Inf,
     msg = "Invalid value for shape (outside of (0, Inf]")
 
   # Check mode, min and max
@@ -137,7 +137,9 @@ bv_psi <- function(
       msg = "Invalid value(s) for min (outside of [0, max)).")
     max <- vapply(max, num_check, numeric(1L), min = 0, max = Inf,
       msg = "Invalid value(s) for max (outside of (min, Inf]).")
-    if(any(min >= max)) {stop("Invalid values for min / max.")}
+    if(any(min >= max) || any(min > mode) || any(mode > max)) {
+      stop("Invalid values for min / max.")
+    }
 
   } else if(any(c(min != "auto", max != "auto"))) {
     stop("Boundaries are only adjustable with a given mode.")
