@@ -53,13 +53,13 @@ expect_silent(priors <- bv_priors(hyper = "auto", mn = mn,
 expect_silent(bv_mn(lambda = c(0.2, 0.4, 1e-6, 5),
   alpha = c(1.5, 0.5, 0.1, 5), var = 100))
 expect_silent(bv_mn(psi = bv_psi(scale = 0.2, shape = 0.2,
-  mode = c(1, 1.5, 1,2, 0.4), min = rep(0.001, 4))))
+  mode = c(1, 1.5, 1.2, 0.4), min = rep(0.001, 4))))
 expect_silent(bv_mn(psi = bv_psi(scale = 0.2, shape = 0.2,
-  mode = c(1, 1.5, 1,2, 0.4), max = rep(1000, 4))))
+  mode = c(1, 1.5, 1.2, 0.4), max = rep(1000, 4))))
 
 expect_error(bv_priors(mn = bv_lambda(sd = 0)))
 expect_error(bv_priors(mn = bv_mn(), dummy = list("mode" = 1, "sd" = 1)))
-expect_error(bv_priors(hyper = c("lambda", "alpha", "sur"), sur = bv_sur()))
+expect_error(bv_priors(hyper = c("lambda", "alpha", "soc"), sur = bv_sur()))
 
 expect_error(bv_mn(alpha = c(2, 1)))
 expect_error(bv_mn(lambda = bv_lambda(mode = 0.4, sd = 0)))
@@ -70,8 +70,8 @@ expect_error(bv_mn(bv_psi(mode = c(1, 2, 0))))
 expect_error(bv_mn(bv_psi(mode = c(1, 2, 1), min = c(0.1, 0.1))))
 expect_error(bv_mn(bv_psi(mode = c(1, 2), min = c(0.1, 0.5), max = c(1, 0.1))))
 
-expect_silent(bv_dummy(mode = 2, sd = 2))
-expect_silent(bv_dummy(min = 2, max = 1))
+expect_error(bv_dummy(mode = 2, sd = 0))
+expect_error(bv_dummy(min = 2, max = 1))
 
 
 # 5*_fcast ---

@@ -2,7 +2,7 @@
 % Please edit documentation in R/60_irf_setup.R
 \name{bv_irf}
 \alias{bv_irf}
-\title{Impulse response settings}
+\title{Impulse response settings and identification}
 \usage{
 bv_irf(
   horizon = 12,

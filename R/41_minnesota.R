@@ -96,7 +96,8 @@ bv_mn <- bv_minnesota
 #' @export
 bv_lambda <- function(mode = 0.2, sd = 0.4, min = 0.0001, max = 5) {
 
-  sd <- num_check(sd, min = 0, max = Inf, msg = "Parameter sd misspecified.")
+  sd <- num_check(sd, min = 0 + 1e-16, max = Inf,
+    msg = "Parameter sd misspecified.")
 
   return(
     dummy(mode, min, max, sd = sd, coef = gamma_coef(mode = mode, sd = sd))

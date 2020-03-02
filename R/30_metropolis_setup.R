@@ -51,8 +51,9 @@ bv_metropolis <- function(
   acc_lower = 0.25, acc_upper = 0.35,
   acc_change = 0.01) {
 
-  scale_hess <- num_check(scale_hess, 1e-16, 1e16,
-    "Issue with scale_hess, please check the parameter again.")
+  scale_hess <- vapply(scale_hess, num_check, numeric(1L),
+    min = 1e-16, max = 1e16,
+    msg = "Issue with scale_hess, please check the parameter again.")
 
   if(isTRUE(adjust_acc)) {
     adjust_burn <- num_check(adjust_burn, 1e-16, 1, "Issue with adjust_burn.")
