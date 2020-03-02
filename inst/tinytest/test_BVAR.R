@@ -33,10 +33,6 @@ expect_error(bv_mh(adjust_acc = TRUE, acc_change = -1))
 
 # 4*_priors.R ---
 
-expect_equal(
-  bv_priors(hyper = c("lambda", "alpha", "psi")),
-  bv_priors(hyper = c("full")))
-
 expect_silent(bv_minnesota(lambda = bv_lambda(0.25, sd = 0.4),
   alpha = bv_alpha(mode = 1.5, min = 0.5, max = 5), var = 1e06))
 expect_silent(mn <- bv_mn(lambda = bv_lambda(0.2, sd = 0.4, max = 4.5),
@@ -49,6 +45,9 @@ expect_silent(bv_sur(mode = 2, sd = 1, min = 0.01, max = 50))
 
 expect_silent(priors <- bv_priors(hyper = "auto", mn = mn,
   sur = bv_sur(), soc = bv_soc(), custom = dummy))
+expect_equal(
+  bv_priors(hyper = c("lambda", "alpha", "psi")),
+  bv_priors(hyper = c("full")))
 
 expect_silent(bv_mn(lambda = c(0.2, 0.4, 1e-6, 5),
   alpha = c(1.5, 0.5, 0.1, 5), var = 100))
@@ -57,24 +56,41 @@ expect_silent(bv_mn(psi = bv_psi(scale = 0.2, shape = 0.2,
 expect_silent(bv_mn(psi = bv_psi(scale = 0.2, shape = 0.2,
   mode = c(1, 1.5, 1.2, 0.4), max = rep(1000, 4))))
 
+# Faulty sd, dummy prior and hyperparameters
 expect_error(bv_priors(mn = bv_lambda(sd = 0)))
 expect_error(bv_priors(mn = bv_mn(), dummy = list("mode" = 1, "sd" = 1)))
 expect_error(bv_priors(hyper = c("lambda", "alpha", "soc"), sur = bv_sur()))
 
+# Wrong format for alpha, faulty sd and var
 expect_error(bv_mn(alpha = c(2, 1)))
 expect_error(bv_mn(lambda = bv_lambda(mode = 0.4, sd = 0)))
 expect_error(bv_mn(var = -1))
 
+# Boundaries w/o mode, faulty mode, wrong length, wrong boundaries
 expect_error(bv_mn(bv_psi(min = c(0, 0), max = c(1, 1))))
 expect_error(bv_mn(bv_psi(mode = c(1, 2, 0))))
 expect_error(bv_mn(bv_psi(mode = c(1, 2, 1), min = c(0.1, 0.1))))
 expect_error(bv_mn(bv_psi(mode = c(1, 2), min = c(0.1, 0.5), max = c(1, 0.1))))
 
+# Faulty sd, wrong boundaries
 expect_error(bv_dummy(mode = 2, sd = 0))
 expect_error(bv_dummy(min = 2, max = 1))
 
 
 # 5*_fcast ---
+
+expect_silent(bv_fcast(horizon = 2020))
+expect_silent(bv_fcast(cond_path = c(2, 2, 2, 2), cond_vars = 1))
+expect_silent(bv_fcast(cond_path = c(2, 2, 2, 2), cond_vars = "FEDFUNDS"))
+expect_silent(bv_fcast(cond_path = matrix(rep(2, 6), nrow = 3)))
+expect_silent(bv_fcast(
+  cond_path = matrix(c(2, 2, NA, NA, 1.5, NA, NA, NA, 1, 1.2, 1.5), nrow = 3)))
+
+expect_message(bv_fcast(horizon = 4, cond_path = rep(2, 6), cond_vars = 1))
+expect_error(bv_fcast(cond_path = matrix(rnorm(9), nrow = 3),
+  cond_vars = c(1, 1)))
+expect_error(bv_fcast(cond_path = matrix(rnorm(9), nrow = 3),
+  cond_vars = c("FEDFUNDS", "FEDFUNDS")))
 
 # 6*_irf ---
 

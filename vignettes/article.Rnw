@@ -59,23 +59,32 @@ library("MASS")
 \Plaintitle{BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R}
 \Shorttitle{\pkg{BVAR}: Hierarchical Bayesian VARs in \proglang{R}}
 
+% \Volume{1}
+% \Issue{1}
+% \Month{1}
+% \Year{1}
+% \Submitdate{2019-06-30}
+% \Acceptdate{1970-01-01}
+
 %% - \Abstract{} almost as usual
 \Abstract{
-  Vector autoregression (VAR) models are widely used models for multivariate time series analysis, but often suffer from their dense parameterization. Bayesian methods are commonly employed as a remedy by imposing shrinkage on the model coefficients via informative priors, thereby reducing parameter uncertainty. The subjective choice of the degree of informativeness implied by these priors is often criticized and can be alleviated via hierarchical modeling. This paper introduces \pkg{BVAR}, an \proglang{R} package dedicated to the estimation of Bayesian VAR models in a hierarchical fashion. It incorporates functionalities that permit addressing a wide range of research problems while retaining an easy-to-use and transparent interface. It features the most commonly used priors in the context of multivariate time series analysis as well as an extensive set of standard methods for analysis. Further functionalities include a framework for defining custom dummy-observation priors, the computation of impulse response functions, forecast error variance decompositions and forecasts.
+Vector autoregression (VAR) models are widely used models for multivariate time series analysis in macroeconomics, finance, and related fields. Bayesian methods are used to deal with their dense paramterization, imposing shrinkage on model coefficients via informative priors. The optimal choice of the degree of informativeness implied by these priors is the subject of much debate, and can be approached with hierarchical modelling.
+This paper introduces \pkg{BVAR}, an \proglang{R} package dedicated to the estimation of Bayesian VAR models with hierarchical prior selection. It implements functionality and options that permit addressing a wide range of research problems while retaining an easy-to-use and transparent interface. Features include structural analysis of impulse responses, forecasts, some of the most commonly used conjugate priors, as well as a framework for defining custom dummy-observation priors.
+\pkg{BVAR} makes Bayesian VAR models user-friendly and provides an accessible, reproducible reference implementation.
 }
 
 %% - \Keywords{} with LaTeX markup, at least one required
 %% - \Plainkeywords{} without LaTeX markup (if necessary)
 %% - Should be comma-separated and in sentence case.
-\Keywords{Vector autoregressive, Bayesian, multivariate, time series, hierarchical, \proglang{R}, package}
-\Plainkeywords{Vector autoregressive, Bayesian, multivariate, time series, hierarchical, R, package}
+\Keywords{Vector autoregressive, Bayesian, multivariate, time series, hierarchical, structural analysis, \proglang{R}, package}
+\Plainkeywords{Vector autoregressive, Bayesian, multivariate, time series, hierarchical, structural analysis, R, package}
 %% - \Address{} of at least one author
 %% - May contain multiple affiliations for each author
 %%   (in extra lines, separated by \emph{and}\\).
 %% - May contain multiple authors for the same affiliation
 %%   (in the same first line, separated by comma).
 \Address{
-  Kuschnig \\
+  Nikolas Kuschnig \\
   Vienna University of Economics and Business \\
   Institute for Ecological Economics \\
   Global Resource Use \\
@@ -104,6 +113,13 @@ library("MASS")
 %%   "generalized linear models" below).
 
 \section{Introduction} \label{sec:intro}
+
+Vector autoregression (VAR) models can capture complex dynamic interdependencies among multiple time series, making them a widely used tool across various disciplines. Popularized by \cite{sims1980}, they have become a staple of empirical macroeconomic research \citep{kilian2017}.
+Specifically, VAR models have been used to:
+- evaluate DSGE models (Del Negro, Schorfheide, Smets, Wouters; 2007)
+- measure the effects of monetary policy (Bernanke, Boivin, Eliasz; 2005 and Sims, Zha; 2006)
+- forecast (Crespo Cuaresma, Feldkircher, Huber; 2016 and Koop, Korobilis; 2012)
+
 
 \cite{giannone2015}
 
@@ -186,9 +202,11 @@ x <- fred_transform(fred_qd[, c("GDPC1", "INDPRO", "PAYEMS",
 
 \begin{appendix}
 
-\section{Construction of custom dummy priors} \label{app:dummy}
+\section{Custom dummy priors} \label{app:dummy}
 
 \section{Identification of impulse responses} \label{app:ident}
+
+\section{Conditional forecasting} \label{app:condition}
 
 \section{Parallelisation and convergence assessment} \label{app:parall}
 
