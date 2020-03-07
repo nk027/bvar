@@ -180,7 +180,7 @@ plot_irf <- function(
   op <- par(mfrow = mfrow, mar = mar, ...)
   for(i in pos_res) {
     for(j in pos_imp) {
-       ts.plot(ts(t(as.matrix(x[, i, , j])), start = 0), col = col, lty = 1,
+       ts.plot(t(as.matrix(x[, i, , j])), col = col, lty = 1,
         main = paste("Shock", variables[j], "on", variables[i]))
       # Fill areas
       if(area) {for(k in seq(P - 1)) {
@@ -189,7 +189,7 @@ plot_irf <- function(
       }}
       grid()
       abline(h = 0, lty = "dashed", col = "gray")
-      lines(ts(x[mid, i, , j], start = 0), col = col[mid])
+      lines(x[mid, i, , j], col = col[mid])
     }
   }
   par(op)

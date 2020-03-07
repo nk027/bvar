@@ -25,7 +25,7 @@
 #' @author Nikolas Kuschnig, Lukas Vashold
 #'
 #' @param data Numeric matrix or dataframe. Note that observations are expected
-#' to be ordered from earliest to latest one.
+#' to be ordered from earliest to latest one with variables in columns.
 #' @param lags Integer scalar. Lag order of the model.
 #' @param n_draw,n_burn Integer scalar. The number of iterations to (a) cycle
 #' through and (b) burn at the start.
