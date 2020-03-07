@@ -75,3 +75,19 @@ fevd(run1)
 coef(run1, 0.1)
 vcov(run1, 0.2)
 fevd(run1, conf_bands = c(0.1, 0.2))
+
+
+# Sparsification (Flo)
+
+b.tilde.hat <- c(coef(x)[-1, ])
+nu <- 2
+lambda <- 1
+
+norm.i <- apply(data, 2, function(x) sqrt(sum(x^2)))^2
+
+b.sparse <- matrix(0, length(b.tilde.hat), 1)
+mu.jj <- lambda / abs(b.tilde.hat) ^ nu
+sl.null <- (abs(b.tilde.hat) * norm.i) < mu.jj
+ind <- sl.null
+
+b.sparse[!sl.null] <- (sign(b.tilde.hat) * 1 / norm.i * ((abs(b.tilde.hat) * norm.i) - mu.jj))[!sl.null]

@@ -68,7 +68,7 @@ library("MASS")
 
 %% - \Abstract{} almost as usual
 \Abstract{
-Vector autoregression (VAR) models are widely used models for multivariate time series analysis in macroeconomics, finance, and related fields. Bayesian methods are used to deal with their dense paramterization, imposing shrinkage on model coefficients via informative priors. The optimal choice of the degree of informativeness implied by these priors is the subject of much debate, and can be approached with hierarchical modelling.
+Vector autoregression (VAR) models are widely used models for multivariate time series analysis in macroeconomics, finance, and related fields. Bayesian methods are used to deal with their dense parameterization, imposing shrinkage on model coefficients via informative priors. The optimal choice of the degree of informativeness implied by these priors is the subject of much debate, and can be approached with hierarchical modeling.
 This paper introduces \pkg{BVAR}, an \proglang{R} package dedicated to the estimation of Bayesian VAR models with hierarchical prior selection. It implements functionality and options that permit addressing a wide range of research problems while retaining an easy-to-use and transparent interface. Features include structural analysis of impulse responses, forecasts, some of the most commonly used conjugate priors, as well as a framework for defining custom dummy-observation priors.
 \pkg{BVAR} makes Bayesian VAR models user-friendly and provides an accessible, reproducible reference implementation.
 }
