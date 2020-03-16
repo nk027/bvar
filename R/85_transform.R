@@ -123,6 +123,18 @@ fred_code <- function(vars, type = c("fred_qd", "fred_md"), table = FALSE) {
 
   fred_trans <- read.table(system.file("fred_trans.csv", package = "BVAR"),
     header = TRUE, sep = ",", na.strings = c("", "NA"))
+  fred_trans[["fred_qd"]] <- factor(fred_trans[["fred_qd"]],
+                                    levels = c("none",
+                                               "1st-diff", "2nd-diff",
+                                               "log",
+                                               "log-diff", "log-2nd-diff",
+                                               "pct-ch-diff"))
+  fred_trans[["fred_md"]] <- factor(fred_trans[["fred_md"]],
+                                    levels = c("none",
+                                               "1st-diff", "2nd-diff",
+                                               "log",
+                                               "log-diff", "log-2nd-diff",
+                                               "pct-ch-diff"))
 
   if(table) {
     matches <- do.call(c, sapply(vars, grep,
