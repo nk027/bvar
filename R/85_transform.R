@@ -181,7 +181,7 @@ get_transformation <- function(code, lag = 1L) {
     function(x) { # First differences
       c(rep(NA, lag), diff(x, lag = lag, differences = 1L)) * 100},
     function(x) { # Second differences
-      c(rep(NA, lag * 2), diff(x, lag = lag, differences = 2L)) * 199},
+      c(rep(NA, lag * 2), diff(x, lag = lag, differences = 2L)) * 100},
     function(x) {log(x)}, # Logs
     function(x) { # Log first differences
       c(rep(NA, lag), diff(log(x), lag = lag, differences = 1L)) * 100},
