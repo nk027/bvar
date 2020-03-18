@@ -123,12 +123,12 @@ fred_code <- function(vars, type = c("fred_qd", "fred_md"), table = FALSE) {
 
   fred_trans <- read.table(system.file("fred_trans.csv", package = "BVAR"),
     header = TRUE, sep = ",", na.strings = c("", "NA"))
-  fred_trans[, 2:3] <- apply(fred_trans[, 2:3], 2, factor,
-                             levels = c("none",
-                                        "1st-diff", "2nd-diff",
-                                        "log",
-                                        "log-diff", "log-2nd-diff",
-                                        "pct-ch-diff"))
+  fred_trans[, 2:3] <- lapply(fred_trans[, 2:3], factor,
+                              levels = c("none",
+                                         "1st-diff", "2nd-diff",
+                                         "log",
+                                         "log-diff", "log-2nd-diff",
+                                         "pct-ch-diff"))
 
   if(table) {
     matches <- do.call(c, sapply(vars, grep,
@@ -179,16 +179,16 @@ get_transformation <- function(code, lag = 1L) {
   switch(code,
     function(x) {x}, # No transformation
     function(x) { # First differences
-      c(rep(NA, lag), diff(x, lag = lag, differences = 1L))},
+      c(rep(NA, lag), diff(x, lag = lag, differences = 1L)) * 100},
     function(x) { # Second differences
-      c(rep(NA, lag * 2), diff(x, lag = lag, differences = 2L))},
+      c(rep(NA, lag * 2), diff(x, lag = lag, differences = 2L)) * 199},
     function(x) {log(x)}, # Logs
     function(x) { # Log first differences
-      c(rep(NA, lag), diff(log(x), lag = lag, differences = 1L))},
+      c(rep(NA, lag), diff(log(x), lag = lag, differences = 1L)) * 100},
     function(x) { # Log second differences
-      c(rep(NA, lag * 2), diff(log(x), lag = lag, differences = 2L))},
+      c(rep(NA, lag * 2), diff(log(x), lag = lag, differences = 2L)) * 100},
     function(x) { # Percent-change differences
       c(rep(NA, lag), diff(x[-seq(lag)] / head(x, length(x) - lag) - 1L),
-        lag = lag, differences = 1L)}
+        lag = lag, differences = 1L) * 100}
   )
 }
