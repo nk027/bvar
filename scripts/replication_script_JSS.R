@@ -15,21 +15,11 @@ library("BVAR")
 
 data("fred_qd")
 
-
 df <- fred_qd[, c("GDPC1", "INDPRO", "PAYEMS",
   "CES0600000007", "CPIAUCSL", "FEDFUNDS")]
- df <- fred_transform(df, type = "fred_qd")
 
-# year-to-year changes
-for(i in c("GDPC1", "CPIAUCSL"))
-  df[5:nrow(df), i] <- diff(log(df[, i]), lag = 4) * 100
-
-# quarter-to-quarter changes
-for(i in c("INDPRO", "PAYEMS", "CES0600000007"))
-  df[2:nrow(df), i] <- diff(log(df[, i]), lag = 1) * 100
-
-df <- df[5:nrow(df), ]
-
+df <- fred_transform(df, type = "fred_qd",
+  codes = c(5, 5, 5, 5, 5, 1), lag = 4)
 
 # Plotting the time series
 op <- par(mfrow = c(2, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
@@ -73,15 +63,15 @@ priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
 irfs  <- bv_irf(horizon = 12, fevd = TRUE, identification = TRUE)
 
 
-# Turning off forecasts
+# Setting up unconditional forecasts
 
-fcasts <- NULL
+fcasts <- bv_fcast(horizon = 12)
 
 
 # Adjust the MH-step
 
-mh <- bv_metropolis(scale_hess = 0.005, adjust_acc = TRUE,
-  acc_lower = 0.25, acc_upper = 0.35, acc_change = 0.05)
+mh <- bv_metropolis(scale_hess = 0.01, adjust_acc = TRUE,
+  acc_lower = 0.25, acc_upper = 0.35, acc_change = 0.01)
 
 
 # Execute the model -------------------------------------------------------
@@ -105,25 +95,32 @@ plot(run, type = "full", vars = "lambda", mfrow = c(2, 1))
 # IRF plots
 
 plot(irf(run), vars_impulse = c("GDPC1", "FEDFUNDS"),
-  vars_response = c(1:5))
+  vars_response = c(1, 3, 5:6), area = TRUE,
+  col = "#4000ff", fill = "#35acda")
 
+# Unconditional forecast plots
+
+plot(predict(run), vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
+  t_back = 5, area = TRUE, fill = "#35acda")
 
 # Get FEVD values
 
-fevd(run)
+fevd <- fevd(run)
+apply(fevd$fevd, c(2, 4), mean) * 100
 
 
 # Ex-post calculations ----------------------------------------------------
 
-# Do conditional forecast with restricted FEDFUNDS ex-post
-path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2)
-plot(predict(run, horizon = 12, cond_path = path, cond_var = "FEDFUNDS"),
-     vars = c(1:2, 5:6), area = TRUE, t_back = 10)
-
 # Plot adjusted IRFs ex-post
 plot(irf(run, conf_bands = c(0.05, 0.16), horizon = 20, fevd = FALSE),
   vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1:3, 5:6),
-  area = TRUE)
+  area = TRUE, col = "#4000ff", fill = "#35acda")
+
+# Conditional forecast with restricted FEDFUNDS ex-post
+path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2)
+plot(predict(run, horizon = 12, cond_path = path, cond_var = "FEDFUNDS"),
+  vars = c(1:2, 5:6), t_back = 5,
+  area = TRUE, fill = "#35acda")
 
 
 # Appendices --------------------------------------------------------------
@@ -150,25 +147,20 @@ priors_dum <- bv_priors(hyper = "auto", soc = soc)
 data("fred_qd")
 df_small <- fred_qd[, c("GDPC1", "CPIAUCSL", "FEDFUNDS")]
 
-df_small <- fred_transform(df_small, type = "fred_qd", lag = 1)
-
-for(i in c("GDPC1", "CPIAUCSL"))
-  df_small[2:nrow(df_small), i] <- diff(log(df_small[, i]), lag = 1) * 100
-
-df_small <- df_small[2:nrow(df_small), ]
-
+df_small <- fred_transform(df_small, type = "fred_qd",
+                           codes = c(5, 5, 1), lag = 4)
 
 signs <- matrix(c(1, 1, 1, NA, 1, 1, -1, -1, 1), ncol = 3)
 irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
   identification = TRUE, sign_restr = signs)
 
 run_signs <- bvar(df_small, lags = 5, n_draw = 25000, n_burn = 10000,
-  priors = priors, mh = mh, fcast = fcasts, irf = irf_signs)
+  priors = priors, mh = mh, fcast = NULL, irf = irf_signs)
 
 print(run_signs)
 print(irf(run_signs))
 
-plot(irf(run_signs), area = TRUE)
+plot(irf(run_signs), area = TRUE, col = "#4000ff", fill = "#35acda")
 
 
 # C - Convergence assessment and parallelization
@@ -181,7 +173,7 @@ runs <- par_bvar(cl = cl, data = df, lags = 5,
   n_draw = 25000, n_burn = 10000, n_thin = 1,
   priors = bv_priors(soc = bv_soc(), sur = bv_sur()),
   mh = bv_mh(scale_hess = 0.005, adjust_acc = TRUE, acc_change = 0.02),
-  irf = bv_irf(horizon = 12, fevd = TRUE, identification = TRUE),
+  irf = bv_irf(horizon = 12, fevd = FALSE, identification = TRUE),
   fcast = NULL)
 
 stopCluster(cl)
@@ -189,9 +181,8 @@ stopCluster(cl)
 plot(run, type = "full", vars = c("lambda", "soc"), chains = runs)
 
 library("coda")
-run_mcmc <- as.mcmc(runs[[1]], vars = c("lambda", "soc"))
+run_mcmc <- as.mcmc(runs[[1]])
 geweke.diag(run_mcmc)
-
 
 runs_mcmc <- as.mcmc(runs, vars = c("lambda", "sur"))
 gelman.diag(runs_mcmc, autoburnin = FALSE)
