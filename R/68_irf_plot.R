@@ -173,7 +173,7 @@ plot_irf <- function(
 
   if(area) {
     P <- dim(x)[1]
-    x_vals <- c(seq(dim(x)[3]) - 1, rev(seq(dim(x)[3]) - 1))
+    x_vals <- c(seq(dim(x)[3]), rev(seq(dim(x)[3])))
   }
   mid <- length(col) %/% 2 + 1
 
