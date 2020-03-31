@@ -5,19 +5,17 @@
 
 # Preliminaries -----------------------------------------------------------
 
-# install.packages("BVAR") # Version 0.2.1
+# install.packages("BVAR") # Version 0.2.2.90000
 
 set.seed(42)
 library("BVAR")
-
 
 # Loading and preparing data ----------------------------------------------
 
 data("fred_qd")
 
-df <- fred_qd[, c("GDPC1", "INDPRO", "PAYEMS",
+df <- fred_qd[, c("GDPC1", "PCECC96", "GPDIC1",
   "CES0600000007", "CPIAUCSL", "FEDFUNDS")]
-
 df <- fred_transform(df, type = "fred_qd",
   codes = c(5, 5, 5, 5, 5, 1), lag = 4)
 
@@ -25,10 +23,10 @@ df <- fred_transform(df, type = "fred_qd",
 op <- par(mfrow = c(2, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
 plot(as.Date(rownames(df)), df[ , "GDPC1"], type = "l",
      xlab = "Time", ylab = "GDP growth")
-plot(as.Date(rownames(df)), df[ , "INDPRO"], type = "l",
-     xlab = "Time", ylab = "Ind. production growth")
-plot(as.Date(rownames(df)), df[ , "PAYEMS"], type = "l",
-     xlab = "Time", ylab = "Non-farm empl. changes")
+plot(as.Date(rownames(df)), df[ , "PCECC96"], type = "l",
+     xlab = "Time", ylab = "Consumption exp. growth")
+plot(as.Date(rownames(df)), df[ , "GPDIC1"], type = "l",
+     xlab = "Time", ylab = "Private investment growth")
 plot(as.Date(rownames(df)), df[ , "CES0600000007"], type = "l",
      xlab = "Time", ylab = "Avg. weekly hours changes")
 plot(as.Date(rownames(df)), df[ , "CPIAUCSL"], type = "l",
@@ -70,7 +68,7 @@ fcasts <- bv_fcast(horizon = 12)
 
 # Adjust the MH-step
 
-mh <- bv_metropolis(scale_hess = 0.01, adjust_acc = TRUE,
+mh <- bv_metropolis(scale_hess = 0.005, adjust_acc = TRUE,
   acc_lower = 0.25, acc_upper = 0.35, acc_change = 0.01)
 
 
@@ -94,32 +92,33 @@ plot(run, type = "full", vars = "lambda", mfrow = c(2, 1))
 
 # IRF plots
 
-plot(irf(run), vars_impulse = c("GDPC1", "FEDFUNDS"),
-  vars_response = c(1, 3, 5:6), area = TRUE,
+plot(run$irf, vars_impulse = c("GDPC1", "FEDFUNDS"),
+  vars_response = c(1:2, 5:6), area = TRUE,
   col = "#4000ff", fill = "#35acda")
 
 # Unconditional forecast plots
 
-plot(predict(run), vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
-  t_back = 5, area = TRUE, fill = "#35acda")
+plot(run$fcast, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
+  t_back = 3, area = TRUE, fill = "#35acda", 
+  orientation = "vertical")
 
 # Get FEVD values
 
 fevd <- fevd(run)
-apply(fevd$fevd, c(2, 4), mean) * 100
+apply(fevd$fevd, c(2, 4), mean) * 100 # do something else here or just kick FEVDs? add plot function?
 
 
 # Ex-post calculations ----------------------------------------------------
 
 # Plot adjusted IRFs ex-post
 plot(irf(run, conf_bands = c(0.05, 0.16), horizon = 20, fevd = FALSE),
-  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1:3, 5:6),
+  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1:2, 5:6),
   area = TRUE, col = "#4000ff", fill = "#35acda")
 
 # Conditional forecast with restricted FEDFUNDS ex-post
 path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2)
 plot(predict(run, horizon = 12, cond_path = path, cond_var = "FEDFUNDS"),
-  vars = c(1:2, 5:6), t_back = 5,
+  vars = c(1:2, 5:6), t_back = 3,
   area = TRUE, fill = "#35acda")
 
 
@@ -160,7 +159,7 @@ run_signs <- bvar(df_small, lags = 5, n_draw = 25000, n_burn = 10000,
 print(run_signs)
 print(irf(run_signs))
 
-plot(irf(run_signs), area = TRUE, col = "#4000ff", fill = "#35acda")
+  plot(irf(run_signs), area = TRUE, col = "#4000ff", fill = "#35acda")
 
 
 # C - Convergence assessment and parallelization
@@ -172,9 +171,8 @@ cl <- makeCluster(n_cores)
 runs <- par_bvar(cl = cl, data = df, lags = 5,
   n_draw = 25000, n_burn = 10000, n_thin = 1,
   priors = bv_priors(soc = bv_soc(), sur = bv_sur()),
-  mh = bv_mh(scale_hess = 0.005, adjust_acc = TRUE, acc_change = 0.02),
-  irf = bv_irf(horizon = 12, fevd = FALSE, identification = TRUE),
-  fcast = NULL)
+  mh = bv_mh(scale_hess = 0.005, adjust_acc = TRUE, acc_change = 0.01),
+  irf = NULL, fcast = NULL)
 
 stopCluster(cl)
 
@@ -184,7 +182,7 @@ library("coda")
 run_mcmc <- as.mcmc(runs[[1]])
 geweke.diag(run_mcmc)
 
-runs_mcmc <- as.mcmc(runs, vars = c("lambda", "sur"))
+runs_mcmc <- as.mcmc(run, vars = c("lambda", "sur"), chains = runs)
 gelman.diag(runs_mcmc, autoburnin = FALSE)
 
 

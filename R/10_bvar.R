@@ -373,16 +373,18 @@ bvar <- function(
     ), class = "bvar")
 
   if(!is.null(irf)) {
-    if(verbose) {cat("Calculating impulse responses.\n")}
+    if(verbose) {cat("Calculating impulse responses.")}
     out[["irf"]] <- tryCatch(irf.bvar(out, irf), error = function(e) {
-      warning("Impulse response calculation failed with:\n", e)
+      warning("\nImpulse response calculation failed with:\n", e)
       return(NULL)})
+    if(verbose) {cat("..Done!\n")}
   }
   if(!is.null(fcast)) {
-    if(verbose) {cat("Calculating forecasts.\n")}
+    if(verbose) {cat("Calculating forecasts.")}
     out[["fcast"]] <- tryCatch(predict.bvar(out, fcast), error = function(e) {
-      warning("Forecast calculation failed with:\n", e)
+      warning("\nForecast calculation failed with:\n", e)
       return(NULL)})
+    if(verbose) {cat("..Done!\n")}
   }
 
   return(out)
