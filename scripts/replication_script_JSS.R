@@ -75,7 +75,7 @@ mh <- bv_metropolis(scale_hess = 0.005, adjust_acc = TRUE,
 # Execute the model -------------------------------------------------------
 
 run <- bvar(df, lags = 5, n_draw = 25000, n_burn = 10000, n_thin = 1,
-  priors = priors, mh = mh, fcast = fcasts, irf = irfs, verbose = TRUE)
+  priors = priors, mh = mh, fcast = NULL, irf = NULL, verbose = TRUE)
 
 
 # Assessing results
@@ -90,36 +90,25 @@ plot(run)
 plot(run, type = "full", vars = "lambda", mfrow = c(2, 1))
 
 
-# IRF plots
-
-plot(run$irf, vars_impulse = c("GDPC1", "FEDFUNDS"),
-  vars_response = c(1:2, 5:6), area = TRUE,
-  col = "#4000ff", fill = "#35acda")
-
-# Unconditional forecast plots
-
-plot(run$fcast, vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"),
-  t_back = 3, area = TRUE, fill = "#35acda", 
-  orientation = "vertical")
-
-# Get FEVD values
-
-fevd <- fevd(run)
-apply(fevd$fevd, c(2, 4), mean) * 100 # do something else here or just kick FEVDs? add plot function?
-
-
 # Ex-post calculations ----------------------------------------------------
 
-# Plot adjusted IRFs ex-post
-plot(irf(run, conf_bands = c(0.05, 0.16), horizon = 20, fevd = FALSE),
-  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1:2, 5:6),
-  area = TRUE, col = "#4000ff", fill = "#35acda")
+# Compute and plot IRFs ex-post
+
+irfs <- bv_irf(horizon = 16, identification = TRUE)
+plot(irf(run, irfs, conf_bands = c(0.05, 0.16)), area = TRUE,
+  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1:2, 5:6))
+
+
+# Compute and plot unconditional forecast ex-post
+
+plot(predict(run, horizon = 16, conf_bands = c(0.05, 0.16)), area = TRUE,
+  vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"), t_back = 3)
+
 
 # Conditional forecast with restricted FEDFUNDS ex-post
 path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2)
-plot(predict(run, horizon = 12, cond_path = path, cond_var = "FEDFUNDS"),
-  vars = c(1:2, 5:6), t_back = 3,
-  area = TRUE, fill = "#35acda")
+plot(predict(run, horizon = 16, cond_path = path, cond_var = "FEDFUNDS"),
+     vars = c(1, 5:6), t_back = 3)
 
 
 # Appendices --------------------------------------------------------------
@@ -159,7 +148,7 @@ run_signs <- bvar(df_small, lags = 5, n_draw = 25000, n_burn = 10000,
 print(run_signs)
 print(irf(run_signs))
 
-  plot(irf(run_signs), area = TRUE, col = "#4000ff", fill = "#35acda")
+plot(irf(run_signs))
 
 
 # C - Convergence assessment and parallelization

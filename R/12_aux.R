@@ -137,8 +137,8 @@ alpha_hex <- function(P) {
 
   n_trans <- P %/% 2
   out <- switch(n_trans, # Handpicked with love
-    "FF", c("FF", "CC"), c("FF", "CC", "99"),
-    c("FF", "CC", "99", "66"), c("FF", "CC", "99", "66", "33"))
+    "FF", c("FF", "80"), c("FF", "A8", "54"),
+    c("FF", "BF", "80", "40"), c("FF", "CC", "99", "66", "33"))
 
   if(is.null(out)) { # Let rgb() sort it out otherwise
     out <- substr(rgb(1, 1, 1, seq(1, 0, length.out = n_trans)), 8, 10)
