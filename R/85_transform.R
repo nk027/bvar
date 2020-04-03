@@ -62,7 +62,7 @@ fred_transform <- function(
   data,
   type = c("fred_qd", "fred_md"),
   codes, na.rm = TRUE,
-  lag = 1) {
+  lag = 1L, scale = 100) {
 
   # Data
   if(!all(vapply(data, is.numeric, logical(1))) || !is.data.frame(data)) {
@@ -83,7 +83,7 @@ fred_transform <- function(
   }
 
   data <- vapply(seq(ncol(data)), function(i, codes, data) {
-    get_transformation(codes[i], lag = lag)(data[, i])
+    get_transformation(codes[i], lag = lag, scale = scale)(data[, i])
   }, codes = codes, data = data, FUN.VALUE = numeric(nrow(data)))
 
   na_rows <- apply(data, 1, function(x) sum(is.na(x)))
@@ -124,11 +124,8 @@ fred_code <- function(vars, type = c("fred_qd", "fred_md"), table = FALSE) {
   fred_trans <- read.table(system.file("fred_trans.csv", package = "BVAR"),
     header = TRUE, sep = ",", na.strings = c("", "NA"))
   fred_trans[, 2:3] <- lapply(fred_trans[, 2:3], factor,
-                              levels = c("none",
-                                         "1st-diff", "2nd-diff",
-                                         "log",
-                                         "log-diff", "log-2nd-diff",
-                                         "pct-ch-diff"))
+    levels = c("none", "1st-diff", "2nd-diff", "log",
+      "log-diff", "log-2nd-diff", "pct-ch-diff"))
 
   if(table) {
     matches <- do.call(c, sapply(vars, grep,
@@ -171,24 +168,25 @@ fred_code <- function(vars, type = c("fred_qd", "fred_md"), table = FALSE) {
 #' @return Returns a function that provides the requested transformation.
 #'
 #' @importFrom utils head
-get_transformation <- function(code, lag = 1L) {
+get_transformation <- function(code, lag = 1L, scale = 100) {
 
   code <- int_check(code, min = 0L, max = 7L, msg = "Code not found.")
   lag <- int_check(lag, min = 1L, max = Inf, msg = "Issue with provided lag.")
+  scale <- num_check(scale, min = 1e-16, max = Inf, msg = "Issue with scale.")
 
   switch(code,
     function(x) {x}, # No transformation
     function(x) { # First differences
-      c(rep(NA, lag), diff(x, lag = lag, differences = 1L)) * 100},
+      c(rep(NA, lag), diff(x, lag = lag, differences = 1L)) * scale},
     function(x) { # Second differences
-      c(rep(NA, lag * 2), diff(x, lag = lag, differences = 2L)) * 100},
+      c(rep(NA, lag * 2), diff(x, lag = lag, differences = 2L)) * scale},
     function(x) {log(x)}, # Logs
     function(x) { # Log first differences
-      c(rep(NA, lag), diff(log(x), lag = lag, differences = 1L)) * 100},
+      c(rep(NA, lag), diff(log(x), lag = lag, differences = 1L)) * scale},
     function(x) { # Log second differences
-      c(rep(NA, lag * 2), diff(log(x), lag = lag, differences = 2L)) * 100},
+      c(rep(NA, lag * 2), diff(log(x), lag = lag, differences = 2L)) * scale},
     function(x) { # Percent-change differences
       c(rep(NA, lag), diff(x[-seq(lag)] / head(x, length(x) - lag) - 1L),
-        lag = lag, differences = 1L) * 100}
+        lag = lag, differences = 1L) * scale}
   )
 }
