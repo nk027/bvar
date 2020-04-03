@@ -56,14 +56,14 @@ sur <- bv_sur(mode = 1, sd = 1, min = 1e-04, max = 50)
 priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
 
 
-# Setting up impulse reponses
-
-irfs  <- bv_irf(horizon = 12, fevd = TRUE, identification = TRUE)
-
-
-# Setting up unconditional forecasts
-
-fcasts <- bv_fcast(horizon = 12)
+# # Setting up impulse reponses
+# 
+# irfs  <- bv_irf(horizon = 12, fevd = TRUE, identification = TRUE)
+# 
+# 
+# # Setting up unconditional forecasts
+# 
+# fcasts <- bv_fcast(horizon = 12)
 
 
 # Adjust the MH-step
@@ -82,6 +82,11 @@ run <- bvar(df, lags = 5, n_draw = 25000, n_burn = 10000, n_thin = 1,
 
 summary(run)
 
+print(run)
+  
+vcov(run)
+
+plot(residuals(run), vars = c("GDPC1", "PCECC96"))
 
 # Hyperparameter plots
 
