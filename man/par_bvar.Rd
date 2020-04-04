@@ -26,7 +26,7 @@ par_bvar(
 length of \emph{cl}, i.e. the number of registered nodes.}
 
 \item{data}{Numeric matrix or dataframe. Note that observations are expected
-to be ordered from earliest to latest one.}
+to be ordered from earliest to latest, and variables in the columns.}
 
 \item{lags}{Integer scalar. Lag order of the model.}
 

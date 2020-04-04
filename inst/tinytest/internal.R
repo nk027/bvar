@@ -50,7 +50,7 @@ expect_equal(
   cbind(NA, NA, "x" = 1:3, NA, NA))
 expect_equal(
   BVAR:::fill_ci_col(x = integer(), y = "#008080", P = 5),
-  c("#008080CC", "#008080FF", "#008080FF", "#008080CC"))
+  c("#00808080", "#008080FF", "#008080FF", "#00808080"))
 
 # Handpicked and automatic
 expect_true(all(grepl("^[0-9a-fA-F]{2}$", BVAR:::alpha_hex(7))))

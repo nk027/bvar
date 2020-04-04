@@ -10,7 +10,8 @@ fred_transform(
   type = c("fred_qd", "fred_md"),
   codes,
   na.rm = TRUE,
-  lag = 1
+  lag = 1L,
+  scale = 100
 )
 
 fred_code(vars, type = c("fred_qd", "fred_md"), table = FALSE)

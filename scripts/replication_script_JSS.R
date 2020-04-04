@@ -22,17 +22,17 @@ df <- fred_transform(df, type = "fred_qd",
 # Plotting the time series
 op <- par(mfrow = c(2, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
 plot(as.Date(rownames(df)), df[ , "GDPC1"], type = "l",
-     xlab = "Time", ylab = "GDP growth")
+  xlab = "Time", ylab = "GDP growth")
 plot(as.Date(rownames(df)), df[ , "PCECC96"], type = "l",
-     xlab = "Time", ylab = "Consumption exp. growth")
+  xlab = "Time", ylab = "Consumption exp. growth")
 plot(as.Date(rownames(df)), df[ , "GPDIC1"], type = "l",
-     xlab = "Time", ylab = "Private investment growth")
+  xlab = "Time", ylab = "Private investment growth")
 plot(as.Date(rownames(df)), df[ , "CES0600000007"], type = "l",
-     xlab = "Time", ylab = "Avg. weekly hours changes")
+  xlab = "Time", ylab = "Avg. weekly hours changes")
 plot(as.Date(rownames(df)), df[ , "CPIAUCSL"], type = "l",
-     xlab = "Time", ylab = "CPI inlation")
+  xlab = "Time", ylab = "CPI inflation")
 plot(as.Date(rownames(df)), df[ , "FEDFUNDS"], type = "l",
-     xlab = "Time", ylab = "Federal funds rate")
+  xlab = "Time", ylab = "Federal funds rate")
 
 
 # `bvar()` setup ----------------------------------------------------------
@@ -57,12 +57,12 @@ priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
 
 
 # # Setting up impulse reponses
-# 
+#
 # irfs  <- bv_irf(horizon = 12, fevd = TRUE, identification = TRUE)
-# 
-# 
+#
+#
 # # Setting up unconditional forecasts
-# 
+#
 # fcasts <- bv_fcast(horizon = 12)
 
 
@@ -83,7 +83,7 @@ run <- bvar(df, lags = 5, n_draw = 25000, n_burn = 10000, n_thin = 1,
 summary(run)
 
 print(run)
-  
+
 vcov(run)
 
 plot(residuals(run), vars = c("GDPC1", "PCECC96"))
@@ -100,13 +100,15 @@ plot(run, type = "full", vars = "lambda", mfrow = c(2, 1))
 # Compute and plot IRFs ex-post
 
 irfs <- bv_irf(horizon = 16, identification = TRUE)
-plot(irf(run, irfs, conf_bands = c(0.05, 0.16)), area = TRUE,
+irf(run) <- irf(run, irfs, conf_bands = c(0.05, 0.16))
+plot(irf(run), area = TRUE,
   vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1:2, 5:6))
 
 
 # Compute and plot unconditional forecast ex-post
 
-plot(predict(run, horizon = 16, conf_bands = c(0.05, 0.16)), area = TRUE,
+predict(run) <- predict(run, horizon = 16, conf_bands = c(0.05, 0.16))
+plot(predict(run), area = TRUE,
   vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"), t_back = 3)
 
 
@@ -138,17 +140,16 @@ priors_dum <- bv_priors(hyper = "auto", soc = soc)
 # B - Identification via sign restrictions
 
 data("fred_qd")
-df_small <- fred_qd[, c("GDPC1", "CPIAUCSL", "FEDFUNDS")]
+df_s <- fred_qd[, c("GDPC1", "CPIAUCSL", "FEDFUNDS")]
 
-df_small <- fred_transform(df_small, type = "fred_qd",
-                           codes = c(5, 5, 1), lag = 4)
+df_s <- fred_transform(df_s, type = "fred_qd", codes = c(5, 5, 1), lag = 4)
 
 signs <- matrix(c(1, 1, 1, NA, 1, 1, -1, -1, 1), ncol = 3)
 irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
   identification = TRUE, sign_restr = signs)
 
-run_signs <- bvar(df_small, lags = 5, n_draw = 25000, n_burn = 10000,
-  priors = priors, mh = mh, fcast = NULL, irf = irf_signs)
+run_signs <- bvar(df_s, lags = 5, n_draw = 25000, n_burn = 10000,
+  priors = priors, mh = mh, irf = irf_signs)
 
 print(run_signs)
 print(irf(run_signs))

@@ -20,6 +20,6 @@ mvt_5 <- mvtnorm::rmvnorm(1000, mean = rep(0, 3L), sigma = sigma)
 # Cramer test for multivariate distributions
 if(requireNamespace("cramer", quietly = TRUE)) {
   expect_true(cramer::cramer.test(mvt_1, mvt_2)[["p.value"]] >= 0.1)
-  expect_true(cramer::cramer.test(mvt_2, mvt_4)[["p.value"]] >= 0.1)
   expect_true(cramer::cramer.test(mvt_3, mvt_4)[["p.value"]] >= 0.1)
+  expect_true(cramer::cramer.test(mvt_3, mvt_5)[["p.value"]] >= 0.1)
 }

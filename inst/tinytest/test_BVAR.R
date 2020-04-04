@@ -84,8 +84,7 @@ expect_silent(bv_fcast(cond_path = c(2, 2, 2, 2), cond_vars = 1))
 expect_silent(bv_fcast(cond_path = c(2, 2, 2, 2), cond_vars = "FEDFUNDS"))
 expect_silent(bv_fcast(cond_path = matrix(rep(2, 6), nrow = 3)))
 expect_silent(bv_fcast(
-  cond_path = matrix(c(2, 2, NA, NA, 1.5, NA, NA, NA, 1, 1.2, 1.5), nrow = 3)))
-
+  cond_path = matrix(c(2, 2, NA, 1.5, NA, NA, 1, 1.2, 1.5), nrow = 3)))
 expect_message(bv_fcast(horizon = 4, cond_path = rep(2, 6), cond_vars = 1))
 expect_error(bv_fcast(cond_path = matrix(rnorm(9), nrow = 3),
   cond_vars = c(1, 1)))
