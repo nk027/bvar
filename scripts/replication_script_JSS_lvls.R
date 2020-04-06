@@ -15,7 +15,7 @@ library("BVAR")
 data("fred_qd")
 
 df <- fred_qd[, c("GDPC1", "PCECC96", "GPDIC1",
-  "CES0600000007", "CPIAUCSL", "FEDFUNDS")]
+  "HOANBS", "GDPCTPI", "FEDFUNDS")]
 df <- fred_transform(df, type = "fred_qd",
   codes = c(4, 4, 4, 4, 4, 1))
 df[, 1:4] <- df[, 1:4] * 4
@@ -28,10 +28,10 @@ plot(as.Date(rownames(df)), df[ , "PCECC96"], type = "l",
   xlab = "Time", ylab = "Consumption expenditure")
 plot(as.Date(rownames(df)), df[ , "GPDIC1"], type = "l",
   xlab = "Time", ylab = "Private investment")
-plot(as.Date(rownames(df)), df[ , "CES0600000007"], type = "l",
-  xlab = "Time", ylab = "Avg. weekly hours")
-plot(as.Date(rownames(df)), df[ , "CPIAUCSL"], type = "l",
-  xlab = "Time", ylab = "Consumer price index (CPI)")
+plot(as.Date(rownames(df)), df[ , "HOANBS"], type = "l",
+  xlab = "Time", ylab = "Total hours worked (nfb)")
+plot(as.Date(rownames(df)), df[ , "GDPCTPI"], type = "l",
+  xlab = "Time", ylab = "GDP deflator")
 plot(as.Date(rownames(df)), df[ , "FEDFUNDS"], type = "l",
   xlab = "Time", ylab = "Federal funds rate")
 
@@ -72,7 +72,7 @@ run <- bvar(df, lags = 5, n_draw = 50000, n_burn = 25000, n_thin = 1,
 
 print(run)
 
-plot(residuals(run), vars = c("PCECC96", "CES0600000007"))  # Residuals are partly quite off from 0
+plot(residuals(run), vars = c("GDPC1", "PCECC96"))  # Residuals are partly quite off from 0 for other vars
 
 
 # Hyperparameter plots
@@ -97,7 +97,7 @@ plot(irf(run), area = TRUE,
 
 predict(run) <- predict(run, horizon = 16, conf_bands = c(0.05, 0.16))
 plot(predict(run), area = TRUE,
-  vars = c("GDPC1", "CPIAUCSL", "FEDFUNDS"), t_back = 3)
+  vars = c("GDPC1", "GDPCTPI", "FEDFUNDS"), t_back = 50)
 
 
 # Appendices --------------------------------------------------------------
@@ -147,7 +147,7 @@ gelman.diag(runs_mcmc, autoburnin = FALSE)
 # C - Identification via sign restrictions and conditional forecasts
 
 data("fred_qd")
-df_s <- fred_qd[, c("GDPC1", "CPIAUCSL", "FEDFUNDS")]
+df_s <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
 df_s <- fred_transform(df_s, type = "fred_qd", codes = c(5, 5, 1), lag = 4)
 
 signs <- matrix(c(1, 1, 1, NA, 1, 1, -1, -1, 1), ncol = 3)
@@ -156,7 +156,7 @@ irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
 priors_s <- bv_priors(mn = bv_mn(b = 0))
 
 run_signs <- bvar(df_s, lags = 5, n_draw = 50000, n_burn = 25000,
-  priors = priors_s, mh = bv_mh(scale_hess = 1, adjust_acc = TRUE),
+  priors = priors_s, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE),
   irf = irf_signs)
 
 print(run_signs)
@@ -167,13 +167,13 @@ plot(irf(run_signs))
 # Conditional forecast with restricted FEDFUNDS ex-post
 path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2, 2, 2)
 plot(predict(run_signs, horizon = 16,
-  cond_path = path, cond_var = "FEDFUNDS"))
+  cond_path = path, cond_var = "FEDFUNDS"), t_back = 16)
 
 
 
 #### Version with levels instead of diffs
 data("fred_qd")
-df_s <- fred_qd[, c("GDPC1", "CPIAUCSL", "FEDFUNDS")]
+df_s <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
 df_s <- fred_transform(df_s, type = "fred_qd", codes = c(4, 4, 1))
 df_s[, 1:2] <- df_s[, 1:2] * 4
 
@@ -192,7 +192,8 @@ plot(irf(run_signs))
 # Conditional forecast with restricted FEDFUNDS ex-post
 path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2, 2, 2)
 plot(predict(run_signs, horizon = 16,
-             cond_path = path, cond_var = "FEDFUNDS"))
+    cond_path = path, cond_var = "FEDFUNDS"),
+  t_back = 16)
 
 
 # Fin ---------------------------------------------------------------------
