@@ -32,7 +32,12 @@
 #' order of integration is incremented by 1. By default \emph{min} / \emph{max}
 #' are set to \emph{mode} divided / multiplied by 100.
 #' @param var Numeric scalar with the prior variance on the model's constant.
-#' @param b Numeric matrix with the prior mean.
+#' @param b Numeric scalar, vector or matrix with the prior mean. A scalar is
+#' applied to all variables, with a default value of 1. Consider setting it to
+#' 0 for growth rates. A vector needs to match the number of variables (i.e.
+#' columns) in the data, with a prior mean per variable. If provided, a matrix
+#' needs to have a column per variable (\eqn{M}), and \eqn{M * p + 1} rows,
+#' where \eqn{p} is the number of lags applied.
 #' @param mode,sd Numeric scalar. Mode / standard deviation of the
 #' parameter. Note that the \emph{mode} of \emph{psi} is set automatically by
 #' default, and would need to be provided as vector.
@@ -69,7 +74,7 @@ bv_minnesota <- function(
   alpha = bv_alpha(),
   psi = bv_psi(), # scale, shape, mode
   var = 1e07,
-  b = "auto") {
+  b = 1) {
 
   # Input checks
   lambda <- lazy_priors(lambda)

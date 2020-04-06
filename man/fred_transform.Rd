@@ -32,6 +32,8 @@ Overrides automatic lookup of transformation codes.}
 \item{lag}{Integer scalar. Number of lags to apply when taking differences.
 See \code{\link[base]{diff}}.}
 
+\item{scale}{Numeric scalar. Scaling to apply to differences.}
+
 \item{vars}{Character vector. Names of the variables to look for.}
 
 \item{table}{Logical scalar. Whether to return a table of matching

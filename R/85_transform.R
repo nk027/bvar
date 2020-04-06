@@ -32,7 +32,7 @@
 #' \code{NA} values. A warning is thrown if rows are non-sequential.
 #' @param lag Integer scalar. Number of lags to apply when taking differences.
 #' See \code{\link[base]{diff}}.
-#' @param scalar Numeric scalar. Scaling to apply to differences.
+#' @param scale Numeric scalar. Scaling to apply to differences.
 #' @param vars Character vector. Names of the variables to look for.
 #' @param table Logical scalar. Whether to return a table of matching
 #' transformation codes instead of just the codes.
