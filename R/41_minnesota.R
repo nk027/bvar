@@ -84,7 +84,7 @@ bv_minnesota <- function(
     msg = "Issue with the prior variance var.")
 
   # Prior mean
-  if(b == "auto") {
+  if(length(b) == 1 && b == "auto") {
     b <- 1
   } else if(is.numeric(b)) {
     if(!is.matrix(b)) { # Matrix dimensions are checked later
