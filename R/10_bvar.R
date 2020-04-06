@@ -193,12 +193,15 @@ bvar <- function(
 
   # Minnesota prior ---
 
-  if(length(priors[["b"]]) == 1 && priors[["b"]] == "auto") {
+  b <- priors[["b"]]
+  if(length(b) == 1 || length(b) == M) {
     priors[["b"]] <- matrix(0, nrow = K, ncol = M)
-    priors[["b"]][2:(M + 1), ] <- diag(M)
-  } else if(!all(dim(priors[["b"]]) == c(K, M))) {
-    stop("Dimensions of prior mean (b) do not fit the data.")
-  }
+    priors[["b"]][2:(M + 1), ] <- diag(b, M)
+  } else if(is.matrix(b) && !all(dim(b) == c(K, M))) {
+    stop("Dimensions of prior mean b do not fit the data.")
+  } else {stop("Issue with the prior mean b. Please reconstruct.")}
+
+
   if(any(priors[["psi"]][["mode"]] == "auto")) {
     psi_temp <- auto_psi(Y, lags)
     priors[["psi"]][["mode"]] <- psi_temp[["mode"]]

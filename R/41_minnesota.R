@@ -78,6 +78,16 @@ bv_minnesota <- function(
   var <- num_check(var, min = 1e-16, max = Inf,
     msg = "Issue with the prior variance var.")
 
+  # Prior mean
+  if(b == "auto") {
+    b <- 1
+  } else if(is.numeric(b)) {
+    if(!is.matrix(b)) { # Matrix dimensions are checked later
+      b <- vapply(b, num_check, numeric(1L), min = -1e16, max = 1e16,
+        msg = "Issue with prior mean b, please check the argument again.")
+    }
+  } else {stop("Issue with prior mean b, wrong type provided.")}
+
   # Outputs
   out <- structure(list(
     "lambda" = lambda, "alpha" = alpha, "psi" = psi, "b" = b, "var" = var),
