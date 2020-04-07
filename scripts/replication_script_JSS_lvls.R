@@ -119,81 +119,74 @@ soc <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_soc)
 priors_dum <- bv_priors(hyper = "auto", soc = soc)
 
 
-# B - Convergence assessment and parallelization
+# B - Data Transformation
+
+data("fred_qd")
+df_s <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
+
+fred_code(c("GDPC1", "GDPCTPI", "FEDFUNDS"), type = "fred_qd")
+
+df_s <- fred_transform(df_s, type = "fred_qd", codes = c(5, 5, 1), lag = 4)
+
+op <- par(mfrow = c(1, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
+plot(as.Date(rownames(df_s)), df_s[ , "GDPC1"], type = "l",
+  xlab = "Time", ylab = "GDP growth")
+plot(as.Date(rownames(df_s)), df_s[ , "GDPCTPI"], type = "l",
+  xlab = "Time", ylab = "Inflation")
+plot(as.Date(rownames(df_s)), df_s[ , "FEDFUNDS"], type = "l",
+  xlab = "Time", ylab = "Federal funds rate")
+
+
+# C - Convergence assessment and parallelization
+
+priors_s <- bv_priors(mn = bv_mn(b = 0))
+
+run_s <- bvar(df_s, lags = 5, n_draw = 50000, n_burn = 25000,
+  priors = priors_s, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
 
 library("coda")
-run_mcmc <- as.mcmc(run)
+run_mcmc <- as.mcmc(run_s)
 geweke.diag(run_mcmc)
 
 library("parallel")
 n_cores <- 3 # detectCores() - 1
 cl <- makeCluster(n_cores)
 
-runs <- par_bvar(cl = cl, data = df, lags = 5,
+runs <- par_bvar(cl = cl, data = df_s, lags = 5,
   n_draw = 50000, n_burn = 25000, n_thin = 1,
-  priors = bv_priors(soc = bv_soc(), sur = bv_sur()),
-  mh = bv_mh(scale_hess = c(1, 0.01, 0.01), adjust_acc = TRUE,
-    acc_lower = 0.25, acc_upper = 0.45, acc_change = 0.02),
-  irf = NULL, fcast = NULL)
+  priors = priors_s,
+  mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
 
 stopCluster(cl)
 
-plot(run, type = "full", vars = c("lambda", "soc"), chains = runs)
+plot(run_s, type = "full", vars = c("lambda"), chains = runs)
 
-runs_mcmc <- as.mcmc(run, vars = c("lambda", "sur"), chains = runs)
+runs_mcmc <- as.mcmc(run_s, chains = runs)
 gelman.diag(runs_mcmc, autoburnin = FALSE)
 
 
-# C - Identification via sign restrictions and conditional forecasts
+# D - Identification via sign restrictions and conditional forecasts
 
-data("fred_qd")
-df_s <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
-df_s <- fred_transform(df_s, type = "fred_qd", codes = c(5, 5, 1), lag = 4)
-
-signs <- matrix(c(1, 1, 1, NA, 1, 1, -1, -1, 1), ncol = 3)
-irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
-  identification = TRUE, sign_restr = signs)
-priors_s <- bv_priors(mn = bv_mn(b = 0))
-
-run_signs <- bvar(df_s, lags = 5, n_draw = 50000, n_burn = 25000,
-  priors = priors_s, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE),
-  irf = irf_signs)
-
-print(run_signs)
-print(irf(run_signs))
-
-plot(irf(run_signs))
-
-# Conditional forecast with restricted FEDFUNDS ex-post
-path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2, 2, 2)
-plot(predict(run_signs, horizon = 16,
-  cond_path = path, cond_var = "FEDFUNDS"), t_back = 16)
-
-
-
-#### Version with levels instead of diffs
-data("fred_qd")
-df_s <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
-df_s <- fred_transform(df_s, type = "fred_qd", codes = c(4, 4, 1))
-df_s[, 1:2] <- df_s[, 1:2] * 4
+# D1 - Identification via sign restrictions
 
 signs <- matrix(c(1, 1, 1, NA, 1, 1, -1, -1, 1), ncol = 3)
 irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
   identification = TRUE, sign_restr = signs)
 
-run_signs <- bvar(df_s, lags = 5, n_draw = 50000, n_burn = 25000,
-  priors = priors, mh = mh, irf = irf_signs)
+irf(run_s) <- irf(run_s, irf_signs)
 
-print(run_signs)
-print(irf(run_signs))
+print(irf(run_s))
 
-plot(irf(run_signs))
+plot(irf(run_s))
 
-# Conditional forecast with restricted FEDFUNDS ex-post
+
+# D2 - Conditional forecasting with restricted FEDFUNDS
+
 path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2, 2, 2)
-plot(predict(run_signs, horizon = 16,
-    cond_path = path, cond_var = "FEDFUNDS"),
-  t_back = 16)
+predict(run_s) <- predict(run_s, horizon = 16,
+  cond_path = path, cond_var = "FEDFUNDS")
+
+plot(predict(run_s), t_back = 16)
 
 
 # Fin ---------------------------------------------------------------------
