@@ -13,7 +13,6 @@ library("BVAR")
 # Loading and preparing data ----------------------------------------------
 
 data("fred_qd")
-
 df <- fred_qd[, c("GDPC1", "PCECC96", "GPDIC1",
   "HOANBS", "GDPCTPI", "FEDFUNDS")]
 df <- fred_transform(df, type = "fred_qd",
@@ -68,12 +67,13 @@ run <- bvar(df, lags = 5, n_draw = 50000, n_burn = 25000, n_thin = 1,
   priors = priors, mh = mh, verbose = TRUE)
 
 
-# Assessing results
+# Assessing the results ----------------------------------------------
 
 print(run)
 
-plot(residuals(run), vars = c("GDPC1", "PCECC96"))  # Residuals are partly quite off from 0 for other vars
+fitted(run)
 
+plot(residuals(run), vars = c("GDPC1", "PCECC96"))
 
 # Hyperparameter plots
 
@@ -82,22 +82,17 @@ plot(run)
 plot(run, vars_response = "GDPC1",
   vars_impulse = c("GDPC1-lag1", "FEDFUNDS-lag2"))
 
-
-# Ex-post calculations ----------------------------------------------------
-
-# Compute and plot IRFs ex-post
+# Compute and plot IRFs
 
 irfs <- bv_irf(horizon = 16, identification = TRUE)
 irf(run) <- irf(run, irfs, conf_bands = c(0.05, 0.16))
 plot(irf(run), area = TRUE,
-  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1:2, 5:6))
+  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1, 5:6))
 
-
-# Compute and plot unconditional forecast ex-post
+# Compute and plot unconditional forecasts
 
 predict(run) <- predict(run, horizon = 16, conf_bands = c(0.05, 0.16))
-plot(predict(run), area = TRUE,
-  vars = c("GDPC1", "GDPCTPI", "FEDFUNDS"), t_back = 50)
+plot(predict(run), vars = c("GDPC1", "GDPCTPI", "FEDFUNDS"), t_back = 50)
 
 
 # Appendices --------------------------------------------------------------
@@ -159,34 +154,30 @@ runs <- par_bvar(cl = cl, data = df_s, lags = 5,
 
 stopCluster(cl)
 
-plot(run_s, type = "full", vars = c("lambda"), chains = runs)
+plot(run_s, type = "full", vars = "lambda", chains = runs)
 
 runs_mcmc <- as.mcmc(run_s, chains = runs)
 gelman.diag(runs_mcmc, autoburnin = FALSE)
 
 
-# D - Identification via sign restrictions and conditional forecasts
-
-# D1 - Identification via sign restrictions
+# D - Identification via sign restrictions
 
 signs <- matrix(c(1, 1, 1, NA, 1, 1, -1, -1, 1), ncol = 3)
 irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
   identification = TRUE, sign_restr = signs)
+print(irf_signs)
 
 irf(run_s) <- irf(run_s, irf_signs)
-
-print(irf(run_s))
-
 plot(irf(run_s))
 
 
-# D2 - Conditional forecasting with restricted FEDFUNDS
+# E - Conditional forecasting
 
 path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2, 2, 2)
 predict(run_s) <- predict(run_s, horizon = 16,
   cond_path = path, cond_var = "FEDFUNDS")
 
-plot(predict(run_s), t_back = 16)
+plot(predict(run_s), area = TRUE, t_back = 16)
 
 
 # Fin ---------------------------------------------------------------------
