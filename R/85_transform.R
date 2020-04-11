@@ -179,9 +179,9 @@ get_transformation <- function(code, lag = 1L, scale = 100) {
   switch(code,
     function(x) {x}, # No transformation
     function(x) { # First differences
-      c(rep(NA, lag), diff(x, lag = lag, differences = 1L)) * scale},
+      c(rep(NA, lag), diff(x, lag = lag, differences = 1L))},
     function(x) { # Second differences
-      c(rep(NA, lag * 2), diff(x, lag = lag, differences = 2L)) * scale},
+      c(rep(NA, lag * 2), diff(x, lag = lag, differences = 2L))},
     function(x) {log(x)}, # Logs
     function(x) { # Log first differences
       c(rep(NA, lag), diff(log(x), lag = lag, differences = 1L)) * scale},
