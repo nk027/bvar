@@ -113,3 +113,9 @@ expect_silent(BVAR:::rmvn_proposal(1, mean = 2, sigma = eigen(sigma)))
 expect_silent(BVAR:::rmvn_inv(1, sigma_inv = solve(sigma), method = "eigen"))
 expect_silent(BVAR:::rmvn_inv(1, sigma_inv = solve(sigma), method = "chol"))
 expect_error(BVAR:::rmvn_inv(1, sigma_inv = solve(sigma), method = "svd"))
+
+
+# 43_sur_soc.R ---
+
+expect_silent(soc <- .add_soc(matrix(c(1, 2, 1, 2, 3, 3), ncol = 2), 2, 0.5))
+expect_silent(sur <- .add_sur(matrix(c(1, 2, 1, 2, 3, 3), ncol = 2), 2, 0.5))

@@ -24,6 +24,7 @@ expect_silent(bv_metropolis(scale_hess = c(0.1, 0.05), adjust_acc = TRUE,
   adjust_burn = 0.5, acc_lower = 0.1, acc_upper = 0.9, acc_change = 0.1))
 expect_silent(mh <- bv_mh(scale_hess = 0.1, adjust_acc = TRUE,
   adjust_burn = 0.5, acc_lower = 0.1, acc_upper = 0.9, acc_change = 0.1))
+expect_silent(print(mh))
 
 expect_error(bv_mh(scale_hess = -1))
 expect_error(bv_mh(adjust_acc = TRUE, adjust_burn = 0))
@@ -45,6 +46,7 @@ expect_silent(bv_sur(mode = 2, sd = 1, min = 0.01, max = 50))
 
 expect_silent(priors <- bv_priors(hyper = "auto", mn = mn,
   sur = bv_sur(), soc = bv_soc(), custom = dummy))
+expect_silent(print(priors))
 expect_equal(
   bv_priors(hyper = c("lambda", "alpha", "psi")),
   bv_priors(hyper = c("full")))
