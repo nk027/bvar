@@ -5,12 +5,21 @@
 \alias{vcov.bvar}
 \title{Coefficient and VCOV methods for Bayesian VARs}
 \usage{
-\method{coef}{bvar}(object, conf_bands = 0.5, companion = FALSE, ...)
+\method{coef}{bvar}(
+  object,
+  type = c("quantile", "mean"),
+  conf_bands = 0.5,
+  companion = FALSE,
+  ...
+)
 
-\method{vcov}{bvar}(object, conf_bands = 0.5, ...)
+\method{vcov}{bvar}(object, type = c("quantile", "mean"), conf_bands = 0.5, ...)
 }
 \arguments{
 \item{object}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
+
+\item{type}{Character scalar. Whether to return quantile or mean values.
+Note that \emph{conf_bands} is ignored for mean values.}
 
 \item{conf_bands}{Numeric vector of confidence bands to apply.
 E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.

@@ -32,7 +32,7 @@
 #' \code{NA} values. A warning is thrown if rows are non-sequential.
 #' @param lag Integer scalar. Number of lags to apply when taking differences.
 #' See \code{\link[base]{diff}}.
-#' @param scale Numeric scalar. Scaling to apply to differences.
+#' @param scale Numeric scalar. Scaling to apply to log differences.
 #' @param vars Character vector. Names of the variables to look for.
 #' @param table Logical scalar. Whether to return a table of matching
 #' transformation codes instead of just the codes.
@@ -165,7 +165,7 @@ fred_code <- function(vars, type = c("fred_qd", "fred_md"), table = FALSE) {
 #'
 #' @param code Integer scalar. Code of the requested transformation.
 #' @param lag Integer scalar. Number of lags to apply.
-#' @param scalar Numeric scalar. Scaling to apply to differences.
+#' @param scalar Numeric scalar. Scaling to apply to log differences.
 #'
 #' @return Returns a function that provides the requested transformation.
 #'

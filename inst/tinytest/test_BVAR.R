@@ -89,7 +89,8 @@ expect_message(bv_fcast(horizon = 4, cond_path = rep(2, 6), cond_vars = 1))
 expect_error(bv_fcast(cond_path = matrix(rnorm(9), nrow = 3),
   cond_vars = c(1, 1)))
 expect_error(bv_fcast(cond_path = matrix(rnorm(9), nrow = 3),
-  cond_vars = c("FEDFUNDS", "FEDFUNDS")))
+  cond_vars = c("FEDFUNDS", "FEDFUNDS", "GDP")))
+
 
 # 6*_irf ---
 

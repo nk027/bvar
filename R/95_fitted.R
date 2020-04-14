@@ -9,7 +9,7 @@
 #' variables by position. Defaults to \code{NULL}, i.e. all variables.
 #' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param ... Graphical parameters for \code{\link[graphics]{par}}.
-#' @inheritParams predict.bvar
+#' @inheritParams coef.bvar
 #'
 #' @return Returns a numeric array of class \code{bvar_fitted} or
 #' \code{bvar_resid} with values at the specified confidence bands.
@@ -41,14 +41,17 @@
 #' # Get residuals and plot them
 #' plot(residuals(x))
 #' }
-fitted.bvar <- function(object, conf_bands = 0.5, ...) {
+fitted.bvar <- function(
+  object, type = c("quantile", "mean"), conf_bands = 0.5, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
+
+  type <- match.arg(type)
 
   X <- object[["meta"]][["X"]]
   N <- object[["meta"]][["N"]]
   M <- object[["meta"]][["M"]]
-  betas <- coef(object, conf_bands)
+  betas <- coef(object, type, conf_bands)
 
   has_quants <- length(dim(betas)) == 3
   if(has_quants) {
@@ -68,11 +71,14 @@ fitted.bvar <- function(object, conf_bands = 0.5, ...) {
 
 #' @rdname fitted.bvar
 #' @export
-residuals.bvar <- function(object, conf_bands = 0.5, ...) {
+residuals.bvar <- function(
+  object, type = c("quantile", "mean"), conf_bands = 0.5, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  fit <- fitted.bvar(object, conf_bands = conf_bands)
+  type <- match.arg(type)
+
+  fit <- fitted.bvar(object, type = type, conf_bands = conf_bands)
 
   Y <- object[["meta"]][["Y"]]
 
@@ -175,7 +181,7 @@ print_fitted <- function(
     cat("Computed confidence bands: ",
       paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")
   }
-  cat("Median values:\n")
+  cat("Average values:\n")
   for(var in seq_len(M)) {
     cat("\t", variables[var], ": ",
       paste0(round(top[, var], digits), collapse = ", "), ", [...], ",

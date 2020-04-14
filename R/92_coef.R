@@ -6,10 +6,14 @@
 #' \emph{conf_bands} argument.
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
+#' @param type Character scalar. Whether to return quantile or mean values.
+#' Note that \emph{conf_bands} is ignored for mean values.
+#' @param conf_bands Numeric vector of confidence bands to apply.
+#' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
+#' Note that the median, i.e. 0.5 is always included.
 #' @param companion Logical scalar. Whether to retrieve the companion matrix of
 #' coefficients. See \code{\link{companion.bvar}}.
 #' @param ... Not used.
-#' @inheritParams predict.bvar
 #'
 #' @return Returns a numeric array of class \code{bvar_coefs} or
 #' \code{bvar_vcovs} with values at the specified confidence bands.
@@ -38,15 +42,22 @@
 #' vcov(x, conf_bands = 0.5)
 #' }
 coef.bvar <- function(
-  object, conf_bands = 0.5,
+  object, type = c("quantile", "mean"), conf_bands = 0.5,
   companion = FALSE, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  if(companion) {return(companion.bvar(object, conf_bands, ...))}
+  type <- match.arg(type)
 
-  quantiles <- quantile_check(conf_bands)
-  coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
+  if(companion) {return(companion.bvar(object, type, conf_bands, ...))}
+
+  if(type == "quantile") {
+    quantiles <- quantile_check(conf_bands)
+    coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
+  } else {
+    quantiles <- 0.5
+    coefs <- apply(object[["beta"]], c(2, 3), mean)
+  }
 
   M <- object[["meta"]][["M"]]
   lags <- object[["meta"]][["lags"]]
@@ -69,12 +80,20 @@ coef.bvar <- function(
 
 #' @rdname coef.bvar
 #' @export
-vcov.bvar <- function(object, conf_bands = 0.5, ...) {
+vcov.bvar <- function(
+  object, type = c("quantile", "mean"), conf_bands = 0.5, ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
 
-  quantiles <- quantile_check(conf_bands)
-  vcovs <- apply(object[["sigma"]], c(2, 3), quantile, quantiles)
+  type <- match.arg(type)
+
+  if(type == "quantile") {
+    quantiles <- quantile_check(conf_bands)
+    vcovs <- apply(object[["sigma"]], c(2, 3), quantile, quantiles)
+  } else {
+    quantiles <- 0.5
+    coefs <- apply(object[["sigma"]], c(2, 3), mean)
+  }
 
   vars <- name_deps(object[["variables"]], M = object[["meta"]][["M"]])
 
@@ -151,7 +170,7 @@ print.bvar_vcovs <- function(x, digits = 3L, complete = FALSE, ...) {
       print(round(x[band, , ], digits = digits))
     }
   } else {
-    cat("Median values:\n")
+    cat("Average values:\n")
     print(round(coefs, digits = digits))
   }
 
