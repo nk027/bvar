@@ -44,3 +44,5 @@ summary(x)
 \code{\link{bvar}};
 \code{\link{predict.bvar}}; \code{\link{irf.bvar}}
 }
+\keyword{BVAR}
+\keyword{analysis}

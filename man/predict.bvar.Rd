@@ -86,7 +86,5 @@ summary(x, vars = 2L)
 \code{\link{plot.bvar_fcast}}; \code{\link{bv_fcast}}
 }
 \keyword{BVAR}
-\keyword{VAR}
-\keyword{forecasts}
-\keyword{prediction}
-\keyword{quantiles}
+\keyword{analysis}
+\keyword{forecast}

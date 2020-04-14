@@ -30,7 +30,7 @@
 #'
 #' @seealso \code{\link{bvar}}; \code{\link{predict.bvar}}
 #'
-#' @keywords VAR BVAR forecasts prediction plot
+#' @keywords BVAR forecast analysis plot
 #'
 #' @export
 #'

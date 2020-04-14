@@ -61,3 +61,5 @@ vcov(x, conf_bands = 0.5)
 \seealso{
 \code{\link{bvar}}; \code{\link{companion.bvar}}
 }
+\keyword{BVAR}
+\keyword{analysis}

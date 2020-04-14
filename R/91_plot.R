@@ -28,7 +28,7 @@
 #' @seealso \code{\link{bvar}}; \code{\link{plot.bvar_fcast}};
 #' \code{\link{plot.bvar_irf}}.
 #'
-#' @keywords VAR BVAR trace density convergence plot
+#' @keywords BVAR trace density plot analysis
 #'
 #' @export
 #'

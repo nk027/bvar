@@ -72,9 +72,6 @@ bv_mh(adjust_acc = TRUE, acc_lower = 0.2, acc_upper = 0.4, acc_change = 0.1)
 # Use only 50\% of the burn-in phase to adjust scaling
 bv_mh(adjust_acc = TRUE, adjust_burn = 0.5)
 }
-\keyword{BVAR}
-\keyword{MH}
-\keyword{VAR}
-\keyword{acceptance}
-\keyword{mcmc}
-\keyword{metropolis-hastings}
+\keyword{MCMC}
+\keyword{Metropolis-Hastings}
+\keyword{settings}

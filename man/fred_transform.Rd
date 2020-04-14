@@ -86,3 +86,5 @@ fred_transform(fred_md, type = "fred_md")
 \seealso{
 \code{\link{fred_qd}}
 }
+\keyword{FRED}
+\keyword{dataset}

@@ -100,6 +100,7 @@ coda::as.mcmc(y, vars = "lambda")
 \code{\link{bvar}}; \code{\link[parallel]{parLapply}}
 }
 \keyword{BVAR}
-\keyword{VAR}
-\keyword{mcmc}
-\keyword{parallel}
+\keyword{MCMC}
+\keyword{Metropolis-Hastings}
+\keyword{hierarchical}
+\keyword{priors}

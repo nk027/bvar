@@ -53,7 +53,5 @@ Waggoner, D. F., & Zha, T. (1999). Conditional Forecasts in Dynamic
 \code{\link{predict.bvar}}; \code{\link{plot.bvar_fcast}}
 }
 \keyword{BVAR}
-\keyword{VAR}
-\keyword{forecasts}
-\keyword{prediction}
+\keyword{forecast}
 \keyword{settings}

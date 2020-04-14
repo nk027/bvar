@@ -30,7 +30,7 @@
 #'
 #' @seealso \code{\link{plot.bvar_fcast}}; \code{\link{bv_fcast}}
 #'
-#' @keywords VAR BVAR forecasts prediction quantiles
+#' @keywords BVAR forecast analysis
 #'
 #' @export
 #'

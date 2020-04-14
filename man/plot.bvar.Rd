@@ -76,8 +76,7 @@ plot(x, type = "fcast", vars = 2)
 \code{\link{plot.bvar_irf}}.
 }
 \keyword{BVAR}
-\keyword{VAR}
-\keyword{convergence}
+\keyword{analysis}
 \keyword{density}
 \keyword{plot}
 \keyword{trace}

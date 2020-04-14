@@ -96,8 +96,6 @@ summary(x, vars_response = 2L)
 \code{\link{plot.bvar_irf}}; \code{\link{bv_irf}}
 }
 \keyword{BVAR}
-\keyword{VAR}
+\keyword{analysis}
 \keyword{fevd}
-\keyword{forecast-error-variance-decomposition}
-\keyword{impulse-responses}
 \keyword{irf}

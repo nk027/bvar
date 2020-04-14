@@ -58,8 +58,8 @@ bv_priors(hyper = "auto", sur = sur)
 \seealso{
 \code{\link{bv_mn}}; \code{\link{bv_dummy}}
 }
-\keyword{BVAR}
-\keyword{VAR}
+\keyword{Minnesota}
 \keyword{dummy}
-\keyword{minnesota}
+\keyword{hierarchical}
 \keyword{priors}
+\keyword{settings}

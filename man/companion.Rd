@@ -47,3 +47,5 @@ companion(x, conf_bands = 0.10)
 \seealso{
 \code{\link{bvar}}; \code{\link{coef.bvar}}
 }
+\keyword{BVAR}
+\keyword{analysis}

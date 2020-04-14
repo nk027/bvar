@@ -26,6 +26,8 @@
 #'
 #' @seealso \code{\link{bvar}}; \code{\link[stats]{density}}
 #'
+#' @keywords BVAR analysis
+#'
 #' @export
 #'
 #' @importFrom stats density

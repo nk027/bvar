@@ -12,6 +12,8 @@
 #'
 #' @seealso \code{\link{bvar}}
 #'
+#' @keywords BVAR analysis
+#'
 #' @export
 #'
 #' @importFrom mvtnorm dmvnorm

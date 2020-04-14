@@ -43,7 +43,7 @@
 #'
 #' @seealso \code{\link{irf.bvar}}; \code{\link{plot.bvar_irf}}
 #'
-#' @keywords VAR BVAR irf impulse responses fevd settings
+#' @keywords BVAR irf fevd settings
 #'
 #' @export
 #'

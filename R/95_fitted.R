@@ -16,6 +16,8 @@
 #'
 #' @seealso \code{\link{bvar}}
 #'
+#' @keywords BVAR analysis
+#'
 #' @export
 #'
 #' @importFrom stats fitted residuals

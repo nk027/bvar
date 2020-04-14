@@ -25,7 +25,7 @@
 #' @seealso \code{\link{bvar}}; \code{\link[coda]{mcmc}};
 #' \code{\link[coda]{mcmc.list}}
 #'
-#' @keywords VAR BVAR coda mcmc convergence
+#' @keywords BVAR coda MCMC analysis
 #'
 #' @export as.mcmc.bvar
 #'

@@ -26,7 +26,7 @@
 #'
 #' @seealso \code{\link{predict.bvar}}; \code{\link{plot.bvar_fcast}}
 #'
-#' @keywords VAR BVAR forecasts prediction settings
+#' @keywords BVAR forecast settings
 #'
 #' @export
 #'

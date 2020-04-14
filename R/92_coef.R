@@ -20,6 +20,8 @@
 #'
 #' @seealso \code{\link{bvar}}; \code{\link{companion.bvar}}
 #'
+#' @keywords BVAR analysis
+#'
 #' @export
 #'
 #' @importFrom stats coef vcov

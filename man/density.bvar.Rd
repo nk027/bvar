@@ -78,3 +78,5 @@ density(x, vars = c("lambda", "UNRATE"))
 \seealso{
 \code{\link{bvar}}; \code{\link[stats]{density}}
 }
+\keyword{BVAR}
+\keyword{analysis}

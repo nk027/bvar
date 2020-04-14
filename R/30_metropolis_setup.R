@@ -28,7 +28,7 @@
 #' @return Returns a named list of class \code{bv_metropolis} with options for
 #' \code{\link{bvar}}.
 #'
-#' @keywords VAR BVAR MH metropolis-hastings acceptance mcmc
+#' @keywords Metropolis-Hastings MCMC settings
 #'
 #' @export
 #'

@@ -19,6 +19,8 @@
 #' @seealso \code{\link{bvar}};
 #' \code{\link{predict.bvar}}; \code{\link{irf.bvar}}
 #'
+#' @keywords BVAR analysis
+#'
 #' @export
 #'
 #' @examples

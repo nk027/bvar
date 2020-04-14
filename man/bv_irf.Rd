@@ -79,9 +79,6 @@ Rubio-Ramirez, J. F. and Waggoner, D. F. and Zha, T. (2010) Structural
 \code{\link{irf.bvar}}; \code{\link{plot.bvar_irf}}
 }
 \keyword{BVAR}
-\keyword{VAR}
 \keyword{fevd}
-\keyword{impulse}
 \keyword{irf}
-\keyword{responses}
 \keyword{settings}

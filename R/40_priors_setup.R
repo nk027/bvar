@@ -21,7 +21,7 @@
 #' @return Returns a named list of class \code{bv_priors} with options for
 #' \code{\link{bvar}}.
 #'
-#' @keywords VAR BVAR priors minnesota dummy
+#' @keywords priors hierarchical Minnesota dummy settings
 #'
 #' @seealso \code{\link{bv_mn}}; \code{\link{bv_dummy}}
 #'

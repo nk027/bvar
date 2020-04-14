@@ -10,6 +10,8 @@
 #'
 #' @seealso \code{\link{bvar}}; \code{\link{coef.bvar}}
 #'
+#' @keywords BVAR analysis
+#'
 #' @export
 #'
 #' @importFrom stats quantile

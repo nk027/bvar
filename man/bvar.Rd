@@ -147,13 +147,7 @@ Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
 Nikolas Kuschnig, Lukas Vashold
 }
 \keyword{BVAR}
-\keyword{Bayesian}
 \keyword{MCMC}
 \keyword{Metropolis-Hastings}
-\keyword{VAR}
-\keyword{estimation}
 \keyword{hierarchical}
-\keyword{macroeconomics}
 \keyword{priors}
-\keyword{regression}
-\keyword{vector-autoregressive}

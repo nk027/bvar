@@ -89,8 +89,7 @@
 #' \code{\link{bv_fcast}}; \code{\link{bv_irf}};
 #' \code{\link{predict.bvar}}; \code{\link{irf.bvar}}; \code{\link{plot.bvar}};
 #'
-#' @keywords BVAR Bayesian VAR estimation hierarchical Metropolis-Hastings MCMC
-#'   priors macroeconomics vector-autoregressive regression
+#' @keywords BVAR Metropolis-Hastings MCMC priors hierarchical
 #'
 #' @export
 #'

@@ -85,7 +85,6 @@ as.mcmc(x, vars_impulse = c("FED", "CPI"), vars_response = "UNRATE")
 \code{\link[coda]{mcmc.list}}
 }
 \keyword{BVAR}
-\keyword{VAR}
+\keyword{MCMC}
+\keyword{analysis}
 \keyword{coda}
-\keyword{convergence}
-\keyword{mcmc}

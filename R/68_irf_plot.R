@@ -27,7 +27,7 @@
 #'
 #' @seealso \code{\link{bvar}}; \code{\link{irf.bvar}}
 #'
-#' @keywords VAR BVAR irf fevd plot
+#' @keywords BVAR irf fevd analysis plot
 #'
 #' @export
 #'

@@ -14,7 +14,7 @@
 #'
 #' @seealso \code{\link{bvar}}; \code{\link[parallel]{parLapply}}
 #'
-#' @keywords VAR BVAR mcmc parallel
+#' @keywords BVAR Metropolis-Hastings MCMC priors hierarchical
 #'
 #' @export
 #'

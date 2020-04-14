@@ -96,7 +96,6 @@ plot(predict(x, cond_path = c(1, 1, 1, 1, 1, 1), cond_var = 2))
 \code{\link{bvar}}; \code{\link{predict.bvar}}
 }
 \keyword{BVAR}
-\keyword{VAR}
-\keyword{forecasts}
+\keyword{analysis}
+\keyword{forecast}
 \keyword{plot}
-\keyword{prediction}

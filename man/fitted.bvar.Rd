@@ -64,3 +64,5 @@ plot(residuals(x))
 \seealso{
 \code{\link{bvar}}
 }
+\keyword{BVAR}
+\keyword{analysis}

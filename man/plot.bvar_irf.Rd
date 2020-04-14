@@ -90,7 +90,7 @@ plot(irf(x), vars_response = "CPI", vars_impulse = "FED")
 \code{\link{bvar}}; \code{\link{irf.bvar}}
 }
 \keyword{BVAR}
-\keyword{VAR}
+\keyword{analysis}
 \keyword{fevd}
 \keyword{irf}
 \keyword{plot}

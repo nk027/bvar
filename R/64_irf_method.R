@@ -30,8 +30,7 @@
 #'
 #' @seealso \code{\link{plot.bvar_irf}}; \code{\link{bv_irf}}
 #'
-#' @keywords VAR BVAR irf impulse-responses fevd
-#' forecast-error-variance-decomposition
+#' @keywords BVAR irf fevd analysis
 #'
 #' @export
 #'
