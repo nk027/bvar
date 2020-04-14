@@ -92,7 +92,7 @@ vcov.bvar <- function(
     vcovs <- apply(object[["sigma"]], c(2, 3), quantile, quantiles)
   } else {
     quantiles <- 0.5
-    coefs <- apply(object[["sigma"]], c(2, 3), mean)
+    vcovs <- apply(object[["sigma"]], c(2, 3), mean)
   }
 
   vars <- name_deps(object[["variables"]], M = object[["meta"]][["M"]])
