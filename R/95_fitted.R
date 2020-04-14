@@ -12,7 +12,7 @@
 #' @inheritParams coef.bvar
 #'
 #' @return Returns a numeric array of class \code{bvar_fitted} or
-#' \code{bvar_resid} with values at the specified confidence bands.
+#' \code{bvar_resid} at the specified values.
 #'
 #' @seealso \code{\link{bvar}}
 #'

@@ -33,7 +33,7 @@ variables by position. Defaults to \code{NULL}, i.e. all variables.}
 }
 \value{
 Returns a numeric array of class \code{bvar_fitted} or
-\code{bvar_resid} with values at the specified confidence bands.
+\code{bvar_resid} at the specified values.
 }
 \description{
 Calculates fitted or residual values for Bayesian VAR models generated with

@@ -32,13 +32,13 @@ coefficients. See \code{\link{companion.bvar}}.}
 }
 \value{
 Returns a numeric array of class \code{bvar_coefs} or
-\code{bvar_vcovs} with values at the specified confidence bands.
+\code{bvar_vcovs} at the specified values.
 }
 \description{
 Retrieves coefficient / variance-covariance values from Bayesian VAR models
 generated with \code{\link{bvar}}. Note that coefficients are available for
-every stored draw and credible intervals may be set via the
-\emph{conf_bands} argument.
+every stored draw and one may retrieve (a) credible intervals via the
+\emph{conf_bands} argument, or (2) means via the \emph{type} argument.
 }
 \examples{
 \donttest{

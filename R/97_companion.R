@@ -6,7 +6,7 @@
 #' @inheritParams coef.bvar
 #'
 #' @return Returns a numeric array/matrix of class \code{bvar_comp} with the
-#' VAR's coefficents in companion form, at the specified confidence bands.
+#' VAR's coefficents in companion form at the specified values.
 #'
 #' @seealso \code{\link{bvar}}; \code{\link{coef.bvar}}
 #'

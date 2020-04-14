@@ -7,20 +7,23 @@
 \usage{
 companion(object, ...)
 
-\method{companion}{bvar}(object, conf_bands = 0.5, ...)
+\method{companion}{bvar}(object, type = c("quantile", "mean"), conf_bands = 0.5, ...)
 }
 \arguments{
 \item{object}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
 
 \item{...}{Not used.}
 
-\item{conf_bands}{Numeric vector of desired confidence bands to apply.
+\item{type}{Character scalar. Whether to return quantile or mean values.
+Note that \emph{conf_bands} is ignored for mean values.}
+
+\item{conf_bands}{Numeric vector of confidence bands to apply.
 E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-Note that the median, i.e. \code{0.5} is always included.}
+Note that the median, i.e. 0.5 is always included.}
 }
 \value{
 Returns a numeric array/matrix of class \code{bvar_comp} with the
-VAR's coefficents in companion form, at the specified confidence bands.
+VAR's coefficents in companion form at the specified values.
 }
 \description{
 Calculates the companion matrix for Bayesian VARs generated via
