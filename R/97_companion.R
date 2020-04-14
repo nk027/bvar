@@ -3,11 +3,7 @@
 #' Calculates the companion matrix for Bayesian VARs generated via
 #' \code{\link{bvar}}.
 #'
-#' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param conf_bands Numeric vector of desired confidence bands to apply.
-#' E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
-#' Note that the median, i.e. \code{0.5} is always included.
-#' @param ... Not used.
+#' @inheritParams coef.bvar
 #'
 #' @return Returns a numeric array/matrix of class \code{bvar_comp} with the
 #' VAR's coefficents in companion form, at the specified confidence bands.
@@ -36,8 +32,9 @@ companion <- function(object, ...) {UseMethod("companion", object)}
 
 
 #' @noRd
-companion.default <- function(x, ...) {
-  stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
+companion.default <- function(object, ...) {
+  stop("No methods for class ",
+    paste0(class(object), collapse = " / "), " found.")
 }
 
 
@@ -45,10 +42,13 @@ companion.default <- function(x, ...) {
 #' @export
 companion.bvar <- function(
   object,
+  type = c("quantile", "mean"),
   conf_bands = 0.5,
   ...) {
 
   if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
+
+  type <- match.arg(type)
 
   K <- object[["meta"]][["K"]]
   M <- object[["meta"]][["M"]]
@@ -57,8 +57,13 @@ companion.bvar <- function(
   vars_expl <- name_expl(vars, M = M, lags = lags)[-1] # No constant
   vars_dep <- c(vars, if(lags > 1) {rep("lag", M * (lags - 1))})
 
-  quantiles <- quantile_check(conf_bands)
-  coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
+  if(type == "quantile") {
+    quantiles <- quantile_check(conf_bands)
+    coefs <- apply(object[["beta"]], c(2, 3), quantile, quantiles)
+  } else {
+    quantiles <- 0.5
+    coefs <- apply(object[["beta"]], c(2, 3), mean)
+  }
 
   if(length(quantiles) == 1) {
     comp <- get_beta_comp(coefs, K, M, lags)
