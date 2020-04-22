@@ -153,16 +153,17 @@ bv_psi <- function(
       msg = "Invalid value(s) for min (outside of [0, max)).")
     max <- vapply(max, num_check, numeric(1L), min = 0, max = Inf,
       msg = "Invalid value(s) for max (outside of (min, Inf]).")
+
+    if(length(mode) != length(min) || length(mode) != length(max)) {
+      stop("The length of mode and boundaries diverge.")
+    }
+
     if(any(min >= max) || any(min > mode) || any(mode > max)) {
       stop("Invalid values for min / max.")
     }
 
   } else if(any(c(min != "auto", max != "auto"))) {
     stop("Boundaries are only adjustable with a given mode.")
-  }
-
-  if(length(mode) != length(min) || length(mode) != length(max)) {
-    stop("The length of mode and boundaries diverge.")
   }
 
   # Outputs ---

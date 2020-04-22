@@ -74,16 +74,17 @@ bv_priors <- function(
     }
   }
 
-
   # Prepare output ---
 
   out <- if(!is.null(mn)) {
     structure(list(hyper = hyper,
       lambda = mn[["lambda"]], alpha = mn[["alpha"]],
-      psi = mn[["psi"]], var = mn[["var"]], b = mn[["b"]], ...
+      psi = mn[["psi"]], var = mn[["var"]], b = mn[["b"]],
+      ..., dummy = names(list(...))
       ), class = "bv_priors")
   } else {
-    structure(list(hyper = hyper, ...), class = "bv_priors")
+    structure(list(hyper = hyper,
+      ..., dummy = names(list(...))), class = "bv_priors")
   }
 
   return(out)

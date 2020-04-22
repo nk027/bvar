@@ -219,7 +219,8 @@ bvar <- function(
   names(pars_full) <- name_pars(pars_names, M)
 
   # Dummy priors ---
-  priors[["dummy"]] <- pars_names[!pars_names %in% c("lambda", "alpha", "psi")]
+  # priors[["dummy"]] <- # Can be done in bv_priors()
+  #   pars_names[!pars_names %in% c("lambda", "alpha", "psi")]
 
   # Hierarchical priors ---
   hyper_n <- length(priors[["hyper"]]) +
