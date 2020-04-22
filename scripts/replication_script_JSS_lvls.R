@@ -17,7 +17,6 @@ df <- fred_qd[, c("GDPC1", "PCECC96", "GPDIC1",
   "HOANBS", "GDPCTPI", "FEDFUNDS")]
 df <- fred_transform(df, type = "fred_qd",
   codes = c(4, 4, 4, 4, 4, 1))
-df[, 1:4] <- df[, 1:4] * 4
 
 # Plotting the time series
 op <- par(mfrow = c(2, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
@@ -57,7 +56,7 @@ priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
 
 # Adjust the MH-step
 
-mh <- bv_metropolis(scale_hess = c(1, 0.01, 0.01), adjust_acc = TRUE,
+mh <- bv_metropolis(scale_hess = c(1, 0.005, 0.005), adjust_acc = TRUE,
   acc_lower = 0.25, acc_upper = 0.45, acc_change = 0.02)
 
 
@@ -67,32 +66,33 @@ run <- bvar(df, lags = 5, n_draw = 50000, n_burn = 25000, n_thin = 1,
   priors = priors, mh = mh, verbose = TRUE)
 
 
-# Assessing the results ----------------------------------------------
+# Analyzing outputs -------------------------------------------------------
 
 print(run)
 
-fitted(run)
+fitted(run, type = "mean")
 
-plot(residuals(run), vars = c("GDPC1", "PCECC96"))
+plot(residuals(run, type = "mean"), vars = c("GDPC1", "PCECC96"))
 
 # Hyperparameter plots
 
 plot(run)
 
-plot(run, vars_response = "GDPC1",
+plot(run, type = "dens", vars_response = "GDPC1",
   vars_impulse = c("GDPC1-lag1", "FEDFUNDS-lag2"))
 
 # Compute and plot IRFs
 
 irfs <- bv_irf(horizon = 16, identification = TRUE)
 irf(run) <- irf(run, irfs, conf_bands = c(0.05, 0.16))
-plot(irf(run), area = TRUE,
-  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1, 5:6))
+plot(irf(run), vars_impulse = c("GDPC1", "FEDFUNDS"),
+  area = TRUE, vars_response = c(1:2, 6))
 
 # Compute and plot unconditional forecasts
 
 predict(run) <- predict(run, horizon = 16, conf_bands = c(0.05, 0.16))
-plot(predict(run), vars = c("GDPC1", "GDPCTPI", "FEDFUNDS"), t_back = 50)
+plot(predict(run), vars = c("GDPC1", "GDPCTPI", "FEDFUNDS"),
+  area = TRUE, t_back = 25)
 
 
 # Appendices --------------------------------------------------------------
@@ -118,10 +118,8 @@ priors_dum <- bv_priors(hyper = "auto", soc = soc)
 
 data("fred_qd")
 df_s <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
-
-fred_code(c("GDPC1", "GDPCTPI", "FEDFUNDS"), type = "fred_qd")
-
-df_s <- fred_transform(df_s, type = "fred_qd", codes = c(5, 5, 1), lag = 4)
+fred_transform(df_s, type = "fred_qd")
+df_s <- fred_transform(df_s, codes = c(5, 5, 1), lag = 4)
 
 op <- par(mfrow = c(1, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
 plot(as.Date(rownames(df_s)), df_s[ , "GDPC1"], type = "l",
@@ -131,38 +129,34 @@ plot(as.Date(rownames(df_s)), df_s[ , "GDPCTPI"], type = "l",
 plot(as.Date(rownames(df_s)), df_s[ , "FEDFUNDS"], type = "l",
   xlab = "Time", ylab = "Federal funds rate")
 
-
-# C - Convergence assessment and parallelization
-
 priors_s <- bv_priors(mn = bv_mn(b = 0))
-
 run_s <- bvar(df_s, lags = 5, n_draw = 50000, n_burn = 25000,
   priors = priors_s, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
 
+# C - Convergence assessment and parallelization
+
 library("coda")
-run_mcmc <- as.mcmc(run_s)
+run_mcmc <- as.mcmc(run_s, vars = "lambda")
 geweke.diag(run_mcmc)
 
 library("parallel")
 n_cores <- 3 # detectCores() - 1
 cl <- makeCluster(n_cores)
-
 runs <- par_bvar(cl = cl, data = df_s, lags = 5,
   n_draw = 50000, n_burn = 25000, n_thin = 1,
   priors = priors_s,
   mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
-
 stopCluster(cl)
 
 plot(run_s, type = "full", vars = "lambda", chains = runs)
 
-runs_mcmc <- as.mcmc(run_s, chains = runs)
+runs_mcmc <- as.mcmc(run_s, vars = "lambda", chains = runs)
 gelman.diag(runs_mcmc, autoburnin = FALSE)
 
 
 # D - Identification via sign restrictions
 
-signs <- matrix(c(1, 1, 1, NA, 1, 1, -1, -1, 1), ncol = 3)
+signs <- matrix(c(1, 1, 1, -1, 1, NA, -1, -1, 1), ncol = 3)
 irf_signs <- bv_irf(horizon = 12, fevd = TRUE,
   identification = TRUE, sign_restr = signs)
 print(irf_signs)
@@ -177,7 +171,7 @@ path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2, 2, 2)
 predict(run_s) <- predict(run_s, horizon = 16,
   cond_path = path, cond_var = "FEDFUNDS")
 
-plot(predict(run_s), area = TRUE, t_back = 16)
+plot(predict(run_s), t_back = 16)
 
 
 # Fin ---------------------------------------------------------------------
