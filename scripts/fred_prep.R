@@ -5,6 +5,7 @@ keep <- readLines("data/fred_permitted.txt")
 
 file <- "2020-01.csv" # Update this
 
+
 # QD ---
 # See https://research.stlouisfed.org/econ/mccracken/fred-databases/
 link <- "https://s3.amazonaws.com/files.fred.stlouisfed.org/fred-md/quarterly/"
@@ -37,6 +38,7 @@ save(fred_qd, file = "data/fred_qd_full.rda", version = 2)
 # Subset to series we are permitted to use
 fred_qd <- fred_qd[, names(fred_qd) %in% keep]
 save(fred_qd, file = "data/fred_qd.rda", version = 2)
+
 
 # MD ---
 # See https://research.stlouisfed.org/econ/mccracken/fred-databases/
@@ -71,6 +73,7 @@ save(fred_md, file = "data/fred_md_full.rda", version = 2)
 fred_md <- fred_md[, names(fred_md) %in% keep]
 save(fred_md, file = "data/fred_md.rda", version = 2)
 
+
 # Transformation codes ---
 
 names_md <- names(fred_md_trans)
@@ -102,34 +105,3 @@ fred_trans$fred_qd <- factor(fred_trans$fred_qd,
 write.table(fred_trans, file = "inst/fred_trans.csv",
   sep = ",", na = "", row.names = FALSE, fileEncoding = "UTF-8")
 # saveRDS(fred_trans, file = "inst/fred_trans.rds", version = 2)
-
-
-# Add transformations -------------------------------------------------------
-
-load("inst/fred_trans.rda")
-source("R/data.R")
-source("R/11_input.R")
-
-# QD ---
-
-# load("data/fred_qd.rda")
-
-# fred_qd_trans <- vapply(names(fred_qd), function(x) {
-#     code <- fred_trans$qd[fred_trans$variable == x]
-#     if(!code %in% 1L:7L) {stop("Code for", name, "not found!")}
-#     get_transformation(code = code, lag = 1, scale = 100)(fred_qd[, x])
-#   }, numeric(nrow(fred_qd)))[c(-1, -2), ]
-
-# save(fred_qd_trans, file = "data/fred_qd_trans.rda", version = 2)
-
-# MD ---
-
-# load("data/fred_md.rda")
-
-# fred_md_trans <- vapply(names(fred_md), function(x) {
-#     code <- fred_trans$md[fred_trans$variable == x]
-#     if(!code %in% 1L:7L) {stop("Code for", name, "not found!")}
-#     get_transformation(code = code, lag = 1, scale = 100)(fred_md[, x])
-#   }, numeric(nrow(fred_md)))[c(-1, -2), ]
-
-# save(fred_md_trans, file = "data/fred_md_trans.rda", version = 2)

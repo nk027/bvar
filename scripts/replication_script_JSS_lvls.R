@@ -32,6 +32,7 @@ plot(as.Date(rownames(df)), df[ , "GDPCTPI"], type = "l",
   xlab = "Time", ylab = "GDP deflator")
 plot(as.Date(rownames(df)), df[ , "FEDFUNDS"], type = "l",
   xlab = "Time", ylab = "Federal funds rate")
+par(op)
 
 
 # `bvar()` setup ----------------------------------------------------------
@@ -128,6 +129,7 @@ plot(as.Date(rownames(df_s)), df_s[ , "GDPCTPI"], type = "l",
   xlab = "Time", ylab = "Inflation")
 plot(as.Date(rownames(df_s)), df_s[ , "FEDFUNDS"], type = "l",
   xlab = "Time", ylab = "Federal funds rate")
+par(op)
 
 priors_s <- bv_priors(mn = bv_mn(b = 0))
 run_s <- bvar(df_s, lags = 5, n_draw = 50000, n_burn = 25000,

@@ -25,7 +25,7 @@ load("data/fred_md_full.rda")
 #   if(RCurl::url.exists(site)) {
 #     site_txt <- site %>% read_html() %>% html_text()
 #     rights[i, ] <- c(grepl("copyrighted: [a-zA-Z]+ required", site_txt),
-#                      grepl("public domain: citation requested", site_txt))
+#       grepl("public domain: citation requested", site_txt))
 #   }
 # }
 
@@ -55,7 +55,7 @@ for(i in seq_along(fred_md_check)) {
   if(RCurl::url.exists(site)) {
     site_txt <- site %>% read_html() %>% html_text()
     rights[i, ] <- c(grepl("copyrighted: [a-zA-Z]+ required", site_txt),
-                     grepl("public domain: citation requested", site_txt))
+      grepl("public domain: citation requested", site_txt))
   }
 }
 
