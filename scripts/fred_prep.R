@@ -3,7 +3,7 @@
 
 keep <- readLines("data/fred_permitted.txt")
 
-file <- "2020-01.csv" # Update this
+file <- "2020-03.csv" # Update this
 
 
 # QD ---
@@ -34,10 +34,10 @@ all(vapply(fred_qd, is.numeric, logical(1)))
 vapply(fred_qd, function(x) sum(is.na(x)), numeric(1))
 
 # Save fred_qd
-save(fred_qd, file = "data/fred_qd_full.rda", version = 2)
+save(fred_qd, file = "data/fred_qd_full.rda", version = 2, compress = "xz")
 # Subset to series we are permitted to use
 fred_qd <- fred_qd[, names(fred_qd) %in% keep]
-save(fred_qd, file = "data/fred_qd.rda", version = 2)
+save(fred_qd, file = "data/fred_qd.rda", version = 2, compress = "xz")
 
 
 # MD ---
@@ -68,10 +68,10 @@ all(vapply(fred_md, is.numeric, logical(1)))
 vapply(fred_md, function(x) sum(is.na(x)), numeric(1))
 
 # Save fred_md
-save(fred_md, file = "data/fred_md_full.rda", version = 2)
+save(fred_md, file = "data/fred_md_full.rda", version = 2, compress = "xz")
 # Subset to series we are permitted to use
 fred_md <- fred_md[, names(fred_md) %in% keep]
-save(fred_md, file = "data/fred_md.rda", version = 2)
+save(fred_md, file = "data/fred_md.rda", version = 2, compress = "xz")
 
 
 # Transformation codes ---
