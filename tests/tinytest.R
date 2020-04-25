@@ -8,7 +8,7 @@ if(requireNamespace("tinytest", quietly = TRUE)) {
     tinytest::test_all(at_home = home, pattern = "^.*\\.[rR]$")
   } else { # Test the API
     tinytest::test_package("BVAR",
-      # at_home = home, pattern = "^.*\\.[rR]$")
-      at_home = home, pattern = "^test.*\\.[rR]$")
+      at_home = home, pattern = "^.*\\.[rR]$")
+      # at_home = home, pattern = "^test.*\\.[rR]$")
   }
 }
