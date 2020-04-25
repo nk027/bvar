@@ -13,4 +13,4 @@ build: article.Rnw
 	pdflatex article.tex
 
 clean:
-	rm -f *.aux *.bbl *.blg *.fls *.log *.out *.fdb_latexmk fig-*
+	rm -f *.aux *.bbl *.blg *.fls *.log *.out *.fdb_latexmk *.R *.pdf img/fig-*

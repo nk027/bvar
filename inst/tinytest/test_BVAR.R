@@ -122,19 +122,23 @@ expect_error(bf_irf(zero_restr = matrix(rnorm(9), nrow = 3)))
 expect_silent(bvar(data, lags = 2, fcast = opt_fcast, irf = opt_irf))
 expect_silent(run <- bvar(data, lags = 2, priors = priors, mh = mh))
 
-# 5*_fcast
+# 5*_fcast ---
 
 expect_silent(predict(run) <- predict(run, opt_fcast))
 expect_silent(fcasts <- predict(run))
+
 expect_silent(print(fcasts))
+expect_silent(print(summary(fcasts)))
 expect_silent(plot(fcasts, vars = 1))
 
-# 6*_irf
+# 6*_irf ---
 
 expect_silent(irf(run) <- irf(run, opt_irf))
 expect_silent(irfs <- irf(run))
+
 expect_silent(print(irfs))
-expect_silent(fevd(irfs))
+expect_silent(print(summary(irfs)))
+expect_silent(print(fevd(irfs)))
 expect_silent(plot(irfs, vars_res = 1, vars_imp = 1))
 
 # 80_coda ---
@@ -184,6 +188,7 @@ expect_silent(print(vcov(run, type = "mean")))
 
 expect_silent(print(density(run, vars = 2)))
 expect_silent(plot(density(run, vars = 2)))
+expect_silent(independent_index(2, 4, 2))
 
 expect_silent(print(fitted(run)))
 expect_silent(print(residuals(run, conf_bands = 0.1)))

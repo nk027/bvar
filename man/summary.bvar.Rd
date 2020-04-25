@@ -31,8 +31,7 @@ Separate summary methods exist for impulse responses and forecasts.
 # Access a subset of the fred_qd dataset
 data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 # Transform it to be stationary
-data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
-data <- data[5:nrow(data), ]
+data <- fred_transform(data, codes = c(5, 5, 5), lag = 4)
 
 # Estimate a BVAR using one lag, default settings and very few draws
 x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)

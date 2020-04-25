@@ -9,7 +9,7 @@
 %\VignetteKeyword{forecast}
 %\VignetteKeyword{macroeconomics}
 
-\SweaveOpts{engine=R, eps=FALSE, keep.source=TRUE, prefix.string=fig}
+\SweaveOpts{engine=R, eps=FALSE, keep.source=TRUE, prefix.string=img/fig}
 
 <<preliminaries, echo=FALSE, results=hide>>=
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
@@ -448,9 +448,19 @@ Other established methods, such as \code{fitted()}, \code{density()} and \code{r
 For our example, we access a concise summary of our estimation using \code{print()}. Then we use \code{plot()} to assess convergence of the MCMC algorithm, which is essential for its stability. By default, the method provides trace and density plots of the ML and the hierarchically treated hyperparameters (see Figure~\ref{fig:trace_density}). Burnt draws are not included and parameter boundaries are plotted as dashed gray lines.
 The plot can be subset to specific hyperparameters or VAR coefficients via the \code{vars} argument (see Figure~\ref{fig:betas}). The arguments \code{var_response} and \code{var_impulse} provide a concise alternative way of retrieving VAR coefficients. We can also use the \code{type} argument to choose a specific type of plot.
 
-<<print, eval=TRUE, echo=TRUE>>=
+<<print, eval=TRUE, echo=TRUE, results=hide>>=
 print(run)
 @
+
+% Hardcoded to match outputs above
+\begin{Soutput}
+  Bayesian VAR consisting of 238 observations, 6 variables and 5 lags.
+  Time spent calculating: 1.23 mins
+  Hyperparameters: lambda, soc, sur
+  Hyperparameter values after optimisation: 1.51317, 0.12619, 0.47657
+  Iterations (burnt / thinning): 50000 (25000 / 1)
+  Accepted draws (rate): 9326 (0.373)
+\end{Soutput}
 
 <<trace_density, fig=TRUE, png=TRUE, eval=TRUE, echo=TRUE, include=FALSE>>=
 plot(run)

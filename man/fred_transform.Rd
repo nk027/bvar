@@ -47,7 +47,8 @@ codes, or a \code{data.frmae} of matching transformation codes.
 \description{
 Apply transformations given by FRED-MD or FRED-QD and generate rectangular
 subsets. See \code{\link{fred_qd}} for information on data and the details
-section for information on the transformations.
+section for information on the transformations. Call without arguments to
+retrieve available codes / all FRED suggestions.
 }
 \details{
 FRED-QD and FRED-MD include a transformation code for every variable. All
