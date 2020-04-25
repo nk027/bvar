@@ -44,7 +44,7 @@
 #'
 #' @seealso \code{\link{fred_qd}}
 #'
-#' @keywords dataset FRED
+#' @keywords datasets FRED
 #'
 #' @export
 #'

@@ -9,7 +9,7 @@
 %\VignetteKeyword{forecast}
 %\VignetteKeyword{macroeconomics}
 
-\SweaveOpts{engine=R, eps=FALSE, keep.source=TRUE, prefix.string=img/fig}
+\SweaveOpts{engine=R, eps=FALSE, keep.source=TRUE, prefix.string=fig}
 
 <<preliminaries, echo=FALSE, results=hide>>=
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
@@ -353,7 +353,7 @@ par(op)
 
 \begin{figure}[ht]
 	\centering
-  \includegraphics[width=0.9\textwidth]{img/fig-timeseries.pdf}
+  \includegraphics[width=0.9\textwidth]{fig-timeseries.pdf}
 	\caption{Transformed time series under consideration.}
 	\label{fig:timeseries}
 \end{figure}
@@ -468,7 +468,7 @@ plot(run)
 
 \begin{figure}[!ht]
 	\centering
-  \includegraphics[height=14cm]{img/fig-trace_density.png}
+  \includegraphics[height=14cm]{fig-trace_density.png}
 	\caption{Trace and density plots of all hierarchically treated hyperparameters and the ML.}
 	\label{fig:trace_density}
 \end{figure}
@@ -480,7 +480,7 @@ plot(run, type = "dens", vars_response = "GDPC1",
 
 \begin{figure}[!ht]
 	\centering
-  \includegraphics[width=0.9\textwidth]{img/fig-betas.pdf}
+  \includegraphics[width=0.9\textwidth]{fig-betas.pdf}
 	\caption{Density plots for the VAR coefficients corresponding to the first lag of GDP and the second lag of the federal funds rate in the GDP equation.}
 	\label{fig:betas}
 \end{figure}
@@ -501,7 +501,7 @@ plot(residuals(run, type = "mean"), vars = c("GDPC1", "PCECC96"))
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{img/fig-residuals.pdf}
+  \includegraphics[width=0.9\textwidth]{fig-residuals.pdf}
   \caption{Residual plots of GDP and private consumption expenditure.}
   \label{fig:residuals}
 \end{figure}
@@ -524,7 +524,7 @@ plot(irf(run), area = TRUE,
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{img/fig-irf_cholesky.pdf}
+  \includegraphics[width=0.9\textwidth]{fig-irf_cholesky.pdf}
   \caption{Impulse responses of GDP, private consumption expenditure and the federal funds rate to an aggregate demand shock (left panels) and a monetary policy shock (right panels). Shaded areas refer to the 90\% and the 68\% credible sets.}
   \label{fig:irf_cholesky}
 \end{figure}
@@ -545,7 +545,7 @@ plot(predict(run), area = TRUE, t_back = 24,
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{img/fig-predict_unconditional.pdf}
+  \includegraphics[width=0.9\textwidth]{fig-predict_unconditional.pdf}
   \caption{Unconditional forecasts for GDP, the GDP deflator and the federal funds rate. Shaded areas refer to the 90\% and the 68\% credible sets.}
   \label{fig:predict_unconditional}
 \end{figure}
@@ -639,7 +639,7 @@ par(op)
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{img/fig-app_timeseries.pdf}
+  \includegraphics[width=0.9\textwidth]{fig-app_timeseries.pdf}
   \caption{Transformed time series under consideration for the prototypical monetary VAR.}
   \label{fig:app_timeseries}
 \end{figure}
@@ -719,7 +719,7 @@ plot(runs, type = "full", vars = "lambda")
 
 \begin{figure}[ht]
 	\centering
-  \includegraphics[width=0.9\linewidth]{img/fig-app_chains.png}
+  \includegraphics[width=0.9\linewidth]{fig-app_chains.png}
 	\caption{Plot of $\lambda$, the key hyperparameter of the Minnesota prior, for separate runs.}
 	\label{fig:app_chains}
 \end{figure}
@@ -749,7 +749,7 @@ plot(irf(run_app))
 
 \begin{figure}[ht!]
 	\centering
-  \includegraphics[width=0.9\linewidth]{img/fig-app_irf_signs.pdf}
+  \includegraphics[width=0.9\linewidth]{fig-app_irf_signs.pdf}
 	\caption{Full set of impulse responses from a prototypical monetary VAR using sign restrictions to achieve identification. Grey lines refer to the 68\% credible set.}
 	\label{fig:app_irf_signs}
 \end{figure}
@@ -777,7 +777,7 @@ plot(predict(run_app), t_back = 16)
 
 \begin{figure}[ht]
 	\centering
-  \includegraphics[width=0.9\textwidth]{img/fig-app_predict_conditional.pdf}
+  \includegraphics[width=0.9\textwidth]{fig-app_predict_conditional.pdf}
 	\caption{Conditional forecasts for GDP growth, inflation and the federal funds rate. Grey lines refer to the 68\% credible set.}
 	\label{fig:app_predict_conditional}
 \end{figure}

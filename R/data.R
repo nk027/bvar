@@ -26,7 +26,7 @@
 #'
 #' @seealso \code{\link{fred_transform}}
 #'
-#' @keywords dataset FRED macroeconomics
+#' @keywords FRED macroeconomics
 #'
 #' @references
 #'   McCracken, M. W. and Ng, S. (2016) FRED-MD: A Monthly Database for

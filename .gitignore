@@ -303,3 +303,5 @@ TSWLatexianTemp*
 *.glstex
 
 # End of https://www.gitignore.io/api/latex
+doc
+Meta
