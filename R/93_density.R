@@ -5,22 +5,12 @@
 #' \code{\link[stats]{density}} outputs into a \code{list}.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
-#' @param vars Character vector used to select variables. Elements are matched
-#' to hyperparameters or coefficients. Coefficients may be matched based on
-#' the dependent variable (by providing the name or position) or the
-#' explanatory variables (by providing the name and the desired lag). See the
-#' example section for a demonstration. Defaults to \code{NULL}, i.e. all
-#' hyperparameters.
-#' @param vars_response,vars_impulse Optional character or integer vectors used
-#' to select coefficents. Dependent variables are specified with
-#' \emph{vars_response}, explanatory ones with \emph{vars_impulse}. See the
-#' example section for a demonstration.
 #' @param ... Fed to \code{\link[stats]{density}} or
 #' \code{\link[graphics]{par}}.
-#' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
 #' @param mfrow Numeric vector. Rows for \code{\link[graphics]{par}}.
-#' @param var,n_vars,lag Integer scalars. Retrieve the position of
+#' @param var,n_vars,lag Integer scalars. Retrieve the position of lag
 #' \emph{lag} of variable \emph{var} given \emph{n_vars} total variables.
+#' @inheritParams plot.bvar
 #'
 #' @return Returns a list with outputs of \code{\link[stats]{density}}.
 #'

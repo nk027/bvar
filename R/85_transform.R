@@ -2,7 +2,8 @@
 #'
 #' Apply transformations given by FRED-MD or FRED-QD and generate rectangular
 #' subsets. See \code{\link{fred_qd}} for information on data and the details
-#' section for information on the transformations.
+#' section for information on the transformations. Call without arguments to
+#' retrieve available codes / all FRED suggestions.
 #'
 #' FRED-QD and FRED-MD include a transformation code for every variable. All
 #' codes are provided in \code{system.file("fred_trans.csv", package = "BVAR")}.
@@ -67,6 +68,11 @@ fred_transform <- function(
   codes, na.rm = TRUE,
   lag = 1L, scale = 100) {
 
+  if(missing(data)) {
+    return(structure(1:7, names = c("none", "1st-diff", "2nd-diff", "log",
+      "log-diff", "log-2nd-diff", "pct-ch-diff")))
+  }
+
   # Data
   if(!all(vapply(data, is.numeric, logical(1))) || !is.data.frame(data)) {
     stop("Problem with the data. Please provide a numeric data.frame.")
@@ -119,16 +125,20 @@ fred_transform <- function(
 #' @importFrom utils read.table
 fred_code <- function(vars, type = c("fred_qd", "fred_md"), table = FALSE) {
 
-  if(!is.character(vars) || length(vars) == 0) {
-    stop("Please provide named variables to look up transformation codes.")
-  }
-  table <- isTRUE(table)
-
   fred_trans <- read.table(system.file("fred_trans.csv", package = "BVAR"),
     header = TRUE, sep = ",", na.strings = c("", "NA"))
   fred_trans[, 2:3] <- lapply(fred_trans[, 2:3], factor,
     levels = c("none", "1st-diff", "2nd-diff", "log",
       "log-diff", "log-2nd-diff", "pct-ch-diff"))
+
+  if(missing(vars)) {
+    return(fred_trans)
+  }
+
+  if(!is.character(vars) || length(vars) == 0) {
+    stop("Please provide named variables to look up transformation codes.")
+  }
+  table <- isTRUE(table)
 
   if(table) {
     matches <- do.call(c, sapply(vars, grep,
@@ -190,7 +200,7 @@ get_transformation <- function(code, lag = 1L, scale = 100) {
     function(x) { # Log second differences
       c(rep(NA, lag * 2), diff(log(x), lag = lag, differences = 2L)) * scale},
     function(x) { # Percent-change differences
-      c(rep(NA, lag), diff(x[-seq(lag)] / head(x, length(x) - lag) - 1L),
-        lag = lag, differences = 1L) * scale}
+      c(rep(NA, lag * 2), diff(x[-seq(lag)] / head(x, length(x) - lag) - 1L,
+        lag = lag, differences = 1L)) * scale}
   )
 }

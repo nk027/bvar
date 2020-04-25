@@ -78,24 +78,27 @@ bv_irf <- function(
 
   if(identification) {
     if(!is.null(zero_restr)) {stop("Zero restrictions are not yet available.")}
-    if(!is.null(sign_restr) && !is.numeric(sign_restr) &&
-      !all(sign_restr %in% c(-1, 0, NA, 1)) &&
-      sqrt(length(sign_restr)) %% 1 != 0) {
-      stop("Please provide sign_restr as a numeric square matrix containing ",
-          "NAs, 1s and -1s.")
+    if(!is.null(sign_restr)) {
+      restr_len <- length(sign_restr)
+      if(!is.numeric(sign_restr) && !all(sign_restr %in% c(-1, 0, NA, 1)) &&
+        sqrt(restr_len) %% 1 != 0) {
+        stop("Please provide sign_restr as a numeric square matrix ",
+          "containing NAs, 1s and -1s.")
+      }
+      if(0 %in% sign_restr) {
+        warning("Please set unrestricted elements to NA instead of 0. ",
+          "This functionality is being deprecated for zero-sign restrictions.")
+        sign_restr[sign_restr == 0] <- NA_integer_
+      }
+      if(is.vector(sign_restr)) {
+        sign_restr <- matrix(sign_restr, nrow = sqrt(restr_len))
+      }
+      if(sum(!is.na(sign_restr)) <
+        (sqrt(restr_len) - 1) * sqrt(restr_len) / 2) {
+        message("Number of restrictions implies an underidentified system.")
+      }
     }
-    if(0 %in% sign_restr) {
-      warning("Please set unrestricted elements to NA instead of 0. ",
-        "This functionality is being deprecated for zero-sign restrictions.")
-      sign_restr[sign_restr == 0] <- NA_integer_
-    }
-    if(sum(!is.na(sign_restr)) < (sqrt(length(sign_restr)) - 1) *
-                                  sqrt(length(sign_restr)) / 2) {
-      warning("Number of restrictions implies underidentified system.")
-    }
-    if(is.vector(sign_restr)) {
-      sign_restr <- matrix(sign_restr, nrow = sqrt(length(sign_restr)))
-    }
+    # Cholesky
   }
 
   # Outputs

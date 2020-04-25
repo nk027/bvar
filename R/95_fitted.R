@@ -5,11 +5,8 @@
 #'
 #' @param object A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param x Object of class \code{bvar_fitted} / \code{bvar_resid}.
-#' @param vars Optional numeric vector. Used to subset the plot to certain
-#' variables by position. Defaults to \code{NULL}, i.e. all variables.
-#' @param mar Numeric vector. Margins for \code{\link[graphics]{par}}.
-#' @param ... Graphical parameters for \code{\link[graphics]{par}}.
 #' @inheritParams coef.bvar
+#' @inheritParams plot.bvar
 #'
 #' @return Returns a numeric array of class \code{bvar_fitted} or
 #' \code{bvar_resid} at the specified values.
