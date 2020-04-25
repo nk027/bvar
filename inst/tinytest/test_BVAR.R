@@ -1,9 +1,11 @@
 
-# API tests -----
+# API tests -------
 
 data <- data2 <- data3 <- matrix(rnorm(1000), nrow = 200)
 
-# 10_bvar.R ---
+# Fail and prepare -----
+
+# 10_bvar ---
 
 expect_error(bvar(data, lags = 1, n_draw = 1000, n_burn = 1000))
 expect_error(bvar(data, lags = 1, n_draw = 10, n_burn = 1))
@@ -32,7 +34,7 @@ expect_error(bv_mh(adjust_acc = TRUE, acc_lower = 0.5, acc_upper = 0.4))
 expect_error(bv_mh(adjust_acc = TRUE, acc_change = -1))
 
 
-# 4*_priors.R ---
+# 4*_priors ---
 
 expect_silent(bv_minnesota(lambda = bv_lambda(0.25, sd = 0.4),
   alpha = bv_alpha(mode = 1.5, min = 0.5, max = 5), var = 1e06))
@@ -81,12 +83,15 @@ expect_error(bv_dummy(min = 2, max = 1))
 
 # 5*_fcast ---
 
-expect_silent(bv_fcast(horizon = 2020))
+expect_silent(opt_fcast <- bv_fcast())
+expect_silent(print(opt_fcast))
 expect_silent(bv_fcast(cond_path = c(2, 2, 2, 2), cond_vars = 1))
 expect_silent(bv_fcast(cond_path = c(2, 2, 2, 2), cond_vars = "FEDFUNDS"))
 expect_silent(bv_fcast(cond_path = matrix(rep(2, 6), nrow = 3)))
-expect_silent(bv_fcast(
+expect_silent(bv_fcast(horizon = 2020,
   cond_path = matrix(c(2, 2, NA, 1.5, NA, NA, 1, 1.2, 1.5), nrow = 3)))
+
+# Short horizon and duplicated cond_vars
 expect_message(bv_fcast(horizon = 4, cond_path = rep(2, 6), cond_vars = 1))
 expect_error(bv_fcast(cond_path = matrix(rnorm(9), nrow = 3),
   cond_vars = c(1, 1)))
@@ -96,9 +101,94 @@ expect_error(bv_fcast(cond_path = matrix(rnorm(9), nrow = 3),
 
 # 6*_irf ---
 
-# 80_coda.R ---
+expect_silent(opt_irf <- bv_irf(fevd = TRUE))
+expect_silent(print(opt_irf))
+expect_silent(bv_irf(horizon = 2020, identification = FALSE))
+expect_silent(bv_irf(
+  sign_restr = matrix(c(1, NA, NA, -1, 1, -1, -1, 1, 1), nrow = 3)))
+expect_silent(bv_irf(sign_restr = c(1, NA, -1, 1), sign_lim = 100))
 
-# 81_parallel.R ---
+# Underidentified, deprecated 0, non-square restrictions and no zeros yet
+expect_message(bv_irf(sign_restr = matrix(c(NA, NA, NA, NA), nrow = 2)))
+expect_warning(bv_irf(sign_restr = matrix(c(0, 1, -1, NA), nrow = 2)))
+expect_error(bf_irf(sign_restr = matrix(rnorm(6), nrow = 3)))
+expect_error(bf_irf(zero_restr = matrix(rnorm(9), nrow = 3)))
+
+
+# Run and analyse -----
+
+# 10_bvar ---
+
+expect_silent(bvar(data, lags = 2, fcast = opt_fcast, irf = opt_irf))
+expect_silent(run <- bvar(data, lags = 2, priors = priors, mh = mh))
+
+# 5*_fcast
+
+expect_silent(predict(run) <- predict(run, opt_fcast))
+expect_silent(fcasts <- predict(run))
+expect_silent(print(fcasts))
+expect_silent(plot(fcasts, vars = 1))
+
+# 6*_irf
+
+expect_silent(irf(run) <- irf(run, opt_irf))
+expect_silent(irfs <- irf(run))
+expect_silent(print(irfs))
+expect_silent(fevd(irfs))
+expect_silent(plot(irfs, vars_res = 1, vars_imp = 1))
+
+# 80_coda ---
+
+expect_silent(coda::as.mcmc(run))
+
+# 81_parallel ---
+
+# 85_transform ---
+
+x <- fred_md[c("RPI")]
+expect_silent(fred_transform())
+expect_silent(fred_transform(fred_qd[c("GDPC1", "GDPCTPI", "FEDFUNDS")]))
+expect_silent(fred_transform(x, type = "fred_md"))
+expect_silent(fred_transform(x, codes = 7, na.rm = FALSE))
+expect_silent(fred_transform(x, type = "fred_md", lag = 2, scale = 50))
+
+expect_silent(fred_code())
+expect_silent(fred_code(c("GDPC1", "GDPCTPI", "FEDFUNDS")))
+expect_silent(fred_code(c("RPI"), type = "fred_md"))
+expect_silent(fred_code(c("GDPC1", "RPI"), table = TRUE))
+
+expect_equivalent(fred_transform(x, code = 1), x)
+expect_equivalent(fred_transform(x, code = 5, lag = 12, scale = 101),
+  data.frame(diff(log(x[, 1]), lag = 12) * 101))
+
+expect_message(fred_code("A"))
+expect_message(fred_code("Temperature"))
+
 
 # 9*_methods ---
 
+expect_silent(print(run))
+
+expect_silent(plot(run))
+expect_silent(plot(run, type = "trace", vars = c("lambda")))
+expect_silent(plot(run, type = "dens", vars_res = 1, vars_imp = 2))
+expect_silent(plot(run, type = "fcast", vars = 1))
+expect_silent(plot(run, type = "irf", vars_impulse = 1, vars_response = 1))
+
+
+expect_silent(print(coef(run)))
+expect_silent(print(coef(run, type = "mean")))
+expect_silent(print(coef(run, conf_bands = 0.1)))
+expect_silent(print(vcov(run)))
+expect_silent(print(vcov(run, type = "mean")))
+
+expect_silent(print(density(run, vars = 2)))
+expect_silent(plot(density(run, vars = 2)))
+
+expect_silent(print(fitted(run)))
+expect_silent(print(residuals(run, conf_bands = 0.1)))
+expect_silent(plot(residuals(run), vars = 1))
+
+expect_silent(print(summary(run)))
+
+expect_silent(print(companion(run)))

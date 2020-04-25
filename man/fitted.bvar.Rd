@@ -22,12 +22,16 @@ Note that \emph{conf_bands} is ignored for mean values.}
 E.g. for bands at 5\%, 10\%, 90\% and 95\% set this to \code{c(0.05, 0.1)}.
 Note that the median, i.e. 0.5 is always included.}
 
-\item{...}{Graphical parameters for \code{\link[graphics]{par}}.}
+\item{...}{Not used.}
 
 \item{x}{Object of class \code{bvar_fitted} / \code{bvar_resid}.}
 
-\item{vars}{Optional numeric vector. Used to subset the plot to certain
-variables by position. Defaults to \code{NULL}, i.e. all variables.}
+\item{vars}{Character vector used to select variables. Elements are matched
+to hyperparameters or coefficients. Coefficients may be matched based on
+the dependent variable (by providing the name or position) or the
+explanatory variables (by providing the name and the desired lag). See the
+example section for a demonstration. Defaults to \code{NULL}, i.e. all
+hyperparameters.}
 
 \item{mar}{Numeric vector. Margins for \code{\link[graphics]{par}}.}
 }

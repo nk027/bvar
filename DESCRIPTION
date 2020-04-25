@@ -7,8 +7,8 @@ Authors@R: c(person("Nikolas", "Kuschnig", role = c("aut", "cre"), email = "niko
     person("Lukas", "Vashold", role = "aut"),
     person("Michael", "McCracken", role = "dtc"),
     person("Serena", "Ng", role = "dtc"))
-Author: Nikolas Kuschnig [aut, cre], Lukas Vashold [aut], Michael
-       McCracken [dtc], Serena Ng [dtc]
+Author: Nikolas Kuschnig [aut, cre], Lukas Vashold [aut],
+    Michael McCracken [dtc], Serena Ng [dtc]
 Maintainer: Nikolas Kuschnig <nikolas.kuschnig@wu.ac.at>
 Description: Estimation of hierarchical Bayesian vector autoregressive models.
     Implements hierarchical prior selection for conjugate priors in the fashion
@@ -24,4 +24,4 @@ Suggests: coda, vars, tinytest
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

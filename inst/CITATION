@@ -2,23 +2,23 @@ citHeader("To cite BVAR in publications please use:")
 
 citEntry(
   entry = "techreport",
-  title = "{BVAR}: Bayesian Vector Autoregressions with Hierarchical Prior Selection in {R}",
-  author = "Nikolas Kuschnig and Lukas Vashold",
+  title = "{BVAR}: {B}ayesian Vector Autoregressions with Hierarchical Prior Selection in {R}",
+  author = "Kuschnig, Nikolas and Vashold, Lukas",
   year = "2019",
   type = "Department of Economics Working Paper Series",
   institution = "WU Vienna University of Economics and Business",
   number = "296",
-  keywords = "Vector autoregression, VAR, Bayesian, multivariate, hierarchical, R, package",
+  keywords = "VAR, multivariate, time series, macroeconomics, econometrics, FRED-MD",
   url = "https://epub.wu.ac.at/7216/",
-  textVersion = "Nikolas Kuschnig and Lukas Vashold (2019). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in {R}. Department of Economics Working Paper Series, 296. WU Vienna University of Economics and Business, Vienna."
+  textVersion = "Nikolas Kuschnig and Lukas Vashold (2019). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. Department of Economics Working Paper Series, 296. WU Vienna University of Economics and Business, Vienna. URL https://epub.wu.ac.at/7216/."
 )
 
 citEntry(
   entry = "manual",
-  title = "{BVAR}: Hierarchical Bayesian Vector Autoregression",
-  author = "Nikolas Kuschnig and Lukas Vashold and others",
+  title = "{BVAR}: {H}ierarchical Bayesian Vector Autoregression",
+  author = "Kuschnig, Nikolas and Vashold, Lukas and others",
   year = "2020",
-  note = "R package version 0.2.1",
+  note = "R package version 1.0.0",
   url = "https://CRAN.R-project.org/package=BVAR",
-  textVersion = "Nikolas Kuschnig and Lukas Vashold (2019). BVAR: Hierarchical Bayesian Vector Autoregression. R package version 0.2.1."
+  textVersion = "Nikolas Kuschnig, Lukas Vashold and others (2019). BVAR: Hierarchical Bayesian Vector Autoregression. R package version 1.0.0, URL https://CRAN.R-project.org/package=BVAR."
 )

@@ -10,7 +10,7 @@ Estimation of hierarchical Bayesian vector autoregressive models. Implements hie
 Installation
 -------
 
-BVAR is available on CRAN. The development version can be installed from GitHub.
+BVAR is available on [CRAN](https://CRAN.R-project.org/package=BVAR). The development version can be installed from GitHub.
 ``` r
 install.packages("BVAR")
 devtools::install_github("nk027/BVAR")
@@ -27,6 +27,8 @@ BVAR comes with the FRED-MD and FRED-QD datasets (McCracken and Ng, 2016). They 
 
 References
 -------
+
+Nikolas Kuschnig and Lukas Vashold (2019). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. Department of Economics Working Paper Series, 296. WU Vienna University of Economics and Business, Vienna. URL <https://epub.wu.ac.at/7216/>.
 
 Domenico Giannone, Michele Lenza and Giorgio E. Primiceri (2015). Prior Selection for Vector Autoregressions. The Review of Economics and Statistics, 97:2, 436-451, DOI: [10.1162/REST_a_00483](dx.doi.org/10.1162/REST_a_00483.).
 

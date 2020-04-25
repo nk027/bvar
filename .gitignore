@@ -13,6 +13,7 @@ vignettes/*.png
 vignettes/*.jpg
 vignettes/*.pdf
 vignettes/template.Rnw
+vignettes/img
 
 *.utf8.md
 *.knit.md
@@ -26,8 +27,6 @@ vignettes/template.Rnw
 
 data/fred_qd_full.rda
 data/fred_md_full.rda
-
-Makefile
 
 
 # Created by https://www.gitignore.io/api/latex

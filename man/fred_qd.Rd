@@ -5,7 +5,11 @@
 \alias{fred_qd}
 \alias{fred_md}
 \title{FRED-MD and FRED-QD: Databases for Macroeconomic Research}
-\format{A \code{data.frame} object with dates as rownames.}
+\format{
+A \code{data.frame} object with dates as rownames.
+
+An object of class \code{data.frame} with 732 rows and 121 columns.
+}
 \source{
 \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}
 }

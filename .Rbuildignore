@@ -3,11 +3,12 @@
 
 ^scripts$
 
-^vignettes/*\.jpg$
-^vignettes/*\.png$
-^vignettes/*\.pdf$
+^vignettes/.*\.jpg$
+^vignettes/.*\.png$
+^vignettes/.*\.pdf$
 ^vignettes/Makefile$
-^vignettes/template.Rnw$
+^vignettes/template\.Rnw$
+^vignettes/img$
 
 ^data/fred_qd_full\.rda$
 ^data/fred_md_full\.rda$
