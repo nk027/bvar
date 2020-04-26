@@ -39,8 +39,8 @@
 #' data <- fred_transform(data, codes = c(5, 5, 5), lag = 4)
 #'
 #' # Estimate two BVARs using one lag, default settings and very few draws
-#' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
-#' y <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+#' x <- bvar(data, lags = 1, n_draw = 750L, n_burn = 250L, verbose = FALSE)
+#' y <- bvar(data, lags = 1, n_draw = 750L, n_burn = 250L, verbose = FALSE)
 #'
 #' # Convert the hyperparameter lambda
 #' as.mcmc(x, vars = c("lambda"))

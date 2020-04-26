@@ -1,12 +1,12 @@
-all: build clean
+all: pdf clean
 
-article.tex: article.Rnw
+tex: article.Rnw
 	"$(R_HOME)/bin/R" CMD Sweave article.Rnw
 
-article.R: article.Rnw
+code: article.Rnw
 	"$(R_HOME)/bin/R" CMD Stangle article.Rnw
 
-build: article.tex refs.bib
+pdf: article.tex refs.bib
 	pdflatex article.tex
 	bibtex article.aux
 	pdflatex article.tex

@@ -48,7 +48,7 @@ bv_metropolis <- function(
   scale_hess = 0.01,
   adjust_acc = FALSE,
   adjust_burn = 0.75,
-  acc_lower = 0.25, acc_upper = 0.35,
+  acc_lower = 0.25, acc_upper = 0.45,
   acc_change = 0.01) {
 
   scale_hess <- vapply(scale_hess, num_check, numeric(1L),
