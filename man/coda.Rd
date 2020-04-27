@@ -67,7 +67,7 @@ y <- bvar(data, lags = 1, n_draw = 750L, n_burn = 250L, verbose = FALSE)
 as.mcmc(x, vars = c("lambda"))
 
 # Convert coefficients for the first dependent, use chains in method
-as.mcmc.bvar(list(x, y), vars = "CPIAUCSL")
+as.mcmc(structure(list(x, y), class = "bvar_chains"), vars = "CPIAUCSL")
 
 # Convert the coefs of variable three's first lag, use in the generic
 as.mcmc(x, vars = "FEDFUNDS-lag1", chains = y)

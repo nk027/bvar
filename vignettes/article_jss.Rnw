@@ -141,7 +141,7 @@ The \pkg{mfbvar} package by \cite{ankargren2019} implements estimation of mixed-
 Despite the popularity of Bayesian VAR models, there is a considerable gap between specialized Bayesian and accessible, all-purpose implementations.
 
 % In comes BVAR
-In this paper, we present \pkg{BVAR}, a comprehensive and user-friendly \proglang{R} package for the estimation and analysis of Bayesian VAR models. The package implements a hierarchical modeling approach to prior selection in the fashion of \cite{giannone2015}. Functionalities to facilitate most common analyses are provided. Standard methods and interfaces to existing frameworks ensure accessibility and extensibility. \pkg{BVAR} is free software, licensed under the GNU General Public License 3, is openly available and developed online.\footnote{See the Comprehensive \proglang{R} Archive Network (CRAN, \url{https://cran.r-project.org/package=BVAR}) and GitHub (\url{https://github.com/nk027/bvar}).}
+In this paper, we present \pkg{BVAR} \citep{kuschnig2020}, a comprehensive and user-friendly \proglang{R} package for the estimation and analysis of Bayesian VAR models. The package implements a hierarchical modeling approach to prior selection in the fashion of \cite{giannone2015}. Functionalities to facilitate most common analyses are provided. Standard methods and interfaces to existing frameworks ensure accessibility and extensibility. \pkg{BVAR} is free software, licensed under the GNU General Public License 3, is openly available and developed online.\footnote{See the Comprehensive \proglang{R} Archive Network (CRAN, \url{https://cran.r-project.org/package=BVAR}) and GitHub (\url{https://github.com/nk027/bvar}).}
 
 The remainder of this paper is structured as follows. Section~\ref{sec:econ} describes the econometric framework of the package. Section~\ref{sec:bvar} provides an overview of the \pkg{BVAR} package, with the use demonstrated by means of an example in Section~\ref{sec:demo}. Section~\ref{sec:concl} concludes.
 
@@ -261,7 +261,7 @@ Its primary use cases are in the field of macroeconomic multivariate time series
 The accessible and user-friendly implementation make it a suitable tool for introductions to multivariate time series modeling and the Bayesian paradigm.
 
 % Mention some abstract features
-The package is available cross-platform and on minimal installations, with no dependencies outside base \proglang{R} and \pkg{mvtnorm} \citep{genz2020}. It is implemented in native \proglang{R} for transparency and in order to lower the bar for contributions and/or adaptations.
+The package is available cross-platform and on minimal installations, with no dependencies outside base \proglang{R} and imports from \pkg{mvtnorm} \citep{genz2020}. It is implemented in native \proglang{R} for transparency and in order to lower the bar for contributions and/or adaptations.
 A functional approach to the package structure facilitates optimization of computationally intensive steps, including ports to e.g., \proglang{C++}, and ensures extensibility. The complete documentation, helper functions to access the multitude of settings, and use of established methods for analysis make the package easy to operate, without sacrificing flexibility.
 
 % Mention usage features
@@ -584,7 +584,7 @@ Continued contribution to and development of free software are crucial in facili
 
 \section*{Computational details}
 
-The results in this paper were obtained using \proglang{R}~3.6.3 with \pkg{BVAR}~1.0.0 and \pkg{mvtnorm}~{1.1-0} as singular dependency. The machine used is a Thinkpad T495 running Ubuntu 18.04 LTS with a Ryzen 5 3500U and 16 GB RAM. The scripts used were also tested on a machine running Debian Sid 11 with an i7-7500U and 16 GB RAM.
+The results in this paper were obtained using \proglang{R}~3.6.3 with \pkg{BVAR}~{1.0.0} and \pkg{mvtnorm}~{1.1-0} and \pkg{coda}~{0.19-3}. The machine used is a Thinkpad T495 running Ubuntu 18.04 LTS with a Ryzen 5 3500U and 16 GB RAM. The scripts used were also tested on a machine running Debian Sid 11 with an i7-7500U and 16 GB RAM.
 \proglang{R} and all packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/}.
 
 

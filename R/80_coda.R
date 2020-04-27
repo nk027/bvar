@@ -27,8 +27,6 @@
 #'
 #' @keywords BVAR coda MCMC analysis
 #'
-#' @export as.mcmc.bvar
-#'
 #' @examples
 #' \donttest{
 #' library("coda")
@@ -46,7 +44,7 @@
 #' as.mcmc(x, vars = c("lambda"))
 #'
 #' # Convert coefficients for the first dependent, use chains in method
-#' as.mcmc.bvar(list(x, y), vars = "CPIAUCSL")
+#' as.mcmc(structure(list(x, y), class = "bvar_chains"), vars = "CPIAUCSL")
 #'
 #' # Convert the coefs of variable three's first lag, use in the generic
 #' as.mcmc(x, vars = "FEDFUNDS-lag1", chains = y)
@@ -61,14 +59,13 @@ NULL
 
 
 #' @rdname coda
-#' @export as.mcmc.bvar
-as.mcmc.bvar <- function(
+as.mcmc.bvar <- function( # Dynamic export (zzz.R)
   x,
   vars = NULL,
   vars_response = NULL, vars_impulse = NULL,
   chains = list(), ...) {
 
-  # Checks ------------------------------------------------------------------
+  # Checks ---
 
   if(!inherits(x, "bvar")) {
     if(inherits(x[[1]], "bvar")) { # Allow chains to x
@@ -86,7 +83,7 @@ as.mcmc.bvar <- function(
   has_coda()
 
 
-  # Get data and transform --------------------------------------------------
+  # Get data and transform ---
 
   prep <- prep_data(x,
     vars = vars, vars_response = vars_response, vars_impulse = vars_impulse,
@@ -105,8 +102,7 @@ as.mcmc.bvar <- function(
 
 
 #' @rdname coda
-#' @export as.mcmc.bvar_chains
-as.mcmc.bvar_chains <- as.mcmc.bvar
+as.mcmc.bvar_chains <- as.mcmc.bvar # Dynamic export (zzz.R)
 
 
 #' @noRd
