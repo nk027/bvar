@@ -204,7 +204,7 @@ The approach yields robust inference, is theoretically grounded, and can be impl
 The contribution of \cite{giannone2015} focuses on conjugate prior distributions, specifically of the Normal-inverse-Wishart (NIW) family.\footnote{\cite{demol2008} note that this setting is similar to ridge penalized estimation in frequentist terms.}
 Conjugacy implies that the ML is available in closed form, enabling efficient computation.
 The NIW family includes some of the most commonly used priors \citep{koop2010, karlsson2013}, with some notable exceptions. These include the steady-state prior \citep{villani2009}, the Normal-Gamma prior \citep{griffin2010, huber2019}, and the Dirichlet-Laplace prior \citep{bhattacharya2015}.
-Many recent contributions focus on accounting for heteroskedastic error structures \citep{clark2011, kastner2014, carriero2016}. This may improve model performance, but is not possible within the conjugate setup and would furthermore complicate inference.
+Many recent contributions focus on accounting for heteroskedastic error structures \citep{clark2011, kastner2014, carriero2016}. This may improve model performance, but is not possible within the conjugate setup and would complicate inference.
 In the chosen NIW framework we approach the model in Equation~\ref{equ:var} by letting $\boldsymbol{A} = \left[ \boldsymbol{a}_0, \boldsymbol{A}_1, \dots, \boldsymbol{A}_p \right]'$ and $\boldsymbol{\beta} = vec(\boldsymbol{A})$. Then:
 \begin{align}
     \label{equ:niw}
@@ -397,8 +397,8 @@ The primary argument is \code{scale_hess}, a scalar or vector. It allows scaling
 Scaling can be complemented by setting \code{adjust_acc = TRUE}, which enables automatic scale adjustment. This happens during an initial share of the burn-in period, adaptable via \code{adjust_burn}. Automatic adjustment is performed iteratively by \code{acc_change} percent, until an acceptance rate between \code{acc_lower} and \code{acc_upper} is reached.
 
 <<metropolis, eval=TRUE, echo=TRUE>>=
-mh <- bv_metropolis(scale_hess = c(0.05, 0.0001, 0.0001), adjust_acc = TRUE,
-  acc_lower = 0.25, acc_upper = 0.45, acc_change = 0.01)
+mh <- bv_metropolis(scale_hess = c(0.05, 0.0001, 0.0001),
+  adjust_acc = TRUE, acc_lower = 0.25, acc_upper = 0.45)
 @
 
 % Wrap up setup
@@ -416,18 +416,18 @@ We also define the total number of iterations with \code{n_draw}, the number of 
 Note that arguments for computing IRF, FEVD and forecasts are also available and work similarly to the ex-post calculations that are demonstrated below.
 When estimating the model, \code{verbose = TRUE} prompts printing of intermediate results and enables a progress bar during the MCMC step.
 
-<<bvar, eval=TRUE, echo=TRUE, cache=TRUE, results=verbatim>>=
-run <- bvar(x, lags = 5, n_draw = 25000, n_burn = 15000, n_thin = 1,
+<<bvar, eval=TRUE, echo=TRUE, cache=TRUE, results=hide>>=
+run <- bvar(x, lags = 5, n_draw = 15000, n_burn = 5000, n_thin = 1,
   priors = priors, mh = mh, verbose = TRUE)
 @
 
-% Hardcoded due to progress bar - care for proper values
+% Hardcoded due to progress bar - care for proper values % 2020-04-27
 \begin{Soutput}
 Optimisation concluded.
-Posterior marginalised likelihood: 3637.111
-Parameters: lambda = 1.51317; soc = 0.12619; sur = 0.47657
-  |==================================================| 100%
-Finished MCMC after 1.23 mins.
+Posterior marginalised likelihood: 3637.405
+Parameters: lambda = 1.51378; soc = 0.12618; sur = 0.47674
+|==================================================| 100%
+Finished MCMC after 48.66 secs.
 \end{Soutput}
 
 % Describe outputs
@@ -448,18 +448,18 @@ Other established methods, such as \code{fitted()}, \code{density()} and \code{r
 For our example, we access a concise summary of our estimation using \code{print()}. Then we use \code{plot()} to assess convergence of the MCMC algorithm, which is essential for its stability. By default, the method provides trace and density plots of the ML and the hierarchically treated hyperparameters (see Figure~\ref{fig:trace_density}). Burnt draws are not included and parameter boundaries are plotted as dashed gray lines.
 The plot can be subset to specific hyperparameters or VAR coefficients via the \code{vars} argument (see Figure~\ref{fig:betas}). The arguments \code{var_response} and \code{var_impulse} provide a concise alternative way of retrieving VAR coefficients. We can also use the \code{type} argument to choose a specific type of plot.
 
-<<print, eval=TRUE, echo=TRUE, results=verbatim>>=
+<<print, eval=TRUE, echo=TRUE, results=hide>>=
 print(run)
 @
 
-% Hardcoded to match outputs above
+% Hardcoded to match outputs above % 2020-04-27
 \begin{Soutput}
   Bayesian VAR consisting of 238 observations, 6 variables and 5 lags.
-  Time spent calculating: 1.23 mins
+  Time spent calculating: 48.66 secs
   Hyperparameters: lambda, soc, sur
-  Hyperparameter values after optimisation: 1.51317, 0.12619, 0.47657
-  Iterations (burnt / thinning): 50000 (25000 / 1)
-  Accepted draws (rate): 9326 (0.373)
+  Hyperparameter values after optimisation: 1.51378, 0.12618, 0.47674
+  Iterations (burnt / thinning): 15000 (5000 / 1)
+  Accepted draws (rate): 3933 (0.393)
 \end{Soutput}
 
 <<trace_density, fig=TRUE, png=TRUE, eval=TRUE, echo=TRUE, include=FALSE>>=
@@ -468,7 +468,7 @@ plot(run)
 
 \begin{figure}[!ht]
 	\centering
-  \includegraphics[height=14cm]{fig-trace_density.png}
+  \includegraphics[width=0.9\textwidth]{fig-trace_density.png}
 	\caption{Trace and density plots of all hierarchically treated hyperparameters and the ML.}
 	\label{fig:trace_density}
 \end{figure}
@@ -616,17 +616,16 @@ Both datasets are packaged in their raw format, but \cite{mccracken2016} provide
 
 Below, we demonstrate using a prototypical monetary VAR model -- covering GDP, the GDP deflator and the federal funds rate. For this example, we are looking to transform the individual time series to be stationary.
 To automatically apply the suggested transformation of \cite{mccracken2016} we simply specify the \code{type} -- either \code{"fred_qd"} or \code{"fred_md"} -- and call \code{fred_transform()} with our data.
-In a second attempt, we deviate from the suggestions and directly provide transformation codes to the \code{codes} argument. We call the function without arguments to display available codes and choose \code{5} for log-differences and \code{1} for no transformation. We also set \code{lag = 4} for yearly differences of our quarterly data. Figure~\ref{fig:app_timeseries} shows the transformed time series, which will be used to illustrate additional features below.
+In a second attempt, we deviate from the suggestions and directly provide transformation codes to the \code{codes} argument. We can call the function without arguments to display available codes. For this example, we choose \code{5} for log-differences and \code{1} for no transformation. We also set \code{lag = 4} for yearly differences of our quarterly data. Figure~\ref{fig:app_timeseries} shows the transformed time series, which will be used to illustrate additional features below.
 
 <<app_data, eval=TRUE, echo=TRUE, results=hide>>=
 data("fred_qd")
 y <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
 fred_transform(y, type = "fred_qd")
-fred_transform()
 y <- fred_transform(y, codes = c(5, 5, 1), lag = 4)
 @
 
-<<app_timeseries, fig=TRUE, eval=TRUE, echo=FALSE, include=FALSE, width=8, height=3>>=
+<<app_timeseries, fig=TRUE, eval=TRUE, echo=FALSE, include=FALSE, width=8, height=2.8>>=
 op <- par(mfrow = c(1, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
 plot(as.Date(rownames(y)), y[ , "GDPC1"], type = "l",
   xlab = "Time", ylab = "GDP growth")
@@ -649,7 +648,7 @@ For this example, we only impose the Minnesota prior, which also needs to be adj
 
 <<app_bvar, eval=TRUE, echo=TRUE, cache=TRUE, results=hide>>=
 priors_app <- bv_priors(mn = bv_mn(b = 0))
-run_app <- bvar(y, lags = 5, n_draw = 25000, n_burn = 15000,
+run_app <- bvar(y, lags = 5, n_draw = 15000, n_burn = 5000,
   priors = priors_app, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
 @
 
@@ -666,10 +665,8 @@ add_soc <- function(Y, lags, par) {
   soc <- if(lags == 1) {diag(Y[1, ]) / par} else {
     diag(colMeans(Y[1:lags, ])) / par
   }
-  Y_soc <- soc
-  X_soc <- cbind(rep(0, ncol(Y)),
-    matrix(rep(soc, lags), nrow = ncol(Y)))
-  return(list("Y" = Y_soc, "X" = X_soc))
+  X_soc <- cbind(rep(0, ncol(Y)), matrix(rep(soc, lags), nrow = ncol(Y)))
+  return(list("Y" = soc, "X" = X_soc))
 }
 @
 
@@ -706,10 +703,12 @@ This object is passed on to \code{gelman.diag()}, in order to compute a diagnost
 library("parallel")
 n_cores <- 2
 cl <- makeCluster(n_cores)
+
 runs <- par_bvar(cl = cl, data = y, lags = 5,
-  n_draw = 25000, n_burn = 15000, n_thin = 1,
+  n_draw = 15000, n_burn = 5000, n_thin = 1,
   priors = priors_app, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
 stopCluster(cl)
+
 runs_mcmc <- as.mcmc(runs, vars = "lambda")
 gelman.diag(runs_mcmc, autoburnin = FALSE)
 @

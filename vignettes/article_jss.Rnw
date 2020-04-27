@@ -1,4 +1,9 @@
-\documentclass[article,nojss]{jss} % add nojss for vignette
+\documentclass[article]{jss}
+% Adapted from the vignette
+%   - remove nojss from documentclass options
+%   - increase n_draw to 50000
+%   - increase n_burn to 25000
+%   - increase n_cores to 4
 
 %\VignetteIndexEntry{BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R}
 %\VignettePackage{BVAR}
@@ -9,8 +14,11 @@
 %\VignetteKeyword{forecast}
 %\VignetteKeyword{macroeconomics}
 
+\SweaveOpts{engine=R, eps=FALSE, keep.source=TRUE, prefix.string=fig}
 
-
+<<preliminaries, echo=FALSE, results=hide>>=
+options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+@
 
 
 %% -- LaTeX packages and custom commands ---------------------------------------
@@ -94,9 +102,8 @@
 }
 
 
-\usepackage{Sweave}
 \begin{document}
-
+\SweaveOpts{concordance=FALSE}
 
 
 %% -- Introduction -------------------------------------------------------------
@@ -202,7 +209,7 @@ The approach yields robust inference, is theoretically grounded, and can be impl
 The contribution of \cite{giannone2015} focuses on conjugate prior distributions, specifically of the Normal-inverse-Wishart (NIW) family.\footnote{\cite{demol2008} note that this setting is similar to ridge penalized estimation in frequentist terms.}
 Conjugacy implies that the ML is available in closed form, enabling efficient computation.
 The NIW family includes some of the most commonly used priors \citep{koop2010, karlsson2013}, with some notable exceptions. These include the steady-state prior \citep{villani2009}, the Normal-Gamma prior \citep{griffin2010, huber2019}, and the Dirichlet-Laplace prior \citep{bhattacharya2015}.
-Many recent contributions focus on accounting for heteroskedastic error structures \citep{clark2011, kastner2014, carriero2016}. This may improve model performance, but is not possible within the conjugate setup and would furthermore complicate inference.
+Many recent contributions focus on accounting for heteroskedastic error structures \citep{clark2011, kastner2014, carriero2016}. This may improve model performance, but is not possible within the conjugate setup and would complicate inference.
 In the chosen NIW framework we approach the model in Equation~\ref{equ:var} by letting $\boldsymbol{A} = \left[ \boldsymbol{a}_0, \boldsymbol{A}_1, \dots, \boldsymbol{A}_p \right]'$ and $\boldsymbol{\beta} = vec(\boldsymbol{A})$. Then:
 \begin{align}
     \label{equ:niw}
@@ -310,12 +317,10 @@ The available FRED-MD and FRED-QD datasets make \pkg{BVAR} an ideal tool for exp
 In this section we demonstrate the functionalities of \pkg{BVAR} via an applied example. We use a subset of the included data and go through a typical workflow of (1) preparing the data, (2) configuring priors and other aspects of the model, (3) estimation of the model, and finally (4) analyzing outputs, including IRF and forecasts. Further possible applications and examples are available in the Appendix.
 We start by setting a seed for reproducibility and loading \pkg{BVAR}.
 
-\begin{Schunk}
-\begin{Sinput}
-R> set.seed(42)
-R> library("BVAR")
-\end{Sinput}
-\end{Schunk}
+<<setup, eval=TRUE, echo=TRUE>>=
+set.seed(42)
+library("BVAR")
+@
 
 \subsection{Data preparation} \label{subsec:data}
 
@@ -327,15 +332,29 @@ Transformation can be performed manually or with the helper function \code{fred_
 For our example, we specify a log-transformation with code \code{4} for the corresponding variables and no transformation for the federal funds rate with code \code{1}.
 Figure~\ref{fig:timeseries} provides an overview of the transformed time series.
 
-\begin{Schunk}
-\begin{Sinput}
-R> data("fred_qd")
-R> x <- fred_qd[, c("GDPC1", "PCECC96", "GPDIC1",
-+    "HOANBS", "GDPCTPI", "FEDFUNDS")]
-R> x <- fred_transform(x, codes = c(4, 4, 4, 4, 4, 1))
-\end{Sinput}
-\end{Schunk}
+<<data, eval=TRUE, echo=TRUE>>=
+data("fred_qd")
+x <- fred_qd[, c("GDPC1", "PCECC96", "GPDIC1",
+  "HOANBS", "GDPCTPI", "FEDFUNDS")]
+x <- fred_transform(x, codes = c(4, 4, 4, 4, 4, 1))
+@
 
+<<timeseries, fig=TRUE, eval=TRUE, echo=FALSE, include=FALSE, width=8, height=5>>=
+op <- par(mfrow = c(2, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
+plot(as.Date(rownames(x)), x[ , "GDPC1"], type = "l",
+  xlab = "Time", ylab = "Gross domestic product (GDP)")
+plot(as.Date(rownames(x)), x[ , "PCECC96"], type = "l",
+  xlab = "Time", ylab = "Consumption expenditure")
+plot(as.Date(rownames(x)), x[ , "GPDIC1"], type = "l",
+  xlab = "Time", ylab = "Private investment")
+plot(as.Date(rownames(x)), x[ , "HOANBS"], type = "l",
+  xlab = "Time", ylab = "Total hours worked (nfb)")
+plot(as.Date(rownames(x)), x[ , "GDPCTPI"], type = "l",
+  xlab = "Time", ylab = "GDP deflator")
+plot(as.Date(rownames(x)), x[ , "FEDFUNDS"], type = "l",
+  xlab = "Time", ylab = "Federal funds rate")
+par(op)
+@
 
 \begin{figure}[ht]
 	\centering
@@ -356,44 +375,36 @@ The goal of this naming scheme is to lower entry barriers for new users, while p
 Priors are set up using \code{bv_priors()}, which holds arguments for hierarchical treatment, the Minnesota, and dummy-observation priors.
 We start by adjusting the Minnesota prior using \code{bv_minnesota()}. The prior parameter $\lambda$ has a Gamma hyperprior and is handed upper and lower bounds for its Gaussian proposal distribution in the MH step. For this example, we do not treat $\alpha$ hierarchically, meaning the parameter can be fixed via the \code{mode} argument. The prior variance on the constant term of the model (\code{var}) is dealt a large value, for a diffuse prior. We leave $\boldsymbol{\Psi}$ to be set automatically -- i.e., to the square root of the innovations variance, after fitting AR($p$) models to each of the variables.
 
-\begin{Schunk}
-\begin{Sinput}
-R> mn <- bv_minnesota(
-+    lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
-+    alpha = bv_alpha(mode = 2), var = 1e07)
-\end{Sinput}
-\end{Schunk}
+<<minnesota, eval=TRUE, echo=TRUE>>=
+mn <- bv_minnesota(
+  lambda = bv_lambda(mode = 0.2, sd = 0.4, min = 0.0001, max = 5),
+  alpha = bv_alpha(mode = 2), var = 1e07)
+@
 
 % Dummy priors
 We also include the sum-of-coefficients and single-unit-root priors -- two pre-constructed dummy-observation priors. The hyperpriors of their key parameters are assigned Gamma distributions, with specification working in the same way as for $\lambda$. Custom dummy-observation priors can be set up similarly via \code{bv_dummy()} and require an additional function to construct the observations (see Appendix~\ref{app:dummy} for a demonstration).
 
-\begin{Schunk}
-\begin{Sinput}
-R> soc <- bv_soc(mode = 1, sd = 1, min = 1e-04, max = 50)
-R> sur <- bv_sur(mode = 1, sd = 1, min = 1e-04, max = 50)
-\end{Sinput}
-\end{Schunk}
+<<dummies, eval=TRUE, echo=TRUE>>=
+soc <- bv_soc(mode = 1, sd = 1, min = 1e-04, max = 50)
+sur <- bv_sur(mode = 1, sd = 1, min = 1e-04, max = 50)
+@
 
 % Wrap up priors
 Once the priors are defined, we provide them to \code{bv_priors()}. The dummy-observation priors are captured by ellipsis argument (\code{...}) and need to be named. Via the argument \code{hyper} we choose which prior parameters should be treated hierarchically. Its default setting (\code{"auto"}) includes $\lambda$ and the key parameters of all provided dummy-observation priors. In our case, this is equivalent to providing the character vector \code{c("lambda", "soc", "sur")}. Prior parameters that are not treated hierarchically, e.g., $\alpha$ in this case, are treated as fixed and set equal to their \code{mode}.
 
-\begin{Schunk}
-\begin{Sinput}
-R> priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
-\end{Sinput}
-\end{Schunk}
+<<priors, eval=TRUE, echo=TRUE>>=
+priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
+@
 
 % Metropolis-Hastings
 As a final step before estimation, we adjust the the MH algorithm via \code{bv_metropolis()}. The function allows us to fine-tune the exploration of the posterior space -- a vital prerequisite for proper inference.
 The primary argument is \code{scale_hess}, a scalar or vector. It allows scaling the inverse Hessian, which is used as VCOV matrix of the Gaussian proposal distribution of the hierarchically treated hyperparameters. This affords us the flexibility of individually tweaking the posterior exploration of hyperparameters.
 Scaling can be complemented by setting \code{adjust_acc = TRUE}, which enables automatic scale adjustment. This happens during an initial share of the burn-in period, adaptable via \code{adjust_burn}. Automatic adjustment is performed iteratively by \code{acc_change} percent, until an acceptance rate between \code{acc_lower} and \code{acc_upper} is reached.
 
-\begin{Schunk}
-\begin{Sinput}
-R> mh <- bv_metropolis(scale_hess = c(1, 0.005, 0.005), adjust_acc = TRUE,
-+    acc_lower = 0.25, acc_upper = 0.45, acc_change = 0.02)
-\end{Sinput}
-\end{Schunk}
+<<metropolis, eval=TRUE, echo=TRUE>>=
+mh <- bv_metropolis(scale_hess = c(0.05, 0.0001, 0.0001),
+  adjust_acc = TRUE, acc_lower = 0.25, acc_upper = 0.45)
+@
 
 % Wrap up setup
 After configuring the model's priors and the MH step we are ready for estimation. Further available configuration options for the MCMC method, IRF, FEVD, and forecasts are described in the following paragraphs.
@@ -410,349 +421,18 @@ We also define the total number of iterations with \code{n_draw}, the number of 
 Note that arguments for computing IRF, FEVD and forecasts are also available and work similarly to the ex-post calculations that are demonstrated below.
 When estimating the model, \code{verbose = TRUE} prompts printing of intermediate results and enables a progress bar during the MCMC step.
 
-\begin{Schunk}
-\begin{Sinput}
-R> run <- bvar(x, lags = 5, n_draw = 25000, n_burn = 15000, n_thin = 1,
-+    priors = priors, mh = mh, verbose = TRUE)
-\end{Sinput}
+<<bvar, eval=TRUE, echo=TRUE, cache=TRUE, results=hide>>=
+run <- bvar(x, lags = 5, n_draw = 50000, n_burn = 25000, n_thin = 1,
+  priors = priors, mh = mh, verbose = TRUE)
+@
+
+% Hardcoded due to progress bar - care for proper values % 2020-04-27
 \begin{Soutput}
 Optimisation concluded.
 Posterior marginalised likelihood: 3637.405
 Parameters: lambda = 1.51378; soc = 0.12618; sur = 0.47674
-
-  |                                                                  
-  |                                                            |   0%
-  |                                                                  
-  |                                                            |   1%
-  |                                                                  
-  |=                                                           |   1%
-  |                                                                  
-  |=                                                           |   2%
-  |                                                                  
-  |==                                                          |   2%
-  |                                                                  
-  |==                                                          |   3%
-  |                                                                  
-  |==                                                          |   4%
-  |                                                                  
-  |===                                                         |   4%
-  |                                                                  
-  |===                                                         |   5%
-  |                                                                  
-  |===                                                         |   6%
-  |                                                                  
-  |====                                                        |   6%
-  |                                                                  
-  |====                                                        |   7%
-  |                                                                  
-  |====                                                        |   8%
-  |                                                                  
-  |=====                                                       |   8%
-  |                                                                  
-  |=====                                                       |   9%
-  |                                                                  
-  |======                                                      |   9%
-  |                                                                  
-  |======                                                      |  10%
-  |                                                                  
-  |======                                                      |  11%
-  |                                                                  
-  |=======                                                     |  11%
-  |                                                                  
-  |=======                                                     |  12%
-  |                                                                  
-  |========                                                    |  12%
-  |                                                                  
-  |========                                                    |  13%
-  |                                                                  
-  |========                                                    |  14%
-  |                                                                  
-  |=========                                                   |  14%
-  |                                                                  
-  |=========                                                   |  15%
-  |                                                                  
-  |=========                                                   |  16%
-  |                                                                  
-  |==========                                                  |  16%
-  |                                                                  
-  |==========                                                  |  17%
-  |                                                                  
-  |==========                                                  |  18%
-  |                                                                  
-  |===========                                                 |  18%
-  |                                                                  
-  |===========                                                 |  19%
-  |                                                                  
-  |============                                                |  19%
-  |                                                                  
-  |============                                                |  20%
-  |                                                                  
-  |============                                                |  21%
-  |                                                                  
-  |=============                                               |  21%
-  |                                                                  
-  |=============                                               |  22%
-  |                                                                  
-  |==============                                              |  22%
-  |                                                                  
-  |==============                                              |  23%
-  |                                                                  
-  |==============                                              |  24%
-  |                                                                  
-  |===============                                             |  24%
-  |                                                                  
-  |===============                                             |  25%
-  |                                                                  
-  |===============                                             |  26%
-  |                                                                  
-  |================                                            |  26%
-  |                                                                  
-  |================                                            |  27%
-  |                                                                  
-  |================                                            |  28%
-  |                                                                  
-  |=================                                           |  28%
-  |                                                                  
-  |=================                                           |  29%
-  |                                                                  
-  |==================                                          |  29%
-  |                                                                  
-  |==================                                          |  30%
-  |                                                                  
-  |==================                                          |  31%
-  |                                                                  
-  |===================                                         |  31%
-  |                                                                  
-  |===================                                         |  32%
-  |                                                                  
-  |====================                                        |  32%
-  |                                                                  
-  |====================                                        |  33%
-  |                                                                  
-  |====================                                        |  34%
-  |                                                                  
-  |=====================                                       |  34%
-  |                                                                  
-  |=====================                                       |  35%
-  |                                                                  
-  |=====================                                       |  36%
-  |                                                                  
-  |======================                                      |  36%
-  |                                                                  
-  |======================                                      |  37%
-  |                                                                  
-  |======================                                      |  38%
-  |                                                                  
-  |=======================                                     |  38%
-  |                                                                  
-  |=======================                                     |  39%
-  |                                                                  
-  |========================                                    |  39%
-  |                                                                  
-  |========================                                    |  40%
-  |                                                                  
-  |========================                                    |  41%
-  |                                                                  
-  |=========================                                   |  41%
-  |                                                                  
-  |=========================                                   |  42%
-  |                                                                  
-  |==========================                                  |  42%
-  |                                                                  
-  |==========================                                  |  43%
-  |                                                                  
-  |==========================                                  |  44%
-  |                                                                  
-  |===========================                                 |  44%
-  |                                                                  
-  |===========================                                 |  45%
-  |                                                                  
-  |===========================                                 |  46%
-  |                                                                  
-  |============================                                |  46%
-  |                                                                  
-  |============================                                |  47%
-  |                                                                  
-  |============================                                |  48%
-  |                                                                  
-  |=============================                               |  48%
-  |                                                                  
-  |=============================                               |  49%
-  |                                                                  
-  |==============================                              |  49%
-  |                                                                  
-  |==============================                              |  50%
-  |                                                                  
-  |==============================                              |  51%
-  |                                                                  
-  |===============================                             |  51%
-  |                                                                  
-  |===============================                             |  52%
-  |                                                                  
-  |================================                            |  52%
-  |                                                                  
-  |================================                            |  53%
-  |                                                                  
-  |================================                            |  54%
-  |                                                                  
-  |=================================                           |  54%
-  |                                                                  
-  |=================================                           |  55%
-  |                                                                  
-  |=================================                           |  56%
-  |                                                                  
-  |==================================                          |  56%
-  |                                                                  
-  |==================================                          |  57%
-  |                                                                  
-  |==================================                          |  58%
-  |                                                                  
-  |===================================                         |  58%
-  |                                                                  
-  |===================================                         |  59%
-  |                                                                  
-  |====================================                        |  59%
-  |                                                                  
-  |====================================                        |  60%
-  |                                                                  
-  |====================================                        |  61%
-  |                                                                  
-  |=====================================                       |  61%
-  |                                                                  
-  |=====================================                       |  62%
-  |                                                                  
-  |======================================                      |  62%
-  |                                                                  
-  |======================================                      |  63%
-  |                                                                  
-  |======================================                      |  64%
-  |                                                                  
-  |=======================================                     |  64%
-  |                                                                  
-  |=======================================                     |  65%
-  |                                                                  
-  |=======================================                     |  66%
-  |                                                                  
-  |========================================                    |  66%
-  |                                                                  
-  |========================================                    |  67%
-  |                                                                  
-  |========================================                    |  68%
-  |                                                                  
-  |=========================================                   |  68%
-  |                                                                  
-  |=========================================                   |  69%
-  |                                                                  
-  |==========================================                  |  69%
-  |                                                                  
-  |==========================================                  |  70%
-  |                                                                  
-  |==========================================                  |  71%
-  |                                                                  
-  |===========================================                 |  71%
-  |                                                                  
-  |===========================================                 |  72%
-  |                                                                  
-  |============================================                |  72%
-  |                                                                  
-  |============================================                |  73%
-  |                                                                  
-  |============================================                |  74%
-  |                                                                  
-  |=============================================               |  74%
-  |                                                                  
-  |=============================================               |  75%
-  |                                                                  
-  |=============================================               |  76%
-  |                                                                  
-  |==============================================              |  76%
-  |                                                                  
-  |==============================================              |  77%
-  |                                                                  
-  |==============================================              |  78%
-  |                                                                  
-  |===============================================             |  78%
-  |                                                                  
-  |===============================================             |  79%
-  |                                                                  
-  |================================================            |  79%
-  |                                                                  
-  |================================================            |  80%
-  |                                                                  
-  |================================================            |  81%
-  |                                                                  
-  |=================================================           |  81%
-  |                                                                  
-  |=================================================           |  82%
-  |                                                                  
-  |==================================================          |  82%
-  |                                                                  
-  |==================================================          |  83%
-  |                                                                  
-  |==================================================          |  84%
-  |                                                                  
-  |===================================================         |  84%
-  |                                                                  
-  |===================================================         |  85%
-  |                                                                  
-  |===================================================         |  86%
-  |                                                                  
-  |====================================================        |  86%
-  |                                                                  
-  |====================================================        |  87%
-  |                                                                  
-  |====================================================        |  88%
-  |                                                                  
-  |=====================================================       |  88%
-  |                                                                  
-  |=====================================================       |  89%
-  |                                                                  
-  |======================================================      |  89%
-  |                                                                  
-  |======================================================      |  90%
-  |                                                                  
-  |======================================================      |  91%
-  |                                                                  
-  |=======================================================     |  91%
-  |                                                                  
-  |=======================================================     |  92%
-  |                                                                  
-  |========================================================    |  92%
-  |                                                                  
-  |========================================================    |  93%
-  |                                                                  
-  |========================================================    |  94%
-  |                                                                  
-  |=========================================================   |  94%
-  |                                                                  
-  |=========================================================   |  95%
-  |                                                                  
-  |=========================================================   |  96%
-  |                                                                  
-  |==========================================================  |  96%
-  |                                                                  
-  |==========================================================  |  97%
-  |                                                                  
-  |==========================================================  |  98%
-  |                                                                  
-  |=========================================================== |  98%
-  |                                                                  
-  |=========================================================== |  99%
-  |                                                                  
-  |============================================================|  99%
-  |                                                                  
-  |============================================================| 100%
-Finished MCMC after 1.17 mins.
-\end{Soutput}
-\end{Schunk}
-
-% Hardcoded due to progress bar - care for proper values
-\begin{Soutput}
-Optimisation concluded.
-Posterior marginalised likelihood: 3637.111
-Parameters: lambda = 1.51317; soc = 0.12619; sur = 0.47657
   |==================================================| 100%
-Finished MCMC after 1.23 mins.
+Finished MCMC after 2.74 mins.
 \end{Soutput}
 
 % Describe outputs
@@ -773,49 +453,35 @@ Other established methods, such as \code{fitted()}, \code{density()} and \code{r
 For our example, we access a concise summary of our estimation using \code{print()}. Then we use \code{plot()} to assess convergence of the MCMC algorithm, which is essential for its stability. By default, the method provides trace and density plots of the ML and the hierarchically treated hyperparameters (see Figure~\ref{fig:trace_density}). Burnt draws are not included and parameter boundaries are plotted as dashed gray lines.
 The plot can be subset to specific hyperparameters or VAR coefficients via the \code{vars} argument (see Figure~\ref{fig:betas}). The arguments \code{var_response} and \code{var_impulse} provide a concise alternative way of retrieving VAR coefficients. We can also use the \code{type} argument to choose a specific type of plot.
 
-\begin{Schunk}
-\begin{Sinput}
-R> print(run)
-\end{Sinput}
-\begin{Soutput}
-Bayesian VAR consisting of 238 observations, 6 variables and 5 lags.
-Time spent calculating: 1.17 mins
-Hyperparameters: lambda, soc, sur 
-Hyperparameter values after optimisation: 1.51378, 0.12618, 0.47674
-Iterations (burnt / thinning): 25000 (15000 / 1)
-Accepted draws (rate): 6305 (0.63)
-\end{Soutput}
-\end{Schunk}
+<<print, eval=TRUE, echo=TRUE, results=hide>>=
+print(run)
+@
 
-% Hardcoded to match outputs above
+% Hardcoded to match outputs above % 2020-04-27
 \begin{Soutput}
   Bayesian VAR consisting of 238 observations, 6 variables and 5 lags.
-  Time spent calculating: 1.23 mins
+  Time spent calculating: 2.74 mins
   Hyperparameters: lambda, soc, sur
-  Hyperparameter values after optimisation: 1.51317, 0.12619, 0.47657
+  Hyperparameter values after optimisation: 1.51378, 0.12618, 0.47674
   Iterations (burnt / thinning): 50000 (25000 / 1)
-  Accepted draws (rate): 9326 (0.373)
+  Accepted draws (rate): 9874 (0.395)
 \end{Soutput}
 
-\begin{Schunk}
-\begin{Sinput}
-R> plot(run)
-\end{Sinput}
-\end{Schunk}
+<<trace_density, fig=TRUE, png=TRUE, eval=TRUE, echo=TRUE, include=FALSE>>=
+plot(run)
+@
 
 \begin{figure}[!ht]
 	\centering
-  \includegraphics[height=14cm]{fig-trace_density.png}
+  \includegraphics[width=0.9\textwidth]{fig-trace_density.png}
 	\caption{Trace and density plots of all hierarchically treated hyperparameters and the ML.}
 	\label{fig:trace_density}
 \end{figure}
 
-\begin{Schunk}
-\begin{Sinput}
-R> plot(run, type = "dens", vars_response = "GDPC1",
-+    vars_impulse = c("GDPC1-lag1", "FEDFUNDS-lag2"))
-\end{Sinput}
-\end{Schunk}
+<<betas, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=8, height=4>>=
+plot(run, type = "dens", vars_response = "GDPC1",
+  vars_impulse = c("GDPC1-lag1", "FEDFUNDS-lag2"))
+@
 
 \begin{figure}[!ht]
 	\centering
@@ -829,28 +495,14 @@ Visual inspection of trace and density plots suggests convergence of the key hyp
 However, as a supplement to this examination, one might want to employ additional convergence diagnostics. The \pkg{coda} package provides, among many other useful functionalities, several such statistics that can be accessed using \pkg{BVAR}'s \code{as.mcmc()} method. An illustration of the interface, the use of diagnostics, and parallel execution of \code{bvar()}, is provided in Appendix~\ref{app:conv}.
 Given proper convergence, we are interested in fitted and residual values (see Figure~\ref{fig:residuals}). We set \code{type = "mean"} to use the mean of posterior draws. Alternatively, credible bands can be computed via the \code{conf_bands} argument.
 
-\begin{Schunk}
-\begin{Sinput}
-R> fitted(run, type = "mean")
-\end{Sinput}
-\begin{Soutput}
-Numeric array (dimensions 238, 6) with fitted values from a BVAR.
-Average values:
-	GDPC1: 8.1, 8.1, 8.1, [...], 9.85, 9.85, 9.86
-	PCECC96: 7.61, 7.62, 7.61, [...], 9.48, 9.49, 9.5
-	GPDIC1: 5.97, 5.89, 5.85, [...], 8.15, 8.15, 8.14
-	HOANBS: 3.97, 3.97, 3.96, [...], 4.72, 4.72, 4.72
-	GDPCTPI: 2.81, 2.81, 2.82, [...], 4.72, 4.72, 4.73
-	FEDFUNDS: 4.04, 3.64, 2.45, [...], 2.3, 2.32, 2.3
-\end{Soutput}
-\end{Schunk}
+<<fitted, eval=TRUE, echo=TRUE>>=
+fitted(run, type = "mean")
+@
 
 
-\begin{Schunk}
-\begin{Sinput}
-R> plot(residuals(run, type = "mean"), vars = c("GDPC1", "PCECC96"))
-\end{Sinput}
-\end{Schunk}
+<<residuals, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=8, height=4>>=
+plot(residuals(run, type = "mean"), vars = c("GDPC1", "PCECC96"))
+@
 
 \begin{figure}[!ht]
   \centering
@@ -866,18 +518,14 @@ Configuration options for IRF and FEVD are available via the ellipsis argument o
 IRF objects feature methods for plotting, printing, and summarizing. The \code{plot()} method has options to subset the plots to specific impulses and/or responses via name or position. Credible bands are visualized as lines or shaded areas with the \code{area} argument toggled.
 In the example below, we customize our IRF using \code{bv_irf()}, then compute and store them with \code{irf()}. We plot the IRF of certain shocks and variables by specifying them with \code{vars_impulse} and \code{vars_response} in Figure~\ref{fig:irf_cholesky}.
 
-\begin{Schunk}
-\begin{Sinput}
-R> opt_irf <- bv_irf(horizon = 16, identification = TRUE)
-R> irf(run) <- irf(run, opt_irf, conf_bands = c(0.05, 0.16))
-\end{Sinput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-R> plot(irf(run), area = TRUE,
-+    vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1, 5:6))
-\end{Sinput}
-\end{Schunk}
+<<irf, eval=TRUE, echo=TRUE>>=
+opt_irf <- bv_irf(horizon = 16, identification = TRUE)
+irf(run) <- irf(run, opt_irf, conf_bands = c(0.05, 0.16))
+@
+<<irf_cholesky, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE>>=
+plot(irf(run), area = TRUE,
+  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1, 5:6))
+@
 
 \begin{figure}[ht]
   \centering
@@ -892,17 +540,13 @@ The method works similarly to \code{irf()}, with functionality to compute, acces
 Settings can also be accessed via the ellipsis argument or the helper function \code{bv_fcast()}. For unconditional forecasts only the forecasting horizon is required. In order to conduct scenario analyses based on conditional forecasts, further settings have to be passed on (see Appendix~\ref{app:cond} for a demonstration).
 Forecast objects feature methods for plotting, printing, and summarizing. The \code{plot()} method can be used to subset plots to certain variables via the \code{vars} argument. The visualization can include a number of realized values before the forecast, which is set with the argument \code{t_back} (see Figure~\ref{fig:predict_unconditional}).
 
-\begin{Schunk}
-\begin{Sinput}
-R> predict(run) <- predict(run, horizon = 16, conf_bands = c(0.05, 0.16))
-\end{Sinput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-R> plot(predict(run), area = TRUE, t_back = 24,
-+    vars = c("GDPC1", "GDPCTPI", "FEDFUNDS"))
-\end{Sinput}
-\end{Schunk}
+<<predict, eval=TRUE, echo=TRUE>>=
+predict(run) <- predict(run, horizon = 16, conf_bands = c(0.05, 0.16))
+@
+<<predict_unconditional, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE>>=
+plot(predict(run), area = TRUE, t_back = 24,
+  vars = c("GDPC1", "GDPCTPI", "FEDFUNDS"))
+@
 
 \begin{figure}[ht]
   \centering
@@ -977,9 +621,25 @@ Both datasets are packaged in their raw format, but \cite{mccracken2016} provide
 
 Below, we demonstrate using a prototypical monetary VAR model -- covering GDP, the GDP deflator and the federal funds rate. For this example, we are looking to transform the individual time series to be stationary.
 To automatically apply the suggested transformation of \cite{mccracken2016} we simply specify the \code{type} -- either \code{"fred_qd"} or \code{"fred_md"} -- and call \code{fred_transform()} with our data.
-In a second attempt, we deviate from the suggestions and directly provide transformation codes to the \code{codes} argument. We call the function without arguments to display available codes and choose \code{5} for log-differences and \code{1} for no transformation. We also set \code{lag = 4} for yearly differences of our quarterly data. Figure~\ref{fig:app_timeseries} shows the transformed time series, which will be used to illustrate additional features below.
+In a second attempt, we deviate from the suggestions and directly provide transformation codes to the \code{codes} argument. We can call the function without arguments to display available codes. For this example, we choose \code{5} for log-differences and \code{1} for no transformation. We also set \code{lag = 4} for yearly differences of our quarterly data. Figure~\ref{fig:app_timeseries} shows the transformed time series, which will be used to illustrate additional features below.
 
+<<app_data, eval=TRUE, echo=TRUE, results=hide>>=
+data("fred_qd")
+y <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
+fred_transform(y, type = "fred_qd")
+y <- fred_transform(y, codes = c(5, 5, 1), lag = 4)
+@
 
+<<app_timeseries, fig=TRUE, eval=TRUE, echo=FALSE, include=FALSE, width=8, height=2.8>>=
+op <- par(mfrow = c(1, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
+plot(as.Date(rownames(y)), y[ , "GDPC1"], type = "l",
+  xlab = "Time", ylab = "GDP growth")
+plot(as.Date(rownames(y)), y[ , "GDPCTPI"], type = "l",
+  xlab = "Time", ylab = "Inflation")
+plot(as.Date(rownames(y)), y[ , "FEDFUNDS"], type = "l",
+  xlab = "Time", ylab = "Federal funds rate")
+par(op)
+@
 
 \begin{figure}[ht]
   \centering
@@ -991,13 +651,11 @@ In a second attempt, we deviate from the suggestions and directly provide transf
 When estimating a VAR model in differences, implications on the priors need to be taken into account. The sum-of-coefficients prior and the single-unit-root prior should no longer be necessary.
 For this example, we only impose the Minnesota prior, which also needs to be adjusted slightly to still carry the notion that variables follow a random walk. This is done by setting the prior mean \code{b = 0} in \code{bv_mn()}, or its alias \code{bv_minnesota()}. The argument may also be provided in a vector or a matrix format, in case the variables differ in their order of integration.
 
-\begin{Schunk}
-\begin{Sinput}
-R> priors_app <- bv_priors(mn = bv_mn(b = 0))
-R> run_app <- bvar(y, lags = 5, n_draw = 25000, n_burn = 15000,
-+    priors = priors_app, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
-\end{Sinput}
-\end{Schunk}
+<<app_bvar, eval=TRUE, echo=TRUE, cache=TRUE, results=hide>>=
+priors_app <- bv_priors(mn = bv_mn(b = 0))
+run_app <- bvar(y, lags = 5, n_draw = 50000, n_burn = 25000,
+  priors = priors_app, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
+@
 
 
 \section{Construction of custom dummy priors} \label{app:dummy}
@@ -1007,29 +665,23 @@ Here, we demonstrate the construction of custom dummy priors using \code{bv_dumm
 A custom prior requires a function to construct artificial observations. This function takes three arguments -- the data as a numeric matrix, an integer with the number of lags, and the value of the prior parameter. The return value is a \code{'list'}, containing two numeric matrices, \code{X} and \code{Y}, with artificial observations to stack on top of the data matrix and the lagged data matrix.
 For the sum-of-coefficients prior we follow the procedure outlined in Section~\ref{subsec:prior}.
 
-\begin{Schunk}
-\begin{Sinput}
-R> add_soc <- function(Y, lags, par) {
-+    soc <- if(lags == 1) {diag(Y[1, ]) / par} else {
-+      diag(colMeans(Y[1:lags, ])) / par
-+    }
-+    Y_soc <- soc
-+    X_soc <- cbind(rep(0, ncol(Y)),
-+      matrix(rep(soc, lags), nrow = ncol(Y)))
-+    return(list("Y" = Y_soc, "X" = X_soc))
-+  }
-\end{Sinput}
-\end{Schunk}
+<<app_dummies, eval=TRUE, echo=TRUE>>=
+add_soc <- function(Y, lags, par) {
+  soc <- if(lags == 1) {diag(Y[1, ]) / par} else {
+    diag(colMeans(Y[1:lags, ])) / par
+  }
+  X_soc <- cbind(rep(0, ncol(Y)), matrix(rep(soc, lags), nrow = ncol(Y)))
+  return(list("Y" = soc, "X" = X_soc))
+}
+@
 
 This function is then passed to \code{bv_dummy()} via the argument \code{fun}. The remaining arguments work in the same way as for other prior constructors (see Section~\ref{subsec:setup}). They determine the hyperprior distribution and boundaries for the proposal distribution. Again, the prior parameter is set to its mode, if not treated hierarchically.
 The output of \code{bv_dummy()} is then passed to the ellipsis argument of \code{bv_priors()} and needs to include a name. Further steps do not differ from standard procedure -- posterior draws are stored and can be analyzed in the same way as for the Minnesota prior.
 
-\begin{Schunk}
-\begin{Sinput}
-R> soc <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_soc)
-R> bv_priors(hyper = "auto", soc = soc)
-\end{Sinput}
-\end{Schunk}
+<<app_priors, eval=TRUE, echo=TRUE, results=hide>>=
+soc <- bv_dummy(mode = 1, sd = 1, min = 0.0001, max = 50, fun = add_soc)
+bv_priors(soc = soc)
+@
 
 
 \section{Convergence assessment and parallelisation} \label{app:conv}
@@ -1039,20 +691,11 @@ Bayesian simulation relies heavily on the convergence of models, particularly so
 To access the interface we call the \code{as.mcmc()} method on the VAR model from Appendix~\ref{app:data}. The method works similarly to \code{plot()}, allowing users to subset hyperparameters or VAR coefficients with \code{vars}, \code{vars_response}, and \code{vars_impulse}.
 These are then converted to a \code{'mcmc'} object, which supports thorough analysis of convergence behavior. This includes the diagnostic statistics of \cite{geweke1992}, which can be calculated with \code{geweke.diag()}.
 
-\begin{Schunk}
-\begin{Sinput}
-R> library("coda")
-R> run_mcmc <- as.mcmc(run_app, vars = "lambda")
-R> geweke.diag(run_mcmc)
-\end{Sinput}
-\begin{Soutput}
-Fraction in 1st window = 0.1
-Fraction in 2nd window = 0.5 
-
- lambda 
--0.4296 
-\end{Soutput}
-\end{Schunk}
+<<app_coda, eval=TRUE, echo=TRUE>>=
+library("coda")
+run_mcmc <- as.mcmc(run_app, vars = "lambda")
+geweke.diag(run_mcmc)
+@
 
 The values of the diagnostic statistics constitute standard $z$-scores and indicate proper within-chain convergence of the hyperparameter $\lambda$.
 Still, one may also be interested in the behavior across chains. A suitable diagnostic to assess between-chain convergence was proposed by \cite{gelman1992} and is implemented in \pkg{coda} as \code{gelman.diag()}.
@@ -1061,30 +704,23 @@ We can visualize the separate runs for different hyperparameters or the ML, whic
 This object is passed on to \code{gelman.diag()}, in order to compute a diagnostic statistics for between-chain convergence.
 
 % CRAN limits to two cores
-\begin{Schunk}
-\begin{Sinput}
-R> library("parallel")
-R> n_cores <- 2
-R> cl <- makeCluster(n_cores)
-R> runs <- par_bvar(cl = cl, data = y, lags = 5,
-+    n_draw = 25000, n_burn = 15000, n_thin = 1,
-+    priors = priors_app, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
-R> stopCluster(cl)
-R> runs_mcmc <- as.mcmc(runs, vars = "lambda")
-R> gelman.diag(runs_mcmc, autoburnin = FALSE)
-\end{Sinput}
-\begin{Soutput}
-Potential scale reduction factors:
+<<app_parallel, eval=TRUE, echo=TRUE, cache=TRUE>>=
+library("parallel")
+n_cores <- 4
+cl <- makeCluster(n_cores)
 
-       Point est. Upper C.I.
-lambda          1          1
-\end{Soutput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-R> plot(runs, type = "full", vars = "lambda")
-\end{Sinput}
-\end{Schunk}
+runs <- par_bvar(cl = cl, data = y, lags = 5,
+  n_draw = 50000, n_burn = 25000, n_thin = 1,
+  priors = priors_app, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
+stopCluster(cl)
+@
+<<app_coda_chains, eval=TRUE, echo=TRUE>>=
+runs_mcmc <- as.mcmc(runs, vars = "lambda")
+gelman.diag(runs_mcmc, autoburnin = FALSE)
+@
+<<app_chains, fig=TRUE, png=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=8, height=2.8>>=
+plot(runs, type = "full", vars = "lambda")
+@
 
 \begin{figure}[ht]
 	\centering
@@ -1102,39 +738,19 @@ Identification via sign restrictions relies on forming expectations about respon
 Sign identification of shocks in \pkg{BVAR} is set up in \code{bv_irf()}, which can be accessed directly or over the ellipsis argument of \code{irf()}. We toggle \code{identification = TRUE} and provide a matrix $\mathbf{SR}$ with sign restrictions to the \code{sign_restr} argument. $\mathbf{SR}$ is constructed by setting all elements $SR_{ij}$ equal to 1 (-1) if the contemporaneous response of variable $i$ to a shock from variable $j$ is expected to be an increase (decrease). For an agnostic view, we set the element to \code{NA}; no restrictions are imposed. Note that the shocks need to be uniquely identifiable \citep{kilian2017}.
 After running \code{bv_irf()}, we can print the chosen sign restrictions with its \code{print()} method. To calculate, we call \code{irf()} as usual, providing the settings to the ellipsis argument. IRF are then calculated based on suitable shocks, which are drawn following the algorithm by \cite{rubio-ramirez2010}. Figure~\ref{fig:app_irf_signs} provides a visualization of the restricted impulse responses.
 
-\begin{Schunk}
-\begin{Sinput}
-R> sr <- matrix(c(1, 1, 1, -1, 1, NA, -1, -1, 1), ncol = 3)
-R> opt_signs <- bv_irf(horizon = 16, fevd = TRUE,
-+    identification = TRUE, sign_restr = sr)
-R> print(opt_signs)
-\end{Sinput}
-\begin{Soutput}
-Object with settings for computing impulse responses.
-Horizon: 16
-Identification: Sign restrictions
-Chosen restrictions:
-			Shock to
-			 Var1	 Var2	 Var3	 
-Response of	Var1	 +	 -	 -	
+<<app_signs, eval=TRUE, echo=TRUE>>=
+sr <- matrix(c(1, 1, 1, -1, 1, NA, -1, -1, 1), ncol = 3)
+opt_signs <- bv_irf(horizon = 16, fevd = TRUE,
+  identification = TRUE, sign_restr = sr)
+print(opt_signs)
+@
 
-		Var2	 +	 +	 -	
-
-		Var3	 +	 NA	 +	
-FEVD: TRUE
-\end{Soutput}
-\end{Schunk}
-
-\begin{Schunk}
-\begin{Sinput}
-R> irf(run_app) <- irf(run_app, opt_signs)
-\end{Sinput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-R> plot(irf(run_app))
-\end{Sinput}
-\end{Schunk}
+<<app_irf, eval=TRUE, echo=TRUE>>=
+irf(run_app) <- irf(run_app, opt_signs)
+@
+<<app_irf_signs, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE>>=
+plot(irf(run_app))
+@
 
 \begin{figure}[ht!]
 	\centering
@@ -1155,18 +771,14 @@ Conditional forecasts rely on fixing the future paths of a number of variables, 
 In \pkg{BVAR}, we configure conditional forecasts with \code{bv_fcast()}, which can be accessed directly or over the ellipsis argument of \code{predict()}. The assumed future paths are provided to the \code{cond_path} argument as numeric vector or matrix; the names or positions of constrained variables to \code{cond_vars}. For our example, we constrain the federal funds rate to a sharp rise and subsequent drop. The forecasts are then calculated as usual, using the \code{predict()} method.
 We use the \code{plot()} method to visualize the conditional forecast. Figure~\ref{fig:app_predict_conditional} shows the constrained federal funds rate together with unconstrained GDP growth and inflation dynamics.
 
-\begin{Schunk}
-\begin{Sinput}
-R> path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2, 2, 2)
-R> predict(run_app) <- predict(run_app, horizon = 16,
-+    cond_path = path, cond_var = "FEDFUNDS")
-\end{Sinput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-R> plot(predict(run_app), t_back = 16)
-\end{Sinput}
-\end{Schunk}
+<<app_predict, eval=TRUE, echo=TRUE>>=
+path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2, 2, 2)
+predict(run_app) <- predict(run_app, horizon = 16,
+  cond_path = path, cond_var = "FEDFUNDS")
+@
+<<app_predict_conditional, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=8, height=5>>=
+plot(predict(run_app), t_back = 16)
+@
 
 \begin{figure}[ht]
 	\centering

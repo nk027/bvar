@@ -49,6 +49,5 @@ McCracken, M. W. and Ng, S. (2016) FRED-MD: A Monthly Database for
 \code{\link{fred_transform}}
 }
 \keyword{FRED}
-\keyword{dataset}
 \keyword{datasets}
 \keyword{macroeconomics}

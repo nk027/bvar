@@ -10,7 +10,7 @@ bv_metropolis(
   adjust_acc = FALSE,
   adjust_burn = 0.75,
   acc_lower = 0.25,
-  acc_upper = 0.35,
+  acc_upper = 0.45,
   acc_change = 0.01
 )
 
@@ -19,7 +19,7 @@ bv_mh(
   adjust_acc = FALSE,
   adjust_burn = 0.75,
   acc_lower = 0.25,
-  acc_upper = 0.35,
+  acc_upper = 0.45,
   acc_change = 0.01
 )
 }

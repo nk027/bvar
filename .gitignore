@@ -12,6 +12,8 @@ vignettes/*.html
 vignettes/*.png
 vignettes/*.jpg
 vignettes/*.pdf
+vignettes/*.tex
+vignettes/*.R
 vignettes/template.Rnw
 vignettes/img
 

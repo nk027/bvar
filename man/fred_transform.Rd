@@ -88,4 +88,4 @@ fred_transform(fred_md, type = "fred_md")
 \code{\link{fred_qd}}
 }
 \keyword{FRED}
-\keyword{dataset}
+\keyword{datasets}

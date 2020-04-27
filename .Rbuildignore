@@ -6,6 +6,7 @@
 ^vignettes/.*\.jpg$
 ^vignettes/.*\.png$
 ^vignettes/.*\.pdf$
+^vignettes/article_jss.Rnw$
 ^vignettes/Makefile$
 ^vignettes/template\.Rnw$
 ^vignettes/img$
