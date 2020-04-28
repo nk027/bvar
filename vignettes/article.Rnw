@@ -131,14 +131,15 @@ In the domain of multivariate time series analysis, the \proglang{R} package \pk
 
 % Bayesian VAR domain
 Currently there exists no equivalent all-purpose tool for Bayesian VAR models in \proglang{R}. Applied work is often performed via ad hoc scripts, compromising reproducibility. Some \proglang{R} packages provide specialized implementations of Bayesian VAR models, but lack flexibility and accessibility.
-The \pkg{bvarsv} package \citep{krueger2015} implements estimation of a model with time-varying parameters and stochastic volatility by \cite{primiceri2005}. Another approach is taken by \pkg{bvartools} \citep{mohr2019}, which provides functions to assist with Bayesian inference in VAR models, but does not include routines for estimation.
-The \pkg{mfbvar} package by \cite{ankargren2019} implements estimation of mixed-frequency VAR models and provides forecasting routines. Several common prior distributions as well as stochastic volatility methods are available, but functions for structural analysis and inference are lacking.
+The \pkg{bvarsv} package \citep{krueger2015} implements estimation of a model with time-varying parameters and stochastic volatility by \cite{primiceri2005}.
+\pkg{mfbvar}, by \cite{ankargren2019}, implements estimation of mixed-frequency VAR models and provides forecasting routines. Several common prior distributions as well as stochastic volatility methods are available, but functions for structural analysis and inference are lacking.
+Another approach is taken by the \pkg{bvartools} package \citep{mohr2019}, which provides functions to assist with Bayesian inference in VAR models, but does not include routines for estimation.
 Despite the popularity of Bayesian VAR models, there is a considerable gap between specialized Bayesian and accessible, all-purpose implementations.
 
 % In comes BVAR
 In this paper, we present \pkg{BVAR} \citep{kuschnig2020}, a comprehensive and user-friendly \proglang{R} package for the estimation and analysis of Bayesian VAR models. The package implements a hierarchical modeling approach to prior selection in the fashion of \cite{giannone2015}. Functionalities to facilitate most common analyses are provided. Standard methods and interfaces to existing frameworks ensure accessibility and extensibility. \pkg{BVAR} is free software, licensed under the GNU General Public License 3, is openly available and developed online.\footnote{See the Comprehensive \proglang{R} Archive Network (CRAN, \url{https://cran.r-project.org/package=BVAR}) and GitHub (\url{https://github.com/nk027/bvar}).}
 
-The remainder of this paper is structured as follows. Section~\ref{sec:econ} describes the econometric framework of the package. Section~\ref{sec:bvar} provides an overview of the \pkg{BVAR} package, with the use demonstrated by means of an example in Section~\ref{sec:demo}. Section~\ref{sec:concl} concludes.
+The remainder of this paper is structured as follows. Section~\ref{sec:econ} describes the econometric framework of the package. Section~\ref{sec:bvar} provides an overview of the \pkg{BVAR} package, with its usage demonstrated by means of an example in Section~\ref{sec:demo}. Section~\ref{sec:concl} concludes.
 
 
 %% -- Manuscript ---------------------------------------------------------------
@@ -172,9 +173,9 @@ The number of coefficients to be estimated is $M + M^2 p$, rising quadratically 
 This dense parameterization often leads to inaccuracies with regard to out-of-sample forecasting and structural inference, especially for higher-dimensional models. This phenomenon is commonly referred to as the curse of dimensionality.
 
 % Bayesian VARs
-The Bayesian approach to estimation of VAR models tackles this limitation by imposing additional structure on the model. Informative priors have been shown to be effective in mitigating the curse of dimensionality and allow for large models to be estimated \citep[see][]{banbura2010, doan1984}. They push model parameters towards a parsimonious benchmark, reducing estimation error and improving out-of-sample prediction accuracy \citep[see][]{koop2013}.
+The Bayesian approach to estimation of VAR models tackles this limitation by imposing additional structure on the model. Informative conjugate priors have been shown to be effective in mitigating the curse of dimensionality and allow for large models to be estimated \citep[see][]{banbura2010, doan1984}. They push model parameters towards a parsimonious benchmark, reducing estimation error and improving out-of-sample prediction accuracy \citep[see][]{koop2013}.
 This shrinkage is related to frequentist regularization approaches \citep{hoerl1970, tibshirani1996}, which is discussed in detail by \cite{demol2008}, among others.
-The flexibility of the Bayesian framework allows for accommodation of a wide range of economic issues, naturally involves prior information, and can account for layers of uncertainty through hierarchical modeling \citep{gelman2013}.
+The flexibility of the Bayesian framework allows for the accommodation of a wide range of economic issues, naturally involves prior information, and can account for layers of uncertainty through hierarchical modeling \citep{gelman2013}.
 
 \subsection{Prior selection and specification} \label{subsec:prior}
 
@@ -275,10 +276,10 @@ Impulse response functions (IRF) are a central tool for structural analysis. The
 IRF serve as a representation of shocks hitting the economic system and are used to analyze the reaction of individual variables. The exact propagation of these shocks is of great interest, but meaningful interpretation relies on proper identification.
 \pkg{BVAR} features a framework for identification schemes, with two of the most popular schemes currently available -- namely short-term zero restrictions and sign restrictions. The former is also known as recursive identification and is achieved via Cholesky decomposition of the VCOV matrix $\boldsymbol{\Sigma}$ \citep[see][Chapter 8]{kilian2017}. This approach is computationally cheap and achieves exact identification without the need for detailed presumptions about variable behavior. Only the contemporaneous reactions of certain variables are limited, making the order of variables pivotal.
 Sign restrictions \citep[see][Chapter 13]{kilian2017} are another popular means of identification that is implemented following the approach of \cite{rubio-ramirez2010}. This scheme requires some presumptions about the behavior of variables following a certain shock. With increasing dimension of the model theoretically grounding such presumptions becomes increasingly challenging. Additionally, identification via sign restrictions comes at the cost of increased uncertainty and a loss of precision for the resulting IRF.
-Another related tool for structural analysis are forecast error variance decompositions (FEVD). FEVD are used to investigate which variables drive the paths of others after a shock. They can easily be computed in \pkg{BVAR} and allow for a more detailed structural analysis of the processes determining the behavior of an economic system.
+Another related tool for structural analysis are forecast error variance decompositions (FEVD). They are used to investigate which variables drive the paths of others after a shock. FEVD can easily be computed in \pkg{BVAR} and allow for a more detailed structural analysis of the processes determining the behavior of an economic system.
 
 % FRED datasets
-\pkg{BVAR} packages the popular FRED-MD and FRED-QD databases \citep{mccracken2016}. They constitute two of the largest macroeconomic databases, featuring more than 200 macroeconomic indicators on a monthly and a quarterly basis, respectively. They describe the US economy, starting from 1959 and are updated regularly.
+\pkg{BVAR} packages the popular FRED-MD and FRED-QD databases \citep{mccracken2016}. They constitute two of the largest macroeconomic databases, featuring more than 200 macroeconomic indicators on a monthly and a quarterly basis, respectively. The databases describe the US economy, starting from 1959 and are updated regularly.
 The databases are distributed in \pkg{BVAR} under a permissive modified Open Data Commons Attribution License (ODC-BY 1.0).
 Together with helper functions to aid with transformations, they allow users to start using the package hassle-free. FRED-MD and FRED-QD lend themselves to the study of a wide range of economic phenomena and are regularly used in benchmarking exercises for newly developed models and methods \citep[see inter alia][]{carriero2018, koop2019, huber2020}.
 
@@ -480,7 +481,7 @@ plot(run, type = "dens",
 \begin{figure}[!ht]
 	\centering
   \includegraphics[width=0.5\textwidth]{fig-betas.pdf}
-	\caption{Density plots for the VAR coefficients corresponding to the first lag of GDP and the second lag of the federal funds rate in the GDP equation.}
+	\caption{Density plots for the VAR coefficient corresponding to the first lag of GDP in the GDP equation.}
 	\label{fig:betas}
 \end{figure}
 
