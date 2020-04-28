@@ -321,7 +321,7 @@ library("BVAR")
 
 % Load and transform dataentry
 The main function \code{bvar()} expects input data to be coercible to a rectangular numeric matrix, i.e., without any missing values. For this example, we use six variables from the included FRED-QD dataset \citep{mccracken2016}, akin to the medium VAR considered by \cite{giannone2015}.
-The six variables are real gross domestic product (GDP), real personal consumption expenditures, real gross private domestic investment (all three in billions of 2012 dollars), as well as the number of total hours worked in the non-farm business sector, the GDP deflator index as a means to measure price inflation, and the effective federal funds rate in percent per year. The covered time period ranges from Q1 1959 to Q3 2019.
+The six variables are real gross domestic product (GDP), real personal consumption expenditures, real gross private domestic investment (all three in billions of 2012 dollars), as well as the number of total hours worked in the non-farm business sector, the GDP deflator index as a means to measure price inflation, and the effective federal funds rate in percent per year. The currently covered time period ranges from Q1 1959 to Q1 2020.
 We follow \cite{giannone2015} in transforming all variables except the federal funds rate to log-levels, in order to demonstrate aforementioned dummy priors.
 Transformation can be performed manually or with the helper function \code{fred_transform()}. The function supports transformations listed by \cite{mccracken2016}, which can be accessed via their transformation codes. Additionally, suggested transformations from the FRED-QD and FRED-MD databases can be applied automatically or looked up via \code{fred_code()}. See Appendix~\ref{app:data} for a demonstration of this functionality.
 For our example, we specify a log-transformation with code \code{4} for the corresponding variables and no transformation for the federal funds rate with code \code{1}.
@@ -420,13 +420,13 @@ run <- bvar(x, lags = 5, n_draw = 15000, n_burn = 5000, n_thin = 1,
   priors = priors, mh = mh, verbose = TRUE)
 @
 
-% Hardcoded due to progress bar - care for proper values % 2020-04-27
+% Hardcoded due to progress bar - care for proper values % 2020-04-28
 \begin{Soutput}
 Optimisation concluded.
 Posterior marginalised likelihood: 3637.405
 Parameters: lambda = 1.51378; soc = 0.12618; sur = 0.47674
 |==================================================| 100%
-Finished MCMC after 48.66 secs.
+Finished MCMC after 16.89 secs.
 \end{Soutput}
 
 % Describe outputs
@@ -451,10 +451,10 @@ The plot can be subset to specific hyperparameters or VAR coefficients via the \
 print(run)
 @
 
-% Hardcoded to match outputs above % 2020-04-27
+% Hardcoded to match outputs above % 2020-04-28
 \begin{Soutput}
   Bayesian VAR consisting of 238 observations, 6 variables and 5 lags.
-  Time spent calculating: 48.66 secs
+  Time spent calculating: 16.89 secs
   Hyperparameters: lambda, soc, sur
   Hyperparameter values after optimisation: 1.51378, 0.12618, 0.47674
   Iterations (burnt / thinning): 15000 (5000 / 1)
@@ -472,14 +472,14 @@ plot(run)
 	\label{fig:trace_density}
 \end{figure}
 
-<<betas, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=2.4>>=
-plot(run, type = "dens", mfrow = c(1, 2),
-  vars_response = "GDPC1", vars_impulse = c("GDPC1-lag1", "FEDFUNDS-lag2"))
+<<betas, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=5, height=3>>=
+plot(run, type = "dens",
+  vars_response = "GDPC1", vars_impulse = "GDPC1-lag1")
 @
 
 \begin{figure}[!ht]
 	\centering
-  \includegraphics[width=0.9\textwidth]{fig-betas.pdf}
+  \includegraphics[width=0.5\textwidth]{fig-betas.pdf}
 	\caption{Density plots for the VAR coefficients corresponding to the first lag of GDP and the second lag of the federal funds rate in the GDP equation.}
 	\label{fig:betas}
 \end{figure}
@@ -494,7 +494,7 @@ fitted(run, type = "mean")
 @
 
 
-<<residuals, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=3.6>>=
+<<residuals, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=7, height=4>>=
 plot(residuals(run, type = "mean"), vars = c("GDPC1", "PCECC96"))
 @
 
@@ -579,7 +579,7 @@ Continued contribution to and development of free software are crucial in facili
 
 \section*{Computational details}
 
-The results in this paper were obtained using \proglang{R}~3.6.3 with \pkg{BVAR}~1.0.0 and \pkg{mvtnorm}~{1.1-0} and \pkg{coda}~{0.19-3}. The machine used is a Thinkpad T495 running Ubuntu 18.04 LTS with a Ryzen 5 3500U and 16 GB RAM. The scripts used were also tested on a machine running Debian Sid 11 with an i7-7500U and 16 GB RAM.
+The results in this paper were obtained using \proglang{R}~4 with \pkg{BVAR}~1.0.0 and \pkg{mvtnorm}~{1.1-0} and \pkg{coda}~{0.19-3}. The machine used to generate the results is PC running Windows 10 with an i5-4670k and 16 GB RAM. The scripts were also tested on a machines running Debian Sid 11 with an i7-7500U and 16 GB RAM and a machine running Ubuntu 20.04 LTS with a Ryzen-3500U and 16 GB RAM.
 \proglang{R} and all packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/}.
 
 
