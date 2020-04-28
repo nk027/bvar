@@ -494,7 +494,7 @@ fitted(run, type = "mean")
 @
 
 
-<<residuals, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=7, height=4>>=
+<<residuals, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=8, height=4>>=
 plot(residuals(run, type = "mean"), vars = c("GDPC1", "PCECC96"))
 @
 
@@ -516,7 +516,7 @@ In the example below, we customize our IRF using \code{bv_irf()}, then compute a
 opt_irf <- bv_irf(horizon = 16, identification = TRUE)
 irf(run) <- irf(run, opt_irf, conf_bands = c(0.05, 0.16))
 @
-<<irf_cholesky, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=6>>=
+<<irf_cholesky, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=7, height=4.2>>=
 plot(irf(run), area = TRUE,
   vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1:2, 6))
 @
@@ -538,7 +538,7 @@ The \code{vars} argument of the \code{plot()} method can be used to subset plots
 <<predict, eval=TRUE, echo=TRUE>>=
 predict(run) <- predict(run, horizon = 16, conf_bands = c(0.05, 0.16))
 @
-<<predict_unconditional, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=6>>=
+<<predict_unconditional, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=7, height=4.2>>=
 plot(predict(run), area = TRUE, t_back = 32,
   vars = c("GDPC1", "GDPCTPI", "FEDFUNDS"))
 @
