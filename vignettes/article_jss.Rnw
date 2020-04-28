@@ -1,9 +1,4 @@
-\documentclass[article]{jss}
-% Adapted from the vignette
-%   - remove nojss from documentclass options
-%   - increase n_draw to 50000
-%   - increase n_burn to 25000
-%   - increase n_cores to 4
+\documentclass[article]{jss} % add nojss for vignette
 
 %\VignetteIndexEntry{BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R}
 %\VignettePackage{BVAR}
@@ -75,7 +70,7 @@ options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 
 %% - \Abstract{} almost as usual
 \Abstract{
-  Vector autoregression (VAR) models are widely used for multivariate time series analysis in macroeconomics, finance, and related fields. Bayesian methods are used to deal with their dense parameterization, imposing shrinkage on model coefficients via prior information. The optimal choice of the degree of informativeness implied by these priors is subject of much debate and can be approached via hierarchical modeling.
+  Vector autoregression (VAR) models are widely used for multivariate time series analysis in macroeconomics, finance, and related fields. Bayesian methods are employed to deal with their dense parameterization, imposing shrinkage on model coefficients via prior information. The optimal choice of the degree of informativeness implied by these priors is subject of much debate and can be approached via hierarchical modeling.
   This paper introduces \pkg{BVAR}, an \proglang{R} package dedicated to the estimation of Bayesian VAR models with hierarchical prior selection. It implements functionalities and options that permit addressing a wide range of research problems, while retaining an easy-to-use and transparent interface. Features include structural analysis of impulse responses, forecasts, some of the most commonly used conjugate priors, as well as a framework for defining custom dummy-observation priors.
   \pkg{BVAR} makes Bayesian VAR models user-friendly and provides an accessible, and reproducible, reference implementation.
 }
@@ -172,7 +167,7 @@ They are commonly resorted to as tools for investigating dynamic effects of shoc
   \text{ with }
   \boldsymbol{\epsilon}_t \sim \mathcal{N} (0, \boldsymbol{\Sigma}),
 \end{align}
-where $\boldsymbol{y}_t$ is an $M \times 1$ vector of endogenous variables, $\boldsymbol{a}_0$ is an $M \times 1$ intercept vector, $\boldsymbol{A}_j$ ($j = 1, \ldots, p$) are $M \times M$ coefficient matrices, and $\boldsymbol{\epsilon_t}$ is an $M \times 1$ vector of Gaussian exogenous shocks.
+where $\boldsymbol{y}_t$ is an $M \times 1$ vector of endogenous variables, $\boldsymbol{a}_0$ is an $M \times 1$ intercept vector, $\boldsymbol{A}_j$ ($j = 1, \ldots, p$) are $M \times M$ coefficient matrices, and $\boldsymbol{\epsilon_t}$ is an $M \times 1$ vector of Gaussian exogenous shocks with zero mean and variance-covariance (VCOV) matrix $\boldsymbol{\Sigma}$.
 The number of coefficients to be estimated is $M + M^2 p$, rising quadratically with the number of included variables and linearly in the lag order.
 This dense parameterization often leads to inaccuracies with regard to out-of-sample forecasting and structural inference, especially for higher-dimensional models. This phenomenon is commonly referred to as the curse of dimensionality.
 
@@ -186,11 +181,11 @@ The flexibility of the Bayesian framework allows for accommodation of a wide ran
 % Introduce priors
 Properly informing prior beliefs is critical and hence the subject of much research.
 In the multivariate context, flat priors that attempt not to impose a certain belief, yield inadmissible estimators \citep{stein1956} and poor inference \citep{sims1980, banbura2010}. Other uninformative or informative priors are necessary. Early contributions \citep{litterman1980} set the priors and their parameters in a way that maximizes out-of-sample forecasting performance over a pre-sample. \cite{delnegro2004} choose values that maximize the marginal data density. \cite{banbura2010} use the in-sample fit as decision criterion and control for overfitting.
-\cite{villani2009} reformulates the model and places priors on the steady state, which is better understood theoretically by economists. Economic theory is a preferred source of prior information, but is lacking in many settings -- in particular for high-dimensional models.
+Economic theory is a preferred source of prior information, but is lacking in many settings -- in particular for high-dimensional models. \cite{villani2009} reformulates the model and places priors on the steady state, which is better understood theoretically by economists.
 
 % Hierarchical approach
 \cite{giannone2015} propose setting prior parameters in a data-based fashion, i.e., by treating them as additional parameters to be estimated. In their hierarchical approach, prior parameters are assigned their own hyperpriors with hyperparameters. Uncertainty surrounding the choice of prior parameters is acknowledged explicitly.
-This can be expressed invoking Bayes' law as:
+This can be expressed by invoking Bayes' law as:
 \begin{align}
   \label{equ:hm1}
   p(\boldsymbol{\gamma} | \boldsymbol{y}) & \propto \hteal{p(\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{\gamma}) p(\boldsymbol{\theta} | \boldsymbol{\gamma})} ~ p(\boldsymbol{\gamma}),
@@ -257,8 +252,8 @@ The sum-of-coefficients and single-unit-root dummy-observation priors are common
 
 % Introduce BVAR
 \pkg{BVAR} implements a hierarchical approach to prior selection \citep{giannone2015} into \proglang{R} \citep{R} and hands the user an easy-to-use and flexible tool for Bayesian VAR models.
-Its primary use cases are in the field of macroeconomic multivariate time series analysis. The hierarchical prior selection serves as a safeguard against unreasonable parameter choices. Due to its ease of use and flexible nature, \pkg{BVAR} is ideal for a broad range of economic analyses \citep[in the spirit of][]{baumeister2016, altavilla2018, nelson2018} and may be consulted as a reference for similar models.
-The accessible and user-friendly implementation make it a suitable tool for introductions to multivariate time series modeling and the Bayesian paradigm.
+Its primary use cases are in the field of macroeconomic multivariate time series analysis. \pkg{BVAR} is ideal for a broad range of economic analyses \citep[in the spirit of][]{baumeister2016, altavilla2018, nelson2018}. It may be consulted as a reference for similar models, where the hierarchical prior selection serves as a safeguard against unreasonable parameter choices.
+The accessible and user-friendly implementation make it a suitable tool for introductions to Bayesian multivariate time series modeling and for quick, versatile analysis.
 
 % Mention some abstract features
 The package is available cross-platform and on minimal installations, with no dependencies outside base \proglang{R} and imports from \pkg{mvtnorm} \citep{genz2020}. It is implemented in native \proglang{R} for transparency and in order to lower the bar for contributions and/or adaptations.
@@ -267,7 +262,7 @@ A functional approach to the package structure facilitates optimization of compu
 % Mention usage features
 \pkg{BVAR} features extensive customization options with regard to priors to be employed, their parameters, and their hierarchical treatment. The Minnesota prior is used as baseline; all of its parameters are adjustable and can be treated hierarchically.
 Users can easily include the sum-of-coefficients and single-unit-root priors of \cite{sims1998} and \cite{giannone2015}. The flexible implementation also allows users to construct custom dummy-observation priors.
-Further options are devoted to the MCMC step and the Metropolis-Hastings (MH) algorithm that is used to explore the posterior hyperparameter space. The number of burned and saved draws are adjustable; thinning may be employed to reduce memory requirements and serial correlation. Proper exploration of the posterior is facilitated by options to manually scale individual proposals, or to enable automatic scaling until a target acceptance rate is achieved.
+Further options are devoted to the MCMC method and the Metropolis-Hastings (MH) algorithm, which is used to explore the posterior hyperparameter space. The number of burned and saved draws are adjustable; thinning may be employed to reduce memory requirements and serial correlation. Proper exploration of the posterior is facilitated by options to manually scale individual proposals for the MH step, or to enable automatic scaling until a target acceptance rate is achieved.
 The customization options can be harnessed for flexible analysis with a number of established and specialized methods.
 
 % Forecasts
@@ -278,19 +273,19 @@ Conditional forecasts allow for elaborate scenario analyses, where the future pa
 % IRF
 Impulse response functions (IRF) are a central tool for structural analysis. They provide insights into the behavior of economic systems and are another cornerstone of inference with VAR models.
 IRF serve as a representation of shocks hitting the economic system and are used to analyze the reaction of individual variables. The exact propagation of these shocks is of great interest, but meaningful interpretation relies on proper identification.
-\pkg{BVAR} features a framework for identification schemes, with two of the most popular schemes currently available -- namely short-term zero restrictions and sign restrictions. The former is also known as recursive identification and is achieved via Cholesky decomposition of the variance-covariance (VCOV) matrix $\boldsymbol{\Sigma}$ \citep[see][Chapter 8]{kilian2017}. This approach is computationally cheap and achieves exact identification without the need for detailed presumptions about variable behavior. Only the contemporaneous reactions of certain variables are limited, making the order of variables pivotal.
+\pkg{BVAR} features a framework for identification schemes, with two of the most popular schemes currently available -- namely short-term zero restrictions and sign restrictions. The former is also known as recursive identification and is achieved via Cholesky decomposition of the VCOV matrix $\boldsymbol{\Sigma}$ \citep[see][Chapter 8]{kilian2017}. This approach is computationally cheap and achieves exact identification without the need for detailed presumptions about variable behavior. Only the contemporaneous reactions of certain variables are limited, making the order of variables pivotal.
 Sign restrictions \citep[see][Chapter 13]{kilian2017} are another popular means of identification that is implemented following the approach of \cite{rubio-ramirez2010}. This scheme requires some presumptions about the behavior of variables following a certain shock. With increasing dimension of the model theoretically grounding such presumptions becomes increasingly challenging. Additionally, identification via sign restrictions comes at the cost of increased uncertainty and a loss of precision for the resulting IRF.
 Another related tool for structural analysis are forecast error variance decompositions (FEVD). FEVD are used to investigate which variables drive the paths of others after a shock. They can easily be computed in \pkg{BVAR} and allow for a more detailed structural analysis of the processes determining the behavior of an economic system.
 
 % FRED datasets
-\pkg{BVAR} packages the popular FRED-MD and FRED-QD databases \citep{mccracken2016}. They constitute two of the largest macroeconomic databases, featuring over 200 macroeconomic indicators on a monthly and a quarterly basis, respectively. They describe the US economy, starting from 1959 and are updated regularly.
+\pkg{BVAR} packages the popular FRED-MD and FRED-QD databases \citep{mccracken2016}. They constitute two of the largest macroeconomic databases, featuring more than 200 macroeconomic indicators on a monthly and a quarterly basis, respectively. They describe the US economy, starting from 1959 and are updated regularly.
 The databases are distributed in \pkg{BVAR} under a permissive modified Open Data Commons Attribution License (ODC-BY 1.0).
 Together with helper functions to aid with transformations, they allow users to start using the package hassle-free. FRED-MD and FRED-QD lend themselves to the study of a wide range of economic phenomena and are regularly used in benchmarking exercises for newly developed models and methods \citep[see inter alia][]{carriero2018, koop2019, huber2020}.
 
 % Conclude
 As detailed above, \pkg{BVAR} makes estimation of and inference in Bayesian VAR models accessible and user-friendly.
 Extensive customization options are available, with sensible default settings allowing for a step-by-step adoption. This is further facilitated by lucid helper functions and comprehensive documentation.
-Analysis of estimated VAR models is readily accessible -- functions for summarizing and plotting model parameters, forecasts, IRF, traces, densities, and residuals are available. Use of established procedures and standard methods, including \code{plot()}, \code{predict()}, \code{coef()}, and \code{summary()}, set a low barrier of entry for \proglang{R} users.
+Analysis of estimated VAR models is readily accessible -- functions for summarizing and plotting model parameters, forecasts, IRF, traces, densities, and residuals are available. Use of established procedures and standard methods, including \code{plot()}, \code{predict()}, \code{coef()}, and \code{summary()}, set a low entry barrier for \proglang{R} users.
 Final and intermediate outputs are provided in an idiomatic format and feature \code{print()} methods for quick access and a transparent research process.
 Existing frameworks may be used for further analysis -- an interface to \pkg{coda} for checking outputs, analysis, and diagnostics is provided.
 The available FRED-MD and FRED-QD datasets make \pkg{BVAR} an ideal tool for exploring a wide range of macroeconomic research questions.
@@ -314,7 +309,7 @@ The available FRED-MD and FRED-QD datasets make \pkg{BVAR} an ideal tool for exp
 \section{An applied example} \label{sec:demo}
 
 % Introduce the demonstration
-In this section we demonstrate the functionalities of \pkg{BVAR} via an applied example. We use a subset of the included data and go through a typical workflow of (1) preparing the data, (2) configuring priors and other aspects of the model, (3) estimation of the model, and finally (4) analyzing outputs, including IRF and forecasts. Further possible applications and examples are available in the Appendix.
+In this section we demonstrate the functionalities of \pkg{BVAR} via an applied example. We use a subset of the included data and go through a typical workflow of (1) preparing the data, (2) configuring priors and other aspects of the model, (3) estimating the model, and finally (4) analyzing outputs, including IRF and forecasts. Further possible applications and examples are available in the Appendix.
 We start by setting a seed for reproducibility and loading \pkg{BVAR}.
 
 <<setup, eval=TRUE, echo=TRUE>>=
@@ -324,7 +319,7 @@ library("BVAR")
 
 \subsection{Data preparation} \label{subsec:data}
 
-% Load and transform data
+% Load and transform dataentry
 The main function \code{bvar()} expects input data to be coercible to a rectangular numeric matrix, i.e., without any missing values. For this example, we use six variables from the included FRED-QD dataset \citep{mccracken2016}, akin to the medium VAR considered by \cite{giannone2015}.
 The six variables are real gross domestic product (GDP), real personal consumption expenditures, real gross private domestic investment (all three in billions of 2012 dollars), as well as the number of total hours worked in the non-farm business sector, the GDP deflator index as a means to measure price inflation, and the effective federal funds rate in percent per year. The covered time period ranges from Q1 1959 to Q3 2019.
 We follow \cite{giannone2015} in transforming all variables except the federal funds rate to log-levels, in order to demonstrate aforementioned dummy priors.
@@ -332,14 +327,14 @@ Transformation can be performed manually or with the helper function \code{fred_
 For our example, we specify a log-transformation with code \code{4} for the corresponding variables and no transformation for the federal funds rate with code \code{1}.
 Figure~\ref{fig:timeseries} provides an overview of the transformed time series.
 
-<<data, eval=TRUE, echo=TRUE>>=
+<<data, eval=TRUE, echo=TRUE, results=hide>>=
 data("fred_qd")
 x <- fred_qd[, c("GDPC1", "PCECC96", "GPDIC1",
   "HOANBS", "GDPCTPI", "FEDFUNDS")]
 x <- fred_transform(x, codes = c(4, 4, 4, 4, 4, 1))
 @
 
-<<timeseries, fig=TRUE, eval=TRUE, echo=FALSE, include=FALSE, width=8, height=5>>=
+<<timeseries, fig=TRUE, eval=TRUE, echo=FALSE, include=FALSE, width=6, height=3.4>>=
 op <- par(mfrow = c(2, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
 plot(as.Date(rownames(x)), x[ , "GDPC1"], type = "l",
   xlab = "Time", ylab = "Gross domestic product (GDP)")
@@ -369,7 +364,6 @@ par(op)
 After preparing the data, we are ready to specify priors and configure our model.
 Functions related to estimation setup and configuration share the prefix \code{bv_}. They are grouped in this way to make them easily discernible and their documentations accessible, facilitating their use.
 This contrasts methods and functions for analysis, which stick closely to idiomatic \proglang{R}.
-The goal of this naming scheme is to lower entry barriers for new users, while providing a comprehensive set of functionalities.
 
 % Priors, start with Minnesota
 Priors are set up using \code{bv_priors()}, which holds arguments for hierarchical treatment, the Minnesota, and dummy-observation priors.
@@ -390,7 +384,7 @@ sur <- bv_sur(mode = 1, sd = 1, min = 1e-04, max = 50)
 @
 
 % Wrap up priors
-Once the priors are defined, we provide them to \code{bv_priors()}. The dummy-observation priors are captured by ellipsis argument (\code{...}) and need to be named. Via the argument \code{hyper} we choose which prior parameters should be treated hierarchically. Its default setting (\code{"auto"}) includes $\lambda$ and the key parameters of all provided dummy-observation priors. In our case, this is equivalent to providing the character vector \code{c("lambda", "soc", "sur")}. Prior parameters that are not treated hierarchically, e.g., $\alpha$ in this case, are treated as fixed and set equal to their \code{mode}.
+Once the priors are defined, we provide them to \code{bv_priors()}. The dummy-observation priors are captured by the ellipsis argument (\code{...}) and need to be named. Via \code{hyper} we choose which prior parameters should be treated hierarchically. Its default setting (\code{"auto"}) includes $\lambda$ and the key parameters of all provided dummy-observation priors. In our case, this is equivalent to providing the character vector \code{c("lambda", "soc", "sur")}. Prior parameters that are not treated hierarchically, e.g., $\alpha$ in this case, are treated as fixed and set equal to their \code{mode}.
 
 <<priors, eval=TRUE, echo=TRUE>>=
 priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
@@ -416,7 +410,7 @@ This enables users to (1) focus on critical parts of their model and (2) use \pk
 
 % Present estimation
 Models are estimated using the core function \code{bvar()}.
-As the bare minimum, we need to provide our prepared data and a lag order as arguments. Additionally, we pass on our customization objects from above to their respective arguments.
+As the bare minimum, we need to provide our prepared data and a lag order $p$ as arguments. Additionally, we pass on our customization objects from above to their respective arguments.
 We also define the total number of iterations with \code{n_draw}, the number of initial iterations to discard with \code{n_burn}, and a denominator for the fraction of draws to store via \code{n_thin}. We increase the number of total and burnt iterations, while retaining all draws, since memory is not an issue in our example.
 Note that arguments for computing IRF, FEVD and forecasts are also available and work similarly to the ex-post calculations that are demonstrated below.
 When estimating the model, \code{verbose = TRUE} prompts printing of intermediate results and enables a progress bar during the MCMC step.
@@ -431,8 +425,8 @@ run <- bvar(x, lags = 5, n_draw = 50000, n_burn = 25000, n_thin = 1,
 Optimisation concluded.
 Posterior marginalised likelihood: 3637.405
 Parameters: lambda = 1.51378; soc = 0.12618; sur = 0.47674
-  |==================================================| 100%
-Finished MCMC after 2.74 mins.
+|==================================================| 100%
+Finished MCMC after 50 secs.
 \end{Soutput}
 
 % Describe outputs
@@ -445,7 +439,7 @@ Outputs can be accessed manually or via a multitude of functions and methods for
 \subsection{Analyzing outputs}\label{subsec:assess}
 
 % Introduce methods and generics
-\pkg{BVAR} provides a range of standard methods for objects of type \code{'bvar'} and derivatives, which facilitate cursory assessments and detailed analysis. These include \code{print()}, \code{plot()}, and \code{summary()} methods, as well as a \code{predict()} method, and an \code{irf()} generic.
+\pkg{BVAR} provides a range of standard methods for objects of type \code{'bvar'} and derivatives, which facilitate cursory assessments and detailed analysis. These include \code{print()}, \code{plot()}, and \code{summary()} methods, as well as a \code{predict()} method and an \code{irf()} generic.
 The \code{print()} method provides some meta information, details on hierarchically treated prior hyperparameters, and their starting values obtained from optimization via \code{optim()}. The \code{summary()} method mimics its counterpart in \pkg{vars}, including information on the VAR model's log-likelihood, coefficients, and the VCOV matrix. These are also available via the methods \code{logLik()}, \code{coef()} and \code{vcov()}.
 Other established methods, such as \code{fitted()}, \code{density()} and \code{residuals()}, are available. They operate on all posterior draws and include clear \code{print()} methods.
 
@@ -460,14 +454,14 @@ print(run)
 % Hardcoded to match outputs above % 2020-04-27
 \begin{Soutput}
   Bayesian VAR consisting of 238 observations, 6 variables and 5 lags.
-  Time spent calculating: 2.74 mins
+  Time spent calculating: 50 secs
   Hyperparameters: lambda, soc, sur
   Hyperparameter values after optimisation: 1.51378, 0.12618, 0.47674
-  Iterations (burnt / thinning): 50000 (25000 / 1)
-  Accepted draws (rate): 9874 (0.395)
+  Iterations (burnt / thinning): 15000 (5000 / 1)
+  Accepted draws (rate): 3933 (0.393)
 \end{Soutput}
 
-<<trace_density, fig=TRUE, png=TRUE, eval=TRUE, echo=TRUE, include=FALSE>>=
+<<trace_density, fig=TRUE, png=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=6>>=
 plot(run)
 @
 
@@ -478,9 +472,9 @@ plot(run)
 	\label{fig:trace_density}
 \end{figure}
 
-<<betas, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=8, height=4>>=
-plot(run, type = "dens", vars_response = "GDPC1",
-  vars_impulse = c("GDPC1-lag1", "FEDFUNDS-lag2"))
+<<betas, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=2.4>>=
+plot(run, type = "dens", mfrow = c(1, 2),
+  vars_response = "GDPC1", vars_impulse = c("GDPC1-lag1", "FEDFUNDS-lag2"))
 @
 
 \begin{figure}[!ht]
@@ -500,7 +494,7 @@ fitted(run, type = "mean")
 @
 
 
-<<residuals, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=8, height=4>>=
+<<residuals, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=3.6>>=
 plot(residuals(run, type = "mean"), vars = c("GDPC1", "PCECC96"))
 @
 
@@ -515,21 +509,21 @@ plot(residuals(run, type = "mean"), vars = c("GDPC1", "PCECC96"))
 Structural analysis with \pkg{BVAR} works in a straightforward fashion. Impulse response functions are handled in a specific object, with the associated generic function \code{irf()}. The function is used for computing, accessing, and storing IRF in the respective slot of a \code{'bvar'} object and updating credible bands.
 Forecast error variance decompositions rely on IRF and are nested in the respective object. They can be accessed directly with the generic function \code{fevd()}.
 Configuration options for IRF and FEVD are available via the ellipsis argument of \code{irf()} or the helper function \code{bv_irf()}. They include the horizon to be considered, whether or not FEVD should be computed, and further settings regarding identification. By default, the shocks under scrutiny are identified via short-term zero restrictions. Identification can also be achieved in other ways (see Appendix~\ref{app:signs} for an example of imposing sign restrictions) or skipped entirely.
-IRF objects feature methods for plotting, printing, and summarizing. The \code{plot()} method has options to subset the plots to specific impulses and/or responses via name or position. Credible bands are visualized as lines or shaded areas with the \code{area} argument toggled.
+IRF objects feature methods for plotting, printing, and summarizing. The \code{plot()} method has options to subset the plots to specific impulses and/or responses via name or position of the variable. Credible bands are visualized as lines or shaded areas with the \code{area} argument toggled.
 In the example below, we customize our IRF using \code{bv_irf()}, then compute and store them with \code{irf()}. We plot the IRF of certain shocks and variables by specifying them with \code{vars_impulse} and \code{vars_response} in Figure~\ref{fig:irf_cholesky}.
 
 <<irf, eval=TRUE, echo=TRUE>>=
 opt_irf <- bv_irf(horizon = 16, identification = TRUE)
 irf(run) <- irf(run, opt_irf, conf_bands = c(0.05, 0.16))
 @
-<<irf_cholesky, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE>>=
+<<irf_cholesky, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=6>>=
 plot(irf(run), area = TRUE,
-  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1, 5:6))
+  vars_impulse = c("GDPC1", "FEDFUNDS"), vars_response = c(1:2, 6))
 @
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{fig-irf_cholesky.pdf}
+  \includegraphics[width=1\textwidth]{fig-irf_cholesky.pdf}
   \caption{Impulse responses of GDP, private consumption expenditure and the federal funds rate to an aggregate demand shock (left panels) and a monetary policy shock (right panels). Shaded areas refer to the 90\% and the 68\% credible sets.}
   \label{fig:irf_cholesky}
 \end{figure}
@@ -538,13 +532,14 @@ plot(irf(run), area = TRUE,
 Forecasting with \pkg{BVAR} is facilitated by the \code{predict()} method and a specific object for forecasts.
 The method works similarly to \code{irf()}, with functionality to compute, access, and store outputs in the respective slot of a \code{'bvar'} object and update credible bands.
 Settings can also be accessed via the ellipsis argument or the helper function \code{bv_fcast()}. For unconditional forecasts only the forecasting horizon is required. In order to conduct scenario analyses based on conditional forecasts, further settings have to be passed on (see Appendix~\ref{app:cond} for a demonstration).
-Forecast objects feature methods for plotting, printing, and summarizing. The \code{plot()} method can be used to subset plots to certain variables via the \code{vars} argument. The visualization can include a number of realized values before the forecast, which is set with the argument \code{t_back} (see Figure~\ref{fig:predict_unconditional}).
+Forecast objects feature methods for plotting, printing, and summarizing.
+The \code{vars} argument of the \code{plot()} method can be used to subset plots to certain variables. The visualization can include a number of realized values before the forecast, which is set with the argument \code{t_back} (see Figure~\ref{fig:predict_unconditional}).
 
 <<predict, eval=TRUE, echo=TRUE>>=
 predict(run) <- predict(run, horizon = 16, conf_bands = c(0.05, 0.16))
 @
-<<predict_unconditional, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE>>=
-plot(predict(run), area = TRUE, t_back = 24,
+<<predict_unconditional, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=6>>=
+plot(predict(run), area = TRUE, t_back = 32,
   vars = c("GDPC1", "GDPCTPI", "FEDFUNDS"))
 @
 
@@ -584,7 +579,7 @@ Continued contribution to and development of free software are crucial in facili
 
 \section*{Computational details}
 
-The results in this paper were obtained using \proglang{R}~3.6.3 with \pkg{BVAR}~{1.0.0} and \pkg{mvtnorm}~{1.1-0} and \pkg{coda}~{0.19-3}. The machine used is a Thinkpad T495 running Ubuntu 18.04 LTS with a Ryzen 5 3500U and 16 GB RAM. The scripts used were also tested on a machine running Debian Sid 11 with an i7-7500U and 16 GB RAM.
+The results in this paper were obtained using \proglang{R}~3.6.3 with \pkg{BVAR}~1.0.0 and \pkg{mvtnorm}~{1.1-0} and \pkg{coda}~{0.19-3}. The machine used is a Thinkpad T495 running Ubuntu 18.04 LTS with a Ryzen 5 3500U and 16 GB RAM. The scripts used were also tested on a machine running Debian Sid 11 with an i7-7500U and 16 GB RAM.
 \proglang{R} and all packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/}.
 
 
@@ -619,7 +614,7 @@ We would like to thank Victor Maus and Florian Huber for helpful comments and en
 Analysis often relies on data coming in a specific format, frequently requiring transformation. The helper function \code{fred_transform()} facilitates this work step. It can be used to apply common transformations, subset data to a rectangular format, i.e., without missing values, and automatically transform the included FRED-QD and FRED-MD datasets.
 Both datasets are packaged in their raw format, but \cite{mccracken2016} provide suggested transformations in their online appendices.\footnote{\url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}} These transformations can also be looked up manually with \code{fred_code()}.
 
-Below, we demonstrate using a prototypical monetary VAR model -- covering GDP, the GDP deflator and the federal funds rate. For this example, we are looking to transform the individual time series to be stationary.
+Below, we demonstrate this using a prototypical monetary VAR model -- covering GDP, the GDP deflator and the federal funds rate. For this example, we are looking to transform the individual time series to be stationary.
 To automatically apply the suggested transformation of \cite{mccracken2016} we simply specify the \code{type} -- either \code{"fred_qd"} or \code{"fred_md"} -- and call \code{fred_transform()} with our data.
 In a second attempt, we deviate from the suggestions and directly provide transformation codes to the \code{codes} argument. We can call the function without arguments to display available codes. For this example, we choose \code{5} for log-differences and \code{1} for no transformation. We also set \code{lag = 4} for yearly differences of our quarterly data. Figure~\ref{fig:app_timeseries} shows the transformed time series, which will be used to illustrate additional features below.
 
@@ -630,7 +625,7 @@ fred_transform(y, type = "fred_qd")
 y <- fred_transform(y, codes = c(5, 5, 1), lag = 4)
 @
 
-<<app_timeseries, fig=TRUE, eval=TRUE, echo=FALSE, include=FALSE, width=8, height=2.8>>=
+<<app_timeseries, fig=TRUE, eval=TRUE, echo=FALSE, include=FALSE, width=6, height=1.8>>=
 op <- par(mfrow = c(1, 3), mar = c(3, 3, 1, 0.5), mgp = c(2, 0.6, 0))
 plot(as.Date(rownames(y)), y[ , "GDPC1"], type = "l",
   xlab = "Time", ylab = "GDP growth")
@@ -684,7 +679,7 @@ bv_priors(soc = soc)
 @
 
 
-\section{Convergence assessment and parallelisation} \label{app:conv}
+\section{Convergence assessment and parallelization} \label{app:conv}
 
 Bayesian simulation relies heavily on the convergence of models, particularly so for hierarchical models. As demonstrated in Section~\ref{subsec:assess}, \pkg{BVAR} includes functionality to assess convergence visually. Many more tools are available through the interface to \pkg{coda}, which specializes in output assessment for Markov chain Monte Carlo (MCMC) simulations.
 
@@ -713,12 +708,11 @@ runs <- par_bvar(cl = cl, data = y, lags = 5,
   n_draw = 50000, n_burn = 25000, n_thin = 1,
   priors = priors_app, mh = bv_mh(scale_hess = 0.5, adjust_acc = TRUE))
 stopCluster(cl)
-@
-<<app_coda_chains, eval=TRUE, echo=TRUE>>=
+
 runs_mcmc <- as.mcmc(runs, vars = "lambda")
 gelman.diag(runs_mcmc, autoburnin = FALSE)
 @
-<<app_chains, fig=TRUE, png=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=8, height=2.8>>=
+<<app_chains, fig=TRUE, png=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=1.8>>=
 plot(runs, type = "full", vars = "lambda")
 @
 
@@ -734,7 +728,7 @@ plot(runs, type = "full", vars = "lambda")
 
 Identification is required for meaningful interpretation of impulse response functions. \pkg{BVAR} implements identification in a flexible manner, facilitating various schemes. Sign restrictions, one such scheme, are readily available and demonstrated here.
 
-Identification via sign restrictions relies on forming expectations about response directions following certain shocks \citep{rubio-ramirez2010}. These expectations are usually derived from economic theory, which can be elusive for high-dimensional models.
+Identification via sign restrictions relies on forming expectations about response directions following certain shocks \citep{rubio-ramirez2010}. These expectations are usually derived from economic theory -- a process that can become cumbersome for high-dimensional models.
 Sign identification of shocks in \pkg{BVAR} is set up in \code{bv_irf()}, which can be accessed directly or over the ellipsis argument of \code{irf()}. We toggle \code{identification = TRUE} and provide a matrix $\mathbf{SR}$ with sign restrictions to the \code{sign_restr} argument. $\mathbf{SR}$ is constructed by setting all elements $SR_{ij}$ equal to 1 (-1) if the contemporaneous response of variable $i$ to a shock from variable $j$ is expected to be an increase (decrease). For an agnostic view, we set the element to \code{NA}; no restrictions are imposed. Note that the shocks need to be uniquely identifiable \citep{kilian2017}.
 After running \code{bv_irf()}, we can print the chosen sign restrictions with its \code{print()} method. To calculate, we call \code{irf()} as usual, providing the settings to the ellipsis argument. IRF are then calculated based on suitable shocks, which are drawn following the algorithm by \cite{rubio-ramirez2010}. Figure~\ref{fig:app_irf_signs} provides a visualization of the restricted impulse responses.
 
@@ -748,14 +742,14 @@ print(opt_signs)
 <<app_irf, eval=TRUE, echo=TRUE>>=
 irf(run_app) <- irf(run_app, opt_signs)
 @
-<<app_irf_signs, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE>>=
-plot(irf(run_app))
+<<app_irf_signs, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=4>>=
+plot(irf(run_app), vars_impulse = c(1, 3))
 @
 
 \begin{figure}[ht!]
 	\centering
   \includegraphics[width=0.9\linewidth]{fig-app_irf_signs.pdf}
-	\caption{Full set of impulse responses from a prototypical monetary VAR using sign restrictions to achieve identification. Grey lines refer to the 68\% credible set.}
+	\caption{Set of impulse responses from a prototypical monetary VAR using sign restrictions to achieve identification. Grey lines refer to the 68\% credible set.}
 	\label{fig:app_irf_signs}
 \end{figure}
 
@@ -776,7 +770,7 @@ path <- c(2.25, 3, 4, 5.5, 6.75, 4.25, 2.75, 2, 2, 2)
 predict(run_app) <- predict(run_app, horizon = 16,
   cond_path = path, cond_var = "FEDFUNDS")
 @
-<<app_predict_conditional, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=8, height=5>>=
+<<app_predict_conditional, fig=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=4>>=
 plot(predict(run_app), t_back = 16)
 @
 

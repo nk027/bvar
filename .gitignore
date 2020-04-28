@@ -15,6 +15,7 @@ vignettes/*.pdf
 vignettes/*.tex
 vignettes/*.R
 vignettes/template.Rnw
+vignettes/article_jss.Rnw
 vignettes/img
 
 *.utf8.md
