@@ -279,7 +279,7 @@ Sign restrictions \citep[see][Chapter 13]{kilian2017} are another popular means 
 Another related tool for structural analysis are forecast error variance decompositions (FEVD). They are used to investigate which variables drive the paths of others after a shock. FEVD can easily be computed in \pkg{BVAR} and allow for a more detailed structural analysis of the processes determining the behavior of an economic system.
 
 % FRED datasets
-\pkg{BVAR} packages the popular FRED-MD and FRED-QD databases \citep{mccracken2016}. They constitute two of the largest macroeconomic databases, featuring more than 200 macroeconomic indicators on a monthly and a quarterly basis, respectively. The databases describe the US economy, starting from 1959 and are updated regularly.
+\pkg{BVAR} packages the popular FRED-MD and FRED-QD databases \citep{mccracken2016,mccracken2020}. They constitute two of the largest macroeconomic databases, featuring more than 200 macroeconomic indicators on a monthly and a quarterly basis, respectively. The databases describe the US economy, starting from 1959 and are updated regularly.
 The databases are distributed in \pkg{BVAR} under a permissive modified Open Data Commons Attribution License (ODC-BY 1.0).
 Together with helper functions to aid with transformations, they allow users to start using the package hassle-free. FRED-MD and FRED-QD lend themselves to the study of a wide range of economic phenomena and are regularly used in benchmarking exercises for newly developed models and methods \citep[see inter alia][]{carriero2018, koop2019, huber2020}.
 
@@ -321,10 +321,10 @@ library("BVAR")
 \subsection{Data preparation} \label{subsec:data}
 
 % Load and transform dataentry
-The main function \code{bvar()} expects input data to be coercible to a rectangular numeric matrix, i.e., without any missing values. For this example, we use six variables from the included FRED-QD dataset \citep{mccracken2016}, akin to the medium VAR considered by \cite{giannone2015}.
+The main function \code{bvar()} expects input data to be coercible to a rectangular numeric matrix, i.e., without any missing values. For this example, we use six variables from the included FRED-QD dataset \citep{mccracken2020}, akin to the medium VAR considered by \cite{giannone2015}.
 The six variables are real gross domestic product (GDP), real personal consumption expenditures, real gross private domestic investment (all three in billions of 2012 dollars), as well as the number of total hours worked in the non-farm business sector, the GDP deflator index as a means to measure price inflation, and the effective federal funds rate in percent per year. The currently covered time period ranges from Q1 1959 to Q1 2020.
 We follow \cite{giannone2015} in transforming all variables except the federal funds rate to log-levels, in order to demonstrate aforementioned dummy priors.
-Transformation can be performed manually or with the helper function \code{fred_transform()}. The function supports transformations listed by \cite{mccracken2016}, which can be accessed via their transformation codes. Additionally, suggested transformations from the FRED-QD and FRED-MD databases can be applied automatically or looked up via \code{fred_code()}. See Appendix~\ref{app:data} for a demonstration of this functionality.
+Transformation can be performed manually or with the helper function \code{fred_transform()}. The function supports transformations listed by \cite{mccracken2016,mccracken2020}, which can be accessed via their transformation codes. Additionally, suggested transformations from the FRED-QD and FRED-MD databases can be applied automatically or looked up via \code{fred_code()}. See Appendix~\ref{app:data} for a demonstration of this functionality.
 For our example, we specify a log-transformation with code \code{4} for the corresponding variables and no transformation for the federal funds rate with code \code{1}.
 Figure~\ref{fig:timeseries} provides an overview of the transformed time series.
 
@@ -586,7 +586,7 @@ The results in this paper were obtained using \proglang{R}~4 with \pkg{BVAR}~1.0
 
 \section*{Acknowledgments}
 
-We would like to thank Victor Maus and Florian Huber for helpful comments and encouragement, Michael McCracken and the staff at the St.~Louis Federal Reserve for their work on FRED-QD, and the JSS editorial team for improvement suggestions. Our thanks also go out to Gregor Kastner, Casper Engelen, Daran Demirol, Maximilian B\"ock, Michael Pfarrhofer, Niko Hauzenberger, Sebastian Luckeneder, and two anonymous referees.
+We would like to thank Victor Maus and Florian Huber for helpful comments and encouragement, Michael McCracken and the staff at the St.~Louis Federal Reserve for their work on FRED-QD and FRED-MD, and the JSS editorial team for improvement suggestions. Our thanks also go out to Gregor Kastner, Casper Engelen, Daran Demirol, Maximilian B\"ock, Michael Pfarrhofer, Niko Hauzenberger, Sebastian Luckeneder, and two anonymous referees.
 
 
 %% -- Bibliography -------------------------------------------------------------
@@ -613,7 +613,7 @@ We would like to thank Victor Maus and Florian Huber for helpful comments and en
 \section{Data transformation and stationarity}\label{app:data}
 
 Analysis often relies on data coming in a specific format, frequently requiring transformation. The helper function \code{fred_transform()} facilitates this work step. It can be used to apply common transformations, subset data to a rectangular format, i.e., without missing values, and automatically transform the included FRED-QD and FRED-MD datasets.
-Both datasets are packaged in their raw format, but \cite{mccracken2016} provide suggested transformations in their online appendices.\footnote{\url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}} These transformations can also be looked up manually with \code{fred_code()}.
+Both datasets are packaged in their raw format, but \cite{mccracken2016,mccracken2020} provide suggested transformations in their online appendices.\footnote{\url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}} These transformations can also be looked up manually with \code{fred_code()}.
 
 Below, we demonstrate this using a prototypical monetary VAR model -- covering GDP, the GDP deflator and the federal funds rate. For this example, we are looking to transform the individual time series to be stationary.
 To automatically apply the suggested transformation of \cite{mccracken2016} we simply specify the \code{type} -- either \code{"fred_qd"} or \code{"fred_md"} -- and call \code{fred_transform()} with our data.
