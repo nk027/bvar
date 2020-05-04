@@ -127,11 +127,10 @@ A number of heuristics for prior selection have been proposed in the literature.
 % Provide background, narrow down domain
 Amidst the rise of Markov chain Monte Carlo (MCMC) methods, Bayesian statistical software has evolved rapidly. Established software provides flexible and extensible tools for Bayesian inference, which are available cross-platform. This includes \pkg{BUGS} \citep{lunn2000, lunn2009} and \pkg{JAGS} \citep{plummer2003}, which build on the Gibbs sampler, \pkg{Stan} \citep{carpenter2017}, which builds on the Hamiltonian Monte Carlo algorithm, as well as \pkg{R-INLA} \citep{rue2015}, for approximate inference.
 Domain-specific inference is facilitated by specialized packages, such as \pkg{MCMCglmm} \citep{hadfield2010} and \pkg{brms} \citep{burkner2018} for the \proglang{R} language \citep{R}.
-
 In the domain of multivariate time series analysis, the \proglang{R} package \pkg{vars} \citep{pfaff2008} represents a cornerstone. It offers a comprehensive set of frequentist VAR-related functionalities, including the calculation and visualization of forecasts, impulse responses and forecast error variance decompositions. Other related packages include \pkg{MTS} \citep{tsay2018}, \pkg{BigVAR} \citep{nicholson2019}, and \pkg{tsDyn} \citep{dinarzo2020}, for a powerful and mature assortment of software.
 
 % Bayesian VAR domain
-Currently there exists no equivalent to \pkg{vars} as an all-purpose tool for Bayesian VAR models in \proglang{R}. Applied work is often performed via ad hoc scripts, compromising reproducibility. Some \proglang{R} packages provide specialized implementations of Bayesian VAR models, but lack flexibility and accessibility.
+Currently there exists no equivalent to \pkg{vars}, as an all-purpose tool for Bayesian VAR models in \proglang{R}. Applied work is often performed via ad hoc scripts, compromising reproducibility. Some \proglang{R} packages provide specialized implementations of Bayesian VAR models, but lack flexibility and accessibility.
 The \pkg{bvarsv} package \citep{krueger2015} implements estimation of a model with time-varying parameters and stochastic volatility by \cite{primiceri2005}.
 \pkg{mfbvar}, by \cite{ankargren2019}, implements estimation of mixed-frequency VAR models and provides forecasting routines. Several common prior distributions as well as stochastic volatility methods are available, but functions for structural analysis and inference are lacking.
 Another approach is taken by the \pkg{bvartools} package \citep{mohr2019}, which provides functions to assist with Bayesian inference in VAR models, but does not include routines for estimation.
@@ -157,7 +156,7 @@ The remainder of this paper is structured as follows. Section~\ref{sec:econ} des
 \section{Econometric framework} \label{sec:econ}
 
 % Introduce econometric background
-\pkg{BVAR} takes a Bayesian hierarchical modeling approach to VAR models. This section introduces the model, prior specification, and the hierarchical prior selection procedure proposed by \cite{giannone2015}. For further information on VAR models, the Bayesian approach to them, as well as Bayesian estimation and inference more generally we refer the interested reader to \cite{kilian2017}, \cite{koop2010}, and \cite{gelman2013} respectively.
+\pkg{BVAR} takes a Bayesian hierarchical modeling approach to VAR models. This section introduces the model, prior specification, and the hierarchical prior selection procedure proposed by \cite{giannone2015}. For further information on VAR models, the Bayesian approach to them, as well as Bayesian estimation and inference in general we refer the interested reader to \cite{kilian2017}, \cite{koop2010}, and \cite{gelman2013} respectively.
 
 \subsection{Model specification} \label{subsec:model}
 
@@ -205,7 +204,7 @@ The approach yields robust inference, is theoretically grounded, and can be impl
 % Specific priors, introduce NIW
 The contribution of \cite{giannone2015} focuses on conjugate prior distributions, specifically of the Normal-inverse-Wishart (NIW) family.\footnote{\cite{demol2008} note that this setting is similar to ridge penalized estimation in frequentist terms.}
 Conjugacy implies that the ML is available in closed form, enabling efficient computation.
-The NIW family includes some of the most commonly used priors \citep{koop2010, karlsson2013}, with notable exceptions. These include the steady-state prior \citep{villani2009}, the Normal-Gamma prior \citep{griffin2010, huber2019}, or the Dirichlet-Laplace prior \citep{bhattacharya2015}.
+The NIW family includes some of the most commonly used priors \citep{koop2010, karlsson2013}, with notable exceptions. These include the steady-state prior \citep{villani2009}, the Normal-Gamma prior \citep{griffin2010, huber2019}, and the Dirichlet-Laplace prior \citep{bhattacharya2015}.
 Many recent contributions focus on accounting for heteroskedastic error structures \citep{clark2011, kastner2014, carriero2016}. This may improve model performance, but is not possible within the conjugate setup and would furthermore complicate inference.
 In the chosen NIW framework we approach the model in Equation~\ref{equ:var} by letting $\boldsymbol{A} = \left[ \boldsymbol{a}_0, \boldsymbol{A}_1, \dots, \boldsymbol{A}_p \right]'$ and $\boldsymbol{\beta} = vec(\boldsymbol{A})$. Then the conjugate prior setup reads as:
 \begin{align}
@@ -290,7 +289,7 @@ Extensive customization options are available, with sensible default settings al
 Analysis of estimated VAR models is readily accessible -- functions for summarizing and plotting model parameters, forecasts, IRF, traces, densities, and residuals are available. Use of established procedures and standard methods, including \code{plot()}, \code{predict()}, \code{coef()}, and \code{summary()}, set a low entry barrier for \proglang{R} users.
 Final and intermediate outputs are provided in an idiomatic format and feature \code{print()} methods for quick access and a transparent research process.
 Existing frameworks may be used for further analysis -- an interface to \pkg{coda} for checking outputs, analysis, and diagnostics is provided.
-Furthermore, the available FRED-MD and FRED-QD datasets make \pkg{BVAR} an ideal tool for exploring a wide range of macroeconomic research questions.
+The available FRED-MD and FRED-QD datasets allow hassle-free exploration of macroeconomic research questions. These features make \pkg{BVAR} an ideal tool for macroeconomic analysis.
 
 
 %% -- Illustrations ------------------------------------------------------------
@@ -325,9 +324,9 @@ library("BVAR")
 The main function \code{bvar()} expects input data to be coercible to a rectangular numeric matrix without any missing values. For this example, we use six variables from the included FRED-QD dataset \citep{mccracken2020}, akin to the medium VAR considered by \cite{giannone2015}.
 The six variables are real gross domestic product (GDP), real personal consumption expenditures, real gross private domestic investment (all three in billions of 2012 dollars), as well as the number of total hours worked in the non-farm business sector, the GDP deflator index as a means to measure price inflation, and the effective federal funds rate in percent per year. The currently covered time period ranges from Q1 1959 to Q1 2020.
 We follow \cite{giannone2015} in transforming all variables except the federal funds rate to log-levels, in order to demonstrate aforementioned dummy priors.
-Transformation can be performed manually or with the helper function \code{fred_transform()}. The function supports transformations listed by \cite{mccracken2016,mccracken2020}, which can be accessed via their transformation codes. % Additionally, suggested transformations from the FRED-QD and FRED-MD databases can be applied automatically or looked up via \code{fred_code()}.
+Transformation can be performed manually or with the helper function \code{fred_transform()}. The function supports transformations listed by \cite{mccracken2016,mccracken2020}, which can be accessed via their transformation codes, and automatic transformation.
 See Appendix~\ref{app:data} for a demonstration of this and related functionalities.
-For our example, we specify a log-transformation with code \code{4} for the corresponding variables and no transformation for the federal funds rate with code \code{1}.
+For our example, we specify a log-transformation for the corresponding variables with code \code{4} and no transformation for the federal funds rate with code \code{1}.
 Figure~\ref{fig:timeseries} provides an overview of the transformed time series.
 
 <<data, eval=TRUE, echo=TRUE, results=hide>>=
@@ -369,7 +368,7 @@ Functions related to estimation setup and configuration share the prefix \code{b
 This contrasts methods and functions for analysis, which stick closely to idiomatic \proglang{R}.
 
 % Priors, start with Minnesota
-Priors are set up using \code{bv_priors()}, which holds arguments for Minnesota and dummy-observation priors as the hierarchical treatment of their respective hyperparameters.
+Priors are set up using \code{bv_priors()}, which holds arguments for the Minnesota and dummy-observation priors as well as their hierarchical treatment.
 We start by adjusting the Minnesota prior using \code{bv_minnesota()}. The prior parameter $\lambda$ has a Gamma hyperprior and is handed upper and lower bounds for its Gaussian proposal distribution in the MH step. For this example, we do not treat $\alpha$ hierarchically, meaning the parameter can be fixed via the \code{mode} argument. The prior variance on the constant term of the model (\code{var}) is dealt a large value, for a diffuse prior. We leave $\boldsymbol{\Psi}$ to be set automatically -- i.e., to the square root of the innovations variance, after fitting AR($p$) models to each of the variables.
 
 <<minnesota, eval=TRUE, echo=TRUE>>=
@@ -414,7 +413,7 @@ This enables users to (1) focus on critical parts of their model and (2) use \pk
 % Present estimation
 Models are estimated using the core function \code{bvar()}.
 As the bare minimum, we need to provide our prepared data and a lag order $p$ as arguments. Additionally, we pass on our customization objects from above to their respective arguments.
-We also define the total number of iterations with \code{n_draw}, the number of initial iterations to discard with \code{n_burn}, and a denominator for the fraction of draws to store via \code{n_thin}. We increase the number of total and burnt iterations, while retaining all draws. %, since memory is not an issue in our example.
+We also define the total number of iterations with \code{n_draw}, the number of initial iterations to discard with \code{n_burn}, and a denominator for the fraction of draws to store via \code{n_thin}. We increase the number of total and burnt iterations, while retaining all draws.
 Note that arguments for computing IRF, FEVD and forecasts are also available and work similarly to the ex-post calculations that are demonstrated below.
 When estimating the model, \code{verbose = TRUE} prompts printing of intermediate results and enables a progress bar during the MCMC step.
 
@@ -573,7 +572,6 @@ Accessible helper functions for customization as well as comprehensive methods a
 One evident extension is the implementation of additional structural identification schemes, such as sign and zero restrictions \citep{arias2018}.
 The interface to \pkg{coda} demonstrates the potential of such extensions -- interfaces to further packages facilitating analysis and visualization, e.g., \pkg{tidybayes} \citep{kay2020}, would be useful.
 A major area for future work is support for a broader spectrum of prior families. This would help enrich analysis and could incorporate e.g., heteroskedastic error structures in various forms. A powerful library implementing these features would be a valuable asset and complement \pkg{BVAR} and similar \proglang{R} packages.
-Continued contribution to and development of free software are crucial in facilitating open and high-quality research.
 
 
 %% -- Optional special unnumbered sections -------------------------------------
