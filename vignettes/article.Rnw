@@ -614,7 +614,6 @@ We would like to thank Victor Maus and Florian Huber for helpful comments and en
 %% - With proper section titles and _not_ just "Appendix".
 
 \newpage
-
 \begin{appendix}
 
 \section{Data transformation and stationarity}\label{app:data}
@@ -720,7 +719,7 @@ stopCluster(cl)
 runs_mcmc <- as.mcmc(runs, vars = "lambda")
 gelman.diag(runs_mcmc, autoburnin = FALSE)
 @
-<<app_chains, fig=TRUE, png=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=6, height=2.4>>=
+<<app_chains, fig=TRUE, png=TRUE, eval=TRUE, echo=TRUE, include=FALSE, width=8, height=2.4>>=
 plot(runs, type = "full", vars = "lambda")
 @
 
