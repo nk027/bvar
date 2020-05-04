@@ -16,9 +16,9 @@ citEntry(
 citEntry(
   entry = "manual",
   title = "{BVAR}: {H}ierarchical {B}ayesian Vector Autoregression",
-  author = "Nikolas Kuschnig and Lukas Vashold and others",
+  author = "Nikolas Kuschnig and Lukas Vashold",
   year = "2020",
   note = "{R} package version 1.0.0",
   url = "https://CRAN.R-project.org/package=BVAR",
-  textVersion = "Nikolas Kuschnig, Lukas Vashold and others (2019). BVAR: Hierarchical Bayesian Vector Autoregression. R package version 1.0.0, URL https://CRAN.R-project.org/package=BVAR."
+  textVersion = "Nikolas Kuschnig, Lukas Vashold (2019). BVAR: Hierarchical Bayesian Vector Autoregression. R package version 1.0.0, URL https://CRAN.R-project.org/package=BVAR."
 )

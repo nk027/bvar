@@ -1,3 +1,29 @@
+# v1.0.0, CRAN Update 5 / JSS Revision 2
+
+add FRED-MD (Update datasets, compress em)
+cond fcast
+bugfixes (irf, vectorised scale_hess)
+improve docs
+add options to plots (area, t_back, x-labels, transparence)
+add vignette
+add wrapper for parallelisation
+add helper function for transformation
+optimise speed (mvnorm, matrix operations)
+add unit tests
+handle coda interface nicer (zzz.R, fix potential Windows bug)
+remove deprecated functions
+update citation
+add mean argument to methods
+facilitate minnesota prior mean changes
+add replacement functions for irf() and predict()
+move irf and predict out of main loop
+speed up fevd calculation
+add robustness checks
+add helper functions
+improve vars & co to work with regex
+auto psi now tries increasing integration once
+
+
 # v0.2.2, CRAN Update 4 / Impulse Response Hotfix
 
 - Fix impulse response calculation (stray transpose of coefficients)
