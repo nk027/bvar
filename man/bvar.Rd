@@ -109,9 +109,6 @@ objects. The function \code{\link[utils]{str}} can be very helpful for this.
 data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 # Transform it to be stationary
 data <- fred_transform(data, codes = c(5, 5, 1), lag = 4)
-# Manual equivalent:
-# data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
-# data <- data[5:nrow(data), ]
 
 # Estimate a BVAR using one lag, default settings and very few draws
 x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)

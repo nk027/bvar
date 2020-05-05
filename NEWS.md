@@ -22,6 +22,7 @@ add robustness checks
 add helper functions
 improve vars & co to work with regex
 auto psi now tries increasing integration once
+add verbosity to errors
 
 
 # v0.2.2, CRAN Update 4 / Impulse Response Hotfix
