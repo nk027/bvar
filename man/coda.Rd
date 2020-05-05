@@ -57,7 +57,7 @@ library("coda")
 # Access a subset of the fred_qd dataset
 data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 # Transform it to be stationary
-data <- fred_transform(data, codes = c(5, 5, 5), lag = 4)
+data <- fred_transform(data, codes = c(5, 5, 1), lag = 4)
 
 # Estimate two BVARs using one lag, default settings and very few draws
 x <- bvar(data, lags = 1, n_draw = 750L, n_burn = 250L, verbose = FALSE)

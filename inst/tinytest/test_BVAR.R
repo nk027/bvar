@@ -131,7 +131,7 @@ expect_error(bf_irf(zero_restr = matrix(rnorm(9), nrow = 3)))
 expect_silent(run <- bvar(data, lags = 2, priors = priors, mh = mh))
 # Conditional and sign-restricted
 expect_silent(bvar(data[, 1:3], lags = 2,
-  fcast = opt_fcast1, irf = opt_irf1))
+  fcast = opt_fcast2, irf = opt_irf2))
 
 
 # 5*_fcast ---

@@ -101,10 +101,7 @@
 #' # Access a subset of the fred_qd dataset
 #' data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 #' # Transform it to be stationary
-#' data <- fred_transform(data, codes = c(5, 5, 5), lag = 4)
-#' # Manual equivalent:
-#' # data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
-#' # data <- data[5:nrow(data), ]
+#' data <- fred_transform(data, codes = c(5, 5, 1), lag = 4)
 #'
 #' # Estimate a BVAR using one lag, default settings and very few draws
 #' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
@@ -198,10 +195,9 @@ bvar <- function(
   if(length(b) == 1 || length(b) == M) {
     priors[["b"]] <- matrix(0, nrow = K, ncol = M)
     priors[["b"]][2:(M + 1), ] <- diag(b, M)
-  } else if(is.matrix(b) && !all(dim(b) == c(K, M))) {
-    stop("Dimensions of prior mean b do not fit the data.")
-  } else {stop("Issue with the prior mean b. Please reconstruct.")}
-
+  } else if(!is.matrix(b) || !all(dim(b) == c(K, M))) {
+    stop("Issue with the prior mean b. Please reconstruct.")
+  }
 
   if(any(priors[["psi"]][["mode"]] == "auto")) {
     psi_temp <- auto_psi(Y, lags)
@@ -237,7 +233,8 @@ bvar <- function(
 
   # Split up psi ---
   for(i in seq_along(priors[["psi"]][["mode"]])) {
-    priors[[paste0("psi", i)]] <- lapply(priors[["psi"]], function(x) x[i])
+    priors[[paste0("psi", i)]] <- vapply(c("mode", "min", "max"), function(x) {
+      priors[["psi"]][[x]][i]}, numeric(1L))
   }
 
 
@@ -266,6 +263,11 @@ bvar <- function(
     exp(opt[["par"]][[name]]) / (1 + exp(opt[["par"]][[name]])) ^ 2 *
       (priors[[name]][["max"]] - priors[[name]][["min"]])
   }))
+  if(any(is.nan(J))) {
+    stop("Issue with parameter(s) ",
+      paste0(names(hyper)[which(is.nan(J))], collapse = ", "), ". ",
+      "Their mode(s) my be too large to exponentiate.")
+  }
   if(hyper_n != 1) {J <- diag(J)}
   HH <- J %*% H %*% t(J)
 

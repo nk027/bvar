@@ -108,7 +108,7 @@ objects. The function \code{\link[utils]{str}} can be very helpful for this.
 # Access a subset of the fred_qd dataset
 data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 # Transform it to be stationary
-data <- fred_transform(data, codes = c(5, 5, 5), lag = 4)
+data <- fred_transform(data, codes = c(5, 5, 1), lag = 4)
 # Manual equivalent:
 # data[5:nrow(data), 1] <- diff(log(data[, 1]), lag = 4) * 100
 # data <- data[5:nrow(data), ]
