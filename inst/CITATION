@@ -27,7 +27,7 @@ citEntry(
   year = year,
   note = paste0("{R} package version ", version),
   url = "https://CRAN.R-project.org/package=BVAR",
-  textVersion = paste0(Nikolas Kuschnig and Lukas Vashold (", year, "). ",
+  textVersion = paste0("Nikolas Kuschnig and Lukas Vashold (", year, "). ",
     "BVAR: Hierarchical Bayesian Vector Autoregression. ",
     "{R} package version ", version,
     ", URL https://CRAN.R-project.org/package=BVAR.")
