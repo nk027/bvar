@@ -251,7 +251,7 @@ bvar <- function(
   if(verbose) {
     cat("Optimisation concluded.",
       "\nPosterior marginalised likelihood: ", round(opt[["value"]], 3),
-      "\nParameters: ", paste(names(hyper), round(opt[["par"]], 5),
+      "\nHyperparameters: ", paste(names(hyper), round(opt[["par"]], 5),
       sep = " = ", collapse = "; "), "\n", sep = "")
   }
 
