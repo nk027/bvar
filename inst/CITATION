@@ -1,24 +1,36 @@
-citHeader("To cite BVAR in publications please use:")
+if(!exists("meta") || is.null(meta)) {meta <- packageDescription("BVAR")}
+year <- sub("-.*", "", meta$Date)
+version <- meta$Version
 
-citEntry(
-  entry = "techreport",
+bibentry(
+  header = "To cite BVAR in publications please use:",
+  bibtype = "techreport",
   title = "{BVAR}: {B}ayesian Vector Autoregressions with Hierarchical Prior Selection in {R}",
-  author = "Nikolas Kuschnig and Lukas Vashold",
+  author = personList(
+    person(given = "Nikolas", family = "Kuschnig", email = "nikolas.kuschnig@wu.ac.at"),
+    person(given = "Lukas", family = "Vashold")),
   year = "2019",
   type = "Department of Economics Working Paper Series",
   institution = "WU Vienna University of Economics and Business",
   number = "296",
-  keywords = "VAR, multivariate, time series, macroeconomics, econometrics, FRED-MD",
   url = "https://epub.wu.ac.at/7216/",
   textVersion = "Nikolas Kuschnig and Lukas Vashold (2019). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. Department of Economics Working Paper Series, 296. WU Vienna University of Economics and Business, Vienna. URL https://epub.wu.ac.at/7216/."
 )
 
 citEntry(
+  header = "To cite the current version of BVAR please use:",
   entry = "manual",
   title = "{BVAR}: {H}ierarchical {B}ayesian Vector Autoregression",
-  author = "Nikolas Kuschnig and Lukas Vashold",
-  year = "2020",
-  note = "{R} package version 1.0.0",
+  author = personList(
+    person(given = "Nikolas", family = "Kuschnig", email = "nikolas.kuschnig@wu.ac.at"),
+    person(given = "Lukas", family = "Vashold")),
+  year = year,
+  note = paste0("{R} package version ", version),
   url = "https://CRAN.R-project.org/package=BVAR",
-  textVersion = "Nikolas Kuschnig, Lukas Vashold (2019). BVAR: Hierarchical Bayesian Vector Autoregression. R package version 1.0.0, URL https://CRAN.R-project.org/package=BVAR."
+  textVersion = paste0(Nikolas Kuschnig and Lukas Vashold (", year, "). ",
+    "BVAR: Hierarchical Bayesian Vector Autoregression. ",
+    "{R} package version ", version,
+    ", URL https://CRAN.R-project.org/package=BVAR.")
 )
+
+citFooter("BibTeX entries can be obtained by", sQuote('toBibtex(citation("BVAR"))'))

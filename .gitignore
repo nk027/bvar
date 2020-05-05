@@ -1,3 +1,26 @@
+
+### Custom
+
+# These would include copyrighted data
+data/fred_qd_full.rda
+data/fred_md_full.rda
+
+doc/
+Meta/
+# man/
+
+vignettes/*.html
+vignettes/*.png
+vignettes/*.jpg
+vignettes/*.pdf
+vignettes/*.tex
+vignettes/*.R
+vignettes/article_jss.Rnw
+
+# bvar.Rproj
+
+
+### R stuff and temporary files
 .Rproj.user
 
 .Rhistory
@@ -8,28 +31,15 @@
 
 .Renviron
 
-vignettes/*.html
-vignettes/*.png
-vignettes/*.jpg
-vignettes/*.pdf
-vignettes/*.tex
-vignettes/*.R
-vignettes/template.Rnw
-vignettes/article_jss.Rnw
-vignettes/img
-
 *.utf8.md
 *.knit.md
 
 *_cache/
 /cache/
 
-.DS_Store
-
 /*.tar.gz
 
-data/fred_qd_full.rda
-data/fred_md_full.rda
+.DS_Store
 
 
 # Created by https://www.gitignore.io/api/latex
@@ -306,5 +316,3 @@ TSWLatexianTemp*
 *.glstex
 
 # End of https://www.gitignore.io/api/latex
-doc
-Meta

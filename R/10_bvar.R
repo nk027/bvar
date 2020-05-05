@@ -259,7 +259,7 @@ bvar <- function(
   # Hessian ---
 
   if(length(mh[["scale_hess"]]) != 1 &&
-    length(mh[["scale_hess"]] != length(hyper))) {
+    length(mh[["scale_hess"]]) != length(hyper)) {
     stop("Length of scale_hess does not match the ", length(hyper),
       " hyperparameters. Please provide a scalar or an element for every ",
       "hyperparameter (see `?bv_mn()`).")

@@ -1,4 +1,6 @@
 
+# Manual tests -----
+
 # 13_mvtnorm.R ---
 
 sigma <- matrix(c(1, 0.2, 0.1, 0, 1, 0.2, 0, 0, 1), nrow = 3)

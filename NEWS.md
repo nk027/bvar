@@ -5,10 +5,10 @@ cond fcast
 bugfixes (irf, vectorised scale_hess)
 improve docs
 add options to plots (area, t_back, x-labels, transparence)
-add vignette
+add vignette (compressed to ebook quality, figures pdf/png)
 add wrapper for parallelisation
 add helper function for transformation
-optimise speed (mvnorm, matrix operations)
+optimise speed (mvnorm, matrix operations, factor 2 to 10)
 add unit tests
 handle coda interface nicer (zzz.R, fix potential Windows bug)
 remove deprecated functions

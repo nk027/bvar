@@ -1,6 +1,12 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 
+^data/fred_qd_full\.rda$
+^data/fred_md_full\.rda$
+^data/fred_permitted\.txt$
+
+^doc$
+^Meta$
 ^scripts$
 
 ^vignettes/.*\.jpg$
@@ -8,14 +14,5 @@
 ^vignettes/.*\.pdf$
 ^vignettes/article_jss.Rnw$
 ^vignettes/Makefile$
-^vignettes/template\.Rnw$
-^vignettes/img$
 
-^data/fred_qd_full\.rda$
-^data/fred_md_full\.rda$
-^data/fred_permitted\.txt$
-
-^cran-comments\.md$
 ^README\.md$
-^doc$
-^Meta$
