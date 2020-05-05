@@ -4,8 +4,6 @@
 #' Forecasts of all or a subset of the available variables can be plotted.
 #'
 #' @param x A code{bvar_fcast} object, obtained from \code{\link{predict.bvar}}.
-#' @param conf_bands Deprecated. Use \code{\link{predict.bvar}}. Numeric vector
-#' of desired confidence bands.
 #' @param vars Optional numeric or character vector. Used to subset the plot to
 #' certain variables by position or name (must be available). Defaults to
 #' \code{NULL}, i.e. all variables.
@@ -69,7 +67,6 @@
 #' }
 plot.bvar_fcast <- function(
   x,
-  conf_bands, # deprecated, see `predict.bvar()`
   vars = NULL,
   col = "#737373",
   t_back = 1,
@@ -81,7 +78,7 @@ plot.bvar_fcast <- function(
   ...) {
 
   if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
-  plot_fcast(x = x, conf_bands = conf_bands, vars = vars,
+  plot_fcast(x = x, vars = vars,
     variables = variables, orientation = orientation, mar = mar,
     t_back = t_back, area = area, col = col, fill = fill, ...)
 }
@@ -90,7 +87,6 @@ plot.bvar_fcast <- function(
 #' @noRd
 plot_fcast <- function(
   x,
-  conf_bands, # deprecated, see `predict.bvar()`
   vars = NULL,
   variables = NULL,
   orientation = c("vertical", "horizontal"),
@@ -107,11 +103,6 @@ plot_fcast <- function(
     stop("Please provide a `bvar` or `bvar_fcast` object.")
   }
   if(inherits(x, "bvar")) {x <- predict(x)}
-
-  if(!missing(conf_bands)) {
-    message("Parameter conf_bands is deprecated. Please use `predict()`.")
-    x <- predict(x, conf_bands = conf_bands)
-  }
 
   orientation <- match.arg(orientation)
 

@@ -1,28 +1,40 @@
 # v1.0.0, CRAN Update 5 / JSS Revision 2
 
-add FRED-MD (Update datasets, compress em)
-cond fcast
-bugfixes (irf, vectorised scale_hess)
-improve docs
-add options to plots (area, t_back, x-labels, transparence)
-add vignette (compressed to ebook quality, figures pdf/png)
-add wrapper for parallelisation
-add helper function for transformation
-optimise speed (mvnorm, matrix operations, factor 2 to 10)
-add unit tests
-handle coda interface nicer (zzz.R, fix potential Windows bug)
-remove deprecated functions
-update citation
-add mean argument to methods
-facilitate minnesota prior mean changes
-add replacement functions for irf() and predict()
-move irf and predict out of main loop
-speed up fevd calculation
-add robustness checks
-add helper functions
-improve vars & co to work with regex
-auto psi now tries increasing integration once
-add verbosity to errors
+- Add fancy **vignette** with background and demonstrations
+- Add new features
+  - New **FRED-MD** database and updated FRED-QD (`data("fred_md")`)
+  - Transformation helper functions (`fred_transform()`, `fred_code()`)
+  - Add **Conditional forecasting** (see `?bv_fcast()`)
+  - New replacement functions for `irf()` and `predict()` (`irf(x) <- irf(x)`)
+  - Provide wrapper for parallelised execution (`par_bvar()`)
+- Improve existing features
+  - Enhance IRF and forecast plotting
+    - `area` argument adds polygons for credible intervals
+    - `t_back` allows adding realised values before forecasts
+    - `col` and `fill` arguments allow changing colours
+    - transparence is applied to sequential lines / polygons
+    - Improved x-axis labelling
+  - Regex may be used for `vars`, `vars_response`, and `vars_impulse`
+  - New `type` for `coef()`, `fitted()`, etc, to retrieve means / quantiles
+  - Add constructors for the prior mean `b` argument in `bv_mn()`
+  - Auto `psi` now allows for one order of integration
+- **Enhance speed** considerably (~2-10 times faster)
+  - Move IRF and forecasts out of MCMC
+  - Capitalise upon matrix properties
+  - Cached and customised multivariate normal drawing
+  - Optimised FEVD computation
+- Fix bugs
+  - IRF calculation is now ordered properly (please recalculate)
+  - *coda* methods are now proper methods (potential issue on Windows)
+  - Vectorised `scale_hess` now works properly
+- Remove deprecated functions and arguments
+- Work on documentation and examples
+- Update citation information
+- Improve upon internal structure
+  - Unit tests with *tinytest* for development (skipped on CRAN)
+  - Outsource additional steps to dedicated functions
+  - More robustness checks and add verbosity to errors
+- Tested extensively on R 4.0.0 and R 3.6.3.
 
 
 # v0.2.2, CRAN Update 4 / Impulse Response Hotfix
