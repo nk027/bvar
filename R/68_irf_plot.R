@@ -5,8 +5,6 @@
 #' plotted.
 #'
 #' @param x A \code{bvar_irf} object, obtained from \code{\link{irf.bvar}}.
-#' @param conf_bands Deprecated. Use \code{\link{irf.bvar}}. Numeric vector
-#' of desired confidence bands.
 #' @param vars_impulse,vars_response Optional numeric or character vector. Used
 #' to subset the plot's impulses / responses to certain variables by position
 #' or name (must be available). Defaults to \code{NULL}, i.e. all variables.
@@ -64,7 +62,6 @@
 #' }
 plot.bvar_irf <- function(
   x,
-  conf_bands, # deprecated, see `irf.bvar()`
   vars_response = NULL,
   vars_impulse = NULL,
   col = "#737373",
@@ -75,7 +72,7 @@ plot.bvar_irf <- function(
   ...) {
 
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
-  plot_irf(x = x, conf_bands = conf_bands,
+  plot_irf(x = x,
     vars_response = vars_response, vars_impulse = vars_impulse,
     variables = variables, mar = mar, area = area, col = col, fill = fill, ...)
 }
@@ -84,7 +81,6 @@ plot.bvar_irf <- function(
 #' @noRd
 plot_irf <- function(
   x,
-  conf_bands, # deprecated, see `irf.bvar()`
   vars_response = NULL,
   vars_impulse = NULL,
   variables = NULL,
@@ -100,11 +96,6 @@ plot_irf <- function(
     stop("Please provide a `bvar` or `bvar_irf` object.")
   }
   if(inherits(x, "bvar")) {x <- irf(x)}
-
-  if(!missing(conf_bands)) {
-    message("Parameter conf_bands is deprecated. Please use `irf()`.")
-    x <- irf(x, conf_bands = conf_bands)
-  }
 
   # Prepare data ---
 
