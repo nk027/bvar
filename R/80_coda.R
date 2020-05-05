@@ -17,10 +17,12 @@
 #' to select coefficents. Dependent variables are specified with
 #' \emph{vars_response}, explanatory ones with \emph{vars_impulse}. See the
 #' example section for a demonstration.
-#' @param chains List with additional \code{bvar} objects. If provided, contents
-#' are converted to an object of class \code{\link[coda]{mcmc.list}}.
-#' @param ... Other parameters for \code{\link[coda]{as.mcmc}} and
-#' \code{\link[coda]{as.mcmc.list}}.
+#' @param chains List with additional \code{bvar} objects. If provided,
+#' an object of class \code{\link[coda]{mcmc.list}} is returned.
+#' @param ... Other parameters for \code{\link[coda]{as.mcmc}}.
+#'
+#' @return Returns a \pkg{coda} \code{\link[coda]{mcmc}} (or
+#' \code{\link[coda]{mcmc.list}}) object.
 #'
 #' @seealso \code{\link{bvar}}; \code{\link[coda]{mcmc}};
 #' \code{\link[coda]{mcmc.list}}

@@ -6,7 +6,6 @@
 \usage{
 \method{plot}{bvar_fcast}(
   x,
-  conf_bands,
   vars = NULL,
   col = "#737373",
   t_back = 1,
@@ -20,9 +19,6 @@
 }
 \arguments{
 \item{x}{A code{bvar_fcast} object, obtained from \code{\link{predict.bvar}}.}
-
-\item{conf_bands}{Deprecated. Use \code{\link{predict.bvar}}. Numeric vector
-of desired confidence bands.}
 
 \item{vars}{Optional numeric or character vector. Used to subset the plot to
 certain variables by position or name (must be available). Defaults to

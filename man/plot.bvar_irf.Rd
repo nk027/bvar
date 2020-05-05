@@ -6,7 +6,6 @@
 \usage{
 \method{plot}{bvar_irf}(
   x,
-  conf_bands,
   vars_response = NULL,
   vars_impulse = NULL,
   col = "#737373",
@@ -19,9 +18,6 @@
 }
 \arguments{
 \item{x}{A \code{bvar_irf} object, obtained from \code{\link{irf.bvar}}.}
-
-\item{conf_bands}{Deprecated. Use \code{\link{irf.bvar}}. Numeric vector
-of desired confidence bands.}
 
 \item{vars_impulse, vars_response}{Optional numeric or character vector. Used
 to subset the plot's impulses / responses to certain variables by position
