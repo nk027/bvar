@@ -5,8 +5,7 @@ if(requireNamespace("tinytest", quietly = TRUE)) {
   home <- length(unclass(packageVersion("BVAR"))[[1]]) == 4 # 0.0.0.9000
 
   if(home) {
+    # Only run locally, let CRAN test examples and the vignette
     tinytest::test_package("BVAR", at_home = home, pattern = "^.*\\.[rR]$")
-  } else {
-    tinytest::test_package("BVAR", at_home = home, pattern = "^test.*\\.[rR]$")
   }
 }
