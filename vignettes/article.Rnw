@@ -154,7 +154,7 @@ The remainder of this paper is structured as follows. Section~\ref{sec:econ} des
 %%   is recommended. Alternatively, a plain {verbatim} can also be used.
 %%   (For executed code see the next section.)
 
-\newpage
+\newpage % sed_flag - hard-formatted
 \section{Econometric framework} \label{sec:econ}
 
 % Introduce econometric background
@@ -307,7 +307,7 @@ The available FRED-MD and FRED-QD datasets allow hassle-free exploration of macr
 %% - Comments within the code chunks should be avoided - these should be made
 %%   within the regular LaTeX text.
 
-\newpage
+\newpage % sed_flag - hard-formatted
 \section{An applied example} \label{sec:demo}
 
 % Introduce the demonstration
