@@ -22,7 +22,7 @@ article_jss.Rnw: article.Rnw
 		-e "s/n_draw = [0-9]*/n_draw = 50000/g" \
 		-e "s/n_burn = [0-9]*/n_burn = 25000/g" \
 		-e "s/n_cores <- [0-9]*/n_cores <- 4/" \
-		-e "s/[0-9\.]* \(secs\|mins\)/50.95 secs/g"
+		-e "s/[0-9\.]* \(secs\|mins\)/50.95 secs/g" \
 		-e "/sed_flag/d" > article_jss.Rnw
 
 jss: article_jss.Rnw refs.bib
