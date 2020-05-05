@@ -121,7 +121,7 @@ options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 
 % Introduce
 Vector autoregression (VAR) models, popularized by \cite{sims1980}, have become a staple of empirical macroeconomic research \citep{kilian2017}. They are widely used for multivariate time series analysis and have been applied to evaluate DSGE models \citep{del2007}, investigate the effects of monetary policy \citep{bernanke2005, sims2006}, and conduct forecasting exercises \citep{litterman1986, koop2013}.
-The large number of parameters and limited temporal availability of macroeconomic datasets often lead to over-parameterization problems \citep{koop2010} that can be mitigated by introducing prior information within a Bayesian approach. Informative priors are used to impose additional structure on the model and shrink it towards proven benchmarks. The result are models with reduced parameter uncertainty and significantly enhanced out-of-sample forecasting performance \citep{koop2013}. However, the specific choice and parameterization of these shrinkage priors pose a challenge that remains the fulcrum of discussion and critique.
+The large number of parameters and limited temporal availability of macroeconomic datasets often lead to over-parameterization problems \citep{koop2010} that can be mitigated by introducing prior information within a Bayesian framework. Informative priors are used to impose additional structure on the model and push it towards proven benchmarks. The result are models with reduced parameter uncertainty and significantly enhanced out-of-sample forecasting performance \citep{koop2013}. However, the specific choice and parameterization of these shrinkage priors pose a challenge that remains at the heart of discussion and critique.
 A number of heuristics for prior selection have been proposed in the literature.
 \cite{giannone2015} tackle this problem by setting prior informativeness in a data-based fashion, in the spirit of hierarchical modeling. Their flexible approach alleviates the subjectivity of setting prior parameters and explicitly acknowledges uncertainty surrounding these choices. The conjugate setup allows for efficient estimation and has been shown to perform remarkably well in common analyses \citep[see][]{miranda-agrippino2015, baumeister2016}.
 
@@ -131,7 +131,7 @@ Domain-specific inference is facilitated by specialized packages, such as \pkg{M
 In the domain of multivariate time series analysis, the \proglang{R} package \pkg{vars} \citep{pfaff2008} represents a cornerstone. It offers a comprehensive set of frequentist VAR-related functionalities, including the calculation and visualization of forecasts, impulse responses, and forecast error variance decompositions. Other related packages include \pkg{MTS} \citep{tsay2018}, \pkg{BigVAR} \citep{nicholson2019}, and \pkg{tsDyn} \citep{dinarzo2020}, for a powerful and mature assortment of software.
 
 % Bayesian VAR domain
-Currently there exists no equivalent to \pkg{vars}, as an all-purpose tool for Bayesian VAR models in \proglang{R}. Applied work is often performed via ad hoc scripts, compromising reproducibility. Some \proglang{R} packages provide specialized implementations of Bayesian VAR models, but lack flexibility and accessibility.
+Currently there exists no equivalent to \pkg{vars} as an all-purpose tool for Bayesian VAR models in \proglang{R}. Applied work is often performed via ad hoc scripts, compromising reproducibility. Some \proglang{R} packages provide specialized implementations of Bayesian VAR models, but lack flexibility and accessibility.
 The \pkg{bvarsv} package \citep{krueger2015} implements estimation of a model with time-varying parameters and stochastic volatility by \cite{primiceri2005}.
 \pkg{mfbvar}, by \cite{ankargren2019}, implements estimation of mixed-frequency VAR models and provides forecasting routines. Several common prior distributions as well as stochastic volatility methods are available, but functions for structural analysis and inference are lacking.
 Another approach is taken by the \pkg{bvartools} package \citep{mohr2019}, which provides functions to assist with Bayesian inference in VAR models, but does not include routines for estimation.
@@ -158,7 +158,7 @@ The remainder of this paper is structured as follows. Section~\ref{sec:econ} des
 \section{Econometric framework} \label{sec:econ}
 
 % Introduce econometric background
-\pkg{BVAR} takes a Bayesian hierarchical modeling approach to VAR models. This section introduces the model, prior specification, and the hierarchical prior selection procedure proposed by \cite{giannone2015}. For further information on VAR models, the Bayesian approach to them, as well as Bayesian estimation, and inference in general we refer the interested reader to \cite{kilian2017}, \cite{koop2010}, and \cite{gelman2013} respectively.
+\pkg{BVAR} takes a Bayesian hierarchical modeling approach to VAR models. This section introduces the model, prior specification, and the hierarchical prior selection procedure proposed by \cite{giannone2015}. For further information on VAR models, the Bayesian approach to them, as well as Bayesian estimation and inference in general we refer the interested reader to \cite{kilian2017}, \cite{koop2010}, and \cite{gelman2013} respectively.
 
 \subsection{Model specification} \label{subsec:model}
 
@@ -183,11 +183,11 @@ The flexibility of the Bayesian framework allows for the accommodation of a wide
 
 % Introduce priors
 Properly informing prior beliefs is critical and hence the subject of much research.
-In the multivariate context, flat priors, which attempt not to impose a certain belief, yield inadmissible estimators \citep{stein1956} and poor inference \citep{sims1980, banbura2010}. Other uninformative or informative priors are necessary. Early contributions \citep{litterman1980} set the priors and their parameters in a way that maximizes out-of-sample forecasting performance over a pre-sample. \cite{delnegro2004} choose values that maximize the marginal data density. \cite{banbura2010} use the in-sample fit as decision criterion and control for overfitting.
+In the multivariate context, flat priors, which attempt not to impose a certain belief, yield inadmissible estimators \citep{stein1956} and poor inference \citep{sims1980, banbura2010}. Other uninformative or informative priors are necessary. Early contributions \citep{litterman1980} set priors and their hyperparameters in a way that maximizes out-of-sample forecasting performance over a pre-sample. \cite{delnegro2004} choose values that maximize the marginal data density. \cite{banbura2010} use the in-sample fit as decision criterion and control for overfitting.
 Economic theory is a preferred source of prior information, but is lacking in many settings -- in particular for high-dimensional models. Acknowledging this, \cite{villani2009} reformulates the model and places priors on the steady state, which is better understood theoretically by economists.
 
 % Hierarchical approach
-\cite{giannone2015} propose setting prior parameters in a data-based fashion, i.e., by treating them as additional parameters to be estimated. In their hierarchical approach, prior parameters are assigned their own hyperpriors with hyperparameters. Uncertainty surrounding the choice of prior parameters is acknowledged explicitly.
+\cite{giannone2015} propose setting prior hyperparameters in a data-based fashion, i.e., by treating them as additional parameters to be estimated. In their hierarchical approach, prior hyperparameters are assigned their own hyperpriors. Uncertainty surrounding the choice of prior hyperparameters is acknowledged explicitly.
 This can be expressed by invoking Bayes' law as:
 \begin{align}
   \label{equ:hm1}
@@ -228,7 +228,7 @@ The Minnesota prior \citep{litterman1980} imposes the hypothesis that individual
         0 &\text{otherwise}. \nonumber
     \end{cases}
 \end{align}
-The key parameter $\lambda$ controls the tightness of the prior, i.e., it weighs the relative importance of prior and data. For $\lambda \to 0$ the prior outweighs any information in the data; the posterior approaches the prior. As $\lambda \to \infty$ the posterior distribution mirrors the sample information.
+The key hyperparameter $\lambda$ controls the tightness of the prior, i.e., it weighs the relative importance of prior and data. For $\lambda \to 0$ the prior outweighs any information in the data; the posterior approaches the prior. As $\lambda \to \infty$ the posterior distribution mirrors the sample information.
 Governing the variance decay with increasing lag order, $\alpha$ controls the degree of shrinkage for more distant observations. Finally, $\psi_j$ controls the prior's standard deviation on lags of variables other than the dependent.
 
 % Dummy priors
@@ -239,13 +239,13 @@ The sum-of-coefficients prior \citep{doan1984} is one example for such an additi
     \underset{M \times (1 + Mp)}{\boldsymbol{x^+}} &= [\boldsymbol{0}, \boldsymbol{y^+}, \dots, \boldsymbol{y^+}], \nonumber
 \end{align}
 where $\boldsymbol{\bar{y}}$ is a $M \times 1$ vector of averages over the first $p$ -- denoting the lag order -- observations of each variable.
-The key parameter $\mu$ controls the variance and hence, the tightness of the prior. For $\mu \to \infty$ the prior becomes uninformative, while for $\mu \to 0$ the model is pulled towards a form with as many unit roots as variables and no cointegration.
+The key hyperparameter $\mu$ controls the variance and hence, the tightness of the prior. For $\mu \to \infty$ the prior becomes uninformative, while for $\mu \to 0$ the model is pulled towards a form with as many unit roots as variables and no cointegration.
 The latter imposition motivates the single-unit-root prior \citep{sims1993, sims1998}, which allows for cointegration relationships in the data. The prior pushes the variables either towards their unconditional mean or towards the presence of at least one unit root. Its associated dummy observations are:
 \begin{align}
     \underset{1 \times M}{\boldsymbol{y^{++}}} &= \frac{\boldsymbol{\bar{y}}}{\delta}, \nonumber \\
     \underset{1 \times (1 + Mp)}{\boldsymbol{x^{++}}} &= \left[\frac{1}{\delta}, \boldsymbol{y^{++}}, \dots, \boldsymbol{y^{++}}\right], \nonumber
 \end{align}
-where $\boldsymbol{\bar{y}}$ is again defined as above. Similarly to before, $\delta$ is the key parameter and governs the tightness of the prior.
+where $\boldsymbol{\bar{y}}$ is again defined as above. Similarly to before, $\delta$ is the key hyperparameter and governs the tightness of the prior.
 The sum-of-coefficients and single-unit-root dummy-observation priors are commonly used in the estimation of VAR models in levels and fit the hierarchical approach to prior selection. Note however, that the approach is applicable to all priors from the NIW family in Equation~\ref{equ:niw}, yielding a flexible and readily extensible framework.
 
 
@@ -253,7 +253,7 @@ The sum-of-coefficients and single-unit-root dummy-observation priors are common
 
 % Introduce BVAR
 \pkg{BVAR} implements a hierarchical approach to prior selection \citep{giannone2015} into \proglang{R} \citep{R} and hands the user an easy-to-use and flexible tool for Bayesian VAR models.
-Its primary use cases are in the field of macroeconomic multivariate time series analysis. \pkg{BVAR} is ideal for a broad range of economic analyses \citep[in the spirit of][]{baumeister2016, altavilla2018, nelson2018}. It may be consulted as a reference for similar models, where the hierarchical prior selection serves as a safeguard against unreasonable parameter choices.
+Its primary use cases are in the field of macroeconomic time series analysis. \pkg{BVAR} is ideal for a range of economic analyses \citep[in the spirit of][]{baumeister2016, altavilla2018, nelson2018}. It may be consulted as a reference for similar models, where the hierarchical prior selection serves as a safeguard against unreasonable hyperparameter choices.
 The accessible and user-friendly implementation make it a suitable tool for introductions to Bayesian multivariate time series modeling and for quick, versatile analysis.
 
 % Mention some abstract features
@@ -261,7 +261,7 @@ The package is available cross-platform and on minimal installations, with no de
 A functional approach to the package structure facilitates optimization of computationally intensive steps, including ports to e.g., \proglang{C++}, and ensures extensibility. The complete documentation, helper functions to access the multitude of settings, and use of established methods for analysis make the package easy to operate, without sacrificing flexibility.
 
 % Mention usage features
-\pkg{BVAR} features extensive customization options with regard to the elicited priors, their parameters, and their hierarchical treatment. The Minnesota prior is used as baseline; all of its parameters are adjustable and can be treated hierarchically.
+\pkg{BVAR} features extensive customization options with regard to the elicited priors, their hyperparameters, and their hierarchical treatment. The Minnesota prior is used as baseline; all of its hyperparameters are adjustable and can be treated hierarchically.
 Users can easily include the sum-of-coefficients and single-unit-root priors of \cite{sims1998} and \cite{giannone2015}. The flexible implementation also allows users to construct custom dummy-observation priors.
 Further options are devoted to the MCMC method and the Metropolis-Hastings (MH) algorithm, which is used to explore the posterior hyperparameter space. The number of burned and saved draws are adjustable; thinning may be employed to reduce memory requirements and serial correlation. Proper exploration of the posterior is facilitated by options to manually scale individual proposals for the MH step, or to enable automatic scaling until a target acceptance rate is achieved.
 The customization options can be harnessed for flexible analysis with a number of established and specialized methods.
@@ -324,7 +324,7 @@ library("BVAR")
 % Load and transform dataentry
 The main function \code{bvar()} expects input data to be coercible to a rectangular numeric matrix without any missing values. For this example, we use six variables from the included FRED-QD dataset \citep{mccracken2020}, akin to the medium VAR considered by \cite{giannone2015}.
 The six variables are real gross domestic product (GDP), real personal consumption expenditures, real gross private domestic investment (all three in billions of 2012 dollars), as well as the number of total hours worked in the non-farm business sector, the GDP deflator index as a means to measure price inflation, and the effective federal funds rate in percent per year. The currently covered time period ranges from Q1 1959 to Q1 2020.
-We follow \cite{giannone2015} in transforming all variables except the federal funds rate to log-levels, in order to demonstrate aforementioned dummy priors.
+We follow \cite{giannone2015} in transforming all variables except the federal funds rate to log-levels, in order to also demonstrate aforementioned dummy priors.
 Transformation can be performed manually or with the helper function \code{fred_transform()}. The function supports transformations listed by \cite{mccracken2016,mccracken2020}, which can be accessed via their transformation codes, and automatic transformation.
 See Appendix~\ref{app:data} for a demonstration of this and related functionalities.
 For our example, we specify a log-transformation for the corresponding variables with code \code{4} and no transformation for the federal funds rate with code \code{1}.
@@ -369,8 +369,8 @@ Functions related to estimation setup and configuration share the prefix \code{b
 This contrasts methods and functions for analysis, which stick closely to idiomatic \proglang{R}.
 
 % Priors, start with Minnesota
-Priors are set up using \code{bv_priors()}, which holds arguments for the Minnesota and dummy-observation priors as well as their hierarchical treatment.
-We start by adjusting the Minnesota prior using \code{bv_minnesota()}. The prior parameter $\lambda$ has a Gamma hyperprior and is handed upper and lower bounds for its Gaussian proposal distribution in the MH step. For this example, we do not treat $\alpha$ hierarchically, meaning the parameter can be fixed via the \code{mode} argument. The prior variance on the constant term of the model (\code{var}) is dealt a large value, for a diffuse prior. We leave $\boldsymbol{\Psi}$ to be set automatically -- i.e., to the square root of the innovations variance, after fitting AR($p$) models to each of the variables.
+Priors are set up using \code{bv_priors()}, which holds arguments for the Minnesota and dummy-observation priors as well as the hierarchical treatment of their hyperparameters.
+We start by adjusting the Minnesota prior using \code{bv_minnesota()}. The prior hyperparameter $\lambda$ has a Gamma hyperprior and is handed upper and lower bounds for its Gaussian proposal distribution in the MH step. For this example, we do not treat $\alpha$ hierarchically, meaning it can be fixed via the \code{mode} argument. The prior variance on the constant term of the model (\code{var}) is dealt a large value, for a diffuse prior. We leave $\boldsymbol{\Psi}$ to be set automatically -- i.e., to the square root of the innovations variance, after fitting AR($p$) models to each of the variables.
 
 <<minnesota, eval=TRUE, echo=TRUE>>=
 mn <- bv_minnesota(
@@ -379,7 +379,7 @@ mn <- bv_minnesota(
 @
 
 % Dummy priors
-We also include the sum-of-coefficients and single-unit-root priors -- two pre-constructed dummy-observation priors. The hyperpriors of their key parameters are assigned Gamma distributions, with specification working in the same way as for $\lambda$. Custom dummy-observation priors can be set up similarly via \code{bv_dummy()} and require an additional function to construct the observations (see Appendix~\ref{app:dummy} for a demonstration).
+We also include the sum-of-coefficients and single-unit-root priors -- two pre-constructed dummy-observation priors. The hyperpriors of their key hyperparameters are assigned Gamma distributions, with specification working in the same way as for $\lambda$. Custom dummy-observation priors can be set up similarly via \code{bv_dummy()} and require an additional function to construct the observations (see Appendix~\ref{app:dummy} for a demonstration).
 
 <<dummies, eval=TRUE, echo=TRUE>>=
 soc <- bv_soc(mode = 1, sd = 1, min = 1e-04, max = 50)
@@ -387,7 +387,7 @@ sur <- bv_sur(mode = 1, sd = 1, min = 1e-04, max = 50)
 @
 
 % Wrap up priors
-Once the priors are defined, we provide them to \code{bv_priors()}. The dummy-observation priors are captured by the ellipsis argument (\code{...}) and need to be named. Via \code{hyper} we choose which prior parameters should be treated hierarchically. Its default setting (\code{"auto"}) includes $\lambda$ and the key parameters of all provided dummy-observation priors. In our case, this is equivalent to providing the character vector \code{c("lambda", "soc", "sur")}. Prior parameters that are not treated hierarchically, e.g., $\alpha$, are treated as fixed and set equal to their \code{mode}.
+Once the priors are defined, we provide them to \code{bv_priors()}. The dummy-observation priors are captured by the ellipsis argument (\code{...}) and need to be named. Via \code{hyper} we choose which hyperparameters should be treated hierarchically. Its default setting (\code{"auto"}) includes $\lambda$ and the key hyperparameters of all provided dummy-observation priors. In our case, this is equivalent to providing the character vector \code{c("lambda", "soc", "sur")}. Hyperparameters that are not treated hierarchically, e.g., $\alpha$, are treated as fixed and set equal to their \code{mode}.
 
 <<priors, eval=TRUE, echo=TRUE>>=
 priors <- bv_priors(hyper = "auto", mn = mn, soc = soc, sur = sur)
@@ -427,7 +427,7 @@ run <- bvar(x, lags = 5, n_draw = 15000, n_burn = 5000, n_thin = 1,
 \begin{Soutput}
 Optimisation concluded.
 Posterior marginalised likelihood: 3637.405
-Parameters: lambda = 1.51378; soc = 0.12618; sur = 0.47674
+Hyperparameters: lambda = 1.51378; soc = 0.12618; sur = 0.47674
 |==================================================| 100%
 Finished MCMC after 16.89 secs.
 \end{Soutput}
@@ -488,7 +488,7 @@ plot(run, type = "dens",
 
 \begin{figure}[!ht]
 	\centering
-  \includegraphics[width=0.5\textwidth]{fig-betas.pdf}
+  \includegraphics[width=0.51\textwidth]{fig-betas.pdf}
 	\caption{Density plot for the autoregressive coefficient corresponding to the first lag of GDP in the GDP equation.}
 	\label{fig:betas}
 \end{figure}
@@ -664,7 +664,7 @@ run_app <- bvar(y, lags = 5, n_draw = 15000, n_burn = 5000,
 
 Here, we demonstrate the construction of custom dummy priors using \code{bv_dummy()}. As an example, the sum-of-coefficients prior is reconstructed manually.
 
-A custom prior requires a function to construct artificial observations. This function takes three arguments -- the data as a numeric matrix, an integer with the number of lags, and the value of the prior parameter. The return value is a \code{'list'}, containing two numeric matrices, \code{X} and \code{Y}, with artificial observations to stack on top of the data matrix and the lagged data matrix.
+A custom prior requires a function to construct artificial observations. This function takes three arguments -- the data as a numeric matrix, an integer with the number of lags, and the value of the prior hyperparameter. The return value is a \code{'list'}, containing two numeric matrices, \code{X} and \code{Y}, with artificial observations to stack on top of the data matrix and the lagged data matrix.
 For the sum-of-coefficients prior we follow the procedure outlined in Section~\ref{subsec:prior}.
 
 <<app_dummies, eval=TRUE, echo=TRUE>>=
@@ -677,7 +677,7 @@ add_soc <- function(Y, lags, par) {
 }
 @
 
-This function is then passed to \code{bv_dummy()} via the argument \code{fun}. The remaining arguments work in the same way as for other prior constructors (see Section~\ref{subsec:setup}). They determine the hyperprior distribution and boundaries for the proposal distribution. Again, if not treated hierarchically, the prior parameter is set to its mode.
+This function is then passed to \code{bv_dummy()} via the argument \code{fun}. The remaining arguments work in the same way as for other prior constructors (see Section~\ref{subsec:setup}). They determine the hyperprior distribution and boundaries for the proposal distribution. Again, if not treated hierarchically, the prior hyperparameter is set to its mode.
 The output of \code{bv_dummy()} is then passed to the ellipsis argument of \code{bv_priors()} and needs to be named. Further steps do not differ from standard procedure -- posterior draws are stored and can be analyzed in the same way as for the Minnesota prior.
 
 <<app_priors, eval=TRUE, echo=TRUE, results=hide>>=
