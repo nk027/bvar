@@ -34,7 +34,7 @@
   - Unit tests with *tinytest* for development (skipped on CRAN)
   - Outsource additional steps to dedicated functions
   - More robustness checks and add verbosity to errors
-- Tested extensively on R 4.0.0 and R 3.6.3.
+- Tested extensively on R 4.0.0 and R 3.6.3
 
 
 # v0.2.2, CRAN Update 4 / Impulse Response Hotfix
