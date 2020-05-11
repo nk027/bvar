@@ -187,7 +187,8 @@ In the multivariate context, flat priors, which attempt not to impose a certain 
 Economic theory is a preferred source of prior information, but is lacking in many settings -- in particular for high-dimensional models. Acknowledging this, \cite{villani2009} reformulates the model and places priors on the steady state, which is better understood theoretically by economists.
 
 % Hierarchical approach
-\cite{giannone2015} propose setting prior hyperparameters in a data-based fashion, i.e., by treating them as additional parameters to be estimated. In their hierarchical approach, prior hyperparameters are assigned their own hyperpriors. Uncertainty surrounding the choice of prior hyperparameters is acknowledged explicitly.
+\cite{giannone2015} propose setting prior hyperparameters in a data-based fashion, i.e., by treating them as additional parameters to be estimated. In their hierarchical approach, prior hyperparameters are assigned their own hyperpriors.
+% Uncertainty surrounding the choice of prior hyperparameters is acknowledged explicitly.
 This can be expressed by invoking Bayes' law as:
 \begin{align}
   \label{equ:hm1}
@@ -261,7 +262,7 @@ The package is available cross-platform and on minimal installations, with no de
 A functional approach to the package structure facilitates optimization of computationally intensive steps, including ports to e.g., \proglang{C++}, and ensures extensibility. The complete documentation, helper functions to access the multitude of settings, and use of established methods for analysis make the package easy to operate, without sacrificing flexibility.
 
 % Mention usage features
-\pkg{BVAR} features extensive customization options with regard to the elicited priors, their hyperparameters, and their hierarchical treatment. The Minnesota prior is used as baseline; all of its hyperparameters are adjustable and can be treated hierarchically.
+\pkg{BVAR} features extensive customization options with regard to the elicited priors, their hyperparameters, and hierarchical treatment of them. The Minnesota prior is used as baseline; all of its hyperparameters are adjustable and can be treated hierarchically.
 Users can easily include the sum-of-coefficients and single-unit-root priors of \cite{sims1998} and \cite{giannone2015}. The flexible implementation also allows users to construct custom dummy-observation priors.
 Further options are devoted to the MCMC method and the Metropolis-Hastings (MH) algorithm, which is used to explore the posterior hyperparameter space. The number of burned and saved draws are adjustable; thinning may be employed to reduce memory requirements and serial correlation. Proper exploration of the posterior is facilitated by options to manually scale individual proposals for the MH step, or to enable automatic scaling until a target acceptance rate is achieved.
 The customization options can be harnessed for flexible analysis with a number of established and specialized methods.
