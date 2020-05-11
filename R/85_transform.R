@@ -10,15 +10,15 @@
 #' The transformation codes are as follows:
 #' \enumerate{
 #'   \item \code{1} - no transformation;
-#'   \item \code{2} - first differences - \eqn{\delta x_t}{delta x};
-#'   \item \code{3} - second differences - \eqn{\delta^2 x_t}{delta2 x};
+#'   \item \code{2} - first differences - \eqn{\Delta x_t}{Delta x};
+#'   \item \code{3} - second differences - \eqn{\Delta^2 x_t}{Delta2 x};
 #'   \item \code{4} - log transformation - \eqn{\log x_t}{log x};
 #'   \item \code{5} - log differences -
-#'     \eqn{\delta \log x_t}{delta log x};
+#'     \eqn{\Delta \log x_t}{Delta log x};
 #'   \item \code{6} - log second differences -
-#'     \eqn{\delta^2 \log x_t}{delta2 log x};
+#'     \eqn{\Delta^2 \log x_t}{Delta2 log x};
 #'   \item \code{7} - percent change differences -
-#'     \eqn{\delta x_t / x_{t-1} - 1}{delta x / lag-x - 1};
+#'     \eqn{\Delta x_t / x_{t-1} - 1}{Delta x / lag-x - 1};
 #' }
 #' Note that the transformation codes of FRED-MD and FRED-QD may differ for
 #' the same series.
@@ -40,7 +40,7 @@
 #'
 #' @return \code{\link{fred_transform}} returns a \code{data.frame} object with
 #' applied transformations. \code{\link{fred_code}} returns transformation
-#' codes, or a \code{data.frmae} of matching transformation codes.
+#' codes, or a \code{data.frame} of matching transformation codes.
 #'
 #' @seealso \code{\link{fred_qd}}
 #'
