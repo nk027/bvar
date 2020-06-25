@@ -273,7 +273,7 @@ bvar <- function(
   if(any(is.nan(J))) {
     stop("Issue with parameter(s) ",
       paste0(names(hyper)[which(is.nan(J))], collapse = ", "), ". ",
-      "Their mode(s) my be too large to exponentiate.")
+      "Their mode(s) may be too large to exponentiate.")
   }
   if(hyper_n != 1) {J <- diag(J)}
   HH <- J %*% H %*% t(J)
