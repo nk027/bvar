@@ -43,7 +43,7 @@
 #' Options include the horizon and settings for conditional forecasts i.e.
 #' scenario analysis.
 #' May also be calculated ex-post using \code{\link{predict.bvar}}.
-#' @param irf Object from code{\link{bv_irf}} with settings for the calculation
+#' @param irf Object from \code{\link{bv_irf}} with settings for the calculation
 #' of impulse responses and forecast error variance decompositions. Options
 #' include the horizon and different identification schemes.
 #' May also be calculated ex-post using \code{\link{irf.bvar}}.
