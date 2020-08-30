@@ -133,8 +133,8 @@ In the domain of multivariate time series analysis, the \proglang{R} package \pk
 % Bayesian VAR domain
 Currently there exists no equivalent to \pkg{vars} for Bayesian VAR models in \proglang{R}. Applied work is often performed via ad hoc scripts, compromising reproducibility. Some \proglang{R} packages provide specialized implementations of Bayesian VAR models, but lack flexibility and accessibility.
 The \pkg{bvarsv} package \citep{krueger2015} implements estimation of a model with time-varying parameters and stochastic volatility by \cite{primiceri2005}.
-\pkg{mfbvar}, by \cite{ankargren2019}, implements estimation of mixed-frequency VAR models and provides forecasting routines. Several common prior distributions as well as stochastic volatility methods are available, but functions for structural analysis and inference are lacking.
-Another approach is taken by the \pkg{bvartools} package \citep{mohr2019}, which provides functions to assist with Bayesian inference in VAR models, but does not include routines for estimation.
+\pkg{mfbvar}, by \cite{ankargren2020}, implements estimation of mixed-frequency VAR models and provides forecasting routines. Several common prior distributions as well as stochastic volatility methods are available, but functions for structural analysis and inference are lacking.
+Another approach is taken by the \pkg{bvartools} package \citep{mohr2020}, which provides functions to assist with Bayesian inference in VAR models, but does not include routines for estimation.
 Despite the popularity of Bayesian VAR models, there is a considerable gap between specialized Bayesian and accessible, all-purpose implementations.
 
 % In comes BVAR
