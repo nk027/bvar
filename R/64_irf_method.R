@@ -100,6 +100,10 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
     if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {
       stop("Dimensions of provided sign restrictions do not fit the data.")
     }
+    if(!is.null(irf[["zero_restr"]]) && length(irf[["zero_restr"]]) != M ^ 2) {
+      stop("Dimensions of provided zero and sign restrictions ",
+           "do not fit the data.")
+    }
 
     # Sampling ---
 
@@ -118,7 +122,8 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       irf_comp  <- compute_irf(
         beta_comp = beta_comp, sigma = sigma[j, , ], M = M, lags = lags,
         horizon = irf[["horizon"]], identification = irf[["identification"]],
-        sign_restr = irf[["sign_restr"]], sign_lim = irf[["sign_lim"]])
+        sign_restr = irf[["sign_restr"]], zero_restr = irf[["zero_restr"]],
+        sign_lim = irf[["sign_lim"]])
       irf_store[["irf"]][i, , , ] <- irf_comp
 
       if(irf[["fevd"]]) { # Forecast error variance decomposition

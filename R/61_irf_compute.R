@@ -17,12 +17,19 @@
 #' @param identification Logical scalar. Whether or not the shocks used for
 #' calculating the impulse should be identified. Defaults to \code{TRUE},
 #' meaning identification will be performed recursively through a
-#' Cholesky decomposition of the VCOV-matrix as long as \emph{sign_restr} is
-#' \code{NULL}. If set to \code{FALSE}, shocks will be unidentified.
+#' Cholesky decomposition of the VCOV-matrix as long as \emph{sign_restr}
+#' and \emph{zero_restr} are \code{NULL}. If set to \code{FALSE}, shocks will
+#' be unidentified.
 #' @param sign_restr Numeric matrix. Elements inform about expected impacts
-#' of certain shocks. Can be either 1, -1 or \code{NA} depending on
-#' whether a positive, negative, or no contemporaneous effect of a certain shock
-#' is expected.
+#' of certain shocks. Can be either \eqn{1} or \eqn{-1} depending on
+#' whether a positive or a negative effect of a certain shock is expected.
+#' Elements set to \eqn{NA} indicate that there are no particular expectations
+#' for the contemporaneous effects.
+#' @param zero_restr Numeric matrix. Elements inform about expected impacts
+#' of certain shocks. Can be either \eqn{1}, \eqn{-1} or \eqn{0} depending
+#' on whether a positive, a negative or no contemporaneous effect of a
+#' certain shock is expected. Elements set to \eqn{NA} indicate that there are
+#' no particular expectations for the contemporaneous effects.
 #' @param sign_lim Integer scalar. Maximum number of rotational matrices to
 #' draw and check for fitting sign restrictions.
 #'
@@ -35,15 +42,20 @@ compute_irf <- function(
   M, lags,
   horizon,
   identification,
-  sign_restr, sign_lim) {
+  sign_restr, zero_restr, sign_lim) {
 
   # Identification
   shock <- if(identification) {
-    if(is.null(sign_restr)) {
+    if(is.null(sign_restr) && is.null(zero_restr)) {
       sigma_chol <- t(chol(sigma))
     } else {
-      sign_restr(sigma_chol = t(chol(sigma)), sign_restr = sign_restr,
-        M = M, sign_lim = sign_lim)
+      if(!is.null(sign_restr)) {
+        sign_restr(sigma_chol = t(chol(sigma)), sign_restr = sign_restr,
+                   M = M, sign_lim = sign_lim)
+      } else {
+        zero_restr(sigma_chol = t(chol(sigma)), zero_restr = zero_restr,
+                   M = M, sign_lim = sign_lim)
+      }
     }
   } else {sigma}
 
