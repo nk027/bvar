@@ -204,7 +204,7 @@ This can be expressed by invoking Bayes' law as:
 where $\boldsymbol{y} = (\boldsymbol{y}_{p+1}, \ldots, \boldsymbol{y}_{T})^\top$, the autoregressive and variance parameters of the VAR model are denoted by $\boldsymbol{\theta}$, and the set of hyperparameters with $\boldsymbol{\gamma}$. The first part of Equation~\ref{equ:hm1} is marginalized with respect to the parameters $\boldsymbol{\theta}$ in Equation~\ref{equ:hm2}. This yields a density of the data as a function of the hyperparameters $p(\boldsymbol{y} | \boldsymbol{\gamma})$, also called marginal likelihood (ML). This quantity is marginal with respect to the parameters $\boldsymbol{\theta}$, but conditional on the hyperparameters $\boldsymbol{\gamma}$.
 The ML can be used as a decision criterion for the hyperparameter choice; maximization constitutes an empirical Bayes method, with a clear frequentist interpretation \citep{giannone2015}.
 In the Bayesian hierarchical approach, the ML is used to explore the full posterior hyperparameter space, acknowledging uncertainty surrounding them.
-This yields robust inference, is theoretically grounded, and can be implemented in an efficient manner \citep{giannone2015}. The authors demonstrate the high accuracy of impulse response functions and forecasts, with the model performing competitively compared to factor models. Since then, their approach has been used extensively in applied research \citep[see e.g.,][]{miranda-agrippino2020, baumeister2016, altavilla2018, nelson2018, altavilla2019}.
+This yields robust inference, is theoretically grounded, and can be implemented in an efficient manner \citep{giannone2015}. The authors demonstrate the high accuracy of impulse response functions and forecasts, with the model performing competitively compared to factor models. Since then, their approach has been used extensively in applied research \citep[see e.g.,][]{baumeister2016, altavilla2018, nelson2018, altavilla2019, miranda-agrippino2020}.
 
 % Specific priors, introduce NIW
 The contribution of \cite{giannone2015} focuses on conjugate prior distributions, specifically of the Normal-inverse-Wishart (NIW) family.\footnote{\cite{demol2008} note that this setting is similar to ridge penalized estimation in frequentist terms.}
@@ -265,7 +265,7 @@ The sum-of-coefficients and single-unit-root dummy-observation priors are common
 \section[The BVAR package]{The \pkg{BVAR} package} \label{sec:bvar}
 
 % Introduce BVAR
-\pkg{BVAR} implements a hierarchical approach to prior selection \citep{giannone2015} into \proglang{R} \citep{R} and hands the user an easy-to-use and flexible tool for Bayesian VAR models.
+\pkg{BVAR} implements a hierarchical approach to prior selection \citep{giannone2015} into \proglang{R} and hands the user an easy-to-use and flexible tool for Bayesian VAR models.
 Its primary use cases are in the field of macroeconomic time series analysis. \pkg{BVAR} is ideal for a range of economic analyses \citep[in the spirit of][]{baumeister2016, altavilla2018, nelson2018}. It may be consulted as a reference for similar models, where the hierarchical prior selection serves as a safeguard against unreasonable hyperparameter choices.
 The accessible and user-friendly implementation make it a suitable tool for introductions to Bayesian multivariate time series modeling and for quick, versatile analysis.
 
@@ -302,7 +302,7 @@ As detailed above, \pkg{BVAR} makes estimation of and inference in Bayesian VAR 
 Extensive customization options are available, with sensible default settings allowing for a step-by-step adoption. This is further facilitated by lucid helper functions and comprehensive documentation.
 Analysis of estimated VAR models is readily accessible -- functions for summarizing and plotting model parameters, forecasts, IRF, traces, densities, and residuals are available. Use of established procedures and standard methods, including \code{plot()}, \code{predict()}, \code{coef()}, and \code{summary()}, set a low entry barrier for \proglang{R} users.
 Final and intermediate outputs are provided in an idiomatic format and feature \code{print()} methods for quick access and a transparent research process.
-Existing frameworks may be used for further analysis -- an interface to \pkg{coda} for checking outputs, analysis, and diagnostics is provided.
+Existing frameworks may be used for further analysis -- an interface to \pkg{coda} \citep{plummer2006} for checking outputs, analysis, and diagnostics is provided.
 The available FRED-MD and FRED-QD datasets allow hassle-free exploration of macroeconomic research questions. These features make \pkg{BVAR} an ideal tool for macroeconomic analysis.
 
 
