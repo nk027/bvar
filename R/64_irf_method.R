@@ -56,6 +56,9 @@
 #' # Recalculate with sign restrictions provided via the ellipsis
 #' irf(x, sign_restr = matrix(c(1, NA, NA, -1, 1, -1, -1, 1, 1), nrow = 3))
 #'
+#' # Recalculate with zero and sign restrictions provided via the ellipsis
+#' irf(x, sign_restr = matrix(c(1, 0, 1, NA, 1, 1, -1, -1, 1), nrow = 3))
+#'
 #' # Calculate the forecast error variance decomposition
 #' fevd(x)
 #'
