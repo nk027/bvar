@@ -8,7 +8,7 @@
 \format{
 A \code{data.frame} object with dates as rownames.
 
-An object of class \code{data.frame} with 734 rows and 121 columns.
+An object of class \code{data.frame} with 737 rows and 120 columns.
 }
 \source{
 \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}
@@ -19,20 +19,19 @@ fred_qd
 fred_md
 }
 \description{
-FRED-MD and FRED-QD are large macroeconomic databases. They contain monthly
-and quarterly time series that are frequently used in the literature. The
-datasets are updated in real-time through the FRED database. They are
-intended to facilitate the reproduction of empirical work and simplify
+FRED-MD and FRED-QD are large macroeconomic databases, containing monthly
+and quarterly time series that are frequently used in the literature. They
+are intended to facilitate the reproduction of empirical work and simplify
 data related tasks.
-The included datasets are provided as is - transformation codes are provided
+Included datasets are provided as is - transformation codes are available
 in \code{system.file("fred_trans.rds", package = "BVAR")}. These can be
 applied automatically with \code{\link{fred_transform}}.
 }
 \details{
 The versions of FRED-MD and FRED-QD that are provided here are licensed
 under a modified ODC-BY 1.0 license that can be found in the provided
-\emph{LICENSE} file. The provided versions are subset to 121 (of 128) and
-237 (of 248) variables that are either in public domain or for which we were
+\emph{LICENSE} file. The provided versions are subset to 120 (of 128) and
+236 (of 248) variables that are either in public domain or for which we were
 given permission to use. For further details see McCracken and Ng (2016) or
 \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
 We would like to thank Michael McCracken and Serena Ng, Adrienne Brennecke
@@ -44,6 +43,8 @@ all other owners of included time series that permitted their use.
 McCracken, M. W. and Ng, S. (2016) FRED-MD: A Monthly Database for
   Macroeconomic Research. \emph{Journal of Business & Economic Statistics},
   \bold{34:4}, 574-589, \url{https://doi.org/10.1080/07350015.2015.1086655}.
+  McCracken, M. W., & Ng, S. (2020). FRED-QD: A Quarterly Database for
+  Macroeconomic Research \bold{w26872}. National Bureau of Economic Research.
 }
 \seealso{
 \code{\link{fred_transform}}

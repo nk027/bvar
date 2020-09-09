@@ -76,7 +76,7 @@ as.mcmc(structure(list(x, y), class = "bvar_chains"), vars = "CPIAUCSL")
 as.mcmc(x, vars = "FEDFUNDS-lag1", chains = y)
 
 # Convert hyperparameters and constant coefficient values for variable 1
-as.mcmc(x, vars = "lambda", "CPI", "constant")
+as.mcmc(x, vars = c("lambda", "CPI", "constant"))
 
 # Specify coefficent values to convert in alternative way
 as.mcmc(x, vars_impulse = c("FED", "CPI"), vars_response = "UNRATE")

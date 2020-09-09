@@ -3,7 +3,7 @@
 
 keep <- readLines("data/fred_permitted.txt")
 
-file <- "2020-03.csv" # Update this
+file <- "2020-08.csv" # Update this
 
 
 # QD ---
@@ -14,8 +14,9 @@ fred_qd <- read.csv(paste(link, file, sep = ""), stringsAsFactors = FALSE)
 
 # Rows to remove
 fred_qd_trans <- fred_qd[2, -1] # Keep transformation codes
-fred_qd[c(1:2, nrow(fred_qd)), ]
-fred_qd <- fred_qd[-c(1:2, nrow(fred_qd)), ]
+fred_qd[c(1:2, nrow(fred_qd)), ] # First two have info, last is mostly NA
+fred_qd[fred_qd$sasdate == "", ] # No date and NA values
+fred_qd <- fred_qd[-c(1:2, nrow(fred_qd), which(fred_qd$sasdate == "")), ]
 
 # Fill rownames with dates and remove date variable
 dates <- as.Date(fred_qd$sasdate, "%m/%d/%Y")
@@ -48,7 +49,10 @@ fred_md <- read.csv(paste(link, file, sep = ""), stringsAsFactors = FALSE)
 
 # Rows to remove
 fred_md_trans <- fred_md[1, -1] # Keep transformation codes
-fred_md[c(1, nrow(fred_md)), ]
+fred_md[c(1, nrow(fred_md)), ] # First has info, last is mostly NA
+fred_md[fred_md$sasdate == "", ] # No date and NA values
+fred_md <- fred_md[-c(1, nrow(fred_md), which(fred_md$sasdate == "")), ]
+
 fred_md <- fred_md[-c(1, nrow(fred_md)), ]
 
 # Fill rownames with dates and remove date variable

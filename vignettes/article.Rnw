@@ -30,8 +30,6 @@ options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 \usepackage{amsmath,amssymb}
 \usepackage{placeins}
 
-% number lines for now
-\usepackage[modulo]{lineno} % Search for "linen" to remove
 
 %% new custom commands
 \newcommand{\class}[1]{`\code{#1}'} % Hard-coded instead
@@ -115,7 +113,6 @@ options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 %%   of Statistical Software" above) they should be in sentence case (like
 %%   "generalized linear models" below).
 
-\linenumbers
 
 \section{Introduction} \label{sec:intro}
 
@@ -165,13 +162,11 @@ The remainder of this paper is structured as follows. Section~\ref{sec:econ} des
 % About VARs
 VAR models are a generalization of univariate autoregressive (AR) models, based on the notion of interdependencies between lagged values of all variables in a given model.
 They are commonly resorted to as tools for investigating dynamic effects of shocks and perform well in forecasting exercises. A VAR model of finite order $p$, referred to as VAR($p$) model, can be expressed as:
-\begin{linenomath*}
 \begin{align} \label{equ:var}
   \boldsymbol{y}_t = \boldsymbol{a}_0 + \boldsymbol{A}_1 \boldsymbol{y}_{t-1} + \dots + \boldsymbol{A}_p \boldsymbol{y}_{t-p} + \boldsymbol{\epsilon}_t,
   \text{ with }
   \boldsymbol{\epsilon}_t \sim \mathcal{N} (0, \boldsymbol{\Sigma}),
 \end{align}
-\end{linenomath*}
 where $\boldsymbol{y}_t$ is an $M \times 1$ vector of endogenous variables, $\boldsymbol{a}_0$ is an $M \times 1$ intercept vector, $\boldsymbol{A}_j$ ($j = 1, \ldots, p$) are $M \times M$ coefficient matrices, and $\boldsymbol{\epsilon_t}$ is an $M \times 1$ vector of exogenous Gaussian shocks with zero mean and variance-covariance (VCOV) matrix $\boldsymbol{\Sigma}$.
 The number of coefficients to be estimated is $M + M^2 p$, rising quadratically with the number of included variables and linearly in the lag order.
 Such a dense parameterization often leads to inaccuracies with regard to out-of-sample forecasting and structural inference, especially for higher-dimensional models. This phenomenon is commonly referred to as the curse of dimensionality.
@@ -192,7 +187,6 @@ Economic theory is a preferred source of prior information, but is lacking in ma
 \cite{giannone2015} propose setting prior hyperparameters in a data-based fashion, i.e., by treating them as additional parameters to be estimated. In their hierarchical approach, prior hyperparameters are assigned their own hyperpriors.
 % Uncertainty surrounding the choice of prior hyperparameters is acknowledged explicitly.
 This can be expressed by invoking Bayes' law as:
-\begin{linenomath*}
 \begin{align}
   \label{equ:hm1}
   p(\boldsymbol{\gamma} | \boldsymbol{y}) & \propto p(\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{\gamma}) p(\boldsymbol{\theta} | \boldsymbol{\gamma}) ~ p(\boldsymbol{\gamma}),
@@ -200,7 +194,6 @@ This can be expressed by invoking Bayes' law as:
   \label{equ:hm2}
   p(\boldsymbol{y} | \boldsymbol{\gamma}) & = \int p(\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{\gamma}) p(\boldsymbol{\theta} | \boldsymbol{\gamma}) d \boldsymbol{\theta},
 \end{align}
-\end{linenomath*}
 where $\boldsymbol{y} = (\boldsymbol{y}_{p+1}, \ldots, \boldsymbol{y}_{T})^\top$, the autoregressive and variance parameters of the VAR model are denoted by $\boldsymbol{\theta}$, and the set of hyperparameters with $\boldsymbol{\gamma}$. The first part of Equation~\ref{equ:hm1} is marginalized with respect to the parameters $\boldsymbol{\theta}$ in Equation~\ref{equ:hm2}. This yields a density of the data as a function of the hyperparameters $p(\boldsymbol{y} | \boldsymbol{\gamma})$, also called marginal likelihood (ML). This quantity is marginal with respect to the parameters $\boldsymbol{\theta}$, but conditional on the hyperparameters $\boldsymbol{\gamma}$.
 The ML can be used as a decision criterion for the hyperparameter choice; maximization constitutes an empirical Bayes method, with a clear frequentist interpretation \citep{giannone2015}.
 In the Bayesian hierarchical approach, the ML is used to explore the full posterior hyperparameter space, acknowledging uncertainty surrounding them.
@@ -212,18 +205,15 @@ Conjugacy implies that the ML is available in closed form, enabling efficient co
 The NIW family includes many of the most commonly used priors \citep{koop2010, karlsson2013}, with some notable exceptions. These include the steady-state prior \citep{villani2009}, the Normal-Gamma prior \citep{griffin2010, huber2019}, and the Dirichlet-Laplace prior \citep{bhattacharya2015}.
 Many recent contributions focus on accounting for heteroskedastic error structures \citep{clark2011, kastner2014, carriero2016}. This may improve model performance, but is not possible within the conjugate setup and would complicate inference.
 In the chosen NIW framework we approach the model in Equation~\ref{equ:var} by letting $\boldsymbol{A} = \left[ \boldsymbol{a}_0, \boldsymbol{A}_1, \dots, \boldsymbol{A}_p \right]'$ and $\boldsymbol{\beta} = vec(\boldsymbol{A})$. Then the conjugate prior setup reads as:
-\begin{linenomath*}
 \begin{align}
     \label{equ:niw}
     \boldsymbol{\beta} | \boldsymbol{\Sigma} &\sim \mathcal{N}(\boldsymbol{b}, \boldsymbol{\Sigma} \otimes \boldsymbol{\Omega}), \\
     \boldsymbol{\Sigma} &\sim \mathcal{IW} (\boldsymbol{\Psi}, \boldsymbol{d}), \nonumber
 \end{align}
-\end{linenomath*}
 where $\boldsymbol{b}$, $\boldsymbol{\Omega}$, $\boldsymbol{\Psi}$ and $\boldsymbol{d}$ are functions of a lower-dimensional vector of hyperparameters $\boldsymbol{\gamma}$. In their paper, \cite{giannone2015} consider three specific priors -- the so-called Minnesota (Litterman) prior, which is used as a baseline, the sum-of-coefficients prior and the single-unit-root prior \citep[also see][]{sims1998}.
 
 % Minnesota prior
 The Minnesota prior \citep{litterman1980} imposes the hypothesis that individual variables all follow random walk processes. This parsimonious specification typically performs well in forecasts of macroeconomic time series \citep{kilian2017} and is often used as a benchmark to evaluate accuracy. The prior is characterized by the following moments:
-\begin{linenomath*}
 \begin{align}
     \mathbb{E}[(\boldsymbol{A}_s)_{ij}|\boldsymbol{\Sigma}] &=
     \begin{cases}
@@ -236,28 +226,24 @@ The Minnesota prior \citep{litterman1980} imposes the hypothesis that individual
         0 &\text{otherwise}. \nonumber
     \end{cases}
 \end{align}
-\end{linenomath*}
+% \end{linenomath*}
 The key hyperparameter $\lambda$ controls the tightness of the prior, i.e., it weighs the relative importance of prior and data. For $\lambda \to 0$ the prior outweighs any information in the data; the posterior approaches the prior. As $\lambda \to \infty$ the posterior distribution mirrors the sample information.
 Governing the variance decay with increasing lag order, $\alpha$ controls the degree of shrinkage for more distant observations. Finally, $\psi_j$ controls the prior's standard deviation on lags of variables other than the dependent.
 
 % Dummy priors
 Refinements of the Minnesota prior are often implemented as additional priors trying to ``reduce the importance of the deterministic component implied by VAR models estimated conditioning on the initial observations'' \citep[p.~440]{giannone2015}. This component is defined as the expectation of future observations, given initial conditions and estimated coefficients.
 The sum-of-coefficients prior \citep{doan1984} is one example for such an additional prior. It imposes the notion that a no-change forecast is optimal at the beginning of a time series. The prior can be implemented by adding artificial dummy-observations on top of the data matrix. They are constructed as follows:
-\begin{linenomath*}
 \begin{align}
     \underset{M \times M}{\boldsymbol{y^+}} &= diag \left(\frac{\boldsymbol{\bar{y}}}{\mu}\right), \nonumber \\
     \underset{M \times (1 + Mp)}{\boldsymbol{x^+}} &= [\boldsymbol{0}, \boldsymbol{y^+}, \dots, \boldsymbol{y^+}], \nonumber
 \end{align}
-\end{linenomath*}
 where $\boldsymbol{\bar{y}}$ is a $M \times 1$ vector of averages over the first $p$ -- denoting the lag order -- observations of each variable.
 The key hyperparameter $\mu$ controls the variance and hence, the tightness of the prior. For $\mu \to \infty$ the prior becomes uninformative, while for $\mu \to 0$ the model is pulled towards a form with as many unit roots as variables and no cointegration.
 The latter imposition motivates the single-unit-root prior \citep{sims1993, sims1998}, which allows for cointegration relationships in the data. The prior pushes the variables either towards their unconditional mean or towards the presence of at least one unit root. Its associated dummy observations are:
-\begin{linenomath*}
 \begin{align}
     \underset{1 \times M}{\boldsymbol{y^{++}}} &= \frac{\boldsymbol{\bar{y}}}{\delta}, \nonumber \\
     \underset{1 \times (1 + Mp)}{\boldsymbol{x^{++}}} &= \left[\frac{1}{\delta}, \boldsymbol{y^{++}}, \dots, \boldsymbol{y^{++}}\right], \nonumber
 \end{align}
-\end{linenomath*}
 where $\boldsymbol{\bar{y}}$ is again defined as above. Similarly to before, $\delta$ is the key hyperparameter and governs the tightness of the prior.
 The sum-of-coefficients and single-unit-root dummy-observation priors are commonly used in the estimation of VAR models in levels and fit the hierarchical approach to prior selection. Note however, that the approach is applicable to all priors from the NIW family in Equation~\ref{equ:niw}, yielding a flexible and readily extensible framework.
 
@@ -820,7 +806,6 @@ plot(predict(run_app), t_back = 16)
 
 \clearpage
 
-\nolinenumbers
 
 \end{appendix}
 

@@ -115,12 +115,12 @@ expect_silent(bv_irf(horizon = 2020, identification = FALSE))
 expect_silent(opt_irf2 <- bv_irf(
   sign_restr = matrix(c(1, NA, NA, -1, 1, -1, -1, 1, 1), nrow = 3)))
 expect_silent(bv_irf(sign_restr = c(1, NA, -1, 1), sign_lim = 1000))
+expect_silent(bv_irf(sign_restr = c(1, NA, 0, 1), sign_lim = 1000))
 
-# Underidentified, deprecated 0, non-square restrictions and no zeros yet
+# Underidentified, too many 0, non-square restrictions
 expect_message(bv_irf(sign_restr = matrix(c(NA, NA, NA, NA), nrow = 2)))
-expect_warning(bv_irf(sign_restr = matrix(c(0, 1, -1, NA), nrow = 2)))
+expect_error(bv_irf(sign_restr = matrix(c(0, 0, -1, NA), nrow = 2)))
 expect_error(bf_irf(sign_restr = matrix(rnorm(6), nrow = 3)))
-expect_error(bf_irf(zero_restr = matrix(rnorm(9), nrow = 3)))
 
 
 # Run and analyse -----

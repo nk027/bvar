@@ -18,7 +18,7 @@
 )
 }
 \arguments{
-\item{x}{A code{bvar_fcast} object, obtained from \code{\link{predict.bvar}}.}
+\item{x}{A \code{bvar_fcast} object, obtained from \code{\link{predict.bvar}}.}
 
 \item{vars}{Optional numeric or character vector. Used to subset the plot to
 certain variables by position or name (must be available). Defaults to

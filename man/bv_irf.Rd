@@ -9,7 +9,6 @@ bv_irf(
   fevd = FALSE,
   identification = TRUE,
   sign_restr = NULL,
-  zero_restr = NULL,
   sign_lim = 1000
 )
 }
@@ -26,19 +25,17 @@ calculating impulses should be identified. Defaults to \code{TRUE}, i.e.
 identification via Cholesky decomposition of the VCOV-matrix unless
 \emph{sign_restr} is provided.}
 
-\item{sign_restr}{Numeric matrix. Sign restrictions for identification.
-Elements should be set to 1 (-1) to restrict for positive
-(negative) impacts. If no presumption about the impact can be made the
-corresponding elements can be set to \code{NA}. The default value is
-\code{NULL}, meaning identification would be performed via Cholesky
-decomposition. Note that in order to be fully identified at least
-\eqn{M * (M - 1) / 2} restrictions have to be set.}
+\item{sign_restr}{Elements inform about expected impacts
+of certain shocks. Can be either \eqn{1}, \eqn{-1} or \eqn{0} depending
+on whether a positive, a negative or no contemporaneous effect of a
+certain shock is expected. Elements set to \eqn{NA} indicate that there are
+no particular expectations for the contemporaneous effects. The default
+value is \code{NULL}. Note that in order to be fully identified at least
+\eqn{M * (M − 1) / 2} restrictions have to be set and a maximum of
+\eqn{M - j} zero restrictions can be imposed on the \eqn{j}'th column.}
 
-\item{zero_restr}{Numeric matrix. Zero and sign restrictions for
-identification. \emph{Currently not functional.}}
-
-\item{sign_lim}{Integer scalar. Maximum number of rotational matrices to
-draw and check for fitting sign restrictions.}
+\item{sign_lim}{Integer scalar. Maximum number of tries to find suitable
+matrices to for fitting sign or zero and sign restrictions.}
 }
 \value{
 Returns a named list of class \code{bv_irf} with options for
@@ -49,13 +46,19 @@ Provides settings for the computation of impulse responses to
 \code{\link{bvar}}, \code{\link{irf.bvar}} or \code{\link{fevd.bvar}}. Allows
 setting the horizon for which impulse responses should be computed, whether
 or not forecast error variance decompositions (FEVDs) should be included
-and if and what kind of identification should be used.
+as well as if and what kind of identification should be used. See the Details
+section for further information on identification. Identification can be
+achieved via Cholesky decomposition, sign restrictions (Rubio-Ramirez,
+Waggoner and Zha, 2010), and zero and sign restrictions (Arias,
+Rubio-Ramirez and Waggoner, 2018).
 }
 \details{
-Identification can be performed via Cholesky decomposition and sign
-restrictions. The algorithm for generating suitable sign restrictions
-follows Rubio-Ramirez, Waggoner and Zha (2010).
-Note the possiblity of finding no suitable sign restrictions.
+Identification can be performed via Cholesky decomposition, sign
+restrictions, or zero and sign restrictions. The algorithm
+for generating suitable sign restrictions follows Rubio-Ramirez, Waggoner
+and Zha (2010), while the one for zero and sign restrictions follows
+Arias, Rubio-Ramirez and Waggoner (2018).
+Note the possiblity of finding no suitable zero/sign restrictions.
 }
 \examples{
 # Set impulse responses to a horizon of 20 time periods and enable FEVD
@@ -66,6 +69,10 @@ bv_irf(horizon = 20, fevd = TRUE)
 signs <- matrix(c(1, NA, NA, -1, 1, -1, -1, 1, 1), nrow = 3)
 bv_irf(sign_restr = signs)
 
+# Set up structural impulse responses using zero and sign restrictions
+zero_signs <- matrix(c(1, 0, NA, -1, 1, 0, -1, 1, 1), nrow = 3)
+bv_irf(sign_restr = zero_signs)
+
 # Prepare to estimate unidentified impulse responses
 bv_irf(identification = FALSE)
 }
@@ -74,6 +81,11 @@ Rubio-Ramirez, J. F. and Waggoner, D. F. and Zha, T. (2010) Structural
   Vector Autoregressions: Theory of Identification and Algorithms for
   Inference. \emph{The Review of Economic Studies}, \bold{77}, 665-696,
   \url{https://doi.org/10.1111/j.1467-937X.2009.00578.x}.
+  Arias, J.E. and Rubio-Ramirez, J. F. and Waggoner, D. F. (2018)
+  Inference Based on Structural Vector Autoregressions Identifiied with
+  Sign and Zero Restrictions: Theory and Applications.
+  \emph{Econometrica}, \bold{86}, 2, 685-720,
+  \url{https://doi.org/10.3982/ECTA14468}.
 }
 \seealso{
 \code{\link{irf.bvar}}; \code{\link{plot.bvar_irf}}

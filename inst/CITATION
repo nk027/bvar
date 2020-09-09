@@ -2,23 +2,22 @@ if(!exists("meta") || is.null(meta)) {meta <- packageDescription("BVAR")}
 year <- sub("-.*", "", meta$Date)
 version <- meta$Version
 
-bibentry(
-  header = "To cite BVAR in publications please use:",
-  bibtype = "techreport",
+citHeader("To cite BVAR in publications please use:")
+
+citentry(
+  entry = "article",
   title = "{BVAR}: {B}ayesian Vector Autoregressions with Hierarchical Prior Selection in {R}",
   author = personList(
     person(given = "Nikolas", family = "Kuschnig", email = "nikolas.kuschnig@wu.ac.at"),
     person(given = "Lukas", family = "Vashold")),
-  year = "2019",
-  type = "Department of Economics Working Paper Series",
-  institution = "WU Vienna University of Economics and Business",
-  number = "296",
+  year = "2021",
+  journal = "Journal of Statistical Software",
+  number = "forthcoming",
   url = "https://epub.wu.ac.at/7216/",
-  textVersion = "Nikolas Kuschnig and Lukas Vashold (2019). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. Department of Economics Working Paper Series, 296. WU Vienna University of Economics and Business, Vienna. URL https://epub.wu.ac.at/7216/."
+  textVersion = "Nikolas Kuschnig and Lukas Vashold (2021). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. Journal of Statistical Software (forthcoming)."
 )
 
 citEntry(
-  header = "To cite the current version of BVAR please use:",
   entry = "manual",
   title = "{BVAR}: {H}ierarchical {B}ayesian Vector Autoregression",
   author = personList(

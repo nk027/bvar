@@ -4,7 +4,7 @@ Title: Hierarchical Bayesian Vector Autoregression
 Version: 1.0.0
 Date: 2020-05-05
 Authors@R: c(person("Nikolas", "Kuschnig", role = c("aut", "cre"), email = "nikolas.kuschnig@wu.ac.at", comment = c(ORCID = "0000-0002-6642-2543")),
-    person("Lukas", "Vashold", role = "aut", email = "lukas.vashold@wu.ac.at", comment = c(ORCID = "0000-0002-3562-3414")),
+    person("Lukas", "Vashold", role = "aut", comment = c(ORCID = "0000-0002-3562-3414")),
     person("Michael", "McCracken", role = "dtc"),
     person("Serena", "Ng", role = "dtc"))
 Author: Nikolas Kuschnig [aut, cre] (<https://orcid.org/0000-0002-6642-2543>),
@@ -25,4 +25,4 @@ Suggests: coda, vars, tinytest
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

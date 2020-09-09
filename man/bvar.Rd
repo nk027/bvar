@@ -45,7 +45,7 @@ Options include the horizon and settings for conditional forecasts i.e.
 scenario analysis.
 May also be calculated ex-post using \code{\link{predict.bvar}}.}
 
-\item{irf}{Object from code{\link{bv_irf}} with settings for the calculation
+\item{irf}{Object from \code{\link{bv_irf}} with settings for the calculation
 of impulse responses and forecast error variance decompositions. Options
 include the horizon and different identification schemes.
 May also be calculated ex-post using \code{\link{irf.bvar}}.}
@@ -132,10 +132,9 @@ Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
   Vector Autoregressions. \emph{The Review of Economics and Statistics},
   \bold{97:2}, 436-451, \url{https://doi.org/10.1162/REST_a_00483}.
 
-  Kuschnig, N. and Vashold, L. (2019) BVAR: Bayesian Vector Autoregressions
-  with Hierarchical Prior Selection in R. \emph{Department of Economics
-  Working Paper Series}, \bold{296}, WU Vienna University of Economics and
-  Business, \url{https://doi.org/10.13140/RG.2.2.25541.60643}.
+  Kuschnig, N. and Vashold, L. (2021) BVAR: Bayesian Vector Autoregressions
+  with Hierarchical Prior Selection in R.
+  \emph{Journal of Statistical Software}, \bold{forthcoming}.
 }
 \seealso{
 \code{\link{bv_priors}}; \code{\link{bv_mh}};
