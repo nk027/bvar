@@ -1,9 +1,10 @@
+
 #' Plotting method for Bayesian VAR predictions
 #'
 #' Plotting method for forecasts obtained from \code{\link{predict.bvar}}.
 #' Forecasts of all or a subset of the available variables can be plotted.
 #'
-#' @param x A code{bvar_fcast} object, obtained from \code{\link{predict.bvar}}.
+#' @param x A \code{bvar_fcast} object, obtained from \code{\link{predict.bvar}}.
 #' @param vars Optional numeric or character vector. Used to subset the plot to
 #' certain variables by position or name (must be available). Defaults to
 #' \code{NULL}, i.e. all variables.
@@ -124,7 +125,7 @@ plot_fcast <- function(
 
   use_data <- t_back != 0
   if(use_data) {
-    if(is.null(x[["data"]])) {
+    if(is.null(x[["data"]])) { # To support versions prior to 1.0.0
       message("No data found, filling with NAs. Recalculate with `predict()`.")
       t_back <- 0L
     } else {

@@ -1,3 +1,4 @@
+
 #' Conditional forecast computation
 #'
 #' Compute conditional forecasts using the algorithm of Waggoner and Zha (1999).

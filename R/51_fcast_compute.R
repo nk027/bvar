@@ -1,3 +1,4 @@
+
 #' Forecast computation
 #'
 #' Compute unconditional forecasts without shocks from the VAR's posterior draws

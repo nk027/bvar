@@ -1,3 +1,4 @@
+
 #' Predict method for Bayesian VARs
 #'
 #' Retrieves / calculates forecasts for Bayesian VARs generated via

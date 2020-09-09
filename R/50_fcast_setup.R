@@ -1,8 +1,9 @@
+
 #' Forecast settings
 #'
 #' Provide forecast settings to \code{\link{predict.bvar}}. Allows adjusting
 #' the horizon of forecasts, and for setting up conditional forecasts. See the
-#' details section for further information.
+#' Details section for further information.
 #'
 #' Conditional forecasts are calculated using the algorithm by Waggoner and Zha
 #' (1999). They are set up by imposing a path on selected variables.
