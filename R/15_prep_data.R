@@ -1,3 +1,4 @@
+
 #' Prepare BVAR data for methods
 #'
 #' Helper function to retrieve hyperparameters or coefficient values based on

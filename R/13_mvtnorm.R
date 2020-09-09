@@ -1,3 +1,4 @@
+
 #' Optimised multivariate normal drawing
 #'
 #' Function to quickly draw from a multivariate normal distribution in special
@@ -17,17 +18,17 @@
 #' @param method Character scalar. Type of decomposition to use.
 #'
 #' @return Returns a numeric matrix of draws.
-#''
+#'
 #' @noRd
 rmvn_proposal <- function(n, mean, sigma) {
 
-  # Univariate cornercase
+  # Univariate cornercase ---
   if(length(sigma[["values"]]) == 1) {
     out <- matrix(rnorm(n, mean = mean, sd = sigma[["values"]]))
     colnames(out) <- names(mean)
     return(out)
   }
-
+  # Multivariate ---
   m <- length(sigma[["values"]])
   R <- t(sigma[["vectors"]] %*%
     (t(sigma[["vectors"]]) * sqrt(sigma[["values"]])))

@@ -1,3 +1,4 @@
+
 #' Hierarchical Bayesian vector autoregression
 #'
 #' Used to estimate hierarchical Bayesian Vector Autoregression (VAR) models in
@@ -80,10 +81,9 @@
 #'   Vector Autoregressions. \emph{The Review of Economics and Statistics},
 #'   \bold{97:2}, 436-451, \url{https://doi.org/10.1162/REST_a_00483}.
 #'
-#'   Kuschnig, N. and Vashold, L. (2019) BVAR: Bayesian Vector Autoregressions
-#'   with Hierarchical Prior Selection in R. \emph{Department of Economics
-#'   Working Paper Series}, \bold{296}, WU Vienna University of Economics and
-#'   Business, \url{https://doi.org/10.13140/RG.2.2.25541.60643}.
+#'   Kuschnig, N. and Vashold, L. (2021) BVAR: Bayesian Vector Autoregressions
+#'   with Hierarchical Prior Selection in R.
+#'   \emph{Journal of Statistical Software}, \bold{forthcoming}.
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_mh}};
 #' \code{\link{bv_fcast}}; \code{\link{bv_irf}};
@@ -216,9 +216,6 @@ bvar <- function(
   pars_full <- do.call(c, lapply(pars_names, function(x) priors[[x]][["mode"]]))
   names(pars_full) <- name_pars(pars_names, M)
 
-  # Dummy priors ---
-  # priors[["dummy"]] <- # Can be done in bv_priors()
-  #   pars_names[!pars_names %in% c("lambda", "alpha", "psi")]
 
   # Hierarchical priors ---
   hyper_n <- length(priors[["hyper"]]) +
@@ -283,18 +280,12 @@ bvar <- function(
     HH_eig <- eigen(HH)
     HH_eig[["values"]] <- abs(HH_eig[["values"]])
     HH <- HH_eig
-    # HH <- HH_eig[["vectors"]] %*% diag(abs(HH_eig[["values"]])) %*%
-    #   t(HH_eig[["vectors"]])
-  } else {
-    HH <- list("values" = abs(HH))
-    # HH <- abs(HH)
-  }
+  } else {HH <- list("values" = abs(HH))}
 
 
   # Initial draw ---
 
   while(TRUE) {
-    # hyper_draw <- rmvnorm(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
     hyper_draw <- rmvn_proposal(n = 1, mean = opt[["par"]], sigma = HH)[1, ]
     ml_draw <- bv_ml(hyper = hyper_draw,
       hyper_min = hyper_min, hyper_max = hyper_max, pars = pars_full,
@@ -319,7 +310,6 @@ bvar <- function(
   for(i in seq.int(1 - n_burn, n_draw - n_burn)) {
 
     # Metropolis-Hastings
-    # hyper_temp <- rmvnorm(n = 1, mean = hyper_draw, sigma = HH)[1, ]
     hyper_temp <- rmvn_proposal(n = 1, mean = hyper_draw, sigma = HH)[1, ]
     ml_temp <- bv_ml(hyper = hyper_temp,
       hyper_min = hyper_min, hyper_max = hyper_max, pars = pars_full,
@@ -337,10 +327,8 @@ bvar <- function(
       acc_rate <- accepted_adj / (i + n_burn)
       if(acc_rate < mh[["acc_lower"]]) {
         HH[["values"]] <- HH[["values"]] * mh[["acc_tighten"]]
-        # HH <- HH * mh[["acc_tighten"]]
       } else if(acc_rate > mh[["acc_upper"]]) {
         HH[["values"]] <- HH[["values"]] * mh[["acc_loosen"]]
-        # HH <- HH * mh[["acc_loosen"]]
       }
     }
 

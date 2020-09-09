@@ -1,3 +1,4 @@
+
 #' Log-posterior of a BVAR
 #'
 #' Compute the log-posterior (or log-marginalised-likelihood) of a Bayesian VAR
@@ -95,9 +96,9 @@ bv_ml <- function(
   b <- priors[["b"]]
 
   # Likelihood ---
-  ev_full <- get_ev(omega_inv = omega_inv, omega_sqrt = omega_sqrt,
+  ev_full <- calc_ev(omega_inv = omega_inv, omega_sqrt = omega_sqrt,
     psi_inv = psi_inv, X = X, XX = XX, Y = Y, b = b, beta_hat = TRUE)
-  log_ml <- get_logml(M = M, N = N, psi = psi,
+  log_ml <- calc_logml(M = M, N = N, psi = psi,
     omega_ml_ev = ev_full[["omega"]], psi_ml_ev = ev_full[["psi"]])
 
   # Add priors
@@ -118,13 +119,12 @@ bv_ml <- function(
   }
 
   if(length(priors[["dummy"]]) > 0) {
-    ev_dummy <- get_ev(omega_inv = omega_inv, omega_sqrt = omega_sqrt,
+    ev_dummy <- calc_ev(omega_inv = omega_inv, omega_sqrt = omega_sqrt,
       psi_inv = psi_inv, X = X_dmy, XX = NULL, Y = Y_dmy, b = b,
       beta_hat = FALSE)
-    log_ml <- log_ml - get_logml(M = M, N = N_dummy, psi = psi,
+    log_ml <- log_ml - calc_logml(M = M, N = N_dummy, psi = psi,
       omega_ml_ev = ev_dummy[["omega"]], psi_ml_ev = ev_dummy[["psi"]])
   }
-
 
 
   # Output -----
