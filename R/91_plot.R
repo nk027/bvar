@@ -1,3 +1,4 @@
+
 #' Plotting method for Bayesian VARs
 #'
 #' Method to plot trace and densities of coefficient, hyperparameter and

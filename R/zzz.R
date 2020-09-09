@@ -1,3 +1,4 @@
+
 .onLoad <- function(...) {
 
   register_s3("coda", "as.mcmc", "bvar")

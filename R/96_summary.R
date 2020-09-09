@@ -1,3 +1,4 @@
+
 #' Summary method for Bayesian VARs
 #'
 #' Retrieves several outputs of interest, including the median coefficient

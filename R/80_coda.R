@@ -1,3 +1,4 @@
+
 #' Methods for \pkg{coda} Markov chain Monte Carlo objects
 #'
 #' Methods to convert parameter and/or coefficient draws from \code{\link{bvar}}
@@ -109,4 +110,3 @@ as.mcmc.bvar_chains <- as.mcmc.bvar # Dynamic export (zzz.R)
 
 #' @noRd
 has_coda <- function() {has_package("coda")}
-

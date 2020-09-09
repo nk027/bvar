@@ -1,3 +1,4 @@
+
 #' Retrieve companion matrix from a Bayesian VAR
 #'
 #' Calculates the companion matrix for Bayesian VARs generated via

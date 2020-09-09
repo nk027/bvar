@@ -1,3 +1,4 @@
+
 #' @export
 print.bvar <- function(x, ...) {
 

@@ -1,3 +1,4 @@
+
 #' Coefficient and VCOV methods for Bayesian VARs
 #'
 #' Retrieves coefficient / variance-covariance values from Bayesian VAR models
@@ -171,7 +172,7 @@ print.bvar_vcovs <- function(x, digits = 3L, complete = FALSE, ...) {
       print(round(x[band, , ], digits = digits))
     }
   } else {
-    cat("Average values:\n")
+    cat("Median values:\n")
     print(round(coefs, digits = digits))
   }
 

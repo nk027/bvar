@@ -1,3 +1,4 @@
+
 #' Fitted and residual methods for Bayesian VARs
 #'
 #' Calculates fitted or residual values for Bayesian VAR models generated with
@@ -179,7 +180,7 @@ print_fitted <- function(
     cat("Computed confidence bands: ",
       paste(dimnames(x)[[1]], collapse = ", "), "\n", sep = "")
   }
-  cat("Average values:\n")
+  cat("Median values:\n")
   for(var in seq_len(M)) {
     cat("\t", variables[var], ": ",
       paste0(round(top[, var], digits), collapse = ", "), ", [...], ",

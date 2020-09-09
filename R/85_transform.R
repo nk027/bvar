@@ -1,7 +1,8 @@
+
 #' FRED transformation and subset helper
 #'
 #' Apply transformations given by FRED-MD or FRED-QD and generate rectangular
-#' subsets. See \code{\link{fred_qd}} for information on data and the details
+#' subsets. See \code{\link{fred_qd}} for information on data and the Details
 #' section for information on the transformations. Call without arguments to
 #' retrieve available codes / all FRED suggestions.
 #'

@@ -1,4 +1,4 @@
-#' BVAR: Hierarchical Bayesian Vector Autoregression
+#' BVAR: Hierarchical Bayesian vector autoregression
 #'
 #' Estimation of hierarchical Bayesian vector autoregressive models.
 #' Implements hierarchical prior selection for conjugate priors in the fashion
@@ -16,10 +16,8 @@
 #'   Vector Autoregressions. \emph{The Review of Economics and Statistics},
 #'   \bold{97:2}, 436-451, \url{https://doi.org/10.1162/REST_a_00483}.
 #'
-#'   Kuschnig, N. and Vashold, L. (2019) BVAR: Bayesian Vector Autoregressions
-#'   with Hierarchical Prior Selection in R. \emph{Department of Economics
-#'   Working Paper Series}, \bold{296}, WU Vienna University of Economics and
-#'   Business, \url{https://doi.org/10.13140/RG.2.2.25541.60643}.
-
+#'   Kuschnig, N. and Vashold, L. (2021) BVAR: Bayesian Vector Autoregressions
+#'   with Hierarchical Prior Selection in R.
+#'   \emph{Journal of Statistical Software}, \bold{forthcoming}.
 #'
 NULL

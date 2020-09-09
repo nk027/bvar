@@ -1,3 +1,4 @@
+
 #' Density methods for Bayesian VARs
 #'
 #' Calculates densities of hyperparameters or coefficient draws from Bayesian
