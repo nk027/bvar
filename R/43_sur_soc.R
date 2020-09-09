@@ -1,3 +1,4 @@
+
 #' Sum-of-coefficients and single-unit-root prior creation functions
 #'
 #' @param Y Numeric matrix. Data to base the dummy observations on.

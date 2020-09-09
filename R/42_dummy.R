@@ -1,3 +1,4 @@
+
 #' Dummy prior settings
 #'
 #' Allows the creation of dummy observation priors for \code{\link{bv_priors}}.
@@ -5,7 +6,7 @@
 #'
 #' Dummy priors are often used to "reduce the importance of the deterministic
 #' component implied by VARs estimated conditioning on the initial
-#' observations" (Giannone et al., 2015, p. 440).
+#' observations" (Giannone, Lenza and Primiceri, 2015, p. 440).
 #' One such prior is the sum-of-coefficients (SOC) prior, which imposes the
 #' notion that a no-change forecast is optimal at the beginning of a time
 #' series. Its key parameter \eqn{\mu}{mu} controls the tightness - i.e. for

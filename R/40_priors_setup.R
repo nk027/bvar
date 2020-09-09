@@ -1,3 +1,4 @@
+
 #' Prior settings
 #'
 #' Function to provide priors and their parameters to \code{\link{bvar}}. Used

@@ -1,3 +1,4 @@
+
 #' Minnesota prior settings
 #'
 #' Provide settings for the Minnesota prior to \code{\link{bv_priors}}. See the

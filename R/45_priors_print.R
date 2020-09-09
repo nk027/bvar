@@ -1,3 +1,4 @@
+
 #' @export
 print.bv_priors <- function(x, ...) {
 

@@ -1,3 +1,4 @@
+
 #' Metropolis-Hastings settings
 #'
 #' Function to provide settings for the Metropolis-Hastings step in
