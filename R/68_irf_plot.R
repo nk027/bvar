@@ -1,3 +1,4 @@
+
 #' Plotting method for Bayesian VAR impulse responses
 #'
 #' Plotting method for impulse responses obtained from \code{\link{irf.bvar}}.

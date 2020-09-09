@@ -1,3 +1,4 @@
+
 #' Impulse response and forecast error methods for Bayesian VARs
 #'
 #' Retrieves / calculates impulse response functions (IRFs) and/or forecast
@@ -125,7 +126,7 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       irf_comp  <- compute_irf(
         beta_comp = beta_comp, sigma = sigma[j, , ], M = M, lags = lags,
         horizon = irf[["horizon"]], identification = irf[["identification"]],
-        sign_restr = irf[["sign_restr"]], zero_restr = irf[["zero_restr"]],
+        sign_restr = irf[["sign_restr"]], zero = irf[["zero"]],
         sign_lim = irf[["sign_lim"]])
       irf_store[["irf"]][i, , , ] <- irf_comp
 
@@ -142,6 +143,16 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       irf.bvar_irf(irf_store, conf_bands)
     } else {irf.bvar_irf(irf_store, c(0.16))}
   }
+
+  if(irf[["fevd"]]) {
+    if(is.null(irf_store[["fevd"]][["quants"]]) || !missing(conf_bands)) {
+      irf_store[["fevd"]] <- if(!missing(conf_bands)) {
+        fevd.bvar_irf(irf_store, conf_bands)
+      } else {fevd.bvar_irf(irf_store, c(0.16))}
+    }
+  }
+
+
 
   return(irf_store)
 }
@@ -211,7 +222,16 @@ fevd.bvar_irf <- function(x, conf_bands, ...) {
   if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
 
   if(is.null(x[["fevd"]])) {
-    stop("No forecast error variance decomposition found.")
+    x[["fevd"]] <- structure(list("fevd" = array(NA, dim(x[["irf"]])),
+      "variables" = x[["variables"]]), class = "bvar_fevd")
+    n_save <- dim(x[["irf"]])[1]
+    M <- dim(x[["irf"]])[2]
+    horizon <- dim(x[["irf"]])[3]
+    for(i in seq_len(n_save)) {
+      irf_comp <- x[["irf"]][i, , , ]
+      x[["fevd"]][["fevd"]][i, , , ] <- compute_fevd(irf_comp = irf_comp,
+        M = M, horizon = horizon)
+    }
   }
 
   fevd_store <- x[["fevd"]]
@@ -237,6 +257,9 @@ fevd.bvar_fevd <- function(x, conf_bands, ...) {
   if(!missing(conf_bands)) {
     quantiles <- quantile_check(conf_bands)
     x[["quants"]] <- apply(x[["fevd"]], c(2, 3, 4), quantile, quantiles)
+    # Make 'em sum to 100%
+    x[["quants"]] <- apply(x[["quants"]], c(1, 2, 3), function(x) {x / sum(x)})
+    x[["quants"]] <- aperm(x[["quants"]], c(2, 3, 4, 1))
   }
 
   return(x)
