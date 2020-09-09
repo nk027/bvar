@@ -1,49 +1,34 @@
-#' Lag a matrix
+
+#' Check numeric scalar
 #'
-#' Compute a lagged version of a matrix to be used in vector autoregressions.
-#' Higher lags are further to the right.
+#' Check whether an object is bounded and coercible to a numeric value.
 #'
-#' @param x Matrix (\eqn{N * M}) to lag.
-#' @param lags Integer scalar. Number of lags to apply.
+#' @param x Numeric scalar.
+#' @param min Numeric scalar. Minimum value of \emph{x}.
+#' @param max Numeric scalar. Maximum value of \emph{x}.
+#' @param fun Function to apply to \emph{x} before returning.
+#' @param msg String fed to \code{\link[base]{stop}} if an error occurs.
 #'
-#' @return Returns an \eqn{N * (M * lags)} matrix with consecutive lags on the
-#' right. The elements of the first \emph{lags} rows are 0.
+#' @return Returns \code{fun(x)}.
 #'
 #' @noRd
-lag_var <- function(x, lags) {
+num_check <- function(
+  x, min = 0, max = Inf,
+  msg = "Please check the numeric parameters.",
+  fun = as.numeric) {
 
-  x_rows <- nrow(x)
-  x_cols <- ncol(x)
+  if(!is.numeric(x) || length(x) != 1 || x < min || x > max) {stop(msg)}
 
-  x_lagged <- matrix(0, x_rows, lags * x_cols)
-  for(i in 1:lags) {
-    x_lagged[(lags + 1):x_rows, (x_cols * (i - 1) + 1):(x_cols * i)] <-
-      x[(lags + 1 - i):(x_rows - i), (1:x_cols)]
-  }
-
-  return(x_lagged)
+  return(fun(x))
 }
 
 
-#' Compute gamma coefficients
-#'
-#' Compute the shape \emph{k} and scale \emph{theta} of a Gamma
-#' distribution via the mode and standard deviation.
-#'
-#' @param mode Numeric scalar.
-#' @param sd Numeric scalar.
-#'
-#' @return Returns a list with shape \emph{k} and scale parameter \emph{theta}.
-#'
 #' @noRd
-gamma_coef <- function(mode, sd) {
+int_check <- function(
+  x, min = 0L, max = Inf,
+  msg = "Please check the integer parameters.") {
 
-  mode_sq <- mode ^ 2
-  sd_sq <- sd ^ 2
-  k <- (2 + mode_sq / sd_sq + sqrt((4 + mode_sq / sd_sq) * mode_sq / sd_sq)) / 2
-  theta <- sqrt(sd_sq / k)
-
-  return(list("k" = k, "theta" = theta))
+  num_check(x, min, max, msg, fun = as.integer)
 }
 
 
@@ -241,32 +226,6 @@ name_expl <- function(variables, M, lags) {
 p_log_ig <- function(x, shape, scale) {
 
   return(shape * log(scale) - (shape + 1) * log(x) - scale / x - lgamma(shape))
-}
-
-
-#' Compute companion matrix
-#'
-#' Compute the companion form of the VAR coefficients.
-#'
-#' @param beta Numeric (\eqn{K * M}) matrix with VAR coefficients.
-#' @param K Integer scalar. Number of columns in the independent data.
-#' @param M Integer scalar. Number of columns in the dependent data.
-#' @param lags Integer scalar. Number of lags applied.
-#'
-#' @return Returns a numeric (\eqn{K - 1 * K -1}) matrix with \emph{beta} in
-#' companion form.
-#'
-#' @noRd
-get_beta_comp <- function(beta, K, M, lags) {
-
-  beta_comp <- matrix(0, K - 1, K - 1)
-
-  beta_comp[1:M, ] <- t(beta[2:K, ]) # Kick constant
-  if(lags > 1) { # Add block-diagonal matrix beneath VAR coefficients
-    beta_comp[(M + 1):(K - 1), 1:(K - 1 - M)] <- diag(M * (lags - 1))
-  }
-
-  return(beta_comp)
 }
 
 
