@@ -288,7 +288,7 @@ As detailed above, \pkg{BVAR} makes estimation of and inference in Bayesian VAR 
 Extensive customization options are available, with sensible default settings allowing for a step-by-step adoption. This is further facilitated by lucid helper functions and comprehensive documentation.
 Analysis of estimated VAR models is readily accessible -- functions for summarizing and plotting model parameters, forecasts, IRF, traces, densities, and residuals are available. Use of established procedures and standard methods, including \code{plot()}, \code{predict()}, \code{coef()}, and \code{summary()}, set a low entry barrier for \proglang{R} users.
 Final and intermediate outputs are provided in an idiomatic format and feature \code{print()} methods for quick access and a transparent research process.
-Existing frameworks may be used for further analysis -- an interface to \pkg{coda} \citep{plummer2006} for checking outputs, analysis, and diagnostics is provided. The \pkg{BVARverse} \citep{vashold2020} companion package allows integration into a \pkg{tidyverse} oriented workflow and facilitates flexible plotting with \pkg{ggplot2} \citep{wickham2016}.
+Existing frameworks may be used for further analysis -- an interface to \pkg{coda} \citep{plummer2006} for checking outputs, analysis, and diagnostics is provided. The \pkg{BVARverse} \citep{vashold2020} companion package allows integration into a \pkg{tidyverse} \citep{wickham2019} oriented workflow and facilitates flexible plotting with \pkg{ggplot2} \citep{wickham2016}.
 The available FRED-MD and FRED-QD datasets allow hassle-free exploration of macroeconomic research questions. These features make \pkg{BVAR} an ideal tool for macroeconomic analysis.
 
 
@@ -575,8 +575,7 @@ Accessible helper functions for customization as well as comprehensive methods a
 
 % Outlook
 \pkg{BVAR} bridges a gap as an accessible all-purpose tool for Bayesian VAR models, but leaves plenty of potential for extensions and novel libraries.
-One evident extension is the implementation of additional structural identification schemes, such as sign and zero restrictions \citep{arias2018}.
-The interface to \pkg{coda} demonstrates the potential of such extensions -- interfaces to further packages facilitating analysis and visualization, e.g., \pkg{tidybayes} \citep{kay2020}, would be useful.
+Smooth integration into existing workflows and software ecosystems offers considerable potential, as demonstrated by the interface to \pkg{coda}. The \pkg{BVARverse} package pursues closer adherence to tidy workflows, facilitating the use of established tools for analysis and visualization. Future development could target a range of useful packages, such as \pkg{tidybayes} \citep{kay2020}, or aim at harmonising VAR functionalities.
 A major area for future work is support for a broader spectrum of prior families. This would help enrich analysis and could incorporate e.g., heteroskedastic error structures in various forms. A powerful library implementing these features would be a valuable asset and complement \pkg{BVAR} and similar \proglang{R} packages.
 
 
