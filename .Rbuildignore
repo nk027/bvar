@@ -12,6 +12,7 @@
 ^vignettes/.*\.jpg$
 ^vignettes/.*\.png$
 ^vignettes/.*\.pdf$
+^vignettes/jss.*$
 ^vignettes/article_jss.Rnw$
 ^vignettes/Makefile$
 

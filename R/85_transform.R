@@ -78,6 +78,7 @@ fred_transform <- function(
   if(!all(vapply(data, is.numeric, logical(1))) || !is.data.frame(data)) {
     stop("Problem with the data. Please provide a numeric data.frame.")
   }
+  data <- as.data.frame(data) # Deal with tibbles and close #60
 
   vars <- colnames(data)
   rows <- rownames(data)

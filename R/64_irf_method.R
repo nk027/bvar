@@ -144,7 +144,7 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
     } else {irf.bvar_irf(irf_store, c(0.16))}
   }
 
-  if(irf[["fevd"]]) {
+  if(irf_store[["setup"]][["fevd"]]) {
     if(is.null(irf_store[["fevd"]][["quants"]]) || !missing(conf_bands)) {
       irf_store[["fevd"]] <- if(!missing(conf_bands)) {
         fevd.bvar_irf(irf_store, conf_bands)

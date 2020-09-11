@@ -103,7 +103,7 @@ bv_irf <- function(
       if(is.vector(sign_restr)) {
         sign_restr <- matrix(sign_restr, nrow = sqrt(restr_len))
       }
-      if(zero && any(colSums(signs == 0, na.rm = TRUE) >
+      if(zero && any(colSums(sign_restr == 0, na.rm = TRUE) >
         rev(seq_len(sqrt(restr_len)) - 1))) {
         stop("Number of zero restrictions on at least one of the shocks is ",
           "too high. Please reduce or change the order of variables.")

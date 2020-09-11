@@ -4,7 +4,7 @@ version <- meta$Version
 
 citHeader("To cite BVAR in publications please use:")
 
-citentry(
+citEntry(
   entry = "article",
   title = "{BVAR}: {B}ayesian Vector Autoregressions with Hierarchical Prior Selection in {R}",
   author = personList(
@@ -13,7 +13,6 @@ citentry(
   year = "2021",
   journal = "Journal of Statistical Software",
   number = "forthcoming",
-  url = "https://epub.wu.ac.at/7216/",
   textVersion = "Nikolas Kuschnig and Lukas Vashold (2021). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. Journal of Statistical Software (forthcoming)."
 )
 

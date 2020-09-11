@@ -86,10 +86,11 @@ options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 \Address{
   Nikolas Kuschnig \\
   Vienna University of Economics and Business \\
+  Institute for Macroeconomics emph{and} \\
   Institute for Ecological Economics \\
-  Global Resource Use \\
   Welthandelsplatz 1 \\
   1020 Vienna, Austria \\
+  and
   E-mail: \email{nikolas.kuschnig@wu.ac.at} \\
   URL: \url{https://kuschnig.eu/}
 }
@@ -226,7 +227,6 @@ The Minnesota prior \citep{litterman1980} imposes the hypothesis that individual
         0 &\text{otherwise}. \nonumber
     \end{cases}
 \end{align}
-% \end{linenomath*}
 The key hyperparameter $\lambda$ controls the tightness of the prior, i.e., it weighs the relative importance of prior and data. For $\lambda \to 0$ the prior outweighs any information in the data; the posterior approaches the prior. As $\lambda \to \infty$ the posterior distribution mirrors the sample information.
 Governing the variance decay with increasing lag order, $\alpha$ controls the degree of shrinkage for more distant observations. Finally, $\psi_j$ controls the prior's standard deviation on lags of variables other than the dependent.
 

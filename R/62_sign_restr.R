@@ -47,7 +47,7 @@ sign_restr <- function(sigma_chol,
 
   while(TRUE) {
     counter <- counter + 1
-    Q <- draw_Q(M, sigma_chol, sign_restr, zero = zero)
+    Q <- draw_Q(sigma_chol, sign_restr, M, zero = zero)
     shock <- sigma_chol %*% Q
     shock[abs(shock) < 1e-12] <- 0
 
@@ -76,8 +76,8 @@ draw_Q <- function(sigma_chol, sign_restr, M, zero = FALSE) {
       R <- rbind(sigma_chol[slct_row, ], Q[seq_len(i - 1), ])
       qr_object <- qr(t(R))
       qr_rank <- qr_object[["rank"]]
-      set <- if(qr_rank == 0) {seq_len(M)} else {-seq_len(qr.rank)}
-      N_i <- qr.Q(qr.temp, complete = TRUE)[, set, drop = FALSE]
+      set <- if(qr_rank == 0) {seq_len(M)} else {-seq_len(qr_rank)}
+      N_i <- qr.Q(qr_object, complete = TRUE)[, set, drop = FALSE]
       N_stdn <- crossprod(N_i, rnorm(M, 0, 1))
       q_i <- N_i %*% (N_stdn / norm(N_stdn, type = "2"))
       Q[i, ] <- q_i

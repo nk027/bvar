@@ -197,7 +197,7 @@ chains_fit <- function(
   }
   if(hypers) {
     hypers <- vapply(chains, function(z) {
-      x[["priors"]][["hyper"]] == z[["priors"]][["hyper"]]}, logical(1))
+      all(x[["priors"]][["hyper"]] == z[["priors"]][["hyper"]])}, logical(1))
     if(!all(hypers)) {stop("Hyperparameters do not match.")}
   }
 
