@@ -47,8 +47,6 @@ coef.bvar <- function(
   object, type = c("quantile", "mean"), conf_bands = 0.5,
   companion = FALSE, ...) {
 
-  if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
-
   type <- match.arg(type)
 
   if(companion) {return(companion.bvar(object, type, conf_bands, ...))}
@@ -85,8 +83,6 @@ coef.bvar <- function(
 vcov.bvar <- function(
   object, type = c("quantile", "mean"), conf_bands = 0.5, ...) {
 
-  if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
-
   type <- match.arg(type)
 
   if(type == "quantile") {
@@ -113,8 +109,6 @@ vcov.bvar <- function(
 
 #' @export
 print.bvar_coefs <- function(x, digits = 3L, complete = FALSE, ...) {
-
-  if(!inherits(x, "bvar_coefs")) {stop("Please provide a `bvar_coefs` object.")}
 
   .print_coefs(x, digits, type = "coefficient", complete = complete, ...)
 

@@ -71,8 +71,6 @@
 #' }
 irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 
-  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
-
   dots <- list(...)
   irf_store <- x[["irf"]]
 
@@ -179,8 +177,6 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 #' @importFrom stats quantile
 irf.bvar_irf <- function(x, conf_bands, ...) {
 
-  if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
-
   if(!missing(conf_bands)) {
     quantiles <- quantile_check(conf_bands)
     x[["quants"]] <- apply(x[["irf"]], c(2, 3, 4), quantile, quantiles)
@@ -193,8 +189,6 @@ irf.bvar_irf <- function(x, conf_bands, ...) {
 #' @rdname irf.bvar
 #' @export
 fevd.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
-
-  if(!inherits(x, "bvar")) {stop("Please provide a `bvar` object.")}
 
   dots <- list(...)
   irf_store <- x[["irf"]]
@@ -218,8 +212,6 @@ fevd.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 #' @noRd
 #' @export
 fevd.bvar_irf <- function(x, conf_bands, ...) {
-
-  if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
 
   if(is.null(x[["fevd"]])) {
     x[["fevd"]] <- structure(list("fevd" = array(NA, dim(x[["irf"]])),
@@ -251,8 +243,6 @@ fevd.bvar_irf <- function(x, conf_bands, ...) {
 #'
 #' @importFrom stats quantile
 fevd.bvar_fevd <- function(x, conf_bands, ...) {
-
-  if(!inherits(x, "bvar_fevd")) {stop("Please provide a `bvar_fevd` object.")}
 
   if(!missing(conf_bands)) {
     quantiles <- quantile_check(conf_bands)

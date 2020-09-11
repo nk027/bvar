@@ -38,8 +38,6 @@
 #' }
 summary.bvar <- function(object, ...) {
 
-  if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
-
   out <- structure(list(
     "bvar" = object, "coef" = coef.bvar(object), "vcov" = vcov.bvar(object),
     "logLik" = logLik.bvar(object)), class = "bvar_summary")

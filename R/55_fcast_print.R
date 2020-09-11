@@ -2,8 +2,6 @@
 #' @export
 print.bv_fcast <- function(x, ...) {
 
-  if(!inherits(x, "bv_fcast")) {stop("Please provide a `bv_fcast` object.")}
-
   cat("Object with settings for computing forecasts.\n")
 
   .print_fcast(x, ...)
@@ -14,8 +12,6 @@ print.bv_fcast <- function(x, ...) {
 
 #' @export
 print.bvar_fcast <- function(x, ...) {
-
-  if(!inherits(x, "bvar_fcast")) {stop("Please provide a `bvar_fcast` object.")}
 
   cat("Forecast object from `bvar()`.\n")
 
@@ -42,10 +38,6 @@ print.bvar_fcast <- function(x, ...) {
 #' @export
 summary.bvar_fcast <- function(object, vars = NULL, ...) {
 
-  if(!inherits(object, "bvar_fcast")) {
-    stop("Please provide a `bvar_fcast` object.")
-  }
-
   quants <- object[["quants"]]
   has_quants <- length(dim(quants)) == 3
   M <- if(has_quants) {dim(quants)[3]} else {dim(quants)[2]}
@@ -64,10 +56,6 @@ summary.bvar_fcast <- function(object, vars = NULL, ...) {
 
 #' @export
 print.bvar_fcast_summary <- function(x, digits = 2L, ...) {
-
-  if(!inherits(x, "bvar_fcast_summary")) {
-    stop("Please provide a `bvar_fcast_summary` object.")
-  }
 
   print.bvar_fcast(x[["fcast"]])
 

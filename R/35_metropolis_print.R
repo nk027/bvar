@@ -2,10 +2,6 @@
 #' @export
 print.bv_metropolis <- function(x, ...) {
 
-  if(!inherits(x, "bv_metropolis")) {
-    stop("Please provide a `bv_metropolis` object.")
-  }
-
   cat("Object with settings for the Metropolis-Hastings step in `bvar()`.\n",
     "Scaling parameter: ", paste0(x[["scale_hess"]], collapse = ", "), "\n",
     "Automatic acceptance adjustment: ", x[["adjust_acc"]], "\n", sep = "")

@@ -2,8 +2,6 @@
 #' @export
 print.bv_irf <- function(x, ...) {
 
-  if(!inherits(x, "bv_irf")) {stop("Please provide a `bv_irf` object.")}
-
   cat("Object with settings for computing impulse responses.\n")
 
   .print_irf(x, ...)
@@ -14,8 +12,6 @@ print.bv_irf <- function(x, ...) {
 
 #' @export
 print.bvar_irf <- function(x, ...) {
-
-  if(!inherits(x, "bvar_irf")) {stop("Please provide a `bvar_irf` object.")}
 
   cat("Impulse response object from `bvar()`.\n")
 
@@ -30,8 +26,6 @@ print.bvar_irf <- function(x, ...) {
 
 #' @export
 print.bvar_fevd <- function(x, digits = 4L, complete = FALSE, ...) {
-
-  if(!inherits(x, "bvar_fevd")) {stop("Please provide a `bvar_fevd` object.")}
 
   has_quants <- length(dim(x[["quants"]])) == 4
   if(has_quants) {

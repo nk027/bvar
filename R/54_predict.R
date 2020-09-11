@@ -73,8 +73,6 @@ predict.bvar <- function(
   conf_bands, n_thin = 1L,
   newdata) {
 
-  if(!inherits(object, "bvar")) {stop("Please provide a `bvar` object.")}
-
   dots <- list(...)
   fcast_store <- object[["fcast"]]
 
@@ -170,7 +168,6 @@ predict.bvar <- function(
 #' @export
 `predict<-.bvar` <- function(object, value) {
 
-  if(!inherits(object, "bvar")) {stop("Please use a `bvar` object.")}
   if(!inherits(value, "bvar_fcast")) {
     stop("Please provide a `bvar_fcast` object to assign.")
   }
@@ -186,10 +183,6 @@ predict.bvar <- function(
 #'
 #' @importFrom stats predict quantile
 predict.bvar_fcast <- function(object, conf_bands, ...) {
-
-  if(!inherits(object, "bvar_fcast")) {
-    stop("Please provide a `bvar_fcast` object.")
-  }
 
   if(!missing(conf_bands)) {
     quantiles <- quantile_check(conf_bands)
