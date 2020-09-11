@@ -114,6 +114,7 @@ plot_fcast <- function(
     quants <- x[["quants"]]
     M <- dim(quants)[3]; P <- P2 <- dim(quants)[1]
   } else {
+    if(area) {message("Cannot plot area without quantiles."); area <- FALSE}
     M <- dim(x[["quants"]])[2]; P <- 1; P2 <- 2
     # Cheat day - quants must be 3-dimensional, so we fill with NAs
     quants <- array(NA, c(2, dim(x[["quants"]])))

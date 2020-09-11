@@ -59,12 +59,12 @@ expect_equal(
   bv_priors(hyper = c("lambda", "alpha", "psi")),
   bv_priors(hyper = c("full")))
 
-expect_silent(bv_mn(lambda = c(0.2, 0.4, 1e-6, 5),
-  alpha = c(1.5, 0.5, 0.1, 5), var = 100))
-expect_silent(bv_mn(psi = bv_psi(scale = 0.2, shape = 0.2,
-  mode = c(1, 1.5, 1.2, 0.4), min = rep(0.001, 4))))
-expect_silent(bv_mn(psi = bv_psi(scale = 0.2, shape = 0.2,
-  mode = c(1, 1.5, 1.2, 0.4), max = rep(1000, 4))))
+expect_silent(print(bv_mn(lambda = c(0.2, 0.4, 1e-6, 5),
+  alpha = c(1.5, 0.5, 0.1, 5), var = 100)))
+expect_silent(print(bv_mn(psi = bv_psi(scale = 0.2, shape = 0.2,
+  mode = c(1, 1.5, 1.2, 0.4), min = rep(0.001, 4)))))
+expect_silent(print(bv_mn(psi = bv_psi(scale = 0.2, shape = 0.2,
+  mode = c(1, 1.5, 1.2, 0.4), max = rep(1000, 4)))))
 
 # Faulty sd, dummy prior and hyperparameters
 expect_error(bv_priors(mn = bv_lambda(sd = 0)))
@@ -141,11 +141,13 @@ expect_silent(run2 <- bvar(data[, 1:3], lags = 2,
 
 # Ex-post predicts and methods
 expect_silent(predict(run) <- predict(run, opt_fcast1))
-expect_silent(fcasts <- predict(run))
+expect_silent(fcasts1 <- predict(run))
+expect_silent(fcasts2 <- predict(run2))
 
-expect_silent(print(fcasts))
-expect_silent(print(summary(fcasts)))
-expect_silent(plot(fcasts, vars = 1))
+expect_silent(print(fcasts1))
+expect_silent(print(summary(fcasts1)))
+expect_silent(print(summary(fcasts2)))
+expect_silent(plot(fcasts1, vars = 1))
 
 
 # 6*_irf ---
@@ -159,6 +161,7 @@ expect_silent(irfs3 <- irf(run2, opt_irf3))
 expect_silent(print(irfs1))
 expect_silent(print(summary(irfs1)))
 expect_silent(print(fevd(run))) # Access
+expect_silent(print(fevd(run2))) # Recalculates
 expect_silent(print(fevd(irfs2))) # Recalculates
 expect_silent(plot(irfs1, vars_res = 1, vars_imp = 1))
 
@@ -213,6 +216,12 @@ expect_silent(plot(run, type = "trace", vars = c("lambda")))
 expect_silent(plot(run, type = "dens", vars_res = 1, vars_imp = 2))
 expect_silent(plot(run, type = "fcast", vars = 1))
 expect_silent(plot(run, type = "irf", vars_impulse = 1, vars_response = 1))
+expect_silent(plot(predict(run, conf_bands = 0.5), vars = 1))
+expect_silent(plot(predict(run, conf_bands = 0.25), vars = 3, area = TRUE))
+expect_silent(plot(irf(run, conf_bands = 0.5),
+  vars_impulse = 1, vars_response = 1))
+expect_silent(plot(irf(run, conf_bands = 0.75), area = TRUE,
+  vars_impulse = 3, vars_response = 3))
 
 
 expect_silent(print(coef(run)))
@@ -232,3 +241,5 @@ expect_silent(plot(residuals(run), vars = 1))
 expect_silent(print(summary(run)))
 
 expect_silent(print(companion(run)))
+expect_silent(print(companion(run, type = "mean")))
+expect_silent(print(companion(run, conf_bands = 0.1)))

@@ -257,9 +257,12 @@ fevd.bvar_fevd <- function(x, conf_bands, ...) {
   if(!missing(conf_bands)) {
     quantiles <- quantile_check(conf_bands)
     x[["quants"]] <- apply(x[["fevd"]], c(2, 3, 4), quantile, quantiles)
-    # Make 'em sum to 100%
-    x[["quants"]] <- apply(x[["quants"]], c(1, 2, 3), function(x) {x / sum(x)})
-    x[["quants"]] <- aperm(x[["quants"]], c(2, 3, 4, 1))
+    # Make 'em sum to 1 (breaks with quantiles) and keep dimension ordering
+    apply_vec <- if(length(quantiles) > 1) {c(1, 2, 3)} else {c(1, 2)}
+    aperm_vec <- if(length(quantiles) > 1) {c(2, 3, 4, 1)} else {c(2, 3, 1)}
+    x[["quants"]] <- apply(x[["quants"]], apply_vec, function(x) {
+      x / sum(x)})
+    x[["quants"]] <- aperm(x[["quants"]], aperm_vec)
   }
 
   return(x)
@@ -291,22 +294,3 @@ fevd <- function(x, ...) {UseMethod("fevd", x)}
 fevd.default <- function(x, ...) {
   stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
 }
-
-
-# vars compatibility ------------------------------------------------------
-
-#' @noRd
-irf.varest <- irf.svarest <- irf.svecest <- irf.vec2var <- function(x, ...) {
-  has_vars()
-  vars::irf(x, ...)
-}
-
-#' @noRd
-fevd.varest <- fevd.svarest <-
-  fevd.svecest <- fevd.vec2var <- function(x, ...) {
-  has_vars()
-  vars::fevd(x, ...)
-}
-
-#' @noRd
-has_vars <- function() {has_package("vars")}

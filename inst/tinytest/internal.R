@@ -120,3 +120,8 @@ expect_silent(soc <- BVAR:::.add_soc(
   matrix(c(1, 2, 1, 2, 3, 3), ncol = 2), 2, 0.5))
 expect_silent(sur <- BVAR:::.add_sur(
   matrix(c(1, 2, 1, 2, 3, 3), ncol = 2), 2, 0.5))
+
+
+# zzz.R ---
+
+expect_silent(BVAR:::.onLoad())

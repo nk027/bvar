@@ -11,9 +11,9 @@
 #'
 #' The versions of FRED-MD and FRED-QD that are provided here are licensed
 #' under a modified ODC-BY 1.0 license that can be found in the provided
-#' \emph{LICENSE} file. The provided versions are subset to 120 (of 128) and
-#' 236 (of 248) variables that are either in public domain or for which we were
-#' given permission to use. For further details see McCracken and Ng (2016) or
+#' \emph{LICENSE} file. The provided versions are subset to variables that are
+#' either in public domain or for which we were given permission to use.
+#' For further details see McCracken and Ng (2016) or
 #' \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
 #' We would like to thank Michael McCracken and Serena Ng, Adrienne Brennecke
 #' and the Federal Reserve Bank of St. Louis for creating, updating and making
