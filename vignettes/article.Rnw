@@ -86,11 +86,10 @@ options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 \Address{
   Nikolas Kuschnig \\
   Vienna University of Economics and Business \\
-  Institute for Macroeconomics emph{and} \\
+  Institute for Macroeconomics \emph{and} \\
   Institute for Ecological Economics \\
   Welthandelsplatz 1 \\
   1020 Vienna, Austria \\
-  and
   E-mail: \email{nikolas.kuschnig@wu.ac.at} \\
   URL: \url{https://kuschnig.eu/}
 }
@@ -273,8 +272,8 @@ Conditional forecasts allow for elaborate scenario analyses, where the future pa
 % IRF
 Impulse response functions (IRF) are a central tool for structural analysis. They provide insights into the behavior of economic systems and are another cornerstone of inference with VAR models.
 IRF serve as a representation of shocks hitting the economic system and are used to analyze the reactions of individual variables. The exact propagation of these shocks is of great interest, but meaningful interpretation relies on proper identification.
-\pkg{BVAR} features a framework for identification schemes, with some of the most popular schemes readily available -- namely short-term zero restrictions, sign restrictions, and zero and sign restrictions. The former is also known as recursive identification and is achieved via Cholesky decomposition of the VCOV matrix $\boldsymbol{\Sigma}$ \citep[see][Chapter 8]{kilian2017}. This approach is computationally cheap and achieves exact identification without the need for detailed assumptions about variable behavior. Only the contemporaneous reactions of certain variables are limited, making the order of variables pivotal.
-Sign restrictions \citep[see][Chapter 13]{kilian2017} are another popular means of identification that is implemented following the approach of \cite{rubio-ramirez2010}. This scheme requires some presumptions about the behavior of variables following a certain shock. With increasing dimension of the model theoretically grounding such presumptions becomes increasingly challenging. Zero and sign restrictions are an extension of this identification scheme, put forth by \cite{arias2018}.
+\pkg{BVAR} features a framework for identification schemes, with some of the most popular schemes readily available -- namely short-term zero restrictions, sign restrictions, as well as a combination of zero and sign restrictions. The former is also known as recursive identification and is achieved via Cholesky decomposition of the VCOV matrix $\boldsymbol{\Sigma}$ \citep[see][Chapter 8]{kilian2017}. This approach is computationally cheap and achieves exact identification without the need for detailed assumptions about variable behavior. Only the contemporaneous reactions of certain variables are limited, making the order of variables pivotal.
+Sign restrictions \citep[see][Chapter 13]{kilian2017} are another popular means of identification that is implemented following the approach of \cite{rubio-ramirez2010}. This scheme requires some presumptions about the behavior of variables following a certain shock. With increasing dimension of the model theoretically grounding such presumptions becomes increasingly challenging. An extension of this identification scheme, put forth by \cite{arias2018}, allows for simultaneously imposing sign and zero restrictions, providing even more flexibility.
 % Additionally, identification via sign restrictions comes at the cost of increased uncertainty and a loss of precision for the resulting IRF.
 Another related tool for structural analysis are forecast error variance decompositions (FEVD). They are used to investigate which variables drive the paths of others after a given shock. FEVD can easily be computed in \pkg{BVAR} and allow for a more detailed structural analysis of the processes determining the behavior of an economic system.
 
