@@ -60,8 +60,8 @@
 #'     variance-covariance matrix. Also see \code{\link{vcov.bvar}}.
 #'   \item \code{hyper} - Numeric matrix with draws from the posterior of the
 #'     hierarchically treated hyperparameters.
-#'   \item \code{ml} - Numeric vector with the marginalised likelihood (with
-#'     respect to the hyperparameters), that determines acceptance probability.
+#'   \item \code{ml} - Numeric vector with the marginal likelihood (with respect
+#'   to the hyperparameters), that determines acceptance probability.
 #'   \item \code{optim} - List with outputs of \code{\link[stats]{optim}},
 #'     which is used to find starting values for the hyperparameters.
 #'   \item \code{prior} - Prior settings from \code{\link{bv_priors}}.
@@ -247,7 +247,7 @@ bvar <- function(
 
   if(verbose) {
     cat("Optimisation concluded.",
-      "\nPosterior marginalised likelihood: ", round(opt[["value"]], 3),
+      "\nPosterior marginal likelihood: ", round(opt[["value"]], 3),
       "\nHyperparameters: ", paste(names(hyper), round(opt[["par"]], 5),
       sep = " = ", collapse = "; "), "\n", sep = "")
   }

@@ -2,8 +2,8 @@
 #' Plotting method for Bayesian VARs
 #'
 #' Method to plot trace and densities of coefficient, hyperparameter and
-#' marginalised draws obtained from \code{\link{bvar}}. Several types of plot
-#' are available via the argument \emph{type}, including traces, densities,
+#' marginal likelihood draws obtained from \code{\link{bvar}}. Several types of
+#' plot are available via the argument \emph{type}, including traces, densities,
 #' plots of forecasts and impulse responses.
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
@@ -46,7 +46,7 @@
 #' # Plot full traces and densities
 #' plot(x)
 #'
-#' # Only plot the marginalised likelihood's trace
+#' # Only plot the marginal likelihood's trace
 #' plot(x, "trace", "ml")
 #'
 #' # Access IRF and forecast plotting functions

@@ -1,5 +1,5 @@
 
-#' Calculate the log marginalised likelihood
+#' Calculate the log marginal likelihood
 #'
 #' @noRd
 calc_logml <- function(M, N, psi, omega_ml_ev, psi_ml_ev) {
