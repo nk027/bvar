@@ -45,8 +45,8 @@ Returns \emph{x} invisibly.
 }
 \description{
 Method to plot trace and densities of coefficient, hyperparameter and
-marginalised draws obtained from \code{\link{bvar}}. Several types of plot
-are available via the argument \emph{type}, including traces, densities,
+marginal likelihood draws obtained from \code{\link{bvar}}. Several types of
+plot are available via the argument \emph{type}, including traces, densities,
 plots of forecasts and impulse responses.
 }
 \examples{
@@ -62,7 +62,7 @@ x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
 # Plot full traces and densities
 plot(x)
 
-# Only plot the marginalised likelihood's trace
+# Only plot the marginal likelihood's trace
 plot(x, "trace", "ml")
 
 # Access IRF and forecast plotting functions

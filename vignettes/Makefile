@@ -17,7 +17,7 @@ article.pdf: article.tex refs.bib
 	pdflatex article.tex
 
 article_jss.Rnw: article.Rnw
-	# Remove nojss, adapt n_, adapt time spent, remove sed_flag lines
+	# Remove nojss, adapt n_, adapt time spent, add/remove hard formatting
 	cat article.Rnw | sed -e "s/,nojss//" \
 		-e "s/n_draw = [0-9]*/n_draw = 50000/g" \
 		-e "s/n_burn = [0-9]*/n_burn = 25000/g" \
@@ -25,7 +25,8 @@ article_jss.Rnw: article.Rnw
 		-e "s/[0-9\.]* \(secs\|mins\)/50.95 secs/g" \
 		-e "s/thinning): [0-9]* ([0-9]*/thinning): 50000 (25000/g" \
 		-e "s/rate): [0-9]* ([0-9\.]*/rate): 9874 (0.395/g" \
-		-e "/sed_flag/d" > article_jss.Rnw
+		-e "/sed_add/s/^.//" \
+		-e "/sed_delete/d" > article_jss.Rnw
 
 jss: article_jss.Rnw refs.bib
 	"$(R_HOME)/bin/R" CMD Sweave article_jss.Rnw

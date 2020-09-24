@@ -156,7 +156,7 @@ The remainder of this paper is structured as follows. Section~\ref{sec:econ} des
 %%   is recommended. Alternatively, a plain {verbatim} can also be used.
 %%   (For executed code see the next section.)
 
-\newpage % sed_flag - hard-formatted
+\newpage % sed_delete - hard-formatted
 \section{Econometric framework} \label{sec:econ}
 
 % Introduce econometric background
@@ -293,7 +293,7 @@ To sum up, \pkg{BVAR} makes estimation of and inference in Bayesian VAR models a
 Extensive customization options are available, with sensible default settings allowing for a step-by-step adoption. This is further facilitated by lucid helper functions and comprehensive documentation.
 Analysis of estimated VAR models is readily accessible -- functions for summarizing and plotting model parameters, forecasts, IRF, traces, densities, and residuals are available. Use of established procedures and standard methods, including \code{plot()}, \code{predict()}, \code{coef()}, and \code{summary()}, set a low entry barrier for \proglang{R} users.
 Final and intermediate outputs are provided in an idiomatic format and feature \code{print()} methods for quick access and a transparent research process.
-Existing frameworks may be used for further analysis -- an interface to \pkg{coda} \citep{plummer2006} for checking outputs, analysis, and diagnostics is provided. The \pkg{BVARverse} \citep{vashold2020} companion package allows integration into a workflow oriented around the concept of tidy data \citep{wickham2014} and facilitates flexible plotting with \pkg{ggplot2} \citep{wickham2016}.
+Existing frameworks may be used for further analysis -- an interface to \pkg{coda} \citep{plummer2006} for checking outputs, analysis, and diagnostics is provided. The \pkg{BVARverse} \citep{vashold2020} companion package allows integration into a workflow oriented towards the concept of tidy data \citep{wickham2014} and facilitates flexible plotting with \pkg{ggplot2} \citep{wickham2016}.
 The available FRED-MD and FRED-QD datasets allow hassle-free exploration of macroeconomic research questions. These features make \pkg{BVAR} an ideal tool for macroeconomic analysis.
 
 
@@ -312,7 +312,7 @@ The available FRED-MD and FRED-QD datasets allow hassle-free exploration of macr
 %% - Comments within the code chunks should be avoided - these should be made
 %%   within the regular LaTeX text.
 
-\newpage % sed_flag - hard-formatted
+\newpage % sed_delete - hard-formatted
 \section{An applied example} \label{sec:demo}
 
 % Introduce the demonstration
@@ -336,7 +336,6 @@ For our example, we specify a log-transformation for the corresponding variables
 Figure~\ref{fig:timeseries} provides an overview of the transformed time series.
 
 <<data, eval=TRUE, echo=TRUE, results=hide>>=
-data("fred_qd")
 x <- fred_qd[, c("GDPC1", "PCECC96", "GPDIC1",
   "HOANBS", "GDPCTPI", "FEDFUNDS")]
 x <- fred_transform(x, codes = c(4, 4, 4, 4, 4, 1))
@@ -366,6 +365,7 @@ par(op)
 	\label{fig:timeseries}
 \end{figure}
 
+% \newpage % sed_add - hard-formatted
 \subsection{Prior setup and further configuration} \label{subsec:setup}
 
 % Introduce bv_
@@ -627,10 +627,9 @@ Both datasets are packaged in their raw format, but \cite{mccracken2016,mccracke
 
 Below, we demonstrate this using a prototypical monetary VAR model -- covering GDP, the GDP deflator and the federal funds rate. For this example, we are looking to transform the individual time series to be stationary.
 To automatically apply the suggested transformation of \cite{mccracken2016} we simply specify the \code{type} -- either \code{"fred_qd"} or \code{"fred_md"} -- and call \code{fred_transform()} with our data.
-In a second attempt, we deviate from the suggestions and directly provide transformation codes to the \code{codes} argument. The function displays available codes when called without arguments. For this example, we choose \code{5} for log-differences and \code{1} for no transformation. We also set \code{lag = 4} for yearly differences of our quarterly data. Figure~\ref{fig:app_timeseries} shows the transformed time series, which will be used to illustrate additional features below.
+In a second attempt, we deviate from the suggestions and directly provide transformation codes to the \code{codes} argument. This way we can apply the transformations to any suitable dataset. The function displays available codes when called without arguments. For this example, we choose \code{5} for log-differences and \code{1} for no transformation. We also set \code{lag = 4} for yearly differences of our quarterly data. Figure~\ref{fig:app_timeseries} shows the transformed time series, which will be used to illustrate additional features below.
 
 <<app_data, eval=TRUE, echo=TRUE, results=hide>>=
-data("fred_qd")
 y <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
 z <- fred_transform(y, type = "fred_qd")
 y <- fred_transform(y, codes = c(5, 5, 1), lag = 4)

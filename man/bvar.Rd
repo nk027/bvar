@@ -64,8 +64,8 @@ Returns a list of class \code{bvar} with the following elements:
     variance-covariance matrix. Also see \code{\link{vcov.bvar}}.
   \item \code{hyper} - Numeric matrix with draws from the posterior of the
     hierarchically treated hyperparameters.
-  \item \code{ml} - Numeric vector with the marginalised likelihood (with
-    respect to the hyperparameters), that determines acceptance probability.
+  \item \code{ml} - Numeric vector with the marginal likelihood (with respect
+  to the hyperparameters), that determines acceptance probability.
   \item \code{optim} - List with outputs of \code{\link[stats]{optim}},
     which is used to find starting values for the hyperparameters.
   \item \code{prior} - Prior settings from \code{\link{bv_priors}}.
