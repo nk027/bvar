@@ -160,13 +160,13 @@ The remainder of this paper is structured as follows. Section~\ref{sec:econ} des
 \section{Econometric framework} \label{sec:econ}
 
 % Introduce econometric background
-\pkg{BVAR} takes a Bayesian hierarchical modeling approach to VAR models. This section introduces the model, prior specification, and the hierarchical prior selection procedure proposed by \cite{giannone2015}. For further information on VAR models, the Bayesian approach to them, as well as Bayesian estimation and inference in general we refer the interested reader to \cite{kilian2017}, \cite{koop2010} and \cite{gelman2013}, respectively.
+\pkg{BVAR} takes a Bayesian hierarchical modeling approach to VAR models. This section introduces the model, prior specification, and the hierarchical prior selection procedure proposed by \cite{giannone2015}. For further information on VAR models, the Bayesian approach to them, as well as Bayesian estimation and inference in general we refer the interested reader to \cite{kilian2017}, \cite{koop2010}, and \cite{gelman2013}, respectively.
 
 \subsection{Model specification} \label{subsec:model}
 
 % About VARs
 VAR models are a generalization of univariate autoregressive (AR) models, based on the notion of interdependencies between lagged values of all variables in a given model.
-They are commonly resorted to as tools for investigating dynamic effects of shocks and perform very well in macroeconomic forecasting exercises. A VAR model of finite order $p$, referred to as VAR($p$) model, can be expressed as:
+They are commonly resorted to as tools for investigating dynamic effects of shocks and perform very well in forecasting exercises. A VAR model of finite order $p$, referred to as VAR($p$) model, can be expressed as:
 \begin{align} \label{equ:var}
   \boldsymbol{y}_t = \boldsymbol{a}_0 + \boldsymbol{A}_1 \boldsymbol{y}_{t-1} + \dots + \boldsymbol{A}_p \boldsymbol{y}_{t-p} + \boldsymbol{\epsilon}_t,
   \text{ with }
@@ -174,7 +174,7 @@ They are commonly resorted to as tools for investigating dynamic effects of shoc
 \end{align}
 where $\boldsymbol{y}_t$ is an $M \times 1$ vector of endogenous variables, $\boldsymbol{a}_0$ is an $M \times 1$ intercept vector, $\boldsymbol{A}_j$ ($j = 1, \ldots, p$) are $M \times M$ coefficient matrices, and $\boldsymbol{\epsilon_t}$ is an $M \times 1$ vector of exogenous Gaussian shocks with zero mean and variance-covariance (VCOV) matrix $\boldsymbol{\Sigma}$.
 The number of coefficients to be estimated is $M + M^2 p$, rising quadratically with the number of included variables and linearly in the lag order.
-Such a dense parameterization often leads to inaccuracies with regard to out-of-sample forecasting and structural inference, especially for higher-dimensional models. This phenomenon is commonly referred to as the \textit{curse of dimensionality}.
+Such a dense parameterization often leads to inaccuracies with regard to out-of-sample forecasting and structural inference, especially for higher-dimensional models. This phenomenon is commonly referred to as the curse of dimensionality.
 
 % Bayesian VARs
 The Bayesian approach to estimating VAR models tackles this limitation by imposing additional structure on the model. Informative conjugate priors have been shown to be effective in mitigating the curse of dimensionality and allow for large models to be estimated \citep[see][]{doan1984, banbura2010}. They push the model parameters towards a parsimonious benchmark, reducing estimation error and improving out-of-sample prediction accuracy \citep{koop2013}.
@@ -208,7 +208,7 @@ This yields robust inference, is theoretically grounded, and can be implemented 
 % Specific priors, introduce NIW
 The contribution of \cite{giannone2015} focuses on conjugate prior distributions, specifically of the Normal-inverse-Wishart (NIW) family.\footnote{\cite{demol2008} note that this setting is similar to ridge penalized estimation in frequentist terms.}
 Conjugacy implies that the ML is available in closed form, enabling efficient computation.
-The NIW family includes many of the most commonly used priors \citep{koop2010, karlsson2013}, with some notable exceptions. These include, amongst others, the steady-state prior \citep{villani2009}, the Normal-Gamma prior \citep{griffin2010, huber2019} and the Dirichlet-Laplace prior \citep{bhattacharya2015}.
+The NIW family includes many of the most commonly used priors \citep{koop2010, karlsson2013}, with some notable exceptions. These include, amongst others, the steady-state prior \citep{villani2009}, the Normal-Gamma prior \citep{griffin2010, huber2019}, and the Dirichlet-Laplace prior \citep{bhattacharya2015}.
 Many recent contributions focus on accounting for heteroskedastic error structures \citep{clark2011, kastner2014, carriero2016}. This may improve model performance, but is not possible within the conjugate setup and would complicate inference.
 In the chosen NIW framework we approach the model in Equation~\ref{equ:var} by letting $\boldsymbol{A} = \left[ \boldsymbol{a}_0, \boldsymbol{A}_1, \dots, \boldsymbol{A}_p \right]'$ and $\boldsymbol{\beta} = vec(\boldsymbol{A})$. Then the conjugate prior setup reads as:
 \begin{align}
@@ -233,7 +233,7 @@ The Minnesota prior \citep{litterman1980} imposes the hypothesis that individual
     \end{cases}
 \end{align}
 The key hyperparameter $\lambda$ controls the tightness of the prior, i.e., it weighs the relative importance of prior and data. For $\lambda \to 0$ the prior outweighs any information in the data; the posterior approaches the prior. As $\lambda \to \infty$ the posterior distribution mirrors the sample information.
-Governing the variance decay with increasing lag order, $\alpha$ controls the degree of shrinkage for more distant observations. Finally, $\psi_j$, denting the $j$-th variable of $\boldsymbol{\Psi}$, controls the prior's standard deviation on lags of variables other than the dependent.
+Governing the variance decay with increasing lag order, $\alpha$ controls the degree of shrinkage for more distant observations. Finally, $\psi_j$, the $j$-th variable of $\boldsymbol{\Psi}$, controls the prior's standard deviation on lags of variables other than the dependent.
 
 % Dummy priors
 Refinements of the Minnesota prior are often implemented as additional priors trying to ``reduce the importance of the deterministic component implied by VAR models estimated conditioning on the initial observations'' \citep[p.~440]{giannone2015}. This component is defined as the expectation of future observations, given initial conditions and estimated coefficients.
@@ -448,7 +448,7 @@ Outputs can be accessed manually or via a multitude of functions and methods for
 
 % Introduce methods and generics
 \pkg{BVAR} provides a range of standard methods for objects of type \code{'bvar'} and derivatives, which facilitate cursory assessments and detailed analysis. These include \code{print()}, \code{plot()}, and \code{summary()} methods, as well as a \code{predict()} method and an \code{irf()} generic.
-The \code{print()} method provides some meta information, details on hierarchically treated prior hyperparameters and their starting values obtained from optimization via \code{optim()}. The \code{summary()} method mimics its counterpart in \pkg{vars}, including information on the VAR model's log-likelihood, coefficients, and the VCOV matrix. These are also available via the methods \code{logLik()}, \code{coef()} and \code{vcov()}, respectively.
+The \code{print()} method provides some meta information, details on hierarchically treated prior hyperparameters and their starting values obtained from optimization via \code{optim()}. The \code{summary()} method mimics its counterpart in \pkg{vars}, including information on the VAR model's log-likelihood, coefficients, and the VCOV matrix. These are also available via the methods \code{logLik()}, \code{coef()}, and \code{vcov()}, respectively.
 Other established methods, such as \code{fitted()}, \code{density()} and \code{residuals()}, are also provided. They operate on all posterior draws and include clear and concise \code{print()} methods.
 
 % Demonstrate some
@@ -565,7 +565,7 @@ plot(predict(run), area = TRUE, t_back = 32,
 \end{figure}
 
 % Conclude demonstration
-This concludes the demonstration of setup, estimation and analysis with \pkg{BVAR}. A comprehensive description of the package and available functionalities is provided in the package documentation. Some more advanced and specific features, including identification via sign restrictions, conditional forecasts, and the interface to \pkg{coda}, are demonstrated in the Appendix.
+This concludes the demonstration of setup, estimation, and analysis with \pkg{BVAR}. A comprehensive description of the package and available functionalities is provided in the package documentation. Some more advanced and specific features, including identification via sign restrictions, conditional forecasts, and the interface to \pkg{coda}, are demonstrated in the Appendix.
 
 
 %% -- Summary/conclusions/discussion -------------------------------------------
@@ -590,7 +590,7 @@ A major area for future work is support for a broader spectrum of prior families
 
 \section*{Computational details}
 
-The results in this paper were obtained using \proglang{R}~4.0.0 with \pkg{BVAR}~1.0.1, \pkg{mvtnorm}~{1.1-1}, and \pkg{coda}~{0.19-3}. The machine used to generate the results is running Windows 10 with an i5-4670k and 16 GB RAM. The scripts were also tested on a machines running Debian Sid 11 with an i7-7500U and 16 GB RAM and a machine running Ubuntu 20.04 LTS with a Ryzen-3500U and 16 GB RAM.
+The results in this paper were obtained using \proglang{R}~4.0.0 with \pkg{BVAR}~1.0.1, \pkg{mvtnorm}~{1.1-1}, and \pkg{coda}~{0.19-3}. The machine used to generate the results is running Windows 10 with an i5-4670k and 16 GB RAM. The scripts were also tested on a machines running Debian Sid with an i7-7500U and 16 GB RAM and a machine running Ubuntu 20.04 LTS with a Ryzen-3500U and 16 GB RAM.
 \proglang{R} and all packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/}.
 
 
@@ -706,7 +706,7 @@ geweke.diag(run_mcmc)
 
 The value of the diagnostic statistic constitutes a standard $z$~score and indicates proper within-chain convergence of the hyperparameter $\lambda$.
 Still, one may also be interested in the behavior across chains. A suitable diagnostic to assess between-chain convergence was proposed by \cite{gelman1992} and is implemented in \pkg{coda} as \code{gelman.diag()}.
-The need for multiple chains makes parallelization attractive, which is supported by the wrapper function \code{par_bvar()}. The wrapper uses \code{parLapply()} from the \pkg{parallel} package \citep{R} to run instances of \code{bvar()} on multiple threads. The output is a \code{'bvar_chains'} object, a \code{'list'} of \code{'bvar'} objects that is supported by covergence-related methods.
+The need for multiple chains makes parallelization attractive, which is supported by the wrapper function \code{par_bvar()}. The wrapper uses \code{parLapply()} from the \pkg{parallel} package \citep{R} to run instances of \code{bvar()} on multiple threads. The output is a \code{'bvar_chains'} object, i.e., a \code{'list'} of \code{'bvar'} objects that is supported by covergence-related methods.
 We can visualize the separate runs for different hyperparameters or the ML, which can be specified via the \code{vars} argument, with the \code{plot()} method (see Figure~\ref{fig:app_chains}). We can also transform it for use with \pkg{coda}, by calling \code{as.mcmc()}, which now yields a \code{'mcmc_list'} object.
 This object is passed on to \code{gelman.diag()}, in order to compute a diagnostic statistics for between-chain convergence.
 
