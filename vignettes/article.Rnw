@@ -257,7 +257,7 @@ The sum-of-coefficients and single-unit-root dummy-observation priors are common
 
 % Introduce BVAR
 \pkg{BVAR} implements a hierarchical approach to prior selection \citep{giannone2015} into \proglang{R} and hands the user an easy-to-use and flexible tool for Bayesian VAR models.
-Its primary use cases are in the field of macroeconomic time series and it is an ideal tool for a range of economic analyses. It may be consulted as a reference for similar models, with the hierarchical prior selection serving as a safeguard against unreasonable hyperparameter choices.
+Its primary use cases are in the field of macroeconomic time series analysis and it is an ideal tool for exploring a range of economic phenomena. It may be consulted as a reference for similar models, with the hierarchical prior selection serving as a safeguard against unreasonable hyperparameter choices that are not supported by the data.
 The accessible and user-friendly implementation make it a suitable tool for introductions to Bayesian multivariate time series modeling and for quick, versatile analysis.
 
 % Mention some abstract features
