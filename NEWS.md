@@ -1,9 +1,9 @@
 # v1.0.1, CRAN Update 6
 
 - Add identification via zero and sign restrictions
-- Update **FRED-MD** and **FRED-QD**
 - Update *CITATION* with the forthcoming JSS reference
-- Prepare for tidy version in *BVARverse*
+- Prepare for tidy outputs in *BVARverse*
+- Fix minor bugs and typos (internal checks, documentation, and vignette)
 
 
 # v1.0.0, CRAN Update 5 / JSS Revision 2
