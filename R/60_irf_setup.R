@@ -33,7 +33,7 @@
 #' certain shock is expected. Elements set to \eqn{NA} indicate that there are
 #' no particular expectations for the contemporaneous effects. The default
 #' value is \code{NULL}. Note that in order to be fully identified at least
-#' \eqn{M * (M − 1) / 2} restrictions have to be set and a maximum of
+#' \eqn{M * (M - 1) / 2} restrictions have to be set and a maximum of
 #' \eqn{M - j} zero restrictions can be imposed on the \eqn{j}'th column.
 #' @param sign_lim Integer scalar. Maximum number of tries to find suitable
 #' matrices to for fitting sign or zero and sign restrictions.

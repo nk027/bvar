@@ -590,7 +590,7 @@ A major area for future work is support for a broader spectrum of prior families
 
 \section*{Computational details}
 
-The results in this paper were obtained using \proglang{R}~4.0.0 with \pkg{BVAR}~1.0.1, \pkg{mvtnorm}~{1.1-1}, and \pkg{coda}~{0.19-3}. The machine used to generate the results is running Windows 10 with an i5-4670k and 16 GB RAM. The scripts were also tested on a machines running Debian Sid with an i7-7500U and 16 GB RAM and a machine running Ubuntu 20.04 LTS with a Ryzen-3500U and 16 GB RAM.
+The results in this paper were obtained using \proglang{R}~4.0.2 with \pkg{BVAR}~1.0.1, \pkg{mvtnorm}~{1.1-1}, and \pkg{coda}~{0.19-3}. The machine used to generate the results is running Windows 10 with an i5-4670k and 16 GB RAM. The scripts were also tested on a machines running Debian Sid with an i7-7500U and 16 GB RAM and a machine running Ubuntu 20.04 LTS with a Ryzen-3500U and 16 GB RAM.
 \proglang{R} and all packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/}.
 
 
