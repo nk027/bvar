@@ -631,7 +631,7 @@ To automatically apply the suggested transformation of \cite{mccracken2016} we s
 In a second attempt, we deviate from the suggestions and directly provide transformation codes to the \code{codes} argument. This way we can apply the transformations to any suitable dataset. The function displays available codes when called without arguments. For this example, we choose \code{5} for log-differences and \code{1} for no transformation. We also set \code{lag = 4} for yearly differences of our quarterly data. Figure~\ref{fig:app_timeseries} shows the transformed time series, which will be used to illustrate additional features below.
 
 <<app_data, eval=TRUE, echo=TRUE, results=hide>>=
-y <- fred_qd[, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
+y <- fred_qd[1:243, c("GDPC1", "GDPCTPI", "FEDFUNDS")]
 z <- fred_transform(y, type = "fred_qd")
 y <- fred_transform(y, codes = c(5, 5, 1), lag = 4)
 @

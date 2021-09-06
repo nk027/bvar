@@ -1,3 +1,8 @@
+# v1.0.2, CRAN Update 7
+
+- Update FRED-QD and FRED-MD datasets to 2021-06
+- Fix minor issues with vignette
+
 # v1.0.1, CRAN Update 6
 
 - Add identification via zero and sign restrictions
