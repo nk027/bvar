@@ -3,12 +3,12 @@
 
 keep <- readLines("data/fred_permitted.txt")
 
-file <- "2020-03.csv" # Update this
+file <- "2021-07.csv" # Update this
 
 
 # QD ---
 # See https://research.stlouisfed.org/econ/mccracken/fred-databases/
-link <- "https://s3.amazonaws.com/files.fred.stlouisfed.org/fred-md/quarterly/"
+link <- "https://files.stlouisfed.org/files/htdocs/fred-md/quarterly/"
 
 fred_qd <- read.csv(paste(link, file, sep = ""), stringsAsFactors = FALSE)
 
@@ -42,7 +42,7 @@ save(fred_qd, file = "data/fred_qd.rda", version = 2, compress = "xz")
 
 # MD ---
 # See https://research.stlouisfed.org/econ/mccracken/fred-databases/
-link <- "https://s3.amazonaws.com/files.fred.stlouisfed.org/fred-md/monthly/"
+link <- "https://files.stlouisfed.org/files/htdocs/fred-md/monthly/"
 
 fred_md <- read.csv(paste(link, file, sep = ""), stringsAsFactors = FALSE)
 

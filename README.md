@@ -23,14 +23,14 @@ Usage
 
 The main function to perform hierarchical Bayesian VAR estimation is `bvar()`. Calls can be customised with regard to the sampling (e.g. via `n_draw`, or see `bv_mh()`) or with regard to the priors (see `bv_priors()`). Forecasts and impulse responses can be computed at runtime, or afterwards (see `predict()` and `irf()`). Identification of sign restrictions can be achieved recursively, via sign restrictions, or via zero and sign restrictions.
 
-Analysis is facilitated by a variety of standard methods. The default `plot()` method provides trace and density plots of hyperparameters and optionally coefficients. Impulse responses and forecasts can easily be assessed with the provided `plot()` methods. Other available methods include `summary()`, `fitted()`, `residuals()`, `coef()`, `vcov()` and `density()`. Note that **BVAR** generates draws from the posterior -- all methods include functionality to access this distributional information.
+Analysis is facilitated by a variety of standard methods. The default `plot()` method provides trace and density plots of hyperparameters and optionally coefficients. Impulse responses and forecasts can easily be assessed with the provided `plot()` methods. Other available methods include `summary()`, `fitted()`, `residuals()`, `coef()`, `vcov()` and `density()`. Note that **BVAR** generates draws from the posterior -- all methods include functionality to access this distributional information. Information can be obtained directly or more conveniently using the **BVARverse** package.
 
 **BVAR** comes with the FRED-MD and FRED-QD datasets (McCracken and Ng, 2016). They can be accessed using `data("fred_md")` or `data("fred_qd")` respectively. The dataset is licensed under a modified ODC-BY 1.0 license, that is available in the provided *LICENSE* file.
 
 Demonstration
 -------
 
-```{r}
+``` r
 # Load the package
 library("BVAR")
 
