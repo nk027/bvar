@@ -70,8 +70,9 @@ auto_psi <- function(x, lags) {
 
   out <- list()
 
-  out[["mode"]] <- tryCatch(apply(x, 2, function(x) {
-    tryCatch(sqrt(arima(x, order = c(lags, 0, 0))$sigma2), # Try AR(lags)
+  out[["mode"]] <- tryCatch(apply(x, 2, function(x) { # Try AR(lags)
+    # tryCatch(sqrt(arima(x, order = c(lags, 0, 0))$sigma2),
+    tryCatch(sqrt(ar.mle(x, aic = FALSE, order.max = lags)$var.pred),
       error = function(e) { # If this fails for a series, increment integration
         message("Some of the data appears to be integrated. Attempting to set ",
           "psi automatically via an ARIMA(", lags, ", 1, 0) model.")
