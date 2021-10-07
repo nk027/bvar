@@ -73,13 +73,20 @@ auto_psi <- function(x, lags) {
   out[["mode"]] <- tryCatch(apply(x, 2, function(x) { # Try AR(lags)
     tryCatch(sqrt(arima0(x, order = c(lags, 0, 0))$sigma2),
       error = function(e) { # If this fails for a series, increment integration
-        message("Some of the data appears to be integrated. Attempting to set ",
-          "psi automatically via an ARIMA(", lags, ", 1, 0) model.")
+        message("Caught an error while automatically setting psi.",
+          "Some of the data appears to be integrated; caught error:\n", e, "\n",
+          "Attempting to increase order of integration via an ARIMA(",
+          lags, ", 1, 0) model.")
         sqrt(arima0(x, order = c(lags, 1, 0))$sigma2) # Try ARIMA(lags, 1, 0)
-    })}), error = function(e) {
-      stop("Some of the data appears to be integrated of order higher than 1. ",
-        "Setting psi automatically failed. Please inspect the data again ",
-        "and/or provide modes for psi manually (see `?bv_psi`).")
+    }, warning = function(w) {
+      message("Caught a warning while setting psi automatically:\n'", w, "'.")
+    }
+    )}), error = function(e) {
+      stop("Cannot set psi automatically via ARIMA(",lags, ", 0/1, 0) model.",
+        "Caught the error:\n", e, "\n",
+        "Please inspect the data or provide modes manually (see `?bv_psi`).")
+    }, warning = function(w) {
+      message("Caught a warning while setting psi automatically:\n'", w, "'.")
     }
   )
 
