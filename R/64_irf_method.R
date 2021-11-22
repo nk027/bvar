@@ -211,6 +211,21 @@ fevd.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
 
 #' @noRd
 #' @export
+`fevd<-.bvar` <- function(x, value) {
+
+  if(!inherits(x, "bvar")) {stop("Please use a `bvar` object.")}
+  if(!inherits(value, "bvar_fevd")) {
+    stop("Please provide a `bvar_fevd` object to assign.")
+  }
+
+  x[["fevd"]] <- value
+
+  return(x)
+}
+
+
+#' @noRd
+#' @export
 fevd.bvar_irf <- function(x, conf_bands, ...) {
 
   if(is.null(x[["fevd"]])) {
@@ -284,3 +299,8 @@ fevd <- function(x, ...) {UseMethod("fevd", x)}
 fevd.default <- function(x, ...) {
   stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
 }
+
+
+#' @rdname irf.bvar
+#' @export
+`fevd<-` <- function(x, value) {UseMethod("fevd<-", x)}
