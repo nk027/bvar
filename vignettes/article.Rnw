@@ -209,7 +209,7 @@ This yields robust inference, is theoretically grounded, and can be implemented 
 % Specific priors, introduce NIW
 The contribution of \cite{giannone2015} focuses on conjugate prior distributions, specifically of the Normal-inverse-Wishart (NIW) family.\footnote{\cite{demol2008} note that this setting is similar to ridge penalized estimation in frequentist terms.}
 Conjugacy implies that the ML is available in closed form, enabling efficient computation.
-The NIW family includes many of the most commonly used priors \citep{koop2010, karlsson2013}, with some notable exceptions. These include, amongst others, the steady-state prior \citep{villani2009}, the Normal-Gamma prior \citep{griffin2010, huber2019}, and the Dirichlet-Laplace prior \citep{bhattacharya2015}.
+The NIW family includes many of the most commonly used priors \citep{koop2010, karlsson2013}, with some notable exceptions. These include, amongst others, the steady-state prior \citep{villani2009}, the Normal-Gamma prior \citep{brown2010, huber2019}, and the Dirichlet-Laplace prior \citep{bhattacharya2015}.
 Many recent contributions focus on accounting for heteroskedastic error structures \citep{clark2011, kastner2014, carriero2016}. This may improve model performance, but is not possible within the conjugate setup and would complicate inference.
 In the chosen NIW framework we approach the model in Equation~\ref{equ:var} by letting $\boldsymbol{A} = \left[ \boldsymbol{a}_0, \boldsymbol{A}_1, \dots, \boldsymbol{A}_p \right]^\top$ and $\boldsymbol{\beta} = vec(\boldsymbol{A})$. Then the conjugate prior setup reads as:
 \begin{align}
