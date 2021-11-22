@@ -60,7 +60,7 @@ gamma_coef <- function(mode, sd) {
 #' @param x Numeric matrix with the data.
 #' @param lags Numeric scalar. Number of lags in the model.
 #'
-#' @importFrom stats arima0
+#' @importFrom stats arima
 #'
 #' @return Returns a list with the modes, minimum, and maximum values for
 #' \emph{psi}.
@@ -71,13 +71,13 @@ auto_psi <- function(x, lags) {
   out <- list()
 
   out[["mode"]] <- tryCatch(apply(x, 2, function(x) { # Try AR(lags)
-    tryCatch(sqrt(arima0(x, order = c(lags, 0, 0))$sigma2),
+    tryCatch(sqrt(arima(x, order = c(lags, 0, 0))$sigma2),
       error = function(e) { # If this fails for a series, increment integration
         message("Caught an error while automatically setting psi.",
           "Some of the data appears to be integrated; caught error:\n", e, "\n",
           "Attempting to increase order of integration via an ARIMA(",
           lags, ", 1, 0) model.")
-        sqrt(arima0(x, order = c(lags, 1, 0))$sigma2) # Try ARIMA(lags, 1, 0)
+        sqrt(arima(x, order = c(lags, 1, 0))$sigma2) # Try ARIMA(lags, 1, 0)
     }, warning = function(w) {
       message("Caught a warning while setting psi automatically:\n'", w, "'.")
     }

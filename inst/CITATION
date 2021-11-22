@@ -2,33 +2,30 @@ if(!exists("meta") || is.null(meta)) {meta <- packageDescription("BVAR")}
 year <- sub("-.*", "", meta$Date)
 version <- meta$Version
 
-citHeader("To cite BVAR in publications please use:")
-
-citEntry(
-  entry = "article",
+bibentry(
+  bibtype = "Article",
   title = "{BVAR}: {B}ayesian Vector Autoregressions with Hierarchical Prior Selection in {R}",
-  author = personList(
+  author = c(
     person(given = "Nikolas", family = "Kuschnig", email = "nikolas.kuschnig@wu.ac.at"),
-    person(given = "Lukas", family = "Vashold")),
-  year = "2021",
+    person(given = "Lukas", family = "Vashold", email = "lukas.vashold@wu.ac.at")),
   journal = "Journal of Statistical Software",
-  number = "forthcoming",
-  textVersion = "Nikolas Kuschnig and Lukas Vashold (2021). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. Journal of Statistical Software (forthcoming)."
+  year = "2021",
+  volume = "100",
+  number = "14",
+  pages = "1--27",
+  doi = "10.18637/jss.v100.i14",
+  header = "To cite BVAR in publications use:"
 )
 
-citEntry(
-  entry = "manual",
-  title = "{BVAR}: {H}ierarchical {B}ayesian Vector Autoregression",
-  author = personList(
+bibentry(
+  bibtype = "Manual",
+  title = "{BVAR}: Hierarchical Prior Selection in {R}",
+  author = c(
     person(given = "Nikolas", family = "Kuschnig", email = "nikolas.kuschnig@wu.ac.at"),
-    person(given = "Lukas", family = "Vashold")),
+    person(given = "Lukas", family = "Vashold", email = "lukas.vashold@wu.ac.at")),
+  journal = "Journal of Statistical Software",
   year = year,
   note = paste0("{R} package version ", version),
   url = "https://CRAN.R-project.org/package=BVAR",
-  textVersion = paste0("Nikolas Kuschnig and Lukas Vashold (", year, "). ",
-    "BVAR: Hierarchical Bayesian Vector Autoregression. ",
-    "{R} package version ", version,
-    ", URL https://CRAN.R-project.org/package=BVAR.")
+  header = "To cite the BVAR package please use:"
 )
-
-citFooter("BibTeX entries can be obtained by", sQuote('toBibtex(citation("BVAR"))'))
