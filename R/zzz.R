@@ -3,6 +3,11 @@
 
   register_s3("coda", "as.mcmc", "bvar")
   register_s3("coda", "as.mcmc", "bvar_chains")
+  register_s3("vars", "irf", "bvar")
+  register_s3("vars", "irf", "bvar_irf")
+  register_s3("vars", "fevd", "bvar")
+  register_s3("vars", "fevd", "bvar_irf")
+  register_s3("vars", "fevd", "bvar_fevd")
 
   invisible()
 }
