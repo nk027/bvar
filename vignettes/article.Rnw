@@ -129,7 +129,7 @@ A number of heuristics for prior selection have been proposed in the literature.
 
 % Provide background, narrow down domain
 With the rise of Markov chain Monte Carlo (MCMC) methods, Bayesian statistical software has evolved rapidly. Established software provides flexible and extensible tools for Bayesian inference, which are available cross-platform. This includes \pkg{BUGS} \citep{lunn2000, lunn2009} and \pkg{JAGS} \citep{plummer2003}, which build on the Gibbs sampler, \pkg{Stan} \citep{carpenter2017}, which builds on the Hamiltonian Monte Carlo algorithm, as well as \pkg{R-INLA} \citep{rue2015}, for approximate inference.
-Domain-specific inference is facilitated by specialized packages, such as \pkg{MCMCglmm} \citep{hadfield2010} and \pkg{brms} \citep{burkner2018} for the \proglang{R} language \citep{R}.
+Domain-specific inference is facilitated by specialized packages, such as \pkg{MCMCglmm} \citep{hadfield2010} and \pkg{brms} \citep{burkner2017, burkner2018} for the \proglang{R} language \citep{R}.
 In the domain of multivariate time series analysis, the \proglang{R} package \pkg{vars} \citep{pfaff2008} represents a cornerstone. It offers a comprehensive set of frequentist VAR-related functionalities, including the calculation and visualization of forecasts, impulse responses, and forecast error variance decompositions. Other related packages include \pkg{MTS} \citep{tsay2018}, \pkg{BigVAR} \citep{nicholson2019}, and \pkg{tsDyn} \citep{dinarzo2020}, for a powerful and mature assortment of software.
 
 % Bayesian VAR domain
@@ -140,7 +140,7 @@ Another approach is taken by the \pkg{bvartools} package \citep{mohr2020}, which
 Despite the popularity of Bayesian VAR models, there is a considerable gap between specialized Bayesian and accessible, all-purpose implementations.
 
 % In comes BVAR
-In this paper, we present \pkg{BVAR} \citep{kuschnig2020}, a comprehensive and user-friendly \proglang{R} package for the estimation and analysis of Bayesian VAR models. It implements a hierarchical modeling approach to prior selection in the fashion of \cite{giannone2015}. Functionalities to facilitate most common analyses are provided. Standard methods and interfaces to existing frameworks ensure accessibility and extensibility. \pkg{BVAR} is free software, licensed under the GNU General Public License 3, openly available and developed online.\footnote{See the Comprehensive \proglang{R} Archive Network (CRAN, \url{https://CRAN.R-project.org/package=BVAR}) and \proglang{GitHub} (\url{https://github.com/nk027/bvar}).}
+In this paper, we present \pkg{BVAR} \citep{kuschnig2021}, a comprehensive and user-friendly \proglang{R} package for the estimation and analysis of Bayesian VAR models. It implements a hierarchical modeling approach to prior selection in the fashion of \cite{giannone2015}. Functionalities to facilitate most common analyses are provided. Standard methods and interfaces to existing frameworks ensure accessibility and extensibility. \pkg{BVAR} is free software, licensed under the GNU General Public License 3, openly available and developed online.\footnote{See the Comprehensive \proglang{R} Archive Network (CRAN, \url{https://CRAN.R-project.org/package=BVAR}) and \proglang{GitHub} (\url{https://github.com/nk027/bvar}).}
 
 The remainder of this paper is structured as follows. Section~\ref{sec:econ} describes the econometric framework used in the package. Section~\ref{sec:bvar} provides an overview of \pkg{BVAR} and its functionalities, with their usage demonstrated by means of an example in Section~\ref{sec:demo}. Section~\ref{sec:concl} concludes. Additional information is provided in the Appendix.
 
@@ -624,7 +624,7 @@ We would like to thank Victor Maus and Florian Huber for helpful comments and en
 \section{Data transformation and stationarity}\label{app:data}
 
 Econometric analysis often relies on data coming in a specific format, frequently requiring transformation. The helper function \code{fred_transform()} facilitates this work step. It can be used to apply common transformations, subset data to a rectangular format without missing values, and automatically transform the included FRED-QD and FRED-MD datasets.
-Both datasets are packaged in their raw format, but \cite{mccracken2016,mccracken2020} provide suggested transformations in their online appendices.\footnote{See \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.} These transformations can also be looked up manually with \code{fred_code()}.
+Both datasets are packaged in their raw format, but \cite{mccracken2016,mccracken2020} provide suggested transformations in their online appendices (see \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}. These transformations can also be looked up manually with \code{fred_code()}.
 
 Below, we demonstrate this using a prototypical monetary VAR model --- covering GDP, the GDP deflator and the federal funds rate. For this example, we are looking to transform the individual time series to be stationary.
 To automatically apply the suggested transformation of \cite{mccracken2016} we simply specify the \code{type} --- either \code{"fred_qd"} or \code{"fred_md"} --- and call \code{fred_transform()} with our data.
