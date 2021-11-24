@@ -2,10 +2,10 @@
 BVAR: Hierarchical Bayesian Vector Autoregression
 =======
 
-[![CRAN](http://www.r-pkg.org/badges/version/BVAR)](http://cran.r-project.org/package=BVAR)
-[![codecov](https://codecov.io/gh/nk027/bvar/branch/master/graph/badge.svg)](https://codecov.io/gh/nk027/bvar)
-[![month](http://cranlogs.r-pkg.org/badges/BVAR)](http://www.r-pkg.org/pkg/BVAR)
-[![total](http://cranlogs.r-pkg.org/badges/grand-total/BVAR)](http://www.r-pkg.org/pkg/BVAR)
+[![CRAN](https://www.r-pkg.org/badges/version/BVAR)](https://cran.r-project.org/package=BVAR)
+[![codecov](https://app.codecov.io/gh/nk027/bvar/branch/master/graph/badge.svg)](https://app.codecov.io/gh/nk027/bvar)
+[![month](https://cranlogs.r-pkg.org/badges/BVAR)](http://www.r-pkg.org/pkg/BVAR)
+[![total](https://cranlogs.r-pkg.org/badges/grand-total/BVAR)](http://www.r-pkg.org/pkg/BVAR)
 
 Estimation of hierarchical Bayesian vector autoregressive models following Kuschnig & Vashold (2021). Implements hierarchical prior selection for conjugate priors in the fashion of Giannone, Lenza & Primiceri (2015). Functions to calculate forecasts, and compute and identify impulse responses and forecast error variance decompositions are available. Several methods to print, plot and summarise results facilitate analysis.
 
@@ -57,8 +57,8 @@ plot(irf(x))
 References
 -------
 
-Nikolas Kuschnig and Lukas Vashold (2021). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. *Journal of Statistical Software*, 14, 1-27, DOI: [10.18637/jss.v100.i14](dx.doi.org/10.18637/jss.v100.i14).
+Nikolas Kuschnig and Lukas Vashold (2021). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. *Journal of Statistical Software*, 14, 1-27, DOI: [10.18637/jss.v100.i14](https://doi.org/10.18637/jss.v100.i14).
 
-Domenico Giannone, Michele Lenza and Giorgio E. Primiceri (2015). Prior Selection for Vector Autoregressions. *The Review of Economics and Statistics*, 97:2, 436-451, DOI: [10.1162/REST_a_00483](dx.doi.org/10.1162/REST_a_00483.).
+Domenico Giannone, Michele Lenza and Giorgio E. Primiceri (2015). Prior Selection for Vector Autoregressions. *The Review of Economics and Statistics*, 97:2, 436-451, DOI: [10.1162/REST_a_00483](https://doi.org/10.1162/REST_a_00483).
 
-Michael W. McCracken and Serena Ng (2016). FRED-MD: A Monthly Database for Macroeconomic Research. *Journal of Business & Economic Statistics*, 34:4, 574-589, DOI: [10.1080/07350015.2015.1086655](dx.doi.org/10.1080/07350015.2015.1086655).
+Michael W. McCracken and Serena Ng (2016). FRED-MD: A Monthly Database for Macroeconomic Research. *Journal of Business & Economic Statistics*, 34:4, 574-589, DOI: [10.1080/07350015.2015.1086655](https://doi.org/10.1080/07350015.2015.1086655).
