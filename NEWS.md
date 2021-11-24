@@ -3,10 +3,12 @@
 
 - Added DOI in the CITATION file for a new **JSS publication**
   - DOI will be registered after publication on CRAN
-- Update **FRED-QD** and **FRED-MD** datasets to 2021-06
-- Fix minor issues with vignette (e.g. fix dataset)
+  - References now use the DOI interface instead of URLs
+- Update **FRED-QD** and **FRED-MD** datasets to 2021-10
+- Fix minor issues with vignette (e.g. fixed dataset, references, etc)
 - Added verbosity to ARIMA-based automatic prior settings
 - Add hook to simplify use of shared generics with *vars*
+- Added *README* file to the package
 
 # v1.0.1, CRAN Update 6
 

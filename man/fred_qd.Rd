@@ -8,7 +8,7 @@
 \format{
 A \code{data.frame} object with dates as rownames.
 
-An object of class \code{data.frame} with 750 rows and 120 columns.
+An object of class \code{data.frame} with 753 rows and 119 columns.
 }
 \source{
 \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}
@@ -42,7 +42,7 @@ all other owners of included time series that permitted their use.
 \references{
 McCracken, M. W. and Ng, S. (2016) FRED-MD: A Monthly Database for
   Macroeconomic Research. \emph{Journal of Business & Economic Statistics},
-  \bold{34:4}, 574-589, \url{https://doi.org/10.1080/07350015.2015.1086655}.
+  \bold{34:4}, 574-589, \doi{10.1080/07350015.2015.1086655}.
   McCracken, M. W., & Ng, S. (2020). FRED-QD: A Quarterly Database for
   Macroeconomic Research \bold{w26872}. National Bureau of Economic Research.
 }

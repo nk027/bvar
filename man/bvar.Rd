@@ -90,7 +90,7 @@ The Metropolis-Hastings step can be modified with \code{\link{bv_mh}}.
 The model can be expressed as:
 \deqn{y_t = a_0 + A_1 y_{t-1} + ... + A_p y_{t-p} + \epsilon_t}{y_t = a_0 +
 A_1 y_{t-1} + ... + A_p y_{t-p} + e_t}
-See Kuschnig and Vashold (2019) and Giannone, Lenza and Primiceri (2015)
+See Kuschnig and Vashold (2021) and Giannone, Lenza and Primiceri (2015)
 for further information.
 Methods for a \code{bvar} object and its derivatives can be used to:
 \itemize{
@@ -130,11 +130,12 @@ summary(x)
 \references{
 Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
   Vector Autoregressions. \emph{The Review of Economics and Statistics},
-  \bold{97:2}, 436-451, \url{https://doi.org/10.1162/REST_a_00483}.
+  \bold{97:2}, 436-451, \doi{10.1162/REST_a_00483}.
 
   Kuschnig, N. and Vashold, L. (2021) BVAR: Bayesian Vector Autoregressions
   with Hierarchical Prior Selection in R.
-  \emph{Journal of Statistical Software}, \bold{forthcoming}.
+  \emph{Journal of Statistical Software}, \bold{14}, 1-27,
+  \doi{10.18637/jss.v100.i14}.
 }
 \seealso{
 \code{\link{bv_priors}}; \code{\link{bv_mh}};

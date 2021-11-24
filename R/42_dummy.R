@@ -30,7 +30,7 @@
 #' @references
 #'   Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
 #'   Vector Autoregressions. \emph{The Review of Economics and Statistics},
-#'   \bold{97:2}, 436-451, \url{https://doi.org/10.1162/REST_a_00483}.
+#'   \bold{97:2}, 436-451, \doi{10.1162/REST_a_00483}.
 #'
 #' @seealso \code{\link{bv_priors}}; \code{\link{bv_minnesota}}
 #'

@@ -114,7 +114,7 @@ bv_mn(psi = bv_psi(mode = c(0.7, 0.3, 0.9)))
 \references{
 Kilian, L. and Lütkepohl, H. (2017). \emph{Structural Vector
   Autoregressive Analysis}. Cambridge University Press,
-  \url{https://doi.org/10.1017/9781108164818}
+  \doi{10.1017/9781108164818}
 }
 \seealso{
 \code{\link{bv_priors}}; \code{\link{bv_dummy}}

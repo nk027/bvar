@@ -15,5 +15,3 @@
 ^vignettes/jss.*$
 ^vignettes/article_jss.Rnw$
 ^vignettes/Makefile$
-
-^README\.md$

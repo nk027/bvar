@@ -47,7 +47,7 @@ bv_fcast(cond_path = paths, cond_var = c(1, 3))
 \references{
 Waggoner, D. F., & Zha, T. (1999). Conditional Forecasts in Dynamic
   Multivariate Models. \emph{Review of Economics and Statistics},
-  \bold{81:4}, 639-651, \url{https://doi.org/10.1162/003465399558508}.
+  \bold{81:4}, 639-651, \doi{10.1162/003465399558508}.
 }
 \seealso{
 \code{\link{predict.bvar}}; \code{\link{plot.bvar_fcast}}

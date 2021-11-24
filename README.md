@@ -7,7 +7,7 @@ BVAR: Hierarchical Bayesian Vector Autoregression
 [![month](http://cranlogs.r-pkg.org/badges/BVAR)](http://www.r-pkg.org/pkg/BVAR)
 [![total](http://cranlogs.r-pkg.org/badges/grand-total/BVAR)](http://www.r-pkg.org/pkg/BVAR)
 
-Estimation of hierarchical Bayesian vector autoregressive models. Implements hierarchical prior selection for conjugate priors in the fashion of Giannone, Lenza & Primiceri (2015). Functions to calculate forecasts, and compute and identify impulse responses and forecast error variance decompositions are available. Several methods to print, plot and summarise results facilitate analysis.
+Estimation of hierarchical Bayesian vector autoregressive models following Kuschnig & Vashold (2021). Implements hierarchical prior selection for conjugate priors in the fashion of Giannone, Lenza & Primiceri (2015). Functions to calculate forecasts, and compute and identify impulse responses and forecast error variance decompositions are available. Several methods to print, plot and summarise results facilitate analysis.
 
 Installation
 -------
@@ -23,7 +23,7 @@ Usage
 
 The main function to perform hierarchical Bayesian VAR estimation is `bvar()`. Calls can be customised with regard to the sampling (e.g. via `n_draw`, or see `bv_mh()`) or with regard to the priors (see `bv_priors()`). Forecasts and impulse responses can be computed at runtime, or afterwards (see `predict()` and `irf()`). Identification of sign restrictions can be achieved recursively, via sign restrictions, or via zero and sign restrictions.
 
-Analysis is facilitated by a variety of standard methods. The default `plot()` method provides trace and density plots of hyperparameters and optionally coefficients. Impulse responses and forecasts can easily be assessed with the provided `plot()` methods. Other available methods include `summary()`, `fitted()`, `residuals()`, `coef()`, `vcov()` and `density()`. Note that **BVAR** generates draws from the posterior -- all methods include functionality to access this distributional information. Information can be obtained directly or more conveniently using the **BVARverse** package.
+Analysis is facilitated by a variety of standard methods. The default `plot()` method provides trace and density plots of hyperparameters and optionally coefficients. Impulse responses and forecasts can easily be assessed with the provided `plot()` methods. Other available methods include `summary()`, `fitted()`, `residuals()`, `coef()`, `vcov()` and `density()`. Note that **BVAR** generates draws from the posterior -- all methods include functionality to access this distributional information. Information can be obtained directly or more conveniently using the **[BVARverse](https://cran.r-project.org/package=BVARverse)** package.
 
 **BVAR** comes with the FRED-MD and FRED-QD datasets (McCracken and Ng, 2016). They can be accessed using `data("fred_md")` or `data("fred_qd")` respectively. The dataset is licensed under a modified ODC-BY 1.0 license, that is available in the provided *LICENSE* file.
 
@@ -57,7 +57,7 @@ plot(irf(x))
 References
 -------
 
-Nikolas Kuschnig and Lukas Vashold (2021). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. *Journal of Statistical Software*, forthcoming.
+Nikolas Kuschnig and Lukas Vashold (2021). BVAR: Bayesian Vector Autoregressions with Hierarchical Prior Selection in R. *Journal of Statistical Software*, 14, 1-27, DOI: [10.18637/jss.v100.i14](dx.doi.org/10.18637/jss.v100.i14).
 
 Domenico Giannone, Michele Lenza and Giorgio E. Primiceri (2015). Prior Selection for Vector Autoregressions. *The Review of Economics and Statistics*, 97:2, 436-451, DOI: [10.1162/REST_a_00483](dx.doi.org/10.1162/REST_a_00483.).
 

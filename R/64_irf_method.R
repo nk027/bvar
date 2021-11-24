@@ -43,16 +43,13 @@
 #' data <- fred_transform(data, codes = c(5, 5, 1), lag = 4)
 #'
 #' # Estimate a BVAR using one lag, default settings and very few draws
-#' x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+#' x <- bvar(data, lags = 1, n_draw = 600L, n_burn = 100L, verbose = FALSE)
 #'
-#' # Calculate and store structural IRFs (via Cholesky decomposition)
-#' irf(x) <- irf(x, identification = TRUE)
+#' # Compute + store IRF with a longer horizon, no identification and thinning
+#' irf(x) <- irf(x, bv_irf(horizon = 24L, identification = FALSE), n_thin = 5L)
 #'
 #' # Update the confidence bands of the IRFs
 #' irf(x, conf_bands = c(0.01, 0.05, 0.1))
-#'
-#' # Compute and store with a longer horizon, no identification and thinning
-#' irf(x) <- irf(x, bv_irf(horizon = 24L, identification = FALSE), n_thin = 10L)
 #'
 #' # Recalculate with sign restrictions provided via the ellipsis
 #' irf(x, sign_restr = matrix(c(1, NA, NA, -1, 1, -1, -1, 1, 1), nrow = 3))

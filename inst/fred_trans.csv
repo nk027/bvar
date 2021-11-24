@@ -122,7 +122,6 @@
 "CES2000000008","log-2nd-diff",
 "CES3000000008","log-2nd-diff",
 "UMCSENTx","1st-diff","none"
-"MZMSL","log-2nd-diff",
 "DTCOLNVHFNM","log-2nd-diff","log-2nd-diff"
 "DTCTHFNM","log-2nd-diff","log-2nd-diff"
 "INVEST","log-2nd-diff","log-2nd-diff"
@@ -233,9 +232,7 @@
 "GS10TB3Mx",,"none"
 "CPF3MTB3Mx",,"none"
 "BOGMBASEREALx",,"log-diff"
-"IMFSLx",,"log-diff"
 "M1REAL",,"log-diff"
-"MZMREAL",,"log-diff"
 "BUSLOANSx",,"log-diff"
 "CONSUMERx",,"log-diff"
 "NONREVSLx",,"log-diff"

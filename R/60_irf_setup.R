@@ -45,12 +45,12 @@
 #'   Rubio-Ramirez, J. F. and Waggoner, D. F. and Zha, T. (2010) Structural
 #'   Vector Autoregressions: Theory of Identification and Algorithms for
 #'   Inference. \emph{The Review of Economic Studies}, \bold{77}, 665-696,
-#'   \url{https://doi.org/10.1111/j.1467-937X.2009.00578.x}.
+#'   \doi{10.1111/j.1467-937X.2009.00578.x}.
 #'   Arias, J.E. and Rubio-Ramirez, J. F. and Waggoner, D. F. (2018)
 #'   Inference Based on Structural Vector Autoregressions Identifiied with
 #'   Sign and Zero Restrictions: Theory and Applications.
 #'   \emph{Econometrica}, \bold{86}, 2, 685-720,
-#'   \url{https://doi.org/10.3982/ECTA14468}.
+#'   \doi{10.3982/ECTA14468}.
 #'
 #' @seealso \code{\link{irf.bvar}}; \code{\link{plot.bvar_irf}}
 #'

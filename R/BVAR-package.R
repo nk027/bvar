@@ -15,11 +15,11 @@
 #' @references
 #'   Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
 #'   Vector Autoregressions. \emph{The Review of Economics and Statistics},
-#'   \bold{97:2}, 436-451, \url{https://doi.org/10.1162/REST_a_00483}.
+#'   \bold{97:2}, 436-451, \doi{10.1162/REST_a_00483}.
 #'
 #'   Kuschnig, N. and Vashold, L. (2021) BVAR: Bayesian Vector Autoregressions
 #'   with Hierarchical Prior Selection in R.
 #'   \emph{Journal of Statistical Software}, \bold{14}, 1-27,
-#'   \url{https://doi.org/10.18637/jss.v100.i14}.
+#'   \doi{10.18637/jss.v100.i14}.
 #'
 NULL

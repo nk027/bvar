@@ -1,8 +1,8 @@
 Package: BVAR
 Type: Package
 Title: Hierarchical Bayesian Vector Autoregression
-Version: 1.0.1.9000
-Date: 2021-09-06
+Version: 1.0.2
+Date: 2021-11-24
 Authors@R: c(person("Nikolas", "Kuschnig", role = c("aut", "cre"), email = "nikolas.kuschnig@wu.ac.at", comment = c(ORCID = "0000-0002-6642-2543")),
     person("Lukas", "Vashold", role = "aut", comment = c(ORCID = "0000-0002-3562-3414")),
     person("Michael", "McCracken", role = "dtc"),
@@ -26,4 +26,4 @@ Suggests: coda, vars, tinytest
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
