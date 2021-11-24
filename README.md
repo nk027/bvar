@@ -3,7 +3,7 @@ BVAR: Hierarchical Bayesian Vector Autoregression
 =======
 
 [![CRAN](https://www.r-pkg.org/badges/version/BVAR)](https://cran.r-project.org/package=BVAR)
-[![codecov](https://codecov.io/gh/nk027/bvar/branch/master/graph/badge.svg)](https://codecov.io/gh/nk027/bvar)
+[![codecov](https://codecov.io/gh/nk027/bvar/branch/master/graph/badge.svg)](https://app.codecov.io/gh/nk027/bvar)
 [![month](https://cranlogs.r-pkg.org/badges/BVAR)](http://www.r-pkg.org/pkg/BVAR)
 [![total](https://cranlogs.r-pkg.org/badges/grand-total/BVAR)](http://www.r-pkg.org/pkg/BVAR)
 
