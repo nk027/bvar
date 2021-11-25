@@ -5,7 +5,7 @@ BVAR: Hierarchical Bayesian Vector Autoregression
 [![CRAN](https://www.r-pkg.org/badges/version/BVAR)](https://cran.r-project.org/package=BVAR)
 [![codecov](https://codecov.io/gh/nk027/bvar/branch/master/graph/badge.svg)](https://app.codecov.io/gh/nk027/bvar)
 [![month](https://cranlogs.r-pkg.org/badges/BVAR)](https://www.r-pkg.org/pkg/BVAR)
-[![total](https://cranlogs.r-pkg.org/badges/grand-total/BVAR)](http://www.r-pkg.org/pkg/BVAR)
+[![total](https://cranlogs.r-pkg.org/badges/grand-total/BVAR)](https://www.r-pkg.org/pkg/BVAR)
 
 Estimation of hierarchical Bayesian vector autoregressive models following Kuschnig & Vashold (2021). Implements hierarchical prior selection for conjugate priors in the fashion of Giannone, Lenza & Primiceri (2015). Functions to calculate forecasts, and compute and identify impulse responses and forecast error variance decompositions are available. Several methods to print, plot and summarise results facilitate analysis.
 
