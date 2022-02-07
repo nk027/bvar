@@ -80,9 +80,10 @@ auto_psi <- function(x, lags) {
         sqrt(arima(x, order = c(lags, 1, 0))$sigma2) # Try ARIMA(lags, 1, 0)
     }, warning = function(w) {
       message("Caught a warning while setting psi automatically:\n'", w, "'.")
+      sqrt(arima(x, order = c(lags, 0, 0))$sigma2) # Still return the value
     }
     )}), error = function(e) {
-      stop("Cannot set psi automatically via ARIMA(",lags, ", 0/1, 0) model.",
+      stop("Cannot set psi automatically via ARIMA(", lags, ", 0/1, 0) model.",
         "Caught the error:\n", e, "\n",
         "Please inspect the data or provide modes manually (see `?bv_psi`).")
     }, warning = function(w) {

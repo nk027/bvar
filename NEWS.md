@@ -1,5 +1,5 @@
 
-# v1.1.0, CRAN Update 7 / JSS Release
+# v1.0.2, CRAN Update 7 / JSS Release
 
 - Add DOI in the CITATION file for a new **JSS publication**
   - DOI will be registered after publication on CRAN
