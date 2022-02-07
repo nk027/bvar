@@ -68,28 +68,28 @@ gamma_coef <- function(mode, sd) {
 #' @noRd
 auto_psi <- function(x, lags) {
 
-  out <- list()
-
-  out[["mode"]] <- tryCatch(apply(x, 2, function(x) { # Try AR(lags)
-    tryCatch(sqrt(arima(x, order = c(lags, 0, 0))$sigma2),
-      error = function(e) { # If this fails for a series, increment integration
+  out <- list("mode" = rep(NA_real_, ncol(x)))
+  
+  for(j in seq_len(ncol(x))) {
+    ar_sigma2 <- tryCatch(sqrt(arima(x[, j], order = c(lags, 0, 0))$sigma2),
+      error = function(e) { # If this fails for, increment integration
         message("Caught an error while automatically setting psi.",
-          "Some of the data appears to be integrated; caught error:\n", e, "\n",
+          "Column", j, "appears to be integrated; caught error:\n", e, "\n",
           "Attempting to increase order of integration via an ARIMA(",
           lags, ", 1, 0) model.")
-        sqrt(arima(x, order = c(lags, 1, 0))$sigma2) # Try ARIMA(lags, 1, 0)
-    }, warning = function(w) {
-      message("Caught a warning while setting psi automatically:\n'", w, "'.")
-      sqrt(arima(x, order = c(lags, 0, 0))$sigma2) # Still return the value
-    }
-    )}), error = function(e) {
-      stop("Cannot set psi automatically via ARIMA(", lags, ", 0/1, 0) model.",
-        "Caught the error:\n", e, "\n",
-        "Please inspect the data or provide modes manually (see `?bv_psi`).")
-    }, warning = function(w) {
-      message("Caught a warning while setting psi automatically:\n'", w, "'.")
-    }
-  )
+        # Integrated ARMA instead
+        tryCatch(sqrt(arima(x[, j], order = c(lags, 1, 0))$sigma2), 
+          stop("Cannot set psi automatically via ARIMA(", lags, ", 0/1, 0)",
+            "Caught the error:\n", e, "\n",
+            "Please inspect the data or provide psi manually (see `?bv_psi`).")
+        )
+      }, warning = function(w) {
+        message("Caught a warning while setting psi automatically:\n", w, "\n")
+        suppressWarnings(sqrt(arima(x[, j], order = c(lags, 0, 0))$sigma2))
+      }
+    )
+    out[["mode"]][j] <- sqrt(ar_sigma2)
+  }
 
   out[["min"]] <- out[["mode"]] / 100
   out[["max"]] <- out[["mode"]] * 100
@@ -122,3 +122,4 @@ get_beta_comp <- function(beta, K, M, lags) {
 
   return(beta_comp)
 }
+
