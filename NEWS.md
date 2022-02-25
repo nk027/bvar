@@ -1,3 +1,8 @@
+# v1.0.3, CRAN Update 8
+
+- Fix bug where warnings caused an error during automatic ARIMA-based priors
+  - Thanks to Martin Feldkircher for pointing this out
+
 
 # v1.0.2, CRAN Update 7 / JSS Release
 
@@ -9,6 +14,7 @@
 - Add verbosity to ARIMA-based automatic prior settings
 - Add hook to simplify use of shared generics with *vars*
 - Add *README* file to the package with correct URLs
+
 
 # v1.0.1, CRAN Update 6
 
