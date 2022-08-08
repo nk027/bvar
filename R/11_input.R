@@ -69,7 +69,7 @@ gamma_coef <- function(mode, sd) {
 auto_psi <- function(x, lags) {
 
   out <- list("mode" = rep(NA_real_, ncol(x)))
-  
+
   for(j in seq_len(ncol(x))) {
     ar_sigma2 <- tryCatch(sqrt(arima(x[, j], order = c(lags, 0, 0))$sigma2),
       error = function(e) { # If this fails for, increment integration
@@ -78,7 +78,7 @@ auto_psi <- function(x, lags) {
           "Attempting to increase order of integration via an ARIMA(",
           lags, ", 1, 0) model.")
         # Integrated ARMA instead
-        tryCatch(sqrt(arima(x[, j], order = c(lags, 1, 0))$sigma2), 
+        tryCatch(sqrt(arima(x[, j], order = c(lags, 1, 0))$sigma2),
           stop("Cannot set psi automatically via ARIMA(", lags, ", 0/1, 0)",
             "Caught the error:\n", e, "\n",
             "Please inspect the data or provide psi manually (see `?bv_psi`).")
@@ -96,6 +96,28 @@ auto_psi <- function(x, lags) {
 
   return(out)
 }
+# auto_psi <- function(x, lags) {
+#
+#   out <- list("mode" = rep(NA_real_, ncol(x)))
+#
+#   for(j in seq_len(ncol(x))) {
+#
+#     y_0 <- cbind(1, lag_var(x[, j, drop = FALSE], lags = lags))
+#     y_0 <- y_0[(lags + 1):nrow(y_0), ]
+#     y_1 <- as.matrix(x[(lags + 1):nrow(x), j, drop = FALSE])
+#
+#     ar_beta <- chol2inv(chol(crossprod(y_0))) %*% crossprod(y_0, y_1)
+#     ar_resid <- y_1 - y_0 %*% ar_beta
+#
+#     out[["mode"]][j] <- sum(ar_resid^2) / (nrow(y_0) - lags - 1)
+#   }
+#
+#   out[["min"]] <- out[["mode"]] / 100
+#   out[["max"]] <- out[["mode"]] * 100
+#
+#   return(out)
+# }
+
 
 
 #' Compute companion matrix
