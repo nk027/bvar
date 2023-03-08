@@ -88,9 +88,7 @@ auto_psi <- function(x, lags) {
         suppressWarnings(sqrt(arima(x[, j], order = c(lags, 0, 0))$sigma2))
       }
     )
-    out[["mode"]][j] <- sqrt(ar_sigma2)
   }
-
   out[["min"]] <- out[["mode"]] / 100
   out[["max"]] <- out[["mode"]] * 100
 
