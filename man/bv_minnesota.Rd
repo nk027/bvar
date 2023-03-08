@@ -92,13 +92,13 @@ minimise the importance of conditioning on initial observations. See
 }
 \section{Functions}{
 \itemize{
-\item \code{bv_lambda}: Tightness of the Minnesota prior
+\item \code{bv_lambda()}: Tightness of the Minnesota prior
 
-\item \code{bv_alpha}: Variance decay with increasing lag order
+\item \code{bv_alpha()}: Variance decay with increasing lag order
 
-\item \code{bv_psi}: Prior standard deviation on other lags
+\item \code{bv_psi()}: Prior standard deviation on other lags
+
 }}
-
 \examples{
 # Adjust alpha and the Minnesota prior variance.
 bv_mn(alpha = bv_alpha(mode = 0.5, sd = 1, min = 1e-12, max = 10), var = 1e6)

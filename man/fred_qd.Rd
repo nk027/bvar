@@ -8,7 +8,7 @@
 \format{
 A \code{data.frame} object with dates as rownames.
 
-An object of class \code{data.frame} with 753 rows and 119 columns.
+An object of class \code{data.frame} with 769 rows and 118 columns.
 }
 \source{
 \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}

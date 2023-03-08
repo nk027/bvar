@@ -22,12 +22,7 @@ explanatory variables (by providing the name and the desired lag). See the
 example section for a demonstration. Defaults to \code{NULL}, i.e. all
 hyperparameters.}
 
-\item{vars_response}{Optional character or integer vectors used
-to select coefficents. Dependent variables are specified with
-\emph{vars_response}, explanatory ones with \emph{vars_impulse}. See the
-example section for a demonstration.}
-
-\item{vars_impulse}{Optional character or integer vectors used
+\item{vars_response, vars_impulse}{Optional character or integer vectors used
 to select coefficents. Dependent variables are specified with
 \emph{vars_response}, explanatory ones with \emph{vars_impulse}. See the
 example section for a demonstration.}

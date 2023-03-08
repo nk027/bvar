@@ -1,3 +1,11 @@
+# v1.0.4, CRAN Update 9
+
+- Fix bug from last update, where automatic ARIMA-priors where sqrt'd twice
+  - Thanks to Michael Wolf for pointing this out, and
+  - many thanks to Nirai Tomass for discovering the bug
+- Update **FRED-MD** and **FRED-QD** datasets to the 2023-02 vintage
+
+
 # v1.0.3, CRAN Update 8
 
 - Fix bug where warnings caused an error during automatic ARIMA-based priors

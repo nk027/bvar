@@ -30,10 +30,7 @@ to be ordered from earliest to latest, and variables in the columns.}
 
 \item{lags}{Integer scalar. Lag order of the model.}
 
-\item{n_draw}{Integer scalar. The number of iterations to (a) cycle
-through and (b) burn at the start.}
-
-\item{n_burn}{Integer scalar. The number of iterations to (a) cycle
+\item{n_draw, n_burn}{Integer scalar. The number of iterations to (a) cycle
 through and (b) burn at the start.}
 
 \item{n_thin}{Integer scalar. Every \emph{n_thin}'th iteration is stored.
