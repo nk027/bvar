@@ -73,16 +73,17 @@ auto_psi <- function(x, lags) {
   for(j in seq_len(ncol(x))) {
     ar_sigma2 <- tryCatch(sqrt(arima(x[, j], order = c(lags, 0, 0))$sigma2),
       error = function(e) { # If this fails for, increment integration
-        message("Caught an error while automatically setting psi.",
-          "Column", j, "appears to be integrated; caught error:\n", e, "\n",
+        message("Caught an error while automatically setting psi. ",
+          "Column ", j, " appears to be integrated; caught error:\n", e, "\n",
           "Attempting to increase order of integration via an ARIMA(",
           lags, ", 1, 0) model.")
         # Integrated ARMA instead
         tryCatch(sqrt(arima(x[, j], order = c(lags, 1, 0))$sigma2),
+                 error = function(f) {
           stop("Cannot set psi automatically via ARIMA(", lags, ", 0/1, 0)",
-            "Caught the error:\n", e, "\n",
+            "Caught the error:\n", f, "\n",
             "Please inspect the data or provide psi manually (see `?bv_psi`).")
-        )
+        })
       }, warning = function(w) {
         message("Caught a warning while setting psi automatically:\n", w, "\n")
         suppressWarnings(sqrt(arima(x[, j], order = c(lags, 0, 0))$sigma2))
@@ -108,7 +109,7 @@ auto_psi <- function(x, lags) {
 #     ar_beta <- chol2inv(chol(crossprod(y_0))) %*% crossprod(y_0, y_1)
 #     ar_resid <- y_1 - y_0 %*% ar_beta
 #
-#     out[["mode"]][j] <- sum(ar_resid^2) / (nrow(y_0) - lags - 1)
+#     out[["mode"]][j] <- sqrt(sum(ar_resid^2) / (nrow(y_0) - lags - 1))
 #   }
 #
 #   out[["min"]] <- out[["mode"]] / 100
