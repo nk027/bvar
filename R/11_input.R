@@ -79,10 +79,10 @@ auto_psi <- function(x, lags) {
           lags, ", 1, 0) model.")
         # Integrated ARMA instead
         tryCatch(sqrt(arima(x[, j], order = c(lags, 1, 0))$sigma2),
-                 error = function(f) {
-          stop("Cannot set psi automatically via ARIMA(", lags, ", 0/1, 0)",
-            "Caught the error:\n", f, "\n",
-            "Please inspect the data or provide psi manually (see `?bv_psi`).")
+          error = function(f) {
+            stop("Cannot set psi automatically via ARIMA(", lags, ", 0/1, 0)",
+              "Caught the error:\n", f, "\nPlease inspect the data ",
+              "or provide psi manually (see `?bv_psi`).")
         })
       }, warning = function(w) {
         message("Caught a warning while setting psi automatically:\n", w, "\n")
