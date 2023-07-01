@@ -16,7 +16,7 @@ compute_fevd <- function(irf_comp, M, horizon) {
 
   fevd_comp <- apply(irf_comp * irf_comp, c(1, 3), cumsum)
   tmp <- matrix(0, M, M)
-  for(i in 1:horizon) {
+  for(i in seq_len(horizon)) {
     tmp <- tmp + tcrossprod(irf_comp[, i, ])
     fevd_comp[i, , ] <- fevd_comp[i, , ] * (1 / diag(tmp))
   }

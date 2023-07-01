@@ -148,7 +148,6 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
   }
 
 
-
   return(irf_store)
 }
 
