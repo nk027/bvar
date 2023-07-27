@@ -54,8 +54,8 @@ hist_decomp.default <- function(x, ...) {
 
 #' Historical variance decompostions draws
 #'
-#' Computes forecast error variance decompostions (FEVDs) using the impulse
-#' response draws obtained from \code{\link{compute_irf}}.
+#' Computes a historical variance decomposition (HD) using draws of the
+#' orthogonalized vcov-matrix (currently retrieved with Cholesky decomposition).
 #'
 #' @param x Numeric matrix. Contains a draw of impulse responses
 #' obtained from \code{\link{compute_irf}}.

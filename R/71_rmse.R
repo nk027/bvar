@@ -21,7 +21,7 @@
 #' data <- fred_transform(data, codes = c(5, 5, 1), lag = 4)
 #'
 #' # Estimate a BVAR using one lag, default settings and very few draws
-#' x <- bvar(data[seq(1, nrow(data) - 5)], lags = 1,
+#' x <- bvar(data[seq(1, nrow(data) - 5), ], lags = 1,
 #'   n_draw = 600L, n_burn = 100L, verbose = FALSE)
 #'
 #' # Compute RMSE
