@@ -77,7 +77,7 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
   if(is.null(irf_store) || length(dots) != 0L) {
 
     # Setup ---
-
+    start_time <- Sys.time()
     irf <- if(length(dots) > 0 && inherits(dots[[1]], "bv_irf")) {
       dots[[1]]
     } else {bv_irf(...)}
@@ -116,6 +116,8 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       class = "bvar_irf")
 
     j <- 1
+    cat("Calculating impulse responses.\n")
+    pb <- txtProgressBar(min = 0, max = n_save, style = 3)
     for(i in seq_len(n_save)) {
       beta_comp <- get_beta_comp(beta[j, , ], K, M, lags)
       irf_comp  <- compute_irf(
@@ -130,7 +132,11 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
           irf_comp = irf_comp, M = M, horizon = irf[["horizon"]])
       }
       j <- j + n_thin
+      setTxtProgressBar(pb, j)
     }
+    close(pb)
+    timer <- Sys.time() - start_time
+    cat("Finished after ", format(round(timer, 2)), ".\n", sep = "")
   } # End new impulse responses
 
   if(is.null(irf_store[["quants"]]) || !missing(conf_bands)) {

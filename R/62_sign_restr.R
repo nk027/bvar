@@ -41,43 +41,34 @@
 sign_restr <- function(sigma_chol,
                        sign_restr, M, zero = FALSE, sign_lim = 10000) {
 
-  counter <- 0
+  outer_counter <- 0
   while(TRUE) {
-    counter <- counter + 1
+    outer_counter <- outer_counter + 1
     Q <- matrix(0, M, M)
-    okay <- numeric(M)
+    pos_check <- numeric(M)
     i <- 1
-    counter2 <- 0
-    while(sum(okay) != M) {
-      counter2 <- counter2 + 1
+    inner_counter <- 0
+    while(sum(pos_check) != M) {
+      inner_counter <- inner_counter + 1
       q_i <- draw_qi(sigma_chol, sign_restr, M, iter = i, zero = zero, Q)
-
-      chk_signs <- check_qi(q_i, sigma_chol, sign_restr, M, iter = i, zero = zero, okay)
+      chk_signs <- check_qi(q_i, sigma_chol, sign_restr, M, iter = i, zero = zero, pos_check)
 
       if(is.numeric(chk_signs)) {
         idx <- chk_signs[2]
-        okay[idx] <- 1
+        pos_check[idx] <- 1
         Q[ , idx] <- q_i * chk_signs[1]
         i <- i + 1
       }
-
-      # print(paste(counter, i, sum(okay)))
-
-      if(counter2 > sign_lim / 100) {
-        # print(counter)
-        # warning("No matrix buildable - Repeat from beginning.")
+      if(inner_counter > round(sign_lim / 10, 0)) {
         break
       }
     }
 
     if(is.numeric(chk_signs)) {
-      if(zero) {
-        Q <- t(Q)
-      }
       shock <- sigma_chol %*% Q
       return(shock)
     }
-    if(counter > sign_lim) {
+    if(outer_counter > sign_lim) {
       stop("No matrix fitting the sign restrictions found.")
     }
   }
@@ -91,12 +82,17 @@ draw_qi <- function(sigma_chol, sign_restr, M, iter, zero = FALSE, Q) {
       q_i <- x / norm(x, type = "2")
     } else {
       x <- rnorm(M, 0, 1)
-      q_i <- (diag(M) - Q %*% t(Q)) %*% x / norm((diag(M) - Q %*% t(Q)) %*% x, type = "2")
+      QQ <- (diag(M) - Q %*% t(Q))
+      q_i <- QQ %*% x / norm(QQ %*% x, type = "2")
     }
   } else {
     slct_row <- which(sign_restr[, iter] == 0)
-    R <- rbind(sigma_chol[slct_row, ], Q[seq_len(iter - 1), ])
-    qr_object <- qr(t(R))
+    if(length(slct_row) == 0) {
+      R <- cbind(t(sigma_chol[slct_row, ]), Q[, seq_len(iter - 1), drop = FALSE])
+    } else {
+      R <- cbind(sigma_chol[slct_row, ], Q[, seq_len(iter - 1), drop = FALSE])
+    }
+    qr_object <- qr(R)
     qr_rank <- qr_object[["rank"]]
     set <- if(qr_rank == 0) {seq_len(M)} else {-seq_len(qr_rank)}
     N_i <- qr.Q(qr_object, complete = TRUE)[, set, drop = FALSE]
@@ -107,11 +103,26 @@ draw_qi <- function(sigma_chol, sign_restr, M, iter, zero = FALSE, Q) {
 }
 
 #' @noRd
-check_qi <- function(q_i, sigma_chol, sign_restr, M, iter, zero = FALSE, okay) {
+check_qi <- function(q_i, sigma_chol, sign_restr, M, iter, zero = FALSE, pos_check) {
+  if(iter == 1 || zero) {
+    v_sign_restr <- sign_restr[, iter]
 
-  if(!zero) {
-    if(iter == 1) {
-      v_sign_restr <- sign_restr[, iter]
+    restricted <- which(!is.na(v_sign_restr) & v_sign_restr != 0)
+    shock_vec <- sigma_chol %*% q_i
+    shock_vec[abs(shock_vec) < 1e-12] <- 0
+    shock_vec[which(shock_vec < 0)] <- -1
+    shock_vec[which(shock_vec > 0)] <- 1
+
+    if(identical(shock_vec[restricted], v_sign_restr[restricted])) {
+      return(c(1L, iter))
+    } else if (identical(-shock_vec[restricted], v_sign_restr[restricted])) {
+      return(c(-1L, iter))
+    } else {
+      return(FALSE)
+    }
+  } else {
+    for(j in which(pos_check == 0)) {
+      v_sign_restr <- sign_restr[, j]
 
       restricted <- which(!is.na(v_sign_restr) & v_sign_restr != 0)
       shock_vec <- sigma_chol %*% q_i
@@ -120,81 +131,12 @@ check_qi <- function(q_i, sigma_chol, sign_restr, M, iter, zero = FALSE, okay) {
       shock_vec[which(shock_vec > 0)] <- 1
 
       if(identical(shock_vec[restricted], v_sign_restr[restricted])) {
-        return(c(1L, iter))
+        return(c(1L, j))
       } else if (identical(-shock_vec[restricted], v_sign_restr[restricted])) {
-        return(c(-1L, iter))
+        return(c(-1L, j))
       } else {
         return(FALSE)
       }
-    } else {
-      for(j in which(okay == 0)) {
-        v_sign_restr <- sign_restr[, j]
-
-        restricted <- which(!is.na(v_sign_restr) & v_sign_restr != 0)
-        shock_vec <- sigma_chol %*% q_i
-        shock_vec[abs(shock_vec) < 1e-12] <- 0
-        shock_vec[which(shock_vec < 0)] <- -1
-        shock_vec[which(shock_vec > 0)] <- 1
-
-        if(identical(shock_vec[restricted], v_sign_restr[restricted])) {
-          return(c(1L, j))
-        } else if (identical(-shock_vec[restricted], v_sign_restr[restricted])) {
-          return(c(-1L, j))
-        } else {
-          return(FALSE)
-        }
-      }
-    }
-
-  } else {
-    v_sign_restr <- sign_restr[, iter]
-    restricted <- which(!is.na(v_sign_restr) & v_sign_restr != 0)
-    shock_vec <- sigma_chol %*% q_i
-
-    shock_vec[abs(shock_vec) < 1e-12] <- 0
-    shock_vec[which(shock_vec < 0)] <- -1
-    shock_vec[which(shock_vec > 0)] <- 1
-
-    if(identical(shock_vec[restricted], v_sign_restr[restricted])) {
-      return(1L)
-    } else if (identical(-shock_vec[restricted], v_sign_restr[restricted])) {
-      return(-1L)
-    } else {
-      return(FALSE)
     }
   }
 }
-
-
-# check_vector <- function() {
-#
-# }
-
-#' #' @noRd
-#' draw_Q <- function(sigma_chol, sign_restr, M, zero = FALSE) {
-#'
-#'   if(!zero) { # Sign restricted
-#'     qr_object <- qr(matrix(rnorm(M ^ 2, 0, 1), M, M))
-#'     Q <- qr.Q(qr_object)
-#'   } else { # Zero restricted
-#'     Q <- matrix(0, M, M)
-#'     for(i in seq_len(M)) { # Build up Q
-#'       slct_row <- which(sign_restr[, i] == 0)
-#'       R <- rbind(sigma_chol[slct_row, ], Q[seq_len(i - 1), ])
-#'       qr_object <- qr(t(R))
-#'       qr_rank <- qr_object[["rank"]]
-#'       set <- if(qr_rank == 0) {seq_len(M)} else {-seq_len(qr_rank)}
-#'       N_i <- qr.Q(qr_object, complete = TRUE)[, set, drop = FALSE]
-#'       N_stdn <- crossprod(N_i, rnorm(M, 0, 1))
-#'       q_i <- N_i %*% (N_stdn / norm(N_stdn, type = "2"))
-#'
-#'       Q[i, ] <- q_i
-#'     }
-#'     Q <- t(Q)
-#'   }
-#'
-#'   Q <- Q %*% diag((diag(Q) > 0) - (diag(Q) < 0)) # Positive
-#'
-#'   return(Q)
-#' }
-
