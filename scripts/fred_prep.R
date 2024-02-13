@@ -3,7 +3,7 @@
 
 keep <- readLines("data/fred_permitted.txt")
 
-file <- "2023-02.csv" # Update this
+file <- "2024-01.csv" # Update this
 
 
 # QD ---
@@ -28,6 +28,8 @@ names(fred_qd)[grep("S[.]P", names(fred_qd))] <-
   c("SP500", "SPINDUST", "SPDIVYIELD", "SPPERATIO")
 names(fred_qd_trans)[grep("S[.]P", names(fred_qd_trans))] <-
   c("SP500", "SPINDUST", "SPDIVYIELD", "SPPERATIO")
+names(fred_qd) <- toupper(names(fred_qd))
+names(fred_qd_trans) <- toupper(names(fred_qd_trans))
 
 # Test
 all(vapply(fred_qd, is.numeric, logical(1)))
@@ -62,6 +64,8 @@ names(fred_md)[grep("S[.]P", names(fred_md))] <-
   c("SP500", "SPINDUST", "SPDIVYIELD", "SPPERATIO")
 names(fred_md_trans)[grep("S[.]P", names(fred_md_trans))] <-
   c("SP500", "SPINDUST", "SPDIVYIELD", "SPPERATIO")
+names(fred_md) <- toupper(names(fred_md))
+names(fred_md_trans) <- toupper(names(fred_md_trans))
 
 # Test
 all(vapply(fred_md, is.numeric, logical(1)))
