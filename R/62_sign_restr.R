@@ -18,8 +18,8 @@
 #' @param M Integer scalar. Columns of \emph{Y}.
 #' @param zero Logical scalar. Whether to impose zero and sign restrictions,
 #' following Arias, Rubio-Ramirez and Waggoner (2018).
-#' @param sign_lim Integer scalar. Maximum number of rotational matrices to
-#' draw and check for fitting sign restrictions.
+#' @param sign_lim Integer scalar. Maximum number (approximately) of rotational
+#' matrices to draw and check for fitting sign restrictions.
 #'
 #' @return Returns a shock matrix for the computation of impulse responses
 #' that is identified via sign and/or zero restrictions.
@@ -39,58 +39,49 @@
 #'
 #' @noRd
 sign_restr <- function(sigma_chol,
-                       sign_restr, M, zero = FALSE, sign_lim = 10000) {
+  sign_restr, M, zero = FALSE, sign_lim = 1000) {
 
-  outer_counter <- 0
-  while(TRUE) {
-    outer_counter <- outer_counter + 1
-    Q <- matrix(0, M, M)
-    pos_check <- numeric(M)
-    i <- 1
-    inner_counter <- 0
-    while(sum(pos_check) != M) {
-      inner_counter <- inner_counter + 1
-      q_i <- draw_qi(sigma_chol, sign_restr, M, iter = i, zero = zero, Q)
-      chk_signs <- check_qi(q_i, sigma_chol, sign_restr, M, iter = i, zero = zero, pos_check)
+  counter_outer <- 0L
+  while(TRUE) { # Search for a shock until we exceed the number of tries
+    if(counter_outer > min(sign_lim^.5)) { # Minimum of 10 tries (100^.5)
+      stop(paste0("No matrix fitting the sign restrictions found after ",
+        sign_lim, " tries. Consider increasing the limit via the",
+        "`sign_lim` argument of `bv_irf()` or adapting the restrictions."))
+    }
+    counter_outer <- counter_outer + 1L
 
-      if(is.numeric(chk_signs)) {
-        idx <- chk_signs[2]
-        pos_check[idx] <- 1
-        Q[ , idx] <- q_i * chk_signs[1]
-        i <- i + 1
+    Q <- matrix(0, M, M) # Shock matrix
+    pos_check <- logical(M) # Vector that indicates suitable shocks
+
+    i <- 1L
+    counter_inner <- 0L
+    while(!all(pos_check)) {
+      if(counter_inner > min(sign_lim^.6)) break
+      counter_inner <- counter_inner + 1L # Minimum of 15 tries (100^.6)
+
+      # Draw and check a shock
+      q_i <- draw_qi(sigma_chol, sign_restr, M, i = i, zero = zero, Q = Q)
+      sign_check <- check_qi(q_i, sigma_chol, sr_i = sign_restr[, i])
+      if(sign_check != 0L) { # The signs are correct
+        pos_check[i] <- TRUE
+        Q[, i] <- q_i * sign_check # Keep or flip the sign of the shock
+        i <- i + 1L
       }
-      if(inner_counter > round(sign_lim / 10, 0)) {
-        break
-      }
     }
 
-    if(is.numeric(chk_signs)) {
-      shock <- sigma_chol %*% Q
-      return(shock)
-    }
-    if(outer_counter > sign_lim) {
-      stop("No matrix fitting the sign restrictions found.")
-    }
+    if(all(pos_check)) {return(sigma_chol %*% Q)}
   }
 }
 
 #' @noRd
-draw_qi <- function(sigma_chol, sign_restr, M, iter, zero = FALSE, Q) {
-  if(!zero) {
-    if(iter == 1) {
-      x <- rnorm(M, 0, 1)
-      q_i <- x / norm(x, type = "2")
+draw_qi <- function(sigma_chol, sign_restr, M, i, zero = FALSE, Q) {
+
+  if(isTRUE(zero)) { # Zero-sign-restrictions
+    sel_row <- which(sign_restr[, i] == 0)
+    if(length(sel_row) == 0) {
+      R <- cbind(t(sigma_chol[sel_row, ]), Q[, seq_len(i - 1L), drop = FALSE])
     } else {
-      x <- rnorm(M, 0, 1)
-      QQ <- (diag(M) - Q %*% t(Q))
-      q_i <- QQ %*% x / norm(QQ %*% x, type = "2")
-    }
-  } else {
-    slct_row <- which(sign_restr[, iter] == 0)
-    if(length(slct_row) == 0) {
-      R <- cbind(t(sigma_chol[slct_row, ]), Q[, seq_len(iter - 1), drop = FALSE])
-    } else {
-      R <- cbind(sigma_chol[slct_row, ], Q[, seq_len(iter - 1), drop = FALSE])
+      R <- cbind(sigma_chol[sel_row, ], Q[, seq_len(i - 1L), drop = FALSE])
     }
     qr_object <- qr(R)
     qr_rank <- qr_object[["rank"]]
@@ -98,45 +89,37 @@ draw_qi <- function(sigma_chol, sign_restr, M, iter, zero = FALSE, Q) {
     N_i <- qr.Q(qr_object, complete = TRUE)[, set, drop = FALSE]
     N_stdn <- crossprod(N_i, rnorm(M, 0, 1))
     q_i <- N_i %*% (N_stdn / norm(N_stdn, type = "2"))
+
+  } else { # Pure sign-restrictions
+    if(i == 1) {
+      x <- rnorm(M, 0, 1)
+      q_i <- x / norm(x, type = "2")
+    } else {
+      x <- rnorm(M, 0, 1)
+      QQ <- diag(M) - tcrossprod(Q)
+      q_i <- QQ %*% x / norm(QQ %*% x, type = "2")
+    }
   }
+
   return(q_i)
 }
 
 #' @noRd
-check_qi <- function(q_i, sigma_chol, sign_restr, M, iter, zero = FALSE, pos_check) {
-  if(iter == 1 || zero) {
-    v_sign_restr <- sign_restr[, iter]
+check_qi <- function(q_i, sigma_chol, sr_i) {
+  # To-do: Zero restrictions should work by design, and we could use shocks
+  # interchangeably for i != 0, i.e. compare 'shock_vec' to all 'sign_restr'.
 
-    restricted <- which(!is.na(v_sign_restr) & v_sign_restr != 0)
-    shock_vec <- sigma_chol %*% q_i
-    shock_vec[abs(shock_vec) < 1e-12] <- 0
-    shock_vec[which(shock_vec < 0)] <- -1
-    shock_vec[which(shock_vec > 0)] <- 1
+  restricted <- which(!is.na(sr_i) & sr_i != 0) # Do we need the sr_i != 0?
+  shock_vec <- sigma_chol %*% q_i
+  shock_vec[abs(shock_vec) < 1e-12] <- 0 # We could probably skip this
+  shock_vec <- sign(shock_vec)
 
-    if(identical(shock_vec[restricted], v_sign_restr[restricted])) {
-      return(c(1L, iter))
-    } else if (identical(-shock_vec[restricted], v_sign_restr[restricted])) {
-      return(c(-1L, iter))
-    } else {
-      return(FALSE)
-    }
+  # Return 1L for a fit, -1L for a fit with flipped signs, and 0L for a failure
+  if(identical(shock_vec[restricted], sr_i[restricted])) {
+    return(1L)
+  } else if (identical(-shock_vec[restricted], sr_i[restricted])) {
+    return(-1L)
   } else {
-    for(j in which(pos_check == 0)) {
-      v_sign_restr <- sign_restr[, j]
-
-      restricted <- which(!is.na(v_sign_restr) & v_sign_restr != 0)
-      shock_vec <- sigma_chol %*% q_i
-      shock_vec[abs(shock_vec) < 1e-12] <- 0
-      shock_vec[which(shock_vec < 0)] <- -1
-      shock_vec[which(shock_vec > 0)] <- 1
-
-      if(identical(shock_vec[restricted], v_sign_restr[restricted])) {
-        return(c(1L, j))
-      } else if (identical(-shock_vec[restricted], v_sign_restr[restricted])) {
-        return(c(-1L, j))
-      } else {
-        return(FALSE)
-      }
-    }
+    return(0L)
   }
 }

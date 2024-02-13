@@ -2,6 +2,7 @@
 % Please edit documentation in R/BVAR-package.R
 \docType{package}
 \name{BVAR-package}
+\alias{BVAR}
 \alias{BVAR-package}
 \title{BVAR: Hierarchical Bayesian vector autoregression}
 \description{
@@ -22,4 +23,28 @@ Giannone, D. and Lenza, M. and Primiceri, G. E. (2015) Prior Selection for
   with Hierarchical Prior Selection in R.
   \emph{Journal of Statistical Software}, \bold{14}, 1-27,
   \doi{10.18637/jss.v100.i14}.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/nk027/bvar}
+  \item Report bugs at \url{https://github.com/nk027/bvar/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Nikolas Kuschnig \email{nikolas.kuschnig@wu.ac.at} (\href{https://orcid.org/0000-0002-6642-2543}{ORCID})
+
+Authors:
+\itemize{
+  \item Lukas Vashold (\href{https://orcid.org/0000-0002-3562-3414}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Nirai Tomass [contributor]
+  \item Michael McCracken [data contributor]
+  \item Serena Ng [data contributor]
+}
+
 }

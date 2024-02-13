@@ -5,6 +5,7 @@
 #'
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param type Character scalar. Whether to use median or mean values.
+#' @param ... Not used.
 #'
 #' @return Returns a numerical array (time, variable, shock) with the results
 #' of the historical decomposition.
@@ -24,8 +25,9 @@
 #' x <- bvar(data, lags = 1, n_draw = 600L, n_burn = 100L, verbose = FALSE)
 #'
 #' # Compute historical decomposition
-#' hist_decomp(x, type = "mean"))
-hist_decomp.bvar <- function(x, type = c("mean", "median")) {
+#' hist_decomp(x, type = "mean")
+#' }
+hist_decomp.bvar <- function(x, type = c("mean", "median"), ...) {
 
   type <- match.arg(type)
 
@@ -64,7 +66,7 @@ hist_decomp.default <- function(x, ...) {
 #' @param eps Numeric matrix of the inverse shock times residuals.
 #' @param lags,N,M,K Integer scalar. Dimensions of the VAR.
 #'
-#' @return Returns a numeric array of FEVDs.
+#' @return Returns a numeric array of HDs.
 #'
 #' @noRd
 compute_hd <- function(x, shock, comp, eps,

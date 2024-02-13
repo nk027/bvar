@@ -17,6 +17,8 @@
 #' \code{\link{bv_irf}}. Contains settings for the IRFs / FEVDs.
 #' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
 #' to calculate, others are dropped.
+#' @param verbose Logical scalar. Whether to print intermediate results and
+#' progress.
 #' @param vars_impulse,vars_response Optional numeric or character vector.
 #' Used to subset the summary method's outputs to certain variables by position
 #' or name (must be available). Defaults to \code{NULL}, i.e. all variables.

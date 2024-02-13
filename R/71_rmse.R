@@ -6,12 +6,17 @@
 #' @param x A \code{bvar} object, obtained from \code{\link{bvar}}.
 #' @param holdout Optional numeric matrix or dataframe. Used for the
 #' out-of-sample fit.
+#' @param n_thin Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
+#' to calculate, others are dropped.
+#' @param ... Not used.
 #'
 #' @return Returns a matrix with measures of model fit.
 #'
 #' @keywords BVAR RMSE LPS
 #'
 #' @export
+#'
+#' @importFrom stats dnorm resid
 #'
 #' @examples
 #' \donttest{
@@ -27,7 +32,8 @@
 #' # Compute RMSE
 #' rmse(x)
 #' lps(x, holdout = data[seq(nrow(data) - 4, nrow(data)), ])
-rmse.bvar <- function(x, holdout) {
+#' }
+rmse.bvar <- function(x, holdout, ...) {
 
   if(missing(holdout)) { # In-sample
     apply(resid(x, type = "mean"), 2, function(r) sqrt(sum(r^2) / length(r)))
@@ -38,9 +44,10 @@ rmse.bvar <- function(x, holdout) {
   }
 }
 
+
 #' @rdname rmse.bvar
 #' @export
-lps.bvar <- function(x, holdout, n_thin = 1L) {
+lps.bvar <- function(x, holdout, n_thin = 1L, ...) {
 
   n_pres <- x[["meta"]][["n_save"]]
   n_thin <- int_check(n_thin, min = 1, max = (n_pres / 10),
@@ -69,7 +76,6 @@ lps.bvar <- function(x, holdout, n_thin = 1L) {
 
   return(lps)
 }
-
 
 
 #' @rdname rmse.bvar

@@ -22,4 +22,4 @@
 #'   \emph{Journal of Statistical Software}, \bold{14}, 1-27,
 #'   \doi{10.18637/jss.v100.i14}.
 #'
-NULL
+"_PACKAGE"

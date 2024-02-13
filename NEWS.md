@@ -1,3 +1,13 @@
+
+# v1.0.5, CRAN Update 9
+- Add historical decompositions and RMSE/LPS, and WAIC for analysis
+- Improve the algorithm to draw sign restrictions
+  - Shocks are now built and checked per variable
+- Fix the CRAN *NOTE* on missing "tangle output"
+- Update **FRED-MD** and **FRED-QD** datasets to the 2024-01 vintage
+  - A change in their naming scheme means we convert all names `toupper` now
+
+
 # v1.0.4, CRAN Update 9
 
 - Fix bug from last update, where automatic ARIMA-priors where sqrt'd twice

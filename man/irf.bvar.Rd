@@ -10,7 +10,7 @@
 \alias{summary.bvar_irf}
 \title{Impulse response and forecast error methods for Bayesian VARs}
 \usage{
-\method{irf}{bvar}(x, ..., conf_bands, n_thin = 1L)
+\method{irf}{bvar}(x, ..., conf_bands, n_thin = 1L, verbose = FALSE)
 
 \method{fevd}{bvar}(x, ..., conf_bands, n_thin = 1L)
 
@@ -38,6 +38,9 @@ Note that the median, i.e. 0.5 is always included.}
 
 \item{n_thin}{Integer scalar. Every \emph{n_thin}'th draw in \emph{x} is used
 to calculate, others are dropped.}
+
+\item{verbose}{Logical scalar. Whether to print intermediate results and
+progress.}
 
 \item{value}{A \code{bvar_irf} object to assign.}
 
