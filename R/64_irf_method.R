@@ -288,7 +288,8 @@ fevd.bvar_fevd <- function(x, conf_bands, ...) {
 irf <- function(x, ...) {UseMethod("irf", x)}
 
 
-#' @noRd
+#' @rdname irf.bvar
+#' @export
 irf.default <- function(x, ...) {
   stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
 }
@@ -304,7 +305,8 @@ irf.default <- function(x, ...) {
 fevd <- function(x, ...) {UseMethod("fevd", x)}
 
 
-#' @noRd
+#' @rdname irf.bvar
+#' @export
 fevd.default <- function(x, ...) {
   stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
 }

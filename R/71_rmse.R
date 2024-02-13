@@ -83,7 +83,8 @@ lps.bvar <- function(x, holdout, n_thin = 1L, ...) {
 rmse <- function(x, ...) {UseMethod("rmse", x)}
 
 
-#' @noRd
+#' @rdname rmse.bvar
+#' @export
 rmse.default <- function(x, ...) {
   stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
 }
@@ -94,7 +95,8 @@ rmse.default <- function(x, ...) {
 lps <- function(x, ...) {UseMethod("lps", x)}
 
 
-#' @noRd
+#' @rdname rmse.bvar
+#' @export
 lps.default <- function(x, ...) {
   stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
 }

@@ -132,7 +132,8 @@ WAIC.bvar <- function(x, n_thin = 1L, ...) {
 WAIC <- function(x, ...) {UseMethod("WAIC", x)}
 
 
-#' @noRd
+#' @rdname WAIC.bvar
+#' @export
 WAIC.default <- function(x, ...) {
   stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
 }

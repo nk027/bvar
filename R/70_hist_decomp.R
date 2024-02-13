@@ -48,7 +48,8 @@ hist_decomp.bvar <- function(x, type = c("mean", "quantile"), ...) {
 hist_decomp <- function(x, ...) {UseMethod("hist_decomp", x)}
 
 
-#' @noRd
+#' @rdname hist_decomp.bvar
+#' @export
 hist_decomp.default <- function(x, ...) {
   stop("No methods for class ", paste0(class(x), collapse = " / "), " found.")
 }

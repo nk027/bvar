@@ -33,7 +33,8 @@
 companion <- function(object, ...) {UseMethod("companion", object)}
 
 
-#' @noRd
+#' @rdname companion
+#' @export
 companion.default <- function(object, ...) {
   stop("No methods for class ",
     paste0(class(object), collapse = " / "), " found.")
