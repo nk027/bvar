@@ -66,10 +66,11 @@
 #' # Limit the summary to responses of variable #2
 #' summary(x, vars_response = 2L)
 #' }
-irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
+irf.bvar <- function(x, ..., conf_bands, n_thin = 1L, verbose = FALSE) {
 
   dots <- list(...)
   irf_store <- x[["irf"]]
+  verbose <- isTRUE(verbose)
 
 
   # Calculate impulse responses -----
@@ -116,8 +117,10 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
       class = "bvar_irf")
 
     j <- 1
-    cat("Calculating impulse responses.\n")
-    pb <- txtProgressBar(min = 0, max = n_save, style = 3)
+    if(verbose) {
+      cat("Calculating impulse responses.\n")
+      pb <- txtProgressBar(min = 0, max = n_save, style = 3)
+    }
     for(i in seq_len(n_save)) {
       beta_comp <- get_beta_comp(beta[j, , ], K, M, lags)
       irf_comp  <- compute_irf(
@@ -132,11 +135,13 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L) {
           irf_comp = irf_comp, M = M, horizon = irf[["horizon"]])
       }
       j <- j + n_thin
-      setTxtProgressBar(pb, j)
+      if(verbose) {setTxtProgressBar(pb, j)}
     }
-    close(pb)
-    timer <- Sys.time() - start_time
-    cat("Finished after ", format(round(timer, 2)), ".\n", sep = "")
+    if(verbose) {
+      close(pb)
+      timer <- Sys.time() - start_time
+      cat("Finished after ", format(round(timer, 2)), ".\n", sep = "")
+    }
   } # End new impulse responses
 
   if(is.null(irf_store[["quants"]]) || !missing(conf_bands)) {
