@@ -4,7 +4,9 @@
 \alias{rmse.bvar}
 \alias{lps.bvar}
 \alias{rmse}
+\alias{rmse.default}
 \alias{lps}
+\alias{lps.default}
 \title{Model fit in- and out-of-sample}
 \usage{
 \method{rmse}{bvar}(x, holdout, ...)
@@ -13,7 +15,11 @@
 
 rmse(x, ...)
 
+\method{rmse}{default}(x, ...)
+
 lps(x, ...)
+
+\method{lps}{default}(x, ...)
 }
 \arguments{
 \item{x}{A \code{bvar} object, obtained from \code{\link{bvar}}.}

@@ -4,8 +4,10 @@
 \alias{irf.bvar}
 \alias{fevd.bvar}
 \alias{irf}
+\alias{irf.default}
 \alias{irf<-}
 \alias{fevd}
+\alias{fevd.default}
 \alias{fevd<-}
 \alias{summary.bvar_irf}
 \title{Impulse response and forecast error methods for Bayesian VARs}
@@ -16,9 +18,13 @@
 
 irf(x, ...)
 
+\method{irf}{default}(x, ...)
+
 irf(x) <- value
 
 fevd(x, ...)
+
+\method{fevd}{default}(x, ...)
 
 fevd(x) <- value
 

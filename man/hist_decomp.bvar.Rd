@@ -3,11 +3,14 @@
 \name{hist_decomp.bvar}
 \alias{hist_decomp.bvar}
 \alias{hist_decomp}
+\alias{hist_decomp.default}
 \title{Historical decomposition}
 \usage{
 \method{hist_decomp}{bvar}(x, type = c("mean", "quantile"), ...)
 
 hist_decomp(x, ...)
+
+\method{hist_decomp}{default}(x, ...)
 }
 \arguments{
 \item{x}{A \code{bvar} object, obtained from \code{\link{bvar}}.}

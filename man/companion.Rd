@@ -2,10 +2,13 @@
 % Please edit documentation in R/97_companion.R
 \name{companion}
 \alias{companion}
+\alias{companion.default}
 \alias{companion.bvar}
 \title{Retrieve companion matrix from a Bayesian VAR}
 \usage{
 companion(object, ...)
+
+\method{companion}{default}(object, ...)
 
 \method{companion}{bvar}(object, type = c("quantile", "mean"), conf_bands = 0.5, ...)
 }

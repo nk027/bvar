@@ -3,11 +3,14 @@
 \name{WAIC.bvar}
 \alias{WAIC.bvar}
 \alias{WAIC}
+\alias{WAIC.default}
 \title{Widely applicable information criterion (WAIC) for Bayesian VARs}
 \usage{
 \method{WAIC}{bvar}(x, n_thin = 1L, ...)
 
 WAIC(x, ...)
+
+\method{WAIC}{default}(x, ...)
 }
 \arguments{
 \item{x}{A \code{bvar} object, obtained from \code{\link{bvar}}.}
