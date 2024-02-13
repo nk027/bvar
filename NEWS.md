@@ -4,8 +4,7 @@
 - Improve the algorithm to draw sign restrictions
   - Shocks are now built and checked per variable
 - Fix the CRAN *NOTE* on missing "tangle output"
-- Update **FRED-MD** and **FRED-QD** datasets to the 2024-01 vintage
-  - A change in their naming scheme means we convert all names `toupper` now
+- Keep older FRED-datasets due to small changes in naming
 
 
 # v1.0.4, CRAN Update 9

@@ -3,7 +3,7 @@
 
 keep <- readLines("data/fred_permitted.txt")
 
-file <- "2024-01.csv" # Update this
+file <- "2023-10.csv" # Update this
 
 
 # QD ---
@@ -22,14 +22,18 @@ dates <- as.Date(fred_qd$sasdate, "%m/%d/%Y")
 rownames(fred_qd) <- dates
 fred_qd$sasdate <- NULL
 
-# Adjust S&P 500 names
-names(fred_qd)[grep("S[.]P", names(fred_qd))]
-names(fred_qd)[grep("S[.]P", names(fred_qd))] <-
-  c("SP500", "SPINDUST", "SPDIVYIELD", "SPPERATIO")
-names(fred_qd_trans)[grep("S[.]P", names(fred_qd_trans))] <-
-  c("SP500", "SPINDUST", "SPDIVYIELD", "SPPERATIO")
-names(fred_qd) <- toupper(names(fred_qd))
-names(fred_qd_trans) <- toupper(names(fred_qd_trans))
+# To-do: versions beyond 2023-10 mess up the names
+# names(fred_qd)[grep("S.P", names(fred_qd))]
+# names(fred_qd)[grep("S.P", names(fred_qd))] <-
+#   c("SP500", "SPINDUST", "SPDIVYIELD", "SPPERATIO")
+# names(fred_qd_trans)[grep("S.P", names(fred_qd_trans))] <-
+#   c("SP500", "SPINDUST", "SPDIVYIELD", "SPPERATIO")
+# lower_case <- c("pcecc96", "conspi", "cp3m",	"compapff")
+# names(fred_qd)[names(fred_qd) %in% lower_case]
+# names(fred_qd)[names(fred_qd) %in% lower_case] <-
+#   toupper(names(fred_qd)[names(fred_qd) %in% lower_case])
+# names(fred_qd) <- toupper(names(fred_qd))
+# names(fred_qd_trans) <- toupper(names(fred_qd_trans))
 
 # Test
 all(vapply(fred_qd, is.numeric, logical(1)))
@@ -64,8 +68,8 @@ names(fred_md)[grep("S[.]P", names(fred_md))] <-
   c("SP500", "SPINDUST", "SPDIVYIELD", "SPPERATIO")
 names(fred_md_trans)[grep("S[.]P", names(fred_md_trans))] <-
   c("SP500", "SPINDUST", "SPDIVYIELD", "SPPERATIO")
-names(fred_md) <- toupper(names(fred_md))
-names(fred_md_trans) <- toupper(names(fred_md_trans))
+# names(fred_md) <- toupper(names(fred_md))
+# names(fred_md_trans) <- toupper(names(fred_md_trans))
 
 # Test
 all(vapply(fred_md, is.numeric, logical(1)))

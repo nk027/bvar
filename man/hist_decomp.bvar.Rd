@@ -5,7 +5,7 @@
 \alias{hist_decomp}
 \title{Historical decomposition}
 \usage{
-\method{hist_decomp}{bvar}(x, type = c("mean", "median"), ...)
+\method{hist_decomp}{bvar}(x, type = c("mean", "quantile"), ...)
 
 hist_decomp(x, ...)
 }

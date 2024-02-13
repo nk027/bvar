@@ -134,7 +134,11 @@ expect_error(bf_irf(sign_restr = matrix(rnorm(6), nrow = 3)))
 expect_silent(run <- bvar(data, lags = 2, priors = priors, mh = mh))
 # Conditional and sign-restricted
 expect_silent(run2 <- bvar(data[, 1:3], lags = 2,
-  fcast = opt_fcast2, irf = opt_irf2))
+  fcast = opt_fcast2, irf = opt_irf2, n_draw = 1000L, n_burn = 500L))
+# Psi as hyperprior
+expect_silent(run3 <- bvar(data, lags = 2,
+  priors = bv_priors(hyper = c("lambda", "psi")), mh = mh,
+  n_draw = 1000L, n_burn = 500L))
 
 
 # 5*_fcast ---
@@ -154,7 +158,7 @@ expect_silent(plot(fcasts1, vars = 1))
 
 # Ex-post irfs and methods
 expect_silent(irf(run) <- irf(run, opt_irf1))
-expect_silent(irfs1 <- irf(run))
+expect_silent(irfs1 <- irf(run, verbose = TRUE))
 expect_silent(irfs2 <- irf(run2, opt_irf2))
 expect_silent(irfs3 <- irf(run2, opt_irf3))
 
@@ -243,3 +247,9 @@ expect_silent(print(summary(run)))
 expect_silent(print(companion(run)))
 expect_silent(print(companion(run, type = "mean")))
 expect_silent(print(companion(run, conf_bands = 0.1)))
+
+expect_silent(print(hist_decomp(run, type = "mean")))
+expect_silent(print(hist_decomp(run, type = "quantile")))
+expect_silent(print(rmse(run, type = "mean")))
+expect_silent(print(lps(run, conf_bands = 0.1)))
+expect_silent(print(WAIC(run)))

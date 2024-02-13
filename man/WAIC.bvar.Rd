@@ -35,7 +35,7 @@ data <- fred_qd[, c("CPIAUCSL", "UNRATE", "FEDFUNDS")]
 data <- fred_transform(data, codes = c(5, 5, 1), lag = 4)
 
 # Estimate a BVAR using one lag, default settings and very few draws
-x <- bvar(data, lags = 1, n_draw = 1000L, n_burn = 200L, verbose = FALSE)
+x <- bvar(data, lags = 1, n_draw = 600L, n_burn = 100L, verbose = FALSE)
 
 # Calculate the log-likelihood
 WAIC(x)
@@ -45,7 +45,6 @@ WAIC(x)
 Watanabe, S. (2010) Asymptotic Equivalence of Bayes Cross Validation and
   Widely Applicable Information Criterion in Singular Learning Theory.
   \emph{Journal of Machine Learning Research}, \bold{11}, 3571-3594.
-  \doi{10.5555/2567709.2502609}.
 
   Kuschnig, N. and Vashold, L. (2021) BVAR: Bayesian Vector Autoregressions
   with Hierarchical Prior Selection in R.

@@ -27,7 +27,7 @@
 #' # Compute historical decomposition
 #' hist_decomp(x, type = "mean")
 #' }
-hist_decomp.bvar <- function(x, type = c("mean", "median"), ...) {
+hist_decomp.bvar <- function(x, type = c("mean", "quantile"), ...) {
 
   type <- match.arg(type)
 
