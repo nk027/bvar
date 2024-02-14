@@ -37,4 +37,4 @@ jss: article_jss.Rnw refs.bib
 	pdflatex article_jss.tex
 
 clean:
-	rm -f *.aux *.bbl *.blg *.fls *.log *.out *.fdb_latexmk *.tex *.R fig-*
+	rm -f *.aux *.bbl *.blg *.fls *.log *.out *.fdb_latexmk *.tex fig-*
