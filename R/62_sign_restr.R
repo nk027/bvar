@@ -62,6 +62,7 @@ sign_restr <- function(sigma_chol,
       # Draw and check a shock
       q_i <- draw_qi(sigma_chol, sign_restr, M, i = i, zero = zero, Q = Q)
       sign_check <- check_qi(q_i, sigma_chol, sr_i = sign_restr[, i])
+
       if(sign_check != 0L) { # The signs are correct
         pos_check[i] <- TRUE
         Q[, i] <- q_i * sign_check # Keep or flip the sign of the shock
@@ -77,19 +78,15 @@ sign_restr <- function(sigma_chol,
 draw_qi <- function(sigma_chol, sign_restr, M, i, zero = FALSE, Q) {
 
   if(isTRUE(zero)) { # Zero-sign-restrictions
+    Q <- t(Q)
     sel_row <- which(sign_restr[, i] == 0)
-    if(length(sel_row) == 0) {
-      R <- cbind(t(sigma_chol[sel_row, ]), Q[, seq_len(i - 1L), drop = FALSE])
-    } else {
-      R <- cbind(sigma_chol[sel_row, ], Q[, seq_len(i - 1L), drop = FALSE])
-    }
-    qr_object <- qr(R)
+    R <- rbind(sigma_chol[sel_row, ], Q[seq_len(i - 1L), ])
+    qr_object <- qr(t(R))
     qr_rank <- qr_object[["rank"]]
     set <- if(qr_rank == 0) {seq_len(M)} else {-seq_len(qr_rank)}
     N_i <- qr.Q(qr_object, complete = TRUE)[, set, drop = FALSE]
     N_stdn <- crossprod(N_i, rnorm(M, 0, 1))
     q_i <- N_i %*% (N_stdn / norm(N_stdn, type = "2"))
-
   } else { # Pure sign-restrictions
     if(i == 1) {
       x <- rnorm(M, 0, 1)
@@ -106,12 +103,9 @@ draw_qi <- function(sigma_chol, sign_restr, M, i, zero = FALSE, Q) {
 
 #' @noRd
 check_qi <- function(q_i, sigma_chol, sr_i) {
-  # To-do: Zero restrictions should work by design, and we could use shocks
-  # interchangeably for i != 0, i.e. compare 'shock_vec' to all 'sign_restr'.
 
-  restricted <- which(!is.na(sr_i) & sr_i != 0) # Do we need the sr_i != 0?
+  restricted <- which(!is.na(sr_i) & sr_i != 0)
   shock_vec <- sigma_chol %*% q_i
-  shock_vec[abs(shock_vec) < 1e-12] <- 0 # We could probably skip this
   shock_vec <- sign(shock_vec)
 
   # Return 1L for a fit, -1L for a fit with flipped signs, and 0L for a failure
