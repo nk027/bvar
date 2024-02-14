@@ -139,16 +139,17 @@ predict.bvar <- function(
       fcast_base <- compute_fcast(
         Y = Y, K = K, M = M, N = N, lags = lags,
         horizon = fcast[["horizon"]],
-        beta_comp = beta_comp, beta_const = beta[j, 1, ])
+        beta_comp = beta_comp, beta_const = beta[j, 1, ],
+        sigma = sigma[j, , ],
+        conditional = conditional)
 
       if(conditional) { # Conditional uses impulse responses
         fcast_store[["fcast"]][i, , ] <- cond_fcast(
           constr_mat = constr_mat, fcast_base = fcast_base,
           ortho_irf = irf_store[["irf"]][j, , , ],
           horizon = fcast[["horizon"]], M = M)
-      } else { # Unconditional gets noise
-        fcast_store[["fcast"]][i, , ] <- fcast_base + t(crossprod(sigma[j, , ],
-          matrix(rnorm(M * fcast[["horizon"]]), nrow = M)))
+      } else {
+        fcast_store[["fcast"]][i, , ] <- fcast_base
       }
       j <- j + n_thin
     }

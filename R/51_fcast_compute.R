@@ -25,14 +25,21 @@
 compute_fcast <- function(
   Y, K, M, N, lags,
   horizon,
-  beta_comp, beta_const) {
+  beta_comp, beta_const, sigma,
+  conditional) {
 
   Y_f <- matrix(NA, horizon + 1, K - 1)
   Y_f[1, ] <- vapply(t(Y[N:(N - lags + 1), ]), c, numeric(1L))
 
+  sigma_chol <- t(chol(sigma))
+
   for(i in seq.int(2, 1 + horizon)) {
     Y_f[i, ] <- tcrossprod(Y_f[i - 1, ], beta_comp) +
       c(beta_const, rep(0, M * (lags - 1))) # Maybe go back to normal beta
+
+    if(!conditional) {
+      Y_f[i, 1:M] <- Y_f[i, 1:M] + sigma_chol %*% rnorm(M, 0, 1)
+    }
   }
 
   # Remove Y_t and lagged variables
