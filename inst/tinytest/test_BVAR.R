@@ -164,7 +164,7 @@ expect_silent(irfs3 <- irf(run2, opt_irf3))
 
 expect_silent(print(irfs1))
 expect_silent(print(summary(irfs1)))
-expect_silent(print(fevd(run))) # Access
+expect_silent(print(fevd(run) <- fevd(run))) # Access
 expect_silent(print(fevd(run2))) # Recalculates
 expect_silent(print(fevd(irfs2))) # Recalculates
 expect_silent(plot(irfs1, vars_res = 1, vars_imp = 1))
@@ -250,6 +250,8 @@ expect_silent(print(companion(run, conf_bands = 0.1)))
 
 expect_silent(print(hist_decomp(run, type = "mean")))
 expect_silent(print(hist_decomp(run, type = "quantile")))
-expect_silent(print(rmse(run, type = "mean")))
-expect_silent(print(lps(run, conf_bands = 0.1)))
+expect_silent(print(rmse(run)))
+expect_silent(print(rmse(run, holdout = data2[1:10, ])))
+expect_silent(print(lps(run)))
+expect_silent(print(lps(run, holdout = data2[1:10, ])))
 expect_silent(print(WAIC(run)))

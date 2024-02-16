@@ -99,12 +99,9 @@ irf.bvar <- function(x, ..., conf_bands, n_thin = 1L, verbose = FALSE) {
     sigma <- x[["sigma"]]
 
     # Check sign restrictions
-    if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2) {
-      stop("Dimensions of provided sign restrictions do not fit the data.")
-    }
-    if(!is.null(irf[["zero_restr"]]) && length(irf[["zero_restr"]]) != M ^ 2) {
-      stop("Dimensions of provided zero and sign restrictions ",
-           "do not fit the data.")
+    if(!is.null(irf[["sign_restr"]]) && length(irf[["sign_restr"]]) != M ^ 2 ||
+      !is.null(irf[["zero_restr"]]) && length(irf[["zero_restr"]]) != M ^ 2) {
+      stop("Dimensions of provided restrictions do not fit the data.")
     }
 
     # Sampling ---
